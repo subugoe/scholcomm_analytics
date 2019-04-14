@@ -1,0 +1,18 @@
+name: "scholcomm analytics"
+title: "Scholarly Communication Analytics with R"
+description: |
+  Based at the Göttingen State and University Library, 
+  we are analysing data around scholarly communication using open data and tools.
+  Here, you'll find insights, and examples of our work using R. Particularly, we like
+  to publish rapid case-studies showing how to support data-driven workflows and 
+  decision-making around scholarly communication in libraries using R.
+output_dir: "docs"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+output: 
+  distill::distill_article:
+    css: styles.css

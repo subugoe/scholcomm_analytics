@@ -1,0 +1,20 @@
+---
+title: "About this blog"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Welcome to our Blog! Here, you'll find insights from our work as Data Analysts in the domain of scholarly communication. Particularly, we like to share rapid case-studies showing how we support data-driven workflows and decision-making around scholarly communication with R.
+
+We are based at the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/en/news/), one of the largest academic libraries in Germany. We are using R-based tools in our everyday work and contribute to R package developements and training activities. In this blog, you'll find news and case-studies around:
+
+- Open Access and Open Science Analytics
+- R Packages making use of open databases and helping us in our work
+- R Tools for interactive visualisations and dashboard developements
+- R-related training and outreach activities 
+
+We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to start a blog about our work. We are using [Distill for R Markdown](https://rstudio.github.io/distill/), a new web publishing format optimized for scientific and technical writing.
+
+*Anne Hobert*, *Najko Jahn*
