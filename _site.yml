@@ -7,6 +7,8 @@ description: |
   to publish case-studies rapidely showing how to support data-driven workflows and 
   decision-making around scholarly communication in libraries using R.
 output_dir: "docs"
+base_url: https://subugoe.github.io/scholcomm_analytics
+repository_url: https://github.com/subugoe/scholcomm_analytics
 creative_commons: CC BY
 navbar:
   right:

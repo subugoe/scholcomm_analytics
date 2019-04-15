@@ -19,3 +19,14 @@ draft("article.Rmd", "distill_article", package = "distill")
 ```
 
 Reference managing is supported, however, there are some issues with BibTeX conversion, e.g. `--` is not rendered as emdash.
+
+##### Build the website
+
+```r
+library(rmarkdown)
+render_site()
+```
+
+### License
+
+CC-BY 4.0

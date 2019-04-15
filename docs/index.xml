@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Scholarly Communication Analytics with R</title>
+    <link>https://subugoe.github.io/scholcomm_analytics</link>
+    <atom:link href="https://subugoe.github.io/scholcomm_analytics/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Based at the Göttingen State and University Library, 
+we are analysing data around scholarly communication using open data and tools.
+Here, you'll find insights, and examples of our work using R. Particularly, we like
+to publish case-studies rapidely showing how to support data-driven workflows and 
+decision-making around scholarly communication in libraries using R.
+</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Sun, 14 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Welcome to Scholarly Communication Analytics with R</title>
+      <dc:creator>Najko Jahn</dc:creator>
+      <link>https://subugoe.github.io/scholcomm_analytics/posts/welcome</link>
+      <description>Welcome to our new blog, Scholarly Communication Analytics with R. We hope you enjoy 
+reading what we have to say!</description>
+      <guid>https://subugoe.github.io/scholcomm_analytics/posts/welcome</guid>
+      <pubDate>Sun, 14 Apr 2019 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
