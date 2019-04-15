@@ -11,6 +11,9 @@ base_url: https://subugoe.github.io/scholcomm_analytics
 repository_url: https://github.com/subugoe/scholcomm_analytics
 creative_commons: CC BY
 navbar:
+  logo:
+    image: logo.svg
+    href: https://www.sub.uni-goettingen.de/
   right:
     - text: "Home"
       href: index.html
