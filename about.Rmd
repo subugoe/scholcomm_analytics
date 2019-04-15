@@ -1,12 +1,12 @@
 ---
-title: "About this blog"
+title: "About our Blog"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Welcome to our Blog! Here, you'll find insights from our work as Data Analysts in the domain of scholarly communication. Particularly, we like to engage with the broader community about how to support data-driven workflows and decision-making around scholarly communication with R.
+Welcome to our Blog! Here, you'll find insights from our work as Data Analysts in the domain of scholarly communication. With this blog, we want to engage with the broader community about how to support data-driven workflows and decision-making around scholarly communication with R.
 
 We are based at the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/en/news/), one of the largest academic libraries in Germany. We are using R-based tools in our everyday work and contribute to R package developments and training activities. In this blog, you'll find news and case-studies around:
 
