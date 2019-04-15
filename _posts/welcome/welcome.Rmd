@@ -1,13 +1,13 @@
 ---
-title: "Welcome to scholcomm_blog"
+title: "Welcome to Scholarly Communication Analytics with R"
 description: |
-  Welcome to our new blog, scholcomm_blog. We hope you enjoy 
+  Welcome to our new blog, Scholarly Communication Analytics with R. We hope you enjoy 
   reading what we have to say!
 author:
-  - name: Nora Jones 
-    url: https://example.com/norajones
-    affiliation: Spacely Sprockets
-    affiliation_url: https://example.com/spacelysprokets
+  - name: Najko Jahn 
+    url: https://twitter.com/najkoja
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/sub-aktuell/
 date: 04-14-2019
 output:
   distill::distill_article:

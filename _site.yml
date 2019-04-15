@@ -4,9 +4,10 @@ description: |
   Based at the Göttingen State and University Library, 
   we are analysing data around scholarly communication using open data and tools.
   Here, you'll find insights, and examples of our work using R. Particularly, we like
-  to publish rapid case-studies showing how to support data-driven workflows and 
+  to publish case-studies rapidely showing how to support data-driven workflows and 
   decision-making around scholarly communication in libraries using R.
 output_dir: "docs"
+creative_commons: CC BY
 navbar:
   right:
     - text: "Home"

@@ -1,17 +1,17 @@
 [
   {
     "path": "posts/welcome/",
-    "title": "Welcome to scholcomm_blog",
-    "description": "Welcome to our new blog, scholcomm_blog. We hope you enjoy \nreading what we have to say!",
+    "title": "Welcome to Scholarly Communication Analytics with R",
+    "description": "Welcome to our new blog, Scholarly Communication Analytics with R. We hope you enjoy \nreading what we have to say!",
     "author": [
       {
-        "name": "Nora Jones",
-        "url": "https://example.com/norajones"
+        "name": "Najko Jahn",
+        "url": "https://twitter.com/najkoja"
       }
     ],
     "date": "2019-04-14",
     "categories": [],
     "preview": {},
-    "last_modified": "2019-04-14T12:45:56+02:00"
+    "last_modified": "2019-04-15T13:18:53+02:00"
   }
 ]
