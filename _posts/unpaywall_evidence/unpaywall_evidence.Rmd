@@ -1,0 +1,37 @@
+---
+title: "Open Access Evidence in Unpaywall"
+description: |
+  Unpaywall has become a primary source to find open access full-texts. We investigated more than 42 million scholarly works contained in Unpaywall that were published between 2008 - 2018 with Google BigQuery and R. Our data analysis revealed various open access location types and large overlaps between them, raising important questions about how to reponsibly re-use Unpaywall data in bibliometric research and open access monitoring.
+author:
+  - name: Najko Jahn 
+    url: https://twitter.com/najkoja
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+  - name: Anne Hobert
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: "`r Sys.Date()`"
+creative_commons: CC BY
+output: distill::distill_article
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+[Unpaywall](https://unpaywall.org/), developed and maintained by the [team of Impactstory](http://impactstory.org/team), is a non-profit service that finds open access copies of scholarly literature. Providing DOIs, [Unpaywall's REST API](https://unpaywall.org/products/api) not only returns open access full-text links, but also helpful metadata about the open access status of a publication indexed in [Crossref](https://www.crossref.org/). While the API is useful for a limited amount of scholarly works, Unpaywall also provides [database snapshots](https://unpaywall.org/products/snapshot) for large-scale analysis. Many bibliometric databases and open access monitoring activities re-use Unpaywall data.
+
+In this blog post, we show how we made use of the Unpaywall data dump in conjunction with [Google BigQuery](https://cloud.google.com/bigquery/), a cloud-based service that allows fast analysis of large datasets, and how we interfaced it for our analysis with R. We wanted to know the extent of open access status information in Unpaywall, particularly, how this information can be utilized for bibliometric research. In our case, we intend to match evidence from Unpaywall with the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) to determine factors influencing open access publication activities among German Universities as part of our [BMBF-funded research project OAUNI](https://www.wihoforschung.de/de/oauni-2182.php).
+
+## Setting up Google Big Query
+
+## Overview
+
+## OA location types
+
+## OA evidence types
+
+## Discussion and Conclusion
+
+
