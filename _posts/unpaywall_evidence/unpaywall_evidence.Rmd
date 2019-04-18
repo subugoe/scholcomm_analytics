@@ -165,7 +165,7 @@ While a general growth of journal articles as well open access provision can be 
 
 ### Unpaywall Open Access Hosting Types (`host_type`)
 
-Using Unpaywall's OA location types allows a more detailled analysis of open access provision. In the following, we explore the variable `host_type`, showing whether Unpaywall found the open access full-text on a publisher website or in a repository. We want to include articles from fully open access journals that are indexed in [Directory of Open Access Journals (DOAJ)](https://doaj.org/) as indicated by the `journal_is_in_doaj` variable in our analysis. As a start, we only examine the best open access location per DOI, `is_best`. As said before, this variable is defined by Unpaywall's algorithm that prioritizes publisher-hosted content.
+Using Unpaywall's open access location types allows a more detailled analysis of open access provision. In the following, we explore the variable `host_type`, showing whether Unpaywall found the open access full-text on a publisher website or in a repository. We want to include articles from fully open access journals that are indexed in [Directory of Open Access Journals (DOAJ)](https://doaj.org/) as indicated by the `journal_is_in_doaj` variable in our analysis. As a start, we only examine the best open access location per DOI, `is_best`. As said before, this variable is defined by Unpaywall's algorithm that prioritizes publisher-hosted content.
 
 Instead of dplyr, we are now querying BigQuery with SQL. We built and tested the SQL queries in the BigQuery web UI. There are stored in separate files ([host_type_08_12.sql](host_type_08_12.sql) and [host_type_13_18.sq](host_type_13_18.sq)), and are shared in the source code repository of this blog:
 
@@ -231,12 +231,13 @@ plotly::ggplotly(plot_b, tooltip = c("y"))
 
 The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ (`r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall)
 
-<!-- is best -->
-
 ## Unpaywall Open Access Evidence Types (`evidence`)
 
 Evidence can be used to further detail open access provision by host_type.
 
+## Overlap of Open Access Provision and Evidence Types
+
 ## Discussion and Conclusion
+
 
 
