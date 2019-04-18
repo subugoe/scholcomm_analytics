@@ -1,7 +1,7 @@
 ---
 title: "Open Access Evidence in Unpaywall"
 description: |
-  Unpaywall has become a primary source to find open access full-texts. We investigated more than 42 million scholarly works contained in Unpaywall that were published between 2008 - 2018 with Google BigQuery and R. Our data analysis revealed various open access location types and large overlaps between them, raising important questions about how to reponsibly re-use Unpaywall data in bibliometric research and open access monitoring.
+  Unpaywall has become a primary source to find open access full-texts. We investigated more than 31 million scholarly journal articles contained in Unpaywall that were published between 2008 - 2018 with Google BigQuery and R. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to reponsibly re-use Unpaywall data in bibliometric research and open access monitoring.
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
@@ -13,6 +13,7 @@ author:
 date: "`r Sys.Date()`"
 creative_commons: CC BY
 output: distill::distill_article
+bibliography: pubs.bib
 draft: true
 ---
 
@@ -49,15 +50,15 @@ library(plotly)
   theme(panel.border=element_blank())
 ```
 
-[Unpaywall](https://unpaywall.org/), developed and maintained by the [team of Impactstory](http://impactstory.org/team), is a non-profit service that finds open access copies of scholarly literature. Providing DOIs, [Unpaywall's REST API](https://unpaywall.org/products/api) not only returns open access full-text links, but also helpful metadata about the open access status of a publication indexed in [Crossref](https://www.crossref.org/). While the API is useful for a limited amount of scholarly works, Unpaywall also provides [database snapshots](https://unpaywall.org/products/snapshot) for large-scale analysis, which many bibliometric databases and open access monitoring activities re-use.
+[Unpaywall](https://unpaywall.org/), developed and maintained by the [team of Impactstory](http://impactstory.org/team), is a non-profit service that finds open access copies of scholarly literature. Providing DOIs, [Unpaywall's REST API](https://unpaywall.org/products/api) not only returns open access full-text links, but also helpful metadata about the open access status of a publication indexed in [Crossref](https://www.crossref.org/). While the API is useful to retrieve a limited amount of records, Unpaywall also provides [database snapshots](https://unpaywall.org/products/snapshot) for large-scale analysis, which many bibliometric databases and open access monitoring activities re-use.
 
 In this blog post, we show how we made use of the Unpaywall data dump together [Google BigQuery](https://cloud.google.com/bigquery/), a cloud-based service that allows fast analysis of large datasets, and how we interfaced BigQuery for our analysis with R. We wanted to know the extent of open access status information in Unpaywall, particularly, how this information can be utilized for bibliometric research. In our case, we intend to match evidence from Unpaywall with the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) to determine factors influencing open access publication activities among German Universities as part of our [BMBF-funded research project OAUNI](https://www.wihoforschung.de/de/oauni-2182.php).
 
-## Setting up Google Big Query
+## Store and analyse large datasets with Google BigQuery 
 
 ## Unpaywall Overview
 
-To investigate the overall number and proportion of journal articles provided using Unpaywall, we firstly connect to Google BigQuery with using the [DBI interface](https://www.r-dbi.org/) and [bigrquery](https://github.com/r-dbi/bigrquery).
+In R, we interface our Unpaywall dataset stored in Google BigQuery with the packages [DBI](https://www.r-dbi.org/) and [bigrquery](https://github.com/r-dbi/bigrquery).
 
 
 ```{r fetch_bq}
@@ -71,27 +72,43 @@ con <- dbConnect(
 )
 ```
 
-Our BigQuery project has two table, one containing all records between 2008 - 2012, and another with publications since 2019. When connecting, Google will ask you to login via your web browser or to supply an private access token.
+Our BigQuery project has two tables, one containing all records between 2008 - 2012, and another for more recent works that have been published since 2013. When connecting, Google asks us to login via your web browser or to supply an private access token to interface our access-protected database. 
 
 ```{r}
 upw_08_12 <- tbl(con, "feb_19_mongo_export_2008_2012_full_all_genres")
 upw_13_19 <- tbl(con, "feb_19_mongo_export_2013_Feb2019_full_all_genres")
 ```
 
-The [bigrquery](https://github.com/r-dbi/bigrquery) package allows querying BigQuery tables using SQL or the dplyr syntax. The latter is very convienent when you just started to learn SQL, but feel more experienced in the [tidyverse](https://www.tidyverse.org/). Here's an  example where we obtain the first ten records from 2018, restricting our search to journal articles, the most common publication genre in Unpaywall.
+The [bigrquery](https://github.com/r-dbi/bigrquery) package allows querying BigQuery tables using SQL or [dplyr](https://dplyr.tidyverse.org/) functions. The latter is  convienent when you just started to learn SQL, but feel more experienced in the [tidyverse](https://www.tidyverse.org/), a more popular collection of R packages following the Wickham-Grolemund approach to practise data science [@Wickham_2017]. Here's an example where we obtain the first ten records from 2018. We restrict our search to journal articles, the most common genre in Unpaywall.
 
 ```{r}
+library(tidyverse)
 upw_13_19 %>%
   filter(year == 2018, genre == "journal-article") %>%
-  head()
+  head(10)
 ```
 
-Notice that our schema follow the [Unpaywall data format](https://unpaywall.org/data-format). The column  `oa_locations` is a [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) that contain comprehensive metadata about the OA sources found by Unpaywall.
+Notice that our schema follows the [Unpaywall data format](https://unpaywall.org/data-format). However, we excluded the large data fields `z-authors` from our analysis. Moreover, we did not consider the fields `title`, `doi-url` (because we already have the `doi` field) and the `best-oa-location`, which is derived from the Open Access location object.  
 
-To start with, we want to retrieve the number and proportion of journal articles with open access fulltext between 2008 and 2018 using the most basic Unpaywall variable `is_oa`, a logical value, which is `TRUE` when at leats one open access fulltext was found.  `collect()` loads the data into a local tibble.
+We will examine the following open access indicators: 
+
+- `is_oa`: A Boolean indicating whether an open accessible version of the article has been found or not.
+
+- `journal_is_in_doaj`: A Boolean indicating whether the journal a given article was published in is registered in the DOAJ.
+
+The column  `oa_locations` is a [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) that contains further metadata about the open access provision. It indicates that open access provision for an article is not limited to one route, but can be made freely available at teh same time over several means. Here are three data variables from the `oa_locations` object that we will analyse:
+
+- `is_best`: A Boolean defined by Unpaywall's algorithm that describes the most relevant open access location. The algorithm prioritizes publisher-hosted content.
+
+- `host_type`: Is the open access full-text provided by a publisher or a repository? 
+
+- `evidence`: How the open access full-text was found by Unpaywall?
+
+### Open Access availability (`is_oa`)
+
+To start with, we want to retrieve the number and proportion of journal articles with open access fulltext publsihed between 2008 and 2018 using the most basic open access indicator from Unpaywall `is_oa`, a logical value, which is `TRUE` when at least one open access fulltext was found. After matching and summarizing the `is_oa` observations by year with dplyr, `collect()` loads the so aggregated data from BigQuery into a local tibble.
 
 ```{r cache=TRUE}
-library(tidyverse)
 oa_08_12 <- upw_08_12 %>%
   # query and aggregate with dpylr 
   filter(genre == "journal-article") %>%
