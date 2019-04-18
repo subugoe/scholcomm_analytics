@@ -79,7 +79,7 @@ upw_08_12 <- tbl(con, "feb_19_mongo_export_2008_2012_full_all_genres")
 upw_13_19 <- tbl(con, "feb_19_mongo_export_2013_Feb2019_full_all_genres")
 ```
 
-The [bigrquery](https://github.com/r-dbi/bigrquery) package allows querying BigQuery tables using SQL or [dplyr](https://dplyr.tidyverse.org/) functions. The latter is  convienent when you just started to learn SQL, but feel more experienced in the [tidyverse](https://www.tidyverse.org/), a more popular collection of R packages following the Wickham-Grolemund approach to practise data science [@Wickham_2017]. Here's an example where we obtain the first ten records from 2018. We restrict our search to journal articles, the most common genre in Unpaywall.
+The [bigrquery](https://github.com/r-dbi/bigrquery) package allows querying BigQuery tables using SQL or [dplyr](https://dplyr.tidyverse.org/) functions. The latter is  convienent when you just started to learn SQL, but feel more experienced in the [tidyverse](https://www.tidyverse.org/), a more popular collection of R packages following the Wickham-Grolemund approach to practise data science [@Wickham_2017]. Here's an example where we call BigQuery with dplyr to obtain the first ten records from 2018. We restrict our search to journal articles, the most common genre in Unpaywall.
 
 ```{r}
 library(tidyverse)
@@ -133,9 +133,9 @@ my_df <- bind_rows(oa_08_12, oa_13_18) %>%
 my_df
 ```
 
-In total, `r sum(my_df$n)` journal articles published between 2008 - 2018 were included in the Unpaywall. For `r  my_df %>% filter(is_oa == TRUE) %>% .$n %>% sum()` articles, Unpwaywall was able to link a DOI to at least one freely available full-text (`r  my_df %>% filter(is_oa == TRUE) %>% .$n %>% sum() / sum(my_df$n) * 100` %).
+In total, `r sum(my_df$n)` journal articles published between 2008 - 2018 were included in the Unpaywall. For `r  my_df %>% filter(is_oa == TRUE) %>% .$n %>% sum()` articles, Unpwaywall was able to link a DOI to at least one freely available full-text (`r  my_df %>% filter(is_oa == TRUE) %>% .$n %>% sum() / sum(my_df$n) * 100` %). In conclusion, around every third scholarly journal article published since 2008 is currently openly available. 
 
-Next, let's create a graph that presents the prevalence of open access to journal articles over year. We turn our [ggplot object](https://ggplot2.tidyverse.org/index.html) into an interactive [plotly](https://plot.ly/) chart, a javascript library, using `ggplotly()`.
+Next, let's plot the prevalence of open access to journal articles over year using [ggplot object](https://ggplot2.tidyverse.org/index.html). To make it interactive, we turn it into a [plotly](https://plot.ly/) chart, a javascript library, using `ggplotly()`. The tooltip presents the total number and percentage for each category and year.
 
 ```{r, layout="l-body-outset", fig.cap="Open Access to Journal Articles according to Unpaywall data. Blue areas represent journal articles with at least one freely available full-text, the gray represent toll-access articles."}
 library(scales)
@@ -163,31 +163,38 @@ plotly::ggplotly(plot_a, tooltip = c("label", "y"))
 
 While a general growth of journal articles as well open access provision can be observed, there is a considerable decline in the number of journal articles published in 2018,  presumbably because of an indexing lag between Crossref and Unpaywall. The decline in open access full-text availability was even clearer in comparison between 2017 and 2018, suggesting that some open access content is provided after an embargo period.
 
-## Unpaywall OA location types
+### Unpaywall Open Access Hosting Types (`host_type`)
 
-Using Unpaywall's OA location types allows a more detailled analysis of open access provision. In the following, we explore the variable `host_type`, showing whether Unpaywall found the open access full-text on a publisher website or in a repository. We furthermore want to include articles from fully open access journals that are indexed in [Directory of Open Access Journals (DOAJ)](https://doaj.org/) as indicated by the `journal_is_in_doaj` variable. A a start, we only examine the best open access location per DOI, `ìs_best`, defined by Unpaywall's algorithm that prioritizes publisher-hosted content.
+Using Unpaywall's OA location types allows a more detailled analysis of open access provision. In the following, we explore the variable `host_type`, showing whether Unpaywall found the open access full-text on a publisher website or in a repository. We want to include articles from fully open access journals that are indexed in [Directory of Open Access Journals (DOAJ)](https://doaj.org/) as indicated by the `journal_is_in_doaj` variable in our analysis. As a start, we only examine the best open access location per DOI, `is_best`. As said before, this variable is defined by Unpaywall's algorithm that prioritizes publisher-hosted content.
 
-Instead of dplyr, we are now querying BigQuery with SQL. We built and tested the SQL query in the BigQuery web UI. Here are our queries:
+Instead of dplyr, we are now querying BigQuery with SQL. We built and tested the SQL queries in the BigQuery web UI. There are stored in separate files ([host_type_08_12.sql](host_type_08_12.sql) and [host_type_13_18.sq](host_type_13_18.sq)), and are shared in the source code repository of this blog:
 
 ```{r}
-host_type_08_12_query <- "SELECT year, host_type, journal_is_in_doaj, COUNT(DISTINCT(doi)) AS number_of_articles FROM `oadoi_full.feb_19_mongo_export_2008_2012_full_all_genres`, UNNEST(oa_locations) WHERE genre = 'journal-article' AND is_best = true GROUP BY year, host_type, journal_is_in_doaj"
-host_type_13_18_query <- "SELECT year, host_type, journal_is_in_doaj, COUNT(DISTINCT(doi)) AS number_of_articles FROM `oadoi_full.feb_19_mongo_export_2013_Feb2019_full_all_genres`, UNNEST(oa_locations) WHERE genre = 'journal-article' AND year < 2019 AND is_best = true GROUP BY year, host_type, journal_is_in_doaj"
+host_type_08_12_query <- readLines("host_type_08_12.sql") %>%
+  paste(collapse = "")
+host_type_13_18_query <- readLines("host_type_13_18.sql") %>%
+  paste(collapse = "")
 ```
 
-Let's call BigQuery:
+After calling BigQuery using SQL, we bind the two resulting data frames into one. Using `case_when()`from dpylr, we create a `host` column distinguishing between "DOAJ-listed Journal", "Other Journals" and "Repositories only" open access provision.
 
 ```{r}
-host_type_08_12_query_df <- dbGetQuery(con,host_type_08_12_query) 
-host_type_13_18_query_df <- dbGetQuery(con,host_type_13_18_query) 
-host_type_df <- bind_rows(host_type_08_12_query_df,host_type_13_18_query_df) %>%
-  mutate(host = case_when(journal_is_in_doaj == TRUE ~ "DOAJ-listed Journal",
-                          host_type == "publisher" ~ "Other Journals",
-                          host_type == "repository" ~ "Repositories only")) %>%
-  mutate(year = as.Date(as.character(year), format = "%Y")) 
+host_type_08_12_query_df <- dbGetQuery(con, host_type_08_12_query)
+host_type_13_18_query_df <- dbGetQuery(con, host_type_13_18_query)
+host_type_df <-
+  bind_rows(host_type_08_12_query_df, host_type_13_18_query_df) %>%
+  mutate(
+    host = case_when(
+      journal_is_in_doaj == TRUE ~ "DOAJ-listed Journal",
+      host_type == "publisher" ~ "Other Journals",
+      host_type == "repository" ~ "Repositories only"
+    )
+  ) %>%
+  mutate(year = as.Date(as.character(year), format = "%Y"))
 host_type_df
 ```
 
-As to explore our data, we follow [Claus Wilke excellent book "Fundamentals of Data Visualization"](https://serialmentor.com/dataviz/) and [visualise our proportions separately as parts of the total](https://serialmentor.com/dataviz/visualizing-proportions.html#visualizing-proportions-separately-as-parts-of-the-total). Again, our final ggplot object will be transformed to an interactive plotly chart.
+To explore our data, we follow [Claus Wilke's excellent book "Fundamentals of Data Visualization"](https://serialmentor.com/dataviz/)[@Wilke_2019] and [visualise our proportions separately as parts of the total](https://serialmentor.com/dataviz/visualizing-proportions.html#visualizing-proportions-separately-as-parts-of-the-total). Again, our final ggplot object will be transformed to an interactive plotly chart.
 
 ```{r, layout="l-body-outset", fig.cap='Open Access to journal articles by  open access hosting location. The colored bars represent the number of open access articles per host ("DOAJ-listed Journal", "Other Journals", "Repositories only"), the gray bar the total number of journal articles indexed in Crossref where Unpaywall was able to identify at least one open access full-text.'}
 # calculate all oa articles per year
@@ -222,20 +229,13 @@ plot_b <-
 plotly::ggplotly(plot_b, tooltip = c("y")) 
 ```
 
-The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ (`r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall), raising important questions about the other ways publisher made articles openly available. 
+The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ (`r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall)
 
-Currently, we are discussing the following explanations:
+<!-- is best -->
 
-1. a journal did not meet DOAJ indexing criteria, but is indexed by Crossref. Examples include articles from so-called "predatory publishers" like OMICS or collections of procedia published as journals(e.g. [Elsevier's Procedia journals](https://www.elsevier.com/books-and-journals/procedia). 
+## Unpaywall Open Access Evidence Types (`evidence`)
 
-2. Toll-access journals made specific articles openly available immediately upon publication ("hybrid open access"). 
-
-3. The category "Other Journals" accounts for delayed open access journals where full issues were made openly available after an embargo period. Example includes the publisher Elsevier, which [lists 118 journals](https://www.elsevier.com/about/open-science/open-access/open-archive) that provide free access after a certain period of time, ranging between six and 48 months. The sharp decline in 2018 suggests that the proportion of delayed open access provided by publishers should not be underestimated.
-
-
-
-
-## Unpaywall OA evidence types
+Evidence can be used to further detail open access provision by host_type.
 
 ## Discussion and Conclusion
 
