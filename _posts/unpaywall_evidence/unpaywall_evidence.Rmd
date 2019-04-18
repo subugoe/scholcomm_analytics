@@ -231,7 +231,7 @@ plotly::ggplotly(plot_b, tooltip = c("y"))
 
 The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ (`r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall)
 
-## Unpaywall Open Access Evidence Types (`evidence`)
+### Unpaywall Open Access Evidence Types (`evidence`)
 
 Evidence can be used to further detail open access provision by host_type.
 
@@ -239,5 +239,8 @@ Evidence can be used to further detail open access provision by host_type.
 
 ## Discussion and Conclusion
 
+In this blog post, we demonstrated how to analyse the Unpaywall data dump with Google BigQuery and R. Interfacing BigQuery with R has allowed us to integrate a high performant and user-friendly database environment into our R data analytics workflow without the help of a database administrator. Using this data management environment, we found 11 million journal articles published between 2008-18 with open access full-texts, representing around 1/3 of all articles indexed in Crossref for this period. Moreover, we found Unpaywall being very suitable for open access analytics, because this data source does not only tag if a publication is freely available, but also contains metadata describing how and where the various open access full-text links were discovered.
 
+Our Unpaywall data analysis revealed various open access location and evidence types, as well as large overlaps between them. This raises important questions about how to reponsibly re-use Unpaywall data in bibliometric research and open access monitoring. Examining Unpaywall's best open access location only, favors publisher-provided open access, which, in turn, means that open access provided by repositories like arXiv will be underestimated. Likewise, large overlaps between evidence categories can be observed. To enablallow for careful consideration, bibliometric research and open access monitoring must therefore be clear about how open access indicators were derived from Unpaywall.
 
+In the following, we will use these insights from our data analysis to elaborare a matching procedure between Unpaywall and the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) in our [OAUNI project](https://www.wihoforschung.de/de/oauni-2182.php). In doing so, we want to represent Unpaywall's open access evidence as comprehensive as possible to allow for a more pluralist view on open access publications from researchers affilated with German Universities.
