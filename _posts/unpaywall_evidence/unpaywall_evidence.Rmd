@@ -56,6 +56,9 @@ In this blog post, we show how we made use of the Unpaywall data dump together [
 
 ## Store and analyse large datasets with Google BigQuery 
 
+highly performant, lack of hardware, lack of database admin, possiblity to share access with collaborators, integration into R data analytics workflow
+vorgehensweise 1 absatz
+
 ## Unpaywall Overview
 
 In R, we interface our Unpaywall dataset stored in Google BigQuery with the packages [DBI](https://www.r-dbi.org/) and [bigrquery](https://github.com/r-dbi/bigrquery).
