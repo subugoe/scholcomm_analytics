@@ -14,7 +14,7 @@ SELECT
             UNNEST(oa_locations)          
         WHERE
             genre ='journal-article' 
-            and year < 2019         
+            AND year < 2019         
         GROUP BY
             doi,
             year)      
