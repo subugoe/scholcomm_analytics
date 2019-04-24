@@ -141,7 +141,7 @@ Next, let's plot the prevalence of open access to journal articles over year usi
   To learn more about plotly, we recommend the book "Interactive web-based data visualization with R, plotly, and shiny" from Carson Sievert. <https://plotly-r.com/index.html>
 </aside>
 
-```{r, layout="l-body-outset", fig.cap="Open Access to Journal Articles according to Unpaywall. Blue area represents journal articles with at least one freely available full-text, the grey area represents toll-access articles."}
+```{r, layout="l-page", fig.cap="Open Access to Journal Articles according to Unpaywall. Blue area represents journal articles with at least one freely available full-text, the grey area represents toll-access articles."}
 library(scales)
 plot_a <- my_df %>%
   # prepare label that we want to present as tooltip
@@ -200,7 +200,7 @@ host_type_df
 
 To explore our data, we follow [Claus Wilke's excellent book "Fundamentals of Data Visualization"](https://serialmentor.com/dataviz/)[@Wilke_2019] and [visualise our proportions separately as parts of the total](https://serialmentor.com/dataviz/visualizing-proportions.html#visualizing-proportions-separately-as-parts-of-the-total). Again, our final ggplot graphic is transformed to an interactive plotly chart.
 
-```{r, layout="l-body-outset", fig.cap='Open Access to journal articles by  open access hosting location. The colored bars represent the number of open access articles per host ("DOAJ-listed Journal", "Other Journals", "Repositories only"), the grey bar the total number of journal articles indexed in Crossref where Unpaywall was able to identify at least one open access full-text.'}
+```{r, layout="l-page", fig.cap='Open Access to journal articles by  open access hosting location. The colored bars represent the number of open access articles per host ("DOAJ-listed Journal", "Other Journals", "Repositories only"), the grey bar the total number of journal articles indexed in Crossref where Unpaywall was able to identify at least one open access full-text.'}
 # calculate all oa articles per year
 all_articles <- host_type_df %>%
   ungroup() %>%
@@ -258,7 +258,7 @@ evidence_df <- bind_rows(evidence_08_12, evidence_13_18) %>%
 
 The `evidence` field indicates how Unpaywall found the article at a specific location and identified it as OA, for example via a PubMed Central index or via license information available on the page or crossref. More specifically, possible values for the evidence type are
 
-```{r, layout = "l-body-outset", fig.cap="Possible Values of Evidence Type Field."}
+```{r, layout = "l-page", fig.cap="Possible Values of Evidence Type Field."}
 #possible values of evidence field
 evidence_df %>%
   distinct(evidence) %>%
@@ -268,7 +268,7 @@ evidence_df %>%
 
 For each evidence type we want to see how many records can be identified as open access by this type. To this end, we look at the total number of records, which contain a reference to the corresponding evidence type. For each evidence type the columns of the following table show the total number of associated records, the proportion with respect to the number of all records in the data set and the cummulative proportion of records associated with all above evidence types.
 
-```{r, layout="l-body-outset", fig.cap = "Number of Articles per Evidence Type."}
+```{r, layout="l-page", fig.cap = "Number of Articles per Evidence Type."}
 # calculate numbers and proportion of articles per evidence type
 evidence_df %>%
   group_by(evidence) %>%
@@ -283,7 +283,7 @@ articles_per_type_df %>%
 
 It can be seen that the total amount of the least frequent 8 categories at the top of the table only makes up `r articles_per_type_df$cum_prop[sum(articles_per_type_df$cum_prop <= 5)]` % of all records, which is why we aggregate these evidence types in the category `Other`. Of the remaining `r sum(articles_per_type_df$cum_prop > 5)` evidence types, most records are categorized as open via a free pdf on the publisher's website.
 
-```{r, layout = "l-body-outset", fig.cap = "Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`."}
+```{r, layout = "l-page", fig.cap = "Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`."}
 # collate least frequent evidence types in category "Other"
 articles_per_type_df %>%
   mutate(evidence = as_factor(evidence)) %>%
@@ -309,7 +309,7 @@ articles_per_type_grouped_df %>%
 
 Notice that the evidence types are not exclusive categories. On the contrary, many records are associated with several evidence types, since a number of different ways to openly access the content have been found by Unpaywall. For this reason, the following figure displays, for what amount of articles a given evidence type is classified as best open access location by Unpaywall. It is clearly visible that Unpaywall prioritizes publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository), as they do state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (possibly even without licensing information) is prioritized over journal level classifications as for example indexing in the DOAJ.
 
-```{r, layout = "l-body-outset", fig.cap="Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
+```{r, layout = "l-page", fig.cap="Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
 #collate least frequent articles as 'Other'
 evidence_df %>%
   mutate(evidence = as_factor(evidence)) %>%
@@ -320,7 +320,7 @@ evidence_df %>%
   #create plot
   ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_best)) +
   geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Classified as best_oa_location") +
+  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is best?") +
   theme_minimal(base_family="Roboto") +
   theme(plot.margin=margin(30,30,30,30)) +
   theme(panel.grid.minor=element_blank()) +
@@ -339,7 +339,7 @@ plotly::ggplotly(plot_ev_types_is_best, tooltip = c("y"))
 
 To investigate the development of each of the more common evidence types over time, we use a faceted graph.
 
-```{r, layout = "l-body-outset", fig.cap="Development of Number of Articles per Evidence Type over Time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown. "}
+```{r, layout = "l-page", fig.cap="Development of Number of Articles per Evidence Type over Time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown.", fig.height=6}
 #collate least frequent categories as 'Other'
 evidence_df %>%
   mutate(evidence = as_factor(evidence)) %>%
@@ -348,8 +348,8 @@ evidence_df %>%
   #create plot
    ggplot(aes(year, number_of_articles, fill = is_best)) +
    geom_bar(stat = "identity") +
-   facet_wrap(~evidence_grouped, ncol = 3) +
-   scale_fill_manual(values = c("#b3b3b3a0","#56B4E9"), name = "Classified as\nbest_oa_location") +
+   facet_wrap(~evidence_grouped, ncol = 2) +
+   scale_fill_manual(values = c("#b3b3b3a0","#56B4E9"), name = "Is best?") +
    theme_minimal(base_family="Roboto") +
   theme(panel.grid.minor=element_blank()) +
   theme(axis.ticks=element_blank()) +
@@ -413,7 +413,7 @@ host_type_intersect
 
 Let's visualise host type distribution including the overlap between publisher and repository-provided open access:
 
-```{r, layout="l-body-outset", fig.cap='Open Access to journal articles by open access hosting location. The colored bars represent the number of open access articles per Unpaywall host category: "publisher" and "repository", the gray bar the percentage of open access to journal articles indexed in Crossref from Unpaywall. Because open access provision is not mutually exclusive, the overlap between "publisher" and "repository" hosted open access full-texts is also shown'}
+```{r, layout="l-page", fig.cap='Open Access to journal articles by open access hosting location. The colored bars represent the number of open access articles per Unpaywall host category: "publisher" and "repository", the gray bar the percentage of open access to journal articles indexed in Crossref from Unpaywall. Because open access provision is not mutually exclusive, the overlap between "publisher" and "repository" hosted open access full-texts is also shown'}
 # get overall oa share
 host_type_all <- host_type_intersect %>%
   group_by(year) %>%
