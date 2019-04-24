@@ -272,13 +272,21 @@ For each evidence type we want to see how many records can be identified as open
 # calculate numbers and proportion of articles per evidence type
 evidence_df %>%
   group_by(evidence) %>%
-  summarize(N_records = sum(number_of_articles))%>%
-  arrange(N_records)%>%
-  mutate(prop = N_records/sum(N_records)*100,
-         cum_prop = cumsum(N_records)/sum(N_records)*100)-> articles_per_type_df
+  summarize(N_records = sum(number_of_articles)) %>%
+  arrange(N_records) %>%
+  mutate(
+    prop = N_records / sum(N_records) * 100,
+    cum_prop = cumsum(N_records) / sum(N_records) * 100
+  ) -> articles_per_type_df
 articles_per_type_df %>%
-  knitr::kable(col.names = c("Evidence Types","Number of Articles",
-                             "Proportion of all Articles in %", "Cummulative Proportion in %"))
+  knitr::kable(
+    col.names = c(
+      "Evidence Types",
+      "Number of Articles",
+      "Proportion of all Articles in %",
+      "Cummulative Proportion in %"
+    )
+  )
 ```
 
 It can be seen that the total amount of the least frequent 8 categories at the top of the table only makes up `r articles_per_type_df$cum_prop[sum(articles_per_type_df$cum_prop <= 5)]` % of all records, which is why we aggregate these evidence types in the category `Other`. Of the remaining `r sum(articles_per_type_df$cum_prop > 5)` evidence types, most records are categorized as open via a free pdf on the publisher's website.
@@ -287,24 +295,31 @@ It can be seen that the total amount of the least frequent 8 categories at the t
 # collate least frequent evidence types in category "Other"
 articles_per_type_df %>%
   mutate(evidence = as_factor(evidence)) %>%
-  mutate(evidence_grouped = fct_relevel(fct_other(evidence, keep = evidence[.$cum_prop >5]), "Other")) %>%
+  mutate(evidence_grouped = fct_relevel(fct_other(evidence, keep = evidence[.$cum_prop >
+                                                                              5]), "Other")) %>%
   group_by(evidence_grouped) %>%
   summarize(number_of_articles = sum(N_records)) %>%
-  mutate(prop = number_of_articles/sum(number_of_articles)*100,
-         cum_prop = cumsum(number_of_articles)/sum(number_of_articles)*100)-> articles_per_type_grouped_df
+  mutate(
+    prop = number_of_articles / sum(number_of_articles) * 100,
+    cum_prop = cumsum(number_of_articles) / sum(number_of_articles) *
+      100
+  ) -> articles_per_type_grouped_df
 # visualize number of articles per evidence type, using the "Other" grouping
 articles_per_type_grouped_df %>%
- ggplot(aes(evidence_grouped, number_of_articles)) +
- geom_bar(stat = "identity")+
- scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) +
- coord_flip() +
- theme_minimal(base_family="Roboto") +
-  theme(plot.margin=margin(30,30,30,30)) +
-  theme(panel.grid.minor=element_blank()) +
-  theme(axis.ticks=element_blank()) +
-  theme(panel.grid.major.y=element_blank()) +
-  theme(panel.border=element_blank()) +
- labs(y = "Number of Articles", x = "Evidence Type")
+  ggplot(aes(evidence_grouped, number_of_articles)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(
+    labels = function(x)
+      format(x, scientific = TRUE)
+  ) +
+  coord_flip() +
+  theme_minimal(base_family = "Roboto") +
+  theme(plot.margin = margin(30, 30, 30, 30)) +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.y = element_blank()) +
+  theme(panel.border = element_blank()) +
+  labs(y = "Number of Articles", x = "Evidence Type")
 ```
 
 Notice that the evidence types are not exclusive categories. On the contrary, many records are associated with several evidence types, since a number of different ways to openly access the content have been found by Unpaywall. For this reason, the following figure displays, for what amount of articles a given evidence type is classified as best open access location by Unpaywall. It is clearly visible that Unpaywall prioritizes publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository), as they do state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (possibly even without licensing information) is prioritized over journal level classifications as for example indexing in the DOAJ.
@@ -313,24 +328,31 @@ Notice that the evidence types are not exclusive categories. On the contrary, ma
 #collate least frequent articles as 'Other'
 evidence_df %>%
   mutate(evidence = as_factor(evidence)) %>%
-  mutate(evidence_grouped = factor(fct_other(evidence, keep = articles_per_type_grouped_df$evidence_grouped),
-                                   levels = articles_per_type_grouped_df$evidence_grouped)) %>%
+  mutate(
+    evidence_grouped = factor(
+      fct_other(evidence, keep = articles_per_type_grouped_df$evidence_grouped),
+      levels = articles_per_type_grouped_df$evidence_grouped
+    )
+  ) %>%
   group_by(evidence_grouped, is_best) %>%
   summarize(number_of_articles = sum(number_of_articles)) %>%
   #create plot
   ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_best)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is best?") +
-  theme_minimal(base_family="Roboto") +
-  theme(plot.margin=margin(30,30,30,30)) +
-  theme(panel.grid.minor=element_blank()) +
-  theme(axis.ticks=element_blank()) +
-  theme(panel.grid.major.y=element_blank()) +
-  theme(panel.border=element_blank()) +
+  theme_minimal(base_family = "Roboto") +
+  theme(plot.margin = margin(30, 30, 30, 30)) +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.y = element_blank()) +
+  theme(panel.border = element_blank()) +
   coord_flip() +
-  scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) +
+  scale_y_continuous(
+    labels = function(x)
+      format(x, scientific = TRUE)
+  ) +
   theme(legend.position = "top",
-          legend.justification = "right") +
+        legend.justification = "right") +
   labs(y = "Number of Records", x = "Evidence Type",
        title = "Number of Records per Evidence Type") -> plot_ev_types_is_best
 #create interactive plot
@@ -343,23 +365,30 @@ To investigate the development of each of the more common evidence types over ti
 #collate least frequent categories as 'Other'
 evidence_df %>%
   mutate(evidence = as_factor(evidence)) %>%
-  mutate(evidence_grouped = factor(fct_other(evidence, keep = articles_per_type_grouped_df$evidence_grouped),
-                                   levels = articles_per_type_grouped_df$evidence_grouped)) %>%
+  mutate(
+    evidence_grouped = factor(
+      fct_other(evidence, keep = articles_per_type_grouped_df$evidence_grouped),
+      levels = articles_per_type_grouped_df$evidence_grouped
+    )
+  ) %>%
   #create plot
-   ggplot(aes(year, number_of_articles, fill = is_best)) +
-   geom_bar(stat = "identity") +
-   facet_wrap(~evidence_grouped, ncol = 2) +
-   scale_fill_manual(values = c("#b3b3b3a0","#56B4E9"), name = "Is best?") +
-   theme_minimal(base_family="Roboto") +
-  theme(panel.grid.minor=element_blank()) +
-  theme(axis.ticks=element_blank()) +
-  theme(panel.grid.major.x=element_blank()) +
-  theme(panel.border=element_blank()) +
+  ggplot(aes(year, number_of_articles, fill = is_best)) +
+  geom_bar(stat = "identity") +
+  facet_wrap( ~ evidence_grouped, ncol = 2) +
+  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is best?") +
+  theme_minimal(base_family = "Roboto") +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.x = element_blank()) +
+  theme(panel.border = element_blank()) +
   theme(legend.position = "bottom", legend.justification = "right") +
-  scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) +
+  scale_y_continuous(
+    labels = function(x)
+      format(x, scientific = TRUE)
+  ) +
   scale_x_date(date_labels = "%y") +
- labs(x = "Publication Year", y = "Number of Articles",
-      title = "Unpaywall OA evidence categories per year") -> plot_ev_types_per_year
+  labs(x = "Publication Year", y = "Number of Articles",
+       title = "Unpaywall OA evidence categories per year") -> plot_ev_types_per_year
 #create interactive plot
 plotly::ggplotly(plot_ev_types_per_year, tooltip = c("y"))
 ```
