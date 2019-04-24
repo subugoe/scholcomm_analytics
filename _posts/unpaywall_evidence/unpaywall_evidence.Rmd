@@ -43,8 +43,10 @@ In this blog post, we show how we made use of the Unpaywall data dump in [Google
 
 ## Store and analyse large datasets with Google BigQuery 
 
-highly performant, lack of hardware, lack of database admin, possiblity to share access with collaborators, integration into R data analytics workflow
-vorgehensweise 1 absatz
+We chose to use Google's BigQuery service for several reasons. Firstly, it is a highly performant tool enabling us to obtain query results of large databases very fast. We would not be able to achieve similarly satisfying performance with our standard laptops and without additional database administration services. Secondly, using this Cloud based service gives us the possiblity to share access to our database with colleagues and collaborators. Finally, a seamless integration of BigQuery into our data analytics workflow based on R is possible, which is a great advantage for users who are familiar with R but not so much with SQL or non relational database languages.
+
+As a preparatory step, we loaded the entire dataset of more than 100 million records into a [Mongo DB database](https://www.mongodb.com) and exported relevant fields for the study of the OA status of scholarly output as compressed JSON files and uploaded them to [Google Cloud Storage](https://cloud.google.com/storage/). To import these files into [BigQuery](https://cloud.google.com/bigquery/) tables, we then only had to specify a [schema](bq_schema.json), which is shared in the source code repository of this blog. Using the BigQuery webinterface, the files are automatically decompressed and the corresponding tables are created.
+
 
 ## Unpaywall Overview
 
@@ -64,6 +66,10 @@ con <- dbConnect(
 
 Our BigQuery project has two tables, one containing all records between 2008 - 2012, and another for more recent works being published since 2013. When connecting with `tbl()` from [dplyr](https://dplyr.tidyverse.org/), Google asks us to login via a web browser or to supply an private access token to interface our access-protected database. 
 
+<aside>
+  We chose an access-protected environment because Google BigQuery is a paid service (with a large free contingent, however). If you would like to reproduce our findings or re-use our tables based on the Unpaywall snapshot for other purposes, please contact us so that we can provide access to you.
+</aside>
+
 ```{r}
 library(dplyr)
 upw_08_12 <- tbl(con, "feb_19_mongo_export_2008_2012_full_all_genres")
@@ -79,7 +85,7 @@ upw_13_19 %>%
   head(10)
 ```
 
-Notice that [our schema](bq_schema.json) follows the [Unpaywall data format](https://unpaywall.org/data-format). However, we excluded the large data fields `z-authors` from our dataset. Moreover, we did not consider the fields `title`, `doi-url`, which is redundant to the `doi` field, and `best-oa-location`, which is derived from the Open Access location object.  
+Notice that [our schema](bq_schema.json), which is shared in the source code repository of this blog, follows the [Unpaywall data format](https://unpaywall.org/data-format). However, we excluded the large data fields `z-authors` from our dataset. Moreover, we did not consider the fields `title`, `doi-url`, which is redundant to the `doi` field, and `best-oa-location`, which is derived from the Open Access location object.  
 
 In this blog post, we will examine the following open access indicators: 
 
