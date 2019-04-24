@@ -47,6 +47,9 @@ We chose to use Google's BigQuery service for several reasons. Firstly, it is a 
 
 As a preparatory step, we loaded the entire dataset of more than 100 million records into a [Mongo DB database](https://www.mongodb.com) and exported relevant fields for the study of the OA status of scholarly output as compressed JSON files and uploaded them to [Google Cloud Storage](https://cloud.google.com/storage/). To import these files into [BigQuery](https://cloud.google.com/bigquery/) tables, we then only had to specify a [schema](bq_schema.json), which is shared in the source code repository of this blog. Using the BigQuery webinterface, the files are automatically decompressed and the corresponding tables are created.
 
+<aside>
+  We chose an access-protected environment because Google BigQuery is a paid service (with a large free contingent, however). If you would like to reproduce our findings or re-use our tables based on the Unpaywall snapshot for other purposes, please contact us so that we can provide access to you.
+</aside>
 
 ## Unpaywall Overview
 
@@ -65,10 +68,6 @@ con <- dbConnect(
 ```
 
 Our BigQuery project has two tables, one containing all records between 2008 - 2012, and another for more recent works being published since 2013. When connecting with `tbl()` from [dplyr](https://dplyr.tidyverse.org/), Google asks us to login via a web browser or to supply an private access token to interface our access-protected database. 
-
-<aside>
-  We chose an access-protected environment because Google BigQuery is a paid service (with a large free contingent, however). If you would like to reproduce our findings or re-use our tables based on the Unpaywall snapshot for other purposes, please contact us so that we can provide access to you.
-</aside>
 
 ```{r}
 library(dplyr)
@@ -395,7 +394,7 @@ plotly::ggplotly(plot_ev_types_per_year, tooltip = c("y"))
 
 ## Overlap of Open Access Provision and Evidence Types
 
-Unpaywall not only describes one, but all open access full-texts it discovers with useful metadata. In the following, we will analyse if and to which extent the various open access indicators intersect. We start with an analysis of the overlap between host types, followed by determining set intersections between Unpaywall's evidence types.
+Many OA articles are accessible through a number of locations, including the publisher's webpage and also one or more OA repositories. Unpaywall not only describes one, but all open access full-texts it discovers with useful metadata. In the following, we will analyse if and to which extent the various open access indicators intersect. We start with an analysis of the overlap between host types, followed by determining set intersections between Unpaywall's evidence types.
 
 ### Overlap between Host Types
 
@@ -478,6 +477,31 @@ plotly::ggplotly(plot_host_intersect, tooltip = c("y"))
 The Figure shows that Unpaywall found most open access full-text links on publisher websites, of which a large proportion was not archived in a repository. The overlap of open access provided by both routes deserves attention: a proportion of around `r filter(host_type_intersect, host != "Publisher only") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access articles was provided in open access using both publisher web sites and repositories.
 
 ### Overlaps between Evidence types
+
+The categroization of evidence types is not exclusive, either and thus, many records will be associated with more than one evidence type.
+
+To gain insight into the extent to which these categories overlap, we generated an additional column specifying all found combinations of evidence types using again concatenation by the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg).
+
+```{r}
+library(tidyverse)
+# define queries
+evidence_overlap_08_12_query <- readLines("evidence_overlap_08_12.sql") %>%
+  paste(collapse = "")
+evidence_overlap_13_18_query <- readLines("evidence_overlap_13_18.sql") %>%
+  paste(collapse = "")
+# fetch records and bind them to one data frame
+evidence_categories_08_12 <- dbGetQuery(con, evidence_overlap_08_12_query)
+evidence_categories_13_18 <- dbGetQuery(con, evidence_overlap_13_18_query)
+evidence_categories_df <- bind_rows(evidence_categories_08_12, evidence_categories_13_18) %>%
+  ungroup() %>%
+  mutate(year = lubridate::ymd(paste0(year, "-01-01")))
+evidence_categories_df
+```
+```
+
+
+We first illustrate for each evidence type - collating again the least frequent types in the category `Other` - the amount of articles which corresponds exclusively to this type and no others.
+
 
 
 ## Discussion and Conclusion

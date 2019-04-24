@@ -6,7 +6,6 @@ SELECT
         SELECT
                 doi,
                 year,
-                genre,
                 STRING_AGG(DISTINCT(evidence) ORDER BY evidence) AS ev_cat
             FROM
                 `oadoi_full.feb_19_mongo_export_2008_2012_full_all_genres`,
