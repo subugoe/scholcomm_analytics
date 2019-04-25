@@ -238,7 +238,7 @@ While the number publications in DOAJ-indexed journals is rising constantly, ope
 
 ### Unpaywall Open Access Evidence Types (`evidence`)
 
-The `evidence` field of the `oa_locations` object can be used to further detail open access provision. We use again SQL queries stored in seperate files ([evidence_08_12.sql](evidence_08_12.sql) and [evidence_13_18.sql](evidence_13_18.sql)) to be found in the source code repository and create a data frame with the relevant fields.
+The `evidence` field of the `oa_locations` object can be used to further detail open access provision. We used again SQL queries stored in seperate files ([evidence_08_12.sql](evidence_08_12.sql) and [evidence_13_18.sql](evidence_13_18.sql)) to be found in the source code repository and create a data frame with the relevant fields.
 
 ```{r}
 library(tidyverse)
@@ -255,17 +255,9 @@ evidence_df <- bind_rows(evidence_08_12, evidence_13_18) %>%
   mutate(year = lubridate::ymd(paste0(year, "-01-01")))
 ```
 
-The `evidence` field indicates how Unpaywall found the article at a specific location and identified it as OA, for example via a PubMed Central index or via license information available on the page or crossref. More specifically, possible values for the evidence type are
+The `evidence` field indicates how Unpaywall found the article at a specific location and identified it as OA, for example via a PubMed Central index or via license information available on the page or crossref. More specifically, possible values for the evidence type are given in the following table.
 
-```{r, layout = "l-page", fig.cap="Possible Values of Evidence Type Field."}
-#possible values of evidence field
-evidence_df %>%
-  distinct(evidence) %>%
-  arrange(evidence) %>%
-  knitr::kable(col.names = c("Evidence Types"))
-```
-
-For each evidence type we want to see how many records can be identified as open access by this type. To this end, we look at the total number of records, which contain a reference to the corresponding evidence type. For each evidence type the columns of the following table show the total number of associated records, the proportion with respect to the number of all records in the data set and the cummulative proportion of records associated with all above evidence types.
+For each evidence type we want to see how many records can be identified as open access by this type. To this end, we look at the total number of records, which contain a reference to the corresponding evidence type. For each evidence type the columns of the following table also shows the total number of associated records, the proportion with respect to the number of all records in the data set and the cummulative proportion of records associated with all above evidence types.
 
 ```{r, layout="l-page", fig.cap = "Number of Articles per Evidence Type."}
 # calculate numbers and proportion of articles per evidence type
@@ -288,40 +280,9 @@ articles_per_type_df %>%
   )
 ```
 
-It can be seen that the total amount of the least frequent 8 categories at the top of the table only makes up `r articles_per_type_df$cum_prop[sum(articles_per_type_df$cum_prop <= 5)]` % of all records, which is why we aggregate these evidence types in the category `Other`. Of the remaining `r sum(articles_per_type_df$cum_prop > 5)` evidence types, most records are categorized as open via a free pdf on the publisher's website.
+It can be seen that the total amount of the least frequent 8 categories at the top of the table only makes up `r articles_per_type_df$cum_prop[sum(articles_per_type_df$cum_prop <= 5)]` % of all records, which is why we aggregate these evidence types in the category `Other`.
 
-```{r, layout = "l-page", fig.cap = "Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`."}
-# collate least frequent evidence types in category "Other"
-articles_per_type_df %>%
-  mutate(evidence = as_factor(evidence)) %>%
-  mutate(evidence_grouped = fct_relevel(fct_other(evidence, keep = evidence[.$cum_prop >
-                                                                              5]), "Other")) %>%
-  group_by(evidence_grouped) %>%
-  summarize(number_of_articles = sum(N_records)) %>%
-  mutate(
-    prop = number_of_articles / sum(number_of_articles) * 100,
-    cum_prop = cumsum(number_of_articles) / sum(number_of_articles) *
-      100
-  ) -> articles_per_type_grouped_df
-# visualize number of articles per evidence type, using the "Other" grouping
-articles_per_type_grouped_df %>%
-  ggplot(aes(evidence_grouped, number_of_articles)) +
-  geom_bar(stat = "identity") +
-  scale_y_continuous(
-    labels = function(x)
-      format(x, scientific = TRUE)
-  ) +
-  coord_flip() +
-  theme_minimal(base_family = "Roboto") +
-  theme(plot.margin = margin(30, 30, 30, 30)) +
-  theme(panel.grid.minor = element_blank()) +
-  theme(axis.ticks = element_blank()) +
-  theme(panel.grid.major.y = element_blank()) +
-  theme(panel.border = element_blank()) +
-  labs(y = "Number of Articles", x = "Evidence Type")
-```
-
-Notice that the evidence types are not exclusive categories. On the contrary, many records are associated with several evidence types, since a number of different ways to openly access the content have been found by Unpaywall. For this reason, the following figure displays, for what amount of articles a given evidence type is classified as best open access location by Unpaywall. It is clearly visible that Unpaywall prioritizes publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository), as they do state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (possibly even without licensing information) is prioritized over journal level classifications as for example indexing in the DOAJ.
+Notice that the evidence types are not exclusive categories. On the contrary, many records are associated with several evidence types, since a number of different ways to openly access the content have been found by Unpaywall. For this reason, the following figure displays, for what amount of articles a given evidence type is classified as best open access location by Unpaywall. It is clearly visible that Unpaywall prioritizes publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository`), as they state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (possibly even without licensing information) is prioritized over journal level classifications as for example indexing in the DOAJ.
 
 ```{r, layout = "l-page", fig.cap="Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
 #collate least frequent articles as 'Other'
@@ -478,9 +439,9 @@ The Figure shows that Unpaywall found most open access full-text links on publis
 
 ### Overlaps between Evidence types
 
-The categroization of evidence types is not exclusive, either and thus, many records will be associated with more than one evidence type.
+The categroization of evidence types is not exclusive, either, and thus, many records will be associated with more than one evidence type.
 
-To gain insight into the extent to which these categories overlap, we generated an additional column specifying all found combinations of evidence types using again concatenation by the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg).
+To gain insight into the extent to which these categories overlap, we generated an additional column specifying all found combinations of evidence types using again concatenation of types by the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg).
 
 ```{r}
 library(tidyverse)
@@ -495,13 +456,162 @@ evidence_categories_13_18 <- dbGetQuery(con, evidence_overlap_13_18_query)
 evidence_categories_df <- bind_rows(evidence_categories_08_12, evidence_categories_13_18) %>%
   ungroup() %>%
   mutate(year = lubridate::ymd(paste0(year, "-01-01")))
-evidence_categories_df
+evidence_categories_df %>%
+  group_by(ev_cat) %>%
+  summarize(number_of_articles = sum(number_of_articles)) %>%
+  arrange(desc(number_of_articles))
 ```
-```
-
 
 We first illustrate for each evidence type - collating again the least frequent types in the category `Other` - the amount of articles which corresponds exclusively to this type and no others.
 
+```{r, layout = "l-page", fig.cap="Number of articles per evidence type over time. In blue, the amount of articles uniquely associated with the corresponding evidence type is shown."}
+#determine number of articles corresponding only to one evidence type
+evidence_single_cat_df <- evidence_df %>%
+  group_by(evidence, year) %>%
+  summarize(number_of_articles = sum(number_of_articles)) %>%
+  left_join(evidence_categories_df, by = c("evidence" = "ev_cat", "year" = "year")) %>%
+  rename(number_of_articles = number_of_articles.x, number_of_single_cat = number_of_articles.y) %>%
+  mutate(number_of_articles = replace_na(number_of_articles, 0),
+         number_of_single_cat = replace_na(number_of_single_cat, 0))
+#aggregate least frequent types as category `Other`
+evidence_single_cat_grouped_df <- evidence_single_cat_df %>%
+  ungroup() %>%
+  mutate(evidence = as_factor(evidence)) %>%
+  mutate(
+    evidence_grouped = factor(
+      fct_other(evidence, keep = articles_per_type_grouped_df$evidence_grouped),
+      levels = articles_per_type_grouped_df$evidence_grouped
+    )
+  ) %>%
+  group_by(evidence_grouped, year) %>%
+  summarize(
+    number_of_articles = sum(number_of_articles),
+    number_of_single_cat = sum(number_of_single_cat)
+  ) %>%
+  #arrange data in order to enable stacked barplots
+  mutate(multiple = number_of_articles-number_of_single_cat, single = number_of_single_cat) %>%
+  select(evidence_grouped, year, single, multiple) %>%
+  gather(is_single, number_of_articles, -evidence_grouped, -year)
+#create faceted graph
+evidence_single_cat_grouped_df %>%
+  ggplot(aes(year, number_of_articles, fill = is_single)) +
+  geom_bar(stat = "identity") +
+  facet_wrap( ~ evidence_grouped, ncol = 2) +
+  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is unique?") +
+  theme_minimal(base_family = "Roboto") +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.x = element_blank()) +
+  theme(panel.border = element_blank()) +
+  theme(legend.position = "bottom", legend.justification = "right") +
+  scale_y_continuous(
+    labels = function(x)
+      format(x, scientific = TRUE)
+  ) +
+  scale_x_date(date_labels = "%y") +
+  labs(x = "Publication Year", y = "Number of Articles",
+       title = "Unique Unpaywall evidence types") -> plot_ev_cat_single_per_year
+#create interactive plot
+plotly::ggplotly(plot_ev_cat_single_per_year, tooltip = c("y"))
+```
+
+Alternatively: aggregated over time
+
+```{r}
+#create aggregated barplot
+evidence_single_cat_grouped_df %>%
+  group_by(evidence_grouped, is_single) %>%
+  summarize(number_of_articles = sum(number_of_articles)) %>%
+  #create plot
+  ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_single)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is unique?") +
+  theme_minimal(base_family = "Roboto") +
+  theme(plot.margin = margin(30, 30, 30, 30)) +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.y = element_blank()) +
+  theme(panel.border = element_blank()) +
+  coord_flip() +
+  scale_y_continuous(
+    labels = function(x)
+      format(x, scientific = TRUE)
+  ) +
+  theme(legend.position = "top",
+        legend.justification = "right") +
+  labs(y = "Number of Articles", x = "Evidence Type",
+       title = "Number of Articles per Evidence Type") -> plot_ev_types_is_single
+#create interactive plot
+plotly::ggplotly(plot_ev_types_is_single, tooltip = c("y"))
+#create aggregated proportions barplot
+#create aggregated barplot
+evidence_single_cat_grouped_df %>%
+  group_by(evidence_grouped, is_single) %>%
+  summarize(number_of_articles = sum(number_of_articles)) %>%
+  #create plot
+  ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_single)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is unique?") +
+  theme_minimal(base_family = "Roboto") +
+  theme(plot.margin = margin(30, 30, 30, 30)) +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.y = element_blank()) +
+  theme(panel.border = element_blank()) +
+  coord_flip() +
+  theme(legend.position = "top",
+        legend.justification = "right") +
+  labs(y = "Number of Articles", x = "Evidence Type",
+       title = "Number of Articles per Evidence Type") -> plot_ev_types_is_single_prop
+#create interactive plot
+plotly::ggplotly(plot_ev_types_is_single_prop, tooltip = c("y"))
+```
+
+It is interesting to see, that the evidence type which appears most often as a unique form of OA identification is via an openly available pdf on the publisher's page, meaning that no other indicator, like license information or a registry of the journal in the DOAJ, is given. However, this type has a very high priority to be picked as `best_oa_location` by Unpaywall. Moreover the figure shows a phenomenon that we observed also for the `host_type`, namely that repository based evidence types occur more frequently in combination with other evidence types. Because of Unpaywall's prioritization of publisher based evidence types, caution is in order, when only the `best_oa_location` is used for categorization of OA articles: publisher based evidence types can include also articles in Hybrid journals and articles which are made accessible only after an embargo period and repository based OA will be largely underestimated.
+
+To examine in more detail, which of the `r nrow(evidence_categories_df %>% group_by(ev_cat) %>% summarize(n = n()))` occuring combinations of evidence types - including singletons - shows up most frequently, we created an [UpSet](http://vcg.github.io/upset/) figure using the [UpSetR package](https://cran.r-project.org/web/packages/UpSetR/). We focused on the 20 combinations of the 7 most frequent types with the highest number of articles.
+
+<aside>
+A very good introduction into the usage of UpSetR is given by the [Basic Usage Vignette](https://cran.r-project.org/package=UpSetR/vignettes/basic.usage.html).
+</aside>
+
+```{r, layout = "l-page", fig.cap="Most frequent combinations of evidence types."}
+library(UpSetR)
+#fetch data for upset graph
+evidence_overlap_upset_08_12_query <- readLines("evidence_overlap_upset_08_12.sql") %>%
+  paste(collapse = "")
+evidence_overlap_upset_13_18_query <- readLines("evidence_overlap_upset_13_18.sql") %>%
+  paste(collapse = "")
+evidence_categories_upset_08_12 <- dbGetQuery(con, evidence_overlap_upset_08_12_query)
+evidence_categories_upset_13_18 <- dbGetQuery(con, evidence_overlap_upset_13_18_query)
+evidence_categories_upset_df <- bind_rows(evidence_categories_upset_08_12, evidence_categories_upset_13_18) %>%
+  ungroup() %>%
+  mutate(CatMember=1) %>%
+  spread(evidence, CatMember, fill=0) %>%
+  as.data.frame()
+upset(evidence_categories_upset_df, nsets = 10,order.by = "freq")
+```
+```{r}
+# evidence_categories_upset_df %>%
+#   group_by(ev_cat) %>%
+#   summarize(number_of_articles = sum(number_of_articles)) %>%
+#   arrange(desc(number_of_articles))
+# # prepare data for visualization
+# evidence_categories_df %>%
+#   group_by(ev_cat) %>%
+#   summarize(number_of_articles = sum(number_of_articles)) %>%
+#   arrange(desc(number_of_articles)) %>%
+#   head(15)
+#   mutate(expr_for_upset = str_c(ev_cat, "=", number_of_articles, sep = " ")) -> ev_cat_plot_df
+# 
+# upset_expr <- c("open (via free pdf)" = ev_cat_plot_df$number_of_articles[1], "oa journal (via doaj)" = ev_cat_plot_df$number_of_articles[6], "oa journal (via doaj)&oa repository (via OAI-PMH doi match)&oa repository (via pmcid lookup)&open (via page says license)" = ev_cat_plot_df$number_of_articles[7])
+# 
+# upset_expr <- as.expression(str_c(ev_cat_plot_df$ev_cat, " = ", ev_cat_plot_df$number_of_articles, sep = ""))
+# 
+# upset_expr
+# 
+# upset(fromExpression(upset_expr))
+```
 
 
 ## Discussion and Conclusion
