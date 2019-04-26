@@ -286,6 +286,18 @@ Notice that the evidence types are not exclusive categories. On the contrary, ma
 
 ```{r, layout = "l-page", fig.cap="Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
 #collate least frequent articles as 'Other'
+articles_per_type_df %>%
+  mutate(evidence = as_factor(evidence)) %>%
+  mutate(evidence_grouped = fct_relevel(fct_other(evidence, keep = evidence[.$cum_prop >
+                                                                              5]), "Other")) %>%
+  group_by(evidence_grouped) %>%
+  summarize(number_of_articles = sum(N_records)) %>%
+  mutate(
+    prop = number_of_articles / sum(number_of_articles) * 100,
+    cum_prop = cumsum(number_of_articles) / sum(number_of_articles) *
+      100
+  ) -> articles_per_type_grouped_df
+# group according to categorization with "Other"
 evidence_df %>%
   mutate(evidence = as_factor(evidence)) %>%
   mutate(
@@ -319,7 +331,7 @@ evidence_df %>%
 plotly::ggplotly(plot_ev_types_is_best, tooltip = c("y"))
 ```
 
-To investigate the development of each of the more common evidence types over time, we use a faceted graph.
+To investigate the development of each of the more common evidence types over time, we use a faceted graph. It is especially interesting to see the increase in classification as `best_oa_location` of OA evidence via registration in DOAJ in 2018, reflecting the increasing amount of journal indexed there. We further observe declines in the proportion repository based evidences which are chosen as best location.
 
 ```{r, layout = "l-page", fig.cap="Development of Number of Articles per Evidence Type over Time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown.", fig.height=6}
 #collate least frequent categories as 'Other'
@@ -567,12 +579,24 @@ evidence_single_cat_grouped_df %>%
 plotly::ggplotly(plot_ev_types_is_single_prop, tooltip = c("y"))
 ```
 
-It is interesting to see, that the evidence type which appears most often as a unique form of OA identification is via an openly available pdf on the publisher's page, meaning that no other indicator, like license information or a registry of the journal in the DOAJ, is given. However, this type has a very high priority to be picked as `best_oa_location` by Unpaywall. Moreover the figure shows a phenomenon that we observed also for the `host_type`, namely that repository based evidence types occur more frequently in combination with other evidence types. Because of Unpaywall's prioritization of publisher based evidence types, caution is in order, when only the `best_oa_location` is used for categorization of OA articles: publisher based evidence types can include also articles in Hybrid journals and articles which are made accessible only after an embargo period and repository based OA will be largely underestimated.
+It is interesting to see, that the evidence type which appears most often as a unique form of OA identification is via an openly available pdf on the publisher's page, meaning that no other indicator, like license information or a registry of the journal in the DOAJ, is given. This shows the importance of including webscraping mechanisms in the detection of openly available versions of articles.
 
-To examine in more detail, which of the `r nrow(evidence_categories_df %>% group_by(ev_cat) %>% summarize(n = n()))` occuring combinations of evidence types - including singletons - shows up most frequently, we created an [UpSet](http://vcg.github.io/upset/) figure using the [UpSetR package](https://cran.r-project.org/web/packages/UpSetR/). We focused on the 20 combinations of the 7 most frequent types with the highest number of articles.
+Moreover, a significant amount of articles is found only through repository based evidence sources and hence, is available only via the green route. Still, the figure shows a phenomenon that we observed also for the `host_type`, namely that repository based evidence types occur more frequently in combination with other evidence types.
+
+Because of Unpaywall's prioritization of publisher based evidence types, caution is in order, when only the `best_oa_location` is used for categorization of OA articles: publisher based evidence types can include also articles in Hybrid journals and articles which are made accessible only after an embargo period due to a lack of license information and repository based OA will typically be largely underestimated.
+
+Quite surprisingly, a large number of articles is identified to be openly available only through license information (via crossref or directly on the publisher's page) without an associated free pdf having been found.
+
+Visualizing the occuring intersections of multiple evidence types is a difficult task. Following [@Lex_2014] and [@Lex_2014b], we created an [UpSet](http://vcg.github.io/upset/) figure using the [UpSetR package](https://cran.r-project.org/web/packages/UpSetR/) in order to examine in more detail, which of the `r nrow(evidence_categories_df %>% group_by(ev_cat) %>% summarize(n = n()))` occuring combinations of evidence types - including singletons - shows up most frequently and how large these groups are.
 
 <aside>
 A very good introduction into the usage of UpSetR is given by the [Basic Usage Vignette](https://cran.r-project.org/package=UpSetR/vignettes/basic.usage.html).
+</aside>
+
+The `upset()` function generating the graph takes a bipartite matrix as input, where in our case one set is given by the evidence types and the other by the dois of the articles. Therefore, we created a data frame containing rows for all combinations of evidence types and dois from our BigQuery tables. This is then converted to a bipartite matrix using `spread()`. To keep the resulting figure digestable, we only display the 20 combinations of the 7 most frequent types with the highest number of articles each.
+
+<aside>
+Generating the bipartite input matrix from our BigQuery tables takes several minutes in total. Our approach probably is not the most efficient way to do this. If you have suggestions for improvement, please let us know.
 </aside>
 
 ```{r, layout = "l-page", fig.cap="Most frequent combinations of evidence types."}
@@ -589,28 +613,7 @@ evidence_categories_upset_df <- bind_rows(evidence_categories_upset_08_12, evide
   mutate(CatMember=1) %>%
   spread(evidence, CatMember, fill=0) %>%
   as.data.frame()
-upset(evidence_categories_upset_df, nsets = 10,order.by = "freq")
-```
-```{r}
-# evidence_categories_upset_df %>%
-#   group_by(ev_cat) %>%
-#   summarize(number_of_articles = sum(number_of_articles)) %>%
-#   arrange(desc(number_of_articles))
-# # prepare data for visualization
-# evidence_categories_df %>%
-#   group_by(ev_cat) %>%
-#   summarize(number_of_articles = sum(number_of_articles)) %>%
-#   arrange(desc(number_of_articles)) %>%
-#   head(15)
-#   mutate(expr_for_upset = str_c(ev_cat, "=", number_of_articles, sep = " ")) -> ev_cat_plot_df
-# 
-# upset_expr <- c("open (via free pdf)" = ev_cat_plot_df$number_of_articles[1], "oa journal (via doaj)" = ev_cat_plot_df$number_of_articles[6], "oa journal (via doaj)&oa repository (via OAI-PMH doi match)&oa repository (via pmcid lookup)&open (via page says license)" = ev_cat_plot_df$number_of_articles[7])
-# 
-# upset_expr <- as.expression(str_c(ev_cat_plot_df$ev_cat, " = ", ev_cat_plot_df$number_of_articles, sep = ""))
-# 
-# upset_expr
-# 
-# upset(fromExpression(upset_expr))
+upset(evidence_categories_upset_df, nsets = 7, nintersects = 20, order.by = "freq", show.numbers = FALSE)
 ```
 
 
