@@ -587,7 +587,7 @@ Because of Unpaywall's prioritization of publisher based evidence types, caution
 
 Quite surprisingly, a large number of articles is identified to be openly available only through license information (via crossref or directly on the publisher's page) without an associated free pdf having been found.
 
-Visualizing the occuring intersections of multiple evidence types is a difficult task. Following [@Lex_2014] and [@Lex_2014b], we created an [UpSet](http://vcg.github.io/upset/) figure using the [UpSetR package](https://cran.r-project.org/web/packages/UpSetR/) in order to examine in more detail, which of the `r nrow(evidence_categories_df %>% group_by(ev_cat) %>% summarize(n = n()))` occuring combinations of evidence types - including singletons - shows up most frequently and how large these groups are.
+Visualizing the occuring intersections of multiple evidence types is a difficult task. Following [@Lex_2014] and [@Lex_2014b], we created an [UpSet](http://vcg.github.io/upset/) figure using the [UpSetR package](https://cran.r-project.org/web/packages/UpSetR/) described in [@Conway_2017] in order to examine in more detail, which of the `r nrow(evidence_categories_df %>% group_by(ev_cat) %>% summarize(n = n()))` occuring combinations of evidence types - including singletons - shows up most frequently and how large these groups are.
 
 <aside>
 A very good introduction into the usage of UpSetR is given by the [Basic Usage Vignette](https://cran.r-project.org/package=UpSetR/vignettes/basic.usage.html).
