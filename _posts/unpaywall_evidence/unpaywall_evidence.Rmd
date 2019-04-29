@@ -538,7 +538,7 @@ To start with, we interface BigQuery and retrieve how frequently the combination
 <!-- The total numbers for the displayed overlapping categories include also the amount of articles associated with intersections with sets, which are exlcuded here because of their low frequency. For example, the set `open (via free pdf)` includes articles from the sets `open (via free pdf)` and `oa repository (via OAI-PMH title match)` because the latter is not considered seperately. -->
 
 
-```{r, layout = "l-page", fig.cap="Most frequent combinations of evidence types. The barplot on the left displays the total number of articles per evidence type. The central barplot shows the number of articles per overlap category. Which evidence types contribute to each intersection is given by the black dots in the chart below."}
+```{r, layout = "l-page", fig.cap='Most frequent combinations of evidence types. The barplot on the left displays the total number of articles per evidence type ("Set Size"). The central barplot shows the number of articles per overlap category ("Intersection Size"). Which evidence types contribute to each intersection is given by the black dots in the chart below.'}
 library(UpSetR)
 # fetch data for upset graph
 evidence_categories_upset_08_12_query <- readLines("database/evidence_overlap_08_12.sql") %>%
