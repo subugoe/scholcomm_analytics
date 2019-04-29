@@ -39,13 +39,13 @@ knitr::knit_hooks$set(
 
 [Unpaywall](https://unpaywall.org/), developed and maintained by the [team of Impactstory](http://impactstory.org/team), finds open access copies of scholarly literature [@Piwowar_2018]. Providing DOIs to [Unpaywall's REST API](https://unpaywall.org/products/api) not only returns open access full-text links, but also helpful metadata about the open access status of publications indexed in [Crossref](https://www.crossref.org/). While the API allows to retrieve a limited amount of records, Unpaywall also offers [database snapshots](https://unpaywall.org/products/snapshot) for large-scale analysis, which more and more bibliometric databases and open access monitoring services utilise. However, documentations about how database and service providers work with these dumps are hard to find.
 
-In this blog post, we show how we loaded Unpaywall's data dump into [Google BigQuery](https://cloud.google.com/bigquery/), a cloud-based service that allows fast analysis of large datasets, and how we interfaced BigQuery for our analysis with R. We wanted to know the extent of open access status information in Unpaywall, particularly, how this information can be utilised for bibliometric research. In our case, we intend to match open access status information from Unpaywall with the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) to determine factors influencing open access publication activities among German Universities as part of our [BMBF-funded research project OAUNI](https://www.wihoforschung.de/de/oauni-2182.php).
+In this blog post, we describe how we loaded Unpaywall's data dump into [Google BigQuery](https://cloud.google.com/bigquery/), a cloud-based service that allows fast analysis of large datasets, and how we interfaced BigQuery for our analysis with R. We wanted to know the extent of open access status information in Unpaywall, particularly, how this information can be utilised for bibliometric research. In our case, we intend to match open access status information from Unpaywall with the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) to determine factors influencing open access publication activities among German Universities as part of our [BMBF-funded research project OAUNI](https://www.wihoforschung.de/de/oauni-2182.php).
 
 ## Store and analyse large datasets with Google BigQuery 
 
-The Unpaywall dataset comprises more than 100 million records amounting to a file size of more than 100 GB. Working with datasets of such a large size is generally non-trivial. We therefore chose Google's BigQuery as a cloud-based solution. From our perspective it has several advantages. Firstly, it is a highly performant tool enabling us to obtain query results of large databases very fast. We would not be able to achieve similarly satisfying performance with our standard laptops. Secondly, using this cloud-based service gives us the possiblity to share access to our database with colleagues and collaborators. Finally, there are already existing interfaces to BigQuery from R allowing us to incorporate this environment into our familiar data analytics workflow.
+The Unpaywall dataset comprises more than 100 million records amounting to a file size of more than 100 GB. Working with datasets of such a large size is generally non-trivial. We therefore chose Google's BigQuery as a cloud-based solution. From our perspective it has several advantages. Firstly, it is a highly performant tool enabling us to obtain query results of large databases very fast. We would not be able to achieve similarly satisfying performance with our standard laptops. Secondly, using this cloud-based service gives us the possiblity to share access to our database with colleagues and collaborators. Finally, the already existing interfaces to BigQuery from R allow us to incorporate this environment into our familiar data analytics workflow.
 
-As a preparatory step, we loaded the entire dataset into a local [Mongo DB database](https://www.mongodb.com), exported relevant fields for the study of the open access status of scholarly output as compressed JSON Lines files, and uploaded them to [Google Cloud Storage](https://cloud.google.com/storage/). To import these files into [BigQuery](https://cloud.google.com/bigquery/), we had to specify a [schema](bq_schema.json), which we shared in the source code repository of this blog. We used the BigQuery user interface, where the files are automatically decompressed and the corresponding tables are created.
+As a preparatory step, we loaded the entire dataset into a local [Mongo DB database](https://www.mongodb.com), exported relevant fields for the study of the open access status of scholarly output as compressed JSON Lines files, and uploaded them to [Google Cloud Storage](https://cloud.google.com/storage/). To import these files into [BigQuery](https://cloud.google.com/bigquery/), we had to specify a [schema](database/bq_schema.json), which we share in the source code repository of this blog. We used the BigQuery user interface, where the files are automatically decompressed and the corresponding tables are created.
 
 <aside>
   Google BigQuery is a paid service (with a large free contingent, however). If you would like to work with our access-restricted instance, please contact us.
@@ -84,7 +84,7 @@ upw_13_19 %>%
   head(10)
 ```
 
-Notice that [our schema](bq_schema.json) follows the [Unpaywall data format](https://unpaywall.org/data-format). However, we excluded the large data field `z-authors`. Moreover, we did not consider the fields `title`, `doi-url`, which is redundant to the `doi` field, and `best-oa-location`, which is derived from the Open Access location object.  
+Notice that [our schema](database/bq_schema.json) follows the [Unpaywall data format](https://unpaywall.org/data-format). However, we excluded the large data field `z-authors`. Moreover, we did not consider the fields `title`, `doi-url`, which is redundant to the `doi` field, and `best-oa-location`, which is derived from the Open Access location object.  
 
 In this blog post, we will examine the following open access indicators: 
 
@@ -140,7 +140,7 @@ Next, let's plot the prevalence of open access to journal articles over time usi
   To learn more about plotly, we recommend the book "Interactive web-based data visualization with R, plotly, and shiny" from Carson Sievert. <https://plotly-r.com/index.html>
 </aside>
 
-```{r, layout="l-page", fig.cap="Open Access to Journal Articles according to Unpaywall. Blue area represents journal articles with at least one freely available full-text, grey area represents toll-access articles."}
+```{r, layout="l-page", fig.cap="Open access to journal rticles according to Unpaywall. Blue area represents journal articles with at least one freely available full-text, grey area represents toll-access articles."}
 library(scales)
 plot_a <- my_df %>%
   # prepare label that we want to present as tooltip
@@ -168,9 +168,9 @@ While a general growth of journal articles and open access provision to them can
 
 ### Unpaywall Open Access Hosting Types (`host_type`)
 
-Using Unpaywall's open access location types allows for a more detailed analysis of open access provision. In the following, we explore the variable `host_type`, showing whether Unpaywall found the open access full-text on a publisher website or in a repository. Furthermore, we specifically highlight articles from fully open access journals that are indexed in [Directory of Open Access Journals (DOAJ)](https://doaj.org/) as indicated by the `journal_is_in_doaj` variable in our analysis. As a start, we only examine the best open access location per DOI, `is_best`. As said before, this variable is defined by Unpaywall's algorithm that prioritises publisher-hosted content.
+Using Unpaywall's open access location types allows for a more detailed analysis of open access provision. In the following, we explore the variable `host_type`, showing whether Unpaywall found the open access full-text on a publisher website or in a repository. Furthermore, we specifically highlight articles from fully open access journals that are indexed in [Directory of Open Access Journals (DOAJ)](https://doaj.org/) as indicated by the `journal_is_in_doaj` variable. As a start, we only examine the best open access location per DOI, `is_best`. As said before, this variable is defined by Unpaywall's algorithm that prioritises publisher-hosted content.
 
-Instead of dplyr, we are now querying BigQuery with SQL. Before, we built and tested the SQL queries in the BigQuery user interface. The SQL code is stored in separate files ([host_type_08_12.sql](database/host_type_08_12.sql) and [host_type_13_18.sql](database/host_type_13_18.sql)), which we shared in the source code repository of this blog.
+Instead of dplyr, we are now querying BigQuery with SQL. Before, we built and tested the SQL queries in the BigQuery user interface. The SQL code is stored in separate files ([host_type_08_12.sql](database/host_type_08_12.sql) and [host_type_13_18.sql](database/host_type_13_18.sql)), which we share in the source code repository of this blog.
 
 ```{r}
 host_type_08_12_query <- readLines("database/host_type_08_12.sql") %>%
@@ -199,7 +199,7 @@ host_type_df
 
 To explore our data, we follow [Claus Wilke's excellent book "Fundamentals of Data Visualization"](https://serialmentor.com/dataviz/)[@Wilke_2019] and [visualise our proportions separately as parts of the total](https://serialmentor.com/dataviz/visualizing-proportions.html#visualizing-proportions-separately-as-parts-of-the-total). Again, our final ggplot graphic is transformed to an interactive plotly chart.
 
-```{r, layout="l-page", fig.cap='Open Access to journal articles by open access hosting location. Colored bars represent the number of open access articles per host ("DOAJ-listed Journal", "Other Journals", "Repositories only"), grey bars the total number of journal articles indexed in Crossref where Unpaywall was able to identify at least one openly available full-text.'}
+```{r, layout="l-page", fig.cap='Open access to journal articles by open access hosting location. Colored bars represent the number of open access articles per host ("DOAJ-listed Journal", "Other Journals", "Repositories only"), grey bars the total number of journal articles indexed in Crossref, where Unpaywall was able to identify at least one openly available full-text.'}
 # calculate all oa articles per year
 all_articles <- host_type_df %>%
   ungroup() %>%
@@ -234,7 +234,7 @@ plotly::ggplotly(plot_b, tooltip = c("y"))
 
 The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ: these are`r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall. 
 
-While the number of publications in DOAJ-indexed journals is rising constantly, open access provided by other journal types and repositories declined from 2017 to 2018. Indeed, there is a considerable amount of journals that delay open access provision [@Laakso_2013]. A prominent example is the journal [Cell](https://www.cell.com/cell/archive) where all articles are made freely available after an embargo period of twelve months. Also self-archiving in repositories is often subject to embargo periods imposed by publishers or researchers upload it later [@Bj_rk_2013]. A more detailed analysis of delayed open access, however, is challenging using Unpaywall data only, because Unpaywall has not tracked so far the point of time when articles were made open access.
+While the number of publications in DOAJ-indexed journals is rising constantly, open access provided by other journal types and repositories declined from 2017 to 2018. Indeed, there is a considerable amount of journals that delay open access provision [@Laakso_2013]. A prominent example is the journal [Cell](https://www.cell.com/cell/archive) where all articles are made freely available after an embargo period of twelve months. Also, self-archiving in repositories is often subject to embargo periods imposed by publishers or researchers upload their publications later [@Bj_rk_2013]. A more detailed analysis of delayed open access, however, is challenging using Unpaywall data only, because Unpaywall has not tracked so far the point of time when articles were made open access.
 
 ### Unpaywall Open Access Evidence Types (`evidence`)
 
@@ -259,17 +259,18 @@ The `evidence` field indicates how Unpaywall found the article at a specific loc
 
 For each evidence type we want to see how many records were identified as open access in this way. To this end, we created the following table that shows the total number of records per evidence type. The columns also present the total number of associated records, the proportion with respect to the number of all articles and the cummulative proportion of articles associated with all evidence types below.
 
-```{r, layout="l-page", fig.cap = "Number of Articles per Evidence Type."}
+```{r, layout="l-page", fig.cap = "Number of articles per evidence type."}
 # calculate numbers and proportion of articles per evidence type
 evidence_df %>%
   group_by(evidence) %>%
   summarize(N_records = sum(number_of_articles)) %>%
-  arrange(desc(N_records)) %>%
+  arrange(N_records) %>%
   mutate(
     prop = N_records / sum(N_records) * 100,
     cum_prop = cumsum(N_records) / sum(N_records) * 100
   ) -> articles_per_type_df
 articles_per_type_df %>%
+  arrange(desc(N_records)) %>%
   knitr::kable(
     col.names = c(
       "Evidence Types",
@@ -280,11 +281,11 @@ articles_per_type_df %>%
   )
 ```
 
-It can be seen that the long tail of the least frequent 8 categories at the bottom of the table only makes up `r articles_per_type_df$cum_prop[sum(articles_per_type_df$cum_prop <= 5)]` % of all articles, which is why in the following we will aggregate these evidence types in the category `Other`.
+It can be seen that the long tail of the least frequent 8 categories at the bottom of the table only makes up `r articles_per_type_df$cum_prop[sum(articles_per_type_df$cum_prop <= 5)]` % of all articles, which is why we will aggregate these evidence types in the category `Other` in the following.
 
-Notice that the evidence types are not exclusive categories. On the contrary, many records are associated with several evidence types, because various ways to openly access the content have been found by Unpaywall. For this reason, the following figure distinguishes a given evidence type is classified as best open access location by Unpaywall or not. It is clearly visible that Unpaywall prioritises publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository`), as they state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (likely even without licensing information) is prioritised over journal level classifications as for example being indexed in DOAJ.
+Notice that the evidence types are not exclusive categories. On the contrary, many records are associated with several evidence types, because various ways to openly access the content have been found by Unpaywall. For this reason, the following figure distinguishes whether a given evidence type is classified as best open access location by Unpaywall or not. It is clearly visible that Unpaywall prioritises publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository`), as they state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (likely even without licensing information) is prioritised over journal level classifications as for example being indexed in DOAJ.
 
-```{r, layout = "l-page", fig.cap="Number of Articles per Evidence Type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
+```{r, layout = "l-page", fig.cap="Number of articles per evidence type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
 # collate least frequent articles as 'Other'
 articles_per_type_df %>%
   mutate(evidence = as_factor(evidence)) %>%
@@ -333,7 +334,7 @@ plotly::ggplotly(plot_ev_types_is_best, tooltip = c("y"))
 
 To investigate the development of the most prevalent evidence types over time, we use a faceted graph. We again observe declines in the proportion repository based evidences which are chosen as best location.
 
-```{r, layout = "l-page", fig.cap="Development of Number of Articles per Evidence Type over Time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown.", fig.height=6}
+```{r, layout = "l-page", fig.cap="Development of the number of articles per evidence type over time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is highlighted.", fig.height=6}
 #collate least frequent categories as 'Other'
 evidence_df %>%
   mutate(evidence = as_factor(evidence)) %>%
@@ -413,7 +414,7 @@ host_type_intersect
 
 Let's visualise the host type distribution including the overlap between publisher and repository-provided open access:
 
-```{r, layout="l-page", fig.cap='Open Access to journal articles by open access hosting location. Colored bars represent the number of open access articles per Unpaywall host category: "publisher" and "repository", grey bars the percentage of open access to journal articles indexed in Crossref from Unpaywall. Because open access provision is not mutually exclusive, the overlap between "publisher" and "repository" hosted open access full-texts is also shown'}
+```{r, layout="l-page", fig.cap='Open access to journal articles by open access hosting location. Colored bars represent the number of open access articles per Unpaywall host category: "publisher" and "repository", grey bars the percentage of open access to journal articles indexed in Crossref from Unpaywall. Because open access provision is not mutually exclusive, the overlap between "publisher" and "repository" hosted open access full-texts is also shown.'}
 # get overall oa share
 host_type_all <- host_type_intersect %>%
   group_by(year) %>%
@@ -462,9 +463,7 @@ evidence_single_cat_13_18_query <- readLines("database/evidence_single_cat_13_18
 # fetch records and bind them to one data frame
 evidence_categories_08_12 <- dbGetQuery(con, evidence_single_cat_08_12_query)
 evidence_categories_13_18 <- dbGetQuery(con, evidence_single_cat_13_18_query)
-evidence_categories_df <- bind_rows(evidence_categories_08_12, evidence_categories_13_18) %>%
-  ungroup() %>%
-  mutate(year = lubridate::ymd(paste0(year, "-01-01")))
+evidence_categories_df <- bind_rows(evidence_categories_08_12, evidence_categories_13_18)
 evidence_categories_df %>%
   group_by(ev_cat) %>%
   summarize(number_of_articles = sum(number_of_articles)) %>%
@@ -473,12 +472,12 @@ evidence_categories_df %>%
 
 We first illustrate for each evidence type - collating again the least frequent types in the category `Other` - the amount of articles which corresponds exclusively to this type and no others.
 
-```{r, layout = "l-page", fig.cap="Number of articles per evidence type over time. In blue, the amount of articles uniquely associated with the corresponding evidence type is shown."}
+```{r, layout = "l-page", fig.cap="Proportion of articles per evidence type. In blue, the amount of articles uniquely associated with the corresponding evidence type is shown."}
 #determine number of articles corresponding only to one evidence type
 evidence_single_cat_df <- evidence_df %>%
-  group_by(evidence, year) %>%
+  group_by(evidence) %>%
   summarize(number_of_articles = sum(number_of_articles)) %>%
-  left_join(evidence_categories_df, by = c("evidence" = "ev_cat", "year" = "year")) %>%
+  left_join(evidence_categories_df, by = c("evidence" = "ev_cat")) %>%
   rename(number_of_articles = number_of_articles.x, number_of_single_cat = number_of_articles.y) %>%
   mutate(number_of_articles = replace_na(number_of_articles, 0),
          number_of_single_cat = replace_na(number_of_single_cat, 0))
@@ -492,75 +491,21 @@ evidence_single_cat_grouped_df <- evidence_single_cat_df %>%
       levels = articles_per_type_grouped_df$evidence_grouped
     )
   ) %>%
-  group_by(evidence_grouped, year) %>%
+  group_by(evidence_grouped) %>%
   summarize(
     number_of_articles = sum(number_of_articles),
     number_of_single_cat = sum(number_of_single_cat)
   ) %>%
   #arrange data in order to enable stacked barplots
   mutate(multiple = number_of_articles-number_of_single_cat, single = number_of_single_cat) %>%
-  select(evidence_grouped, year, single, multiple) %>%
-  gather(is_single, number_of_articles, -evidence_grouped, -year)
-#create faceted graph
-evidence_single_cat_grouped_df %>%
-  ggplot(aes(year, number_of_articles, fill = is_single)) +
-  geom_bar(stat = "identity") +
-  facet_wrap( ~ evidence_grouped, ncol = 2) +
-  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is unique?") +
-  theme_minimal(base_family = "Roboto") +
-  theme(panel.grid.minor = element_blank()) +
-  theme(axis.ticks = element_blank()) +
-  theme(panel.grid.major.x = element_blank()) +
-  theme(panel.border = element_blank()) +
-  theme(legend.position = "bottom", legend.justification = "right") +
-  scale_y_continuous(
-    labels = function(x)
-      format(x, scientific = TRUE)
-  ) +
-  scale_x_date(date_labels = "%y") +
-  labs(x = "Publication Year", y = "Number of Articles",
-       title = "Unique Unpaywall evidence types") -> plot_ev_cat_single_per_year
-#create interactive plot
-plotly::ggplotly(plot_ev_cat_single_per_year, tooltip = c("y"))
-```
-
-Alternatively: aggregated over time
-
-```{r}
-#create aggregated barplot
-evidence_single_cat_grouped_df %>%
-  group_by(evidence_grouped, is_single) %>%
-  summarize(number_of_articles = sum(number_of_articles)) %>%
-  #create plot
-  ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_single)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is unique?") +
-  theme_minimal(base_family = "Roboto") +
-  theme(plot.margin = margin(30, 30, 30, 30)) +
-  theme(panel.grid.minor = element_blank()) +
-  theme(axis.ticks = element_blank()) +
-  theme(panel.grid.major.y = element_blank()) +
-  theme(panel.border = element_blank()) +
-  coord_flip() +
-  scale_y_continuous(
-    labels = function(x)
-      format(x, scientific = TRUE)
-  ) +
-  theme(legend.position = "top",
-        legend.justification = "right") +
-  labs(y = "Number of Articles", x = "Evidence Type",
-       title = "Number of Articles per Evidence Type") -> plot_ev_types_is_single
-#create interactive plot
-plotly::ggplotly(plot_ev_types_is_single, tooltip = c("y"))
+  select(evidence_grouped, single, multiple) %>%
+  gather(is_single, number_of_articles, -evidence_grouped)
 #create aggregated proportions barplot
-#create aggregated barplot
 evidence_single_cat_grouped_df %>%
-  group_by(evidence_grouped, is_single) %>%
-  summarize(number_of_articles = sum(number_of_articles)) %>%
-  #create plot
   ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_single)) +
   geom_bar(stat = "identity", position = "fill") +
   scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is unique?") +
+  scale_y_continuous(labels = scales::percent_format()) +
   theme_minimal(base_family = "Roboto") +
   theme(plot.margin = margin(30, 30, 30, 30)) +
   theme(panel.grid.minor = element_blank()) +
@@ -570,8 +515,8 @@ evidence_single_cat_grouped_df %>%
   coord_flip() +
   theme(legend.position = "top",
         legend.justification = "right") +
-  labs(y = "Number of Articles", x = "Evidence Type",
-       title = "Number of Articles per Evidence Type") -> plot_ev_types_is_single_prop
+  labs(y = "Proportion of Articles", x = "Evidence Type",
+       title = "Proportion of Articles per Evidence Type") -> plot_ev_types_is_single_prop
 #create interactive plot
 plotly::ggplotly(plot_ev_types_is_single_prop, tooltip = c("y"))
 ```
@@ -588,12 +533,12 @@ Visualising the occuring intersections of multiple evidence types is difficult. 
 A very good introduction into the usage of UpSetR is given by the [Basic Usage Vignette](https://cran.r-project.org/package=UpSetR/vignettes/basic.usage.html).
 </aside>
 
-To start with, we interfaced BigQuery and retrieved how frequently the combinations of evidence types occur. Again, we stored the corresponding SQL queries (evidence_overlap_08_12.sql and evidence_overlap_13_18.sql) and shared the resulting dataset as .csv files. Next, we transformed the data to an upsetr-compatible expression format, resulting in a named character vector. Next, upset() function generates the graph.  To keep the resulting figure readable, we only display the 20 combinations of the 7 most frequent types with the highest number of articles each.
+To start with, we interface BigQuery and retrieve how frequently the combinations of evidence types occur. We store the corresponding SQL queries ([evidence_overlap_08_12.sql](database/evidence_overlap_08_12.sql) and [evidence_overlap_13_18.sql](database/evidence_overlap_13_18.sql)) and share the resulting dataset as .csv files ([results_evidence_overlap_08_12.csv](data/results_evidence_overlap_08_12.csv) and [results_evidence_overlap_13_18.csv](data/results_evidence_overlap_13_18.csv)). Next, we transform the data to an upsetr-compatible expression format, resulting in a named character vector. Lastly, the `upset()` function generates the graph. To keep the resulting figure readable, we only display the 15 combinations of the 7 most frequent types with the highest number of articles each.
 
 <!-- The total numbers for the displayed overlapping categories include also the amount of articles associated with intersections with sets, which are exlcuded here because of their low frequency. For example, the set `open (via free pdf)` includes articles from the sets `open (via free pdf)` and `oa repository (via OAI-PMH title match)` because the latter is not considered seperately. -->
 
 
-```{r, layout = "l-page", fig.cap="Most frequent combinations of evidence types."}
+```{r, layout = "l-page", fig.cap="Most frequent combinations of evidence types. The barplot on the left displays the total number of articles per evidence type. The central barplot shows the number of articles per overlap category. Which evidence types contribute to each intersection is given by the black dots in the chart below."}
 library(UpSetR)
 # fetch data for upset graph
 evidence_categories_upset_08_12_query <- readLines("database/evidence_overlap_08_12.sql") %>%
