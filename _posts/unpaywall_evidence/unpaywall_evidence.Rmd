@@ -607,7 +607,7 @@ evidence_categories_upset_08_12_query <- readLines("database/evidence_overlap_08
 evidence_categories_upset_13_18_query <- readLines("database/evidence_overlap_08_12.sql") %>%
   paste(collapse = "")
 evidence_categories_upset_08_12 <- dbGetQuery(con, evidence_categories_upset_08_12_query)
-  evidence_categories_upset_13_18 <- dbGetQuery(con, evidence_categories_upset_13_18_query)
+evidence_categories_upset_13_18 <- dbGetQuery(con, evidence_categories_upset_13_18_query)
 evidence_categories_upset_df <- bind_rows(evidence_categories_upset_08_12, evidence_categories_upset_13_18) %>%
   group_by(ev_cat) %>% 
   summarise(n = sum(number_of_articles))
@@ -617,7 +617,7 @@ evidence_categories_upset_list <- as.list(evidence_categories_upset_df$n)
 names(evidence_categories_upset_list) <- evidence_categories_upset_list$ev_cat
 # convert to vector
 evidence_categories_upset_expr <- unlist(evidence_categories_upset_list)
-upset(evidence_categories_upset_expr, nsets = 7, nintersects = 15, order.by = "freq", show.numbers = FALSE)
+upset(fromExpression(evidence_categories_upset_expr), nsets = 7, nintersects = 15, order.by = "freq", show.numbers = FALSE)
 ```
 
 
