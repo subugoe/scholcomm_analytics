@@ -170,12 +170,12 @@ While a general growth of journal articles and open access provision to them can
 
 Using Unpaywall's open access location types allows for a more detailed analysis of open access provision. In the following, we explore the variable `host_type`, showing whether Unpaywall found the open access full-text on a publisher website or in a repository. Furthermore, we include articles from fully open access journals that are indexed in [Directory of Open Access Journals (DOAJ)](https://doaj.org/) as indicated by the `journal_is_in_doaj` variable in our analysis. As a start, we only examine the best open access location per DOI, `is_best`. As said before, this variable is defined by Unpaywall's algorithm that prioritizes publisher-hosted content.
 
-Instead of dplyr, we are now querying BigQuery with SQL. Before, we built and tested the SQL queries in the BigQuery web UI. The SQL code is stored in separate files ([host_type_08_12.sql](host_type_08_12.sql) and [host_type_13_18.sql](host_type_13_18.sql)), which are shared in the source code repository of this blog:
+Instead of dplyr, we are now querying BigQuery with SQL. Before, we built and tested the SQL queries in the BigQuery web UI. The SQL code is stored in separate files ([host_type_08_12.sql](database/host_type_08_12.sql) and [host_type_13_18.sql](database/host_type_13_18.sql)), which are shared in the source code repository of this blog:
 
 ```{r}
-host_type_08_12_query <- readLines("host_type_08_12.sql") %>%
+host_type_08_12_query <- readLines("database/host_type_08_12.sql") %>%
   paste(collapse = "")
-host_type_13_18_query <- readLines("host_type_13_18.sql") %>%
+host_type_13_18_query <- readLines("database/host_type_13_18.sql") %>%
   paste(collapse = "")
 ```
 
@@ -238,14 +238,14 @@ While the number publications in DOAJ-indexed journals is rising constantly, ope
 
 ### Unpaywall Open Access Evidence Types (`evidence`)
 
-The `evidence` field of the `oa_locations` object can be used to further detail open access provision. We used again SQL queries stored in seperate files ([evidence_08_12.sql](evidence_08_12.sql) and [evidence_13_18.sql](evidence_13_18.sql)) to be found in the source code repository and create a data frame with the relevant fields.
+The `evidence` field of the `oa_locations` object can be used to further detail open access provision. We used again SQL queries stored in seperate files ([evidence_08_12.sql](database/evidence_08_12.sql) and [evidence_13_18.sql](database/evidence_13_18.sql)) to be found in the source code repository and create a data frame with the relevant fields.
 
 ```{r}
 library(tidyverse)
 # define queries
-evidence_08_12_query <- readLines("evidence_08_12.sql") %>%
+evidence_08_12_query <- readLines("database/evidence_08_12.sql") %>%
   paste(collapse = "")
-evidence_13_18_query <- readLines("evidence_13_18.sql") %>%
+evidence_13_18_query <- readLines("database/evidence_13_18.sql") %>%
   paste(collapse = "")
 # fetch records and bind them to one data frame
 evidence_08_12 <- dbGetQuery(con, evidence_08_12_query)
@@ -371,12 +371,12 @@ Many OA articles are accessible through a number of locations, including the pub
 
 ### Overlap between Host Types
 
-So far, we only examined the best open access location per DOI, indicated by `is_best`, a variable defined by Unpaywall algorithm that prioritises publisher-hosted content. To present articles that are both provided by publishers and repositories, we use the BigQuery SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg) to make a new variable where we concatenate the different host_types per open access article (for more details, see the full SQL queries [`host_type_intersect_08_12.sql`](host_type_intersect_08_12.sql) and [`host_type_intersect_13_18.sql`](host_type_intersect_13_18.sql)].
+So far, we only examined the best open access location per DOI, indicated by `is_best`, a variable defined by Unpaywall algorithm that prioritises publisher-hosted content. To present articles that are both provided by publishers and repositories, we use the BigQuery SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg) to make a new variable where we concatenate the different host_types per open access article (for more details, see the full SQL queries [`host_type_intersect_08_12.sql`](database/host_type_intersect_08_12.sql) and [`host_type_intersect_13_18.sql`](database/host_type_intersect_13_18.sql)].
 
 ```{r}
-host_type_intersect_08_12_query <- readLines("host_type_intersect_08_12.sql") %>%
+host_type_intersect_08_12_query <- readLines("database/host_type_intersect_08_12.sql") %>%
   paste(collapse = "")
-host_type_intersect_13_18_query <- readLines("host_type_intersect_13_18.sql") %>%
+host_type_intersect_13_18_query <- readLines("database/host_type_intersect_13_18.sql") %>%
   paste(collapse = "")
 ```
 
@@ -453,18 +453,18 @@ The Figure shows that Unpaywall found most open access full-text links on publis
 
 The categroization of evidence types is not exclusive, either, and thus, many records will be associated with more than one evidence type.
 
-To gain insight into the extent to which these categories overlap, we generated an additional column specifying all found combinations of evidence types using again concatenation of types by the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg).
+To gain insight into the extent to which these categories overlap, we generated an additional column specifying all found combinations of evidence types using again concatenation of types by the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg). The SQL queries we used ([evidence_single_cat_08_12.sql](database/evidence_single_cat_08_12.sql) and [evidence_single_cat_08_12.sql](database/evidence_single_cat_08_12.sql)) can be found in the source code repository.
 
 ```{r}
 library(tidyverse)
 # define queries
-evidence_overlap_08_12_query <- readLines("evidence_overlap_08_12.sql") %>%
+evidence_single_cat_08_12_query <- readLines("database/evidence_single_cat_08_12.sql") %>%
   paste(collapse = "")
-evidence_overlap_13_18_query <- readLines("evidence_overlap_13_18.sql") %>%
+evidence_single_cat_13_18_query <- readLines("database/evidence_single_cat_13_18.sql") %>%
   paste(collapse = "")
 # fetch records and bind them to one data frame
-evidence_categories_08_12 <- dbGetQuery(con, evidence_overlap_08_12_query)
-evidence_categories_13_18 <- dbGetQuery(con, evidence_overlap_13_18_query)
+evidence_categories_08_12 <- dbGetQuery(con, evidence_single_cat_08_12_query)
+evidence_categories_13_18 <- dbGetQuery(con, evidence_single_cat_13_18_query)
 evidence_categories_df <- bind_rows(evidence_categories_08_12, evidence_categories_13_18) %>%
   ungroup() %>%
   mutate(year = lubridate::ymd(paste0(year, "-01-01")))
@@ -593,21 +593,17 @@ Visualizing the occuring intersections of multiple evidence types is a difficult
 A very good introduction into the usage of UpSetR is given by the [Basic Usage Vignette](https://cran.r-project.org/package=UpSetR/vignettes/basic.usage.html).
 </aside>
 
-The `upset()` function generating the graph takes a bipartite matrix as input, where in our case one set is given by the evidence types and the other by the dois of the articles. Therefore, we created a data frame containing rows for all combinations of evidence types and dois from our BigQuery tables. This is then converted to a bipartite matrix using `spread()`. To keep the resulting figure digestable, we only display the 20 combinations of the 7 most frequent types with the highest number of articles each.
+The `upset()` function generating the graph takes a bipartite matrix as input, where in our case one set is given by the evidence types and the other by the dois of the articles. The package has a built in function (`fromExpression`) for the conversion of an expression list to the required input format. We extracted the information on the frequency of the occurence of all combinations of evidence types as `.csv` files ([]() and []()) from our BigQuery tables using again SQL queries stored in seperate files ([evidence_overlap_08_12.sql](database/evidence_overlap_08_12.sql) and [evidence_overlap_13_18.sql](database/evidence_overlap_13_18.sql)) to be found in the source code repository. We then imported the resulting tables into R and converted them into the expression format which can be rendered by the `UpSetR` functions. To keep the resulting figure digestable, we only display the 20 combinations of the 7 most frequent types with the highest number of articles each.
 
 <aside>
-Generating the bipartite input matrix from our BigQuery tables takes several minutes in total. Our approach probably is not the most efficient way to do this. If you have suggestions for improvement, please let us know.
+The total numbers for the displayed overlapping categories include also the amount of articles associated with intersections with sets, which are exlcuded here because of their low frequency. For example, the shown number of articles available via free pdf include articles with evidence via free pdf and via OAI-PMH title match since the latter is not considered seperately.
 </aside>
 
 ```{r, layout = "l-page", fig.cap="Most frequent combinations of evidence types."}
 library(UpSetR)
 #fetch data for upset graph
-evidence_overlap_upset_08_12_query <- readLines("evidence_overlap_upset_08_12.sql") %>%
-  paste(collapse = "")
-evidence_overlap_upset_13_18_query <- readLines("evidence_overlap_upset_13_18.sql") %>%
-  paste(collapse = "")
-evidence_categories_upset_08_12 <- dbGetQuery(con, evidence_overlap_upset_08_12_query)
-evidence_categories_upset_13_18 <- dbGetQuery(con, evidence_overlap_upset_13_18_query)
+evidence_categories_upset_08_12 <- readr::read_csv("~/Downloads/results-20190427-172458.csv")
+evidence_categories_upset_13_18 <- readr::read_csv("~/Downloads/results-20190427-172458.csv")
 evidence_categories_upset_df <- bind_rows(evidence_categories_upset_08_12, evidence_categories_upset_13_18) %>%
   ungroup() %>%
   mutate(CatMember=1) %>%
