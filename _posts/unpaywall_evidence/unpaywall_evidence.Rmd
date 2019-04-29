@@ -614,7 +614,7 @@ evidence_categories_upset_df <- bind_rows(evidence_categories_upset_08_12, evide
 # list with counts
 evidence_categories_upset_list <- as.list(evidence_categories_upset_df$n)
 # categories as list names
-names(evidence_categories_upset_list) <- evidence_categories_upset_list$ev_cat
+names(evidence_categories_upset_list) <- evidence_categories_upset_df$ev_cat
 # convert to vector
 evidence_categories_upset_expr <- unlist(evidence_categories_upset_list)
 upset(fromExpression(evidence_categories_upset_expr), nsets = 7, nintersects = 15, order.by = "freq", show.numbers = FALSE)
