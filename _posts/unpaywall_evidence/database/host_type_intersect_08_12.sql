@@ -1,7 +1,7 @@
 SELECT
         year,
         host_type_count,
-        count(*) as number_of_articles      
+        count(distinct(doi)) as number_of_articles      
     FROM
         (SELECT
             doi,
