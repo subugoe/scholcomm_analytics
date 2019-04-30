@@ -14,7 +14,6 @@ date: "`r Sys.Date()`"
 creative_commons: CC BY
 output: distill::distill_article
 bibliography: pubs.bib
-draft: true
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
