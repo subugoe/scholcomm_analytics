@@ -36,7 +36,7 @@ knitr::knit_hooks$set(
 )
 ```
 
-[Unpaywall](https://unpaywall.org/), developed and maintained by the [team of Impactstory](http://impactstory.org/team), finds open access copies of scholarly literature [@Piwowar_2018]. Providing DOIs to [Unpaywall's REST API](https://unpaywall.org/products/api) not only returns open access full-text links, but also helpful metadata about the open access status of publications indexed in [Crossref](https://www.crossref.org/), a DOI registration agency. While the API allows to retrieve a limited amount of records, Unpaywall also offers [database snapshots](https://unpaywall.org/products/snapshot) for large-scale analysis, which more and more bibliometric databases and open access monitoring services utilise. However, documentations about how database and service providers work with these dumps are hard to find.
+[Unpaywall](https://unpaywall.org/), developed and maintained by the [team of Impactstory](http://impactstory.org/team), finds open access copies of scholarly literature [@Piwowar_2018]. Providing DOIs to [Unpaywall's REST API](https://unpaywall.org/products/api) not only returns open access full-text links, but also helpful metadata about the open access status of publications indexed in [Crossref](https://www.crossref.org/), a DOI registration agency. While the API allows to retrieve a limited amount of records, Unpaywall also offers [database snapshots](https://unpaywall.org/products/snapshot) for large-scale analysis, which more and more bibliometric databases and open access monitoring services utilise. However, documentation about how database and service providers work with these dumps are hard to find.
 
 In this blog post, we describe how we loaded Unpaywall's data dump into [Google BigQuery](https://cloud.google.com/bigquery/), a cloud-based service that allows fast analysis of large datasets, and how we interfaced BigQuery for our analysis with R. We wanted to know the extent of open access status information in Unpaywall, particularly, how this information can be utilised for bibliometric research. In our case, we intend to match open access status information from Unpaywall with the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) to determine factors influencing open access publication activities among German Universities as part of our [BMBF-funded research project OAUNI](https://www.wihoforschung.de/de/oauni-2182.php).
 
@@ -139,7 +139,7 @@ Next, let's plot the prevalence of open access to journal articles over time usi
   To learn more about plotly, we recommend the book "Interactive web-based data visualization with R, plotly, and shiny" from Carson Sievert. <https://plotly-r.com/index.html>
 </aside>
 
-```{r, layout="l-page", fig.cap="Open access to journal rticles according to Unpaywall. Blue area represents journal articles with at least one freely available full-text, grey area represents toll-access articles."}
+```{r, layout="l-page", fig.cap="Open access to journal articles according to Unpaywall. Blue area represents journal articles with at least one freely available full-text, grey area represents toll-access articles."}
 library(scales)
 plot_a <- my_df %>%
   # prepare label that we want to present as tooltip
@@ -274,7 +274,7 @@ articles_per_type_df %>%
       "Evidence Types",
       "Number of Articles",
       "Proportion of all Articles in %",
-      "Cummulative Proportion in %"
+      "Cumulative Proportion in %"
     )
   )
 ```
