@@ -9,7 +9,6 @@ SELECT
     WHERE
         genre = 'journal-article'
         AND year < 2019 
-        AND data_standard = 2
     GROUP BY
         evidence,
         year,

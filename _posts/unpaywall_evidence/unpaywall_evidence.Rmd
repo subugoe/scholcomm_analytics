@@ -42,7 +42,7 @@ In this blog post, we describe how we loaded Unpaywall's data dump into [Google 
 
 ## Store and analyse large datasets with Google BigQuery 
 
-The most recent Unpaywall dataset from February 2019 comprises more than 100 million records amounting to a file size of more than 100 GB. Working with datasets of such a large size is generally non-trivial. We therefore chose Google's BigQuery as a cloud-based solution. From our perspective it has several advantages. Firstly, it is a highly performant tool enabling us to obtain query results of large databases very fast. We would not be able to achieve similarly satisfying performance with a local database deployed on our standard laptops. Secondly, using this cloud-based service gives us the possibility to share access to our database with colleagues and collaborators. Finally, the already existing interfaces to BigQuery from R allow us to incorporate this environment into our familiar data analytics workflow.
+The Unpaywall data dump from February 2019 comprises more than 100 million records amounting to a file size of more than 100 GB. Working with datasets of such a large size is generally non-trivial. We therefore chose Google's BigQuery as a cloud-based solution. From our perspective BigQuery has several advantages. Firstly, it is a highly performant tool enabling us to query and manipulate large datasets very fast. We would not be able to achieve an similarly satisfying performance with a local database deployed on our standard laptops. Secondly, using this cloud-based service gives us the possibility to share access to our database with colleagues and collaborators. Finally, the already existing interfaces to BigQuery from R allow us to incorporate this environment into our familiar data analytics workflow.
 
 As a preparatory step, we loaded the entire dataset into a local [Mongo DB database](https://www.mongodb.com), exported relevant fields and rows for the study of the open access status of scholarly output as compressed JSON Lines files, and uploaded them to [Google Cloud Storage](https://cloud.google.com/storage/). To import these files into [BigQuery](https://cloud.google.com/bigquery/), we had to specify a [schema](database/bq_schema.json), which we share in the source code repository of this blog. We used the BigQuery user interface, where the files are automatically decompressed and the corresponding tables are created.
 
@@ -230,7 +230,7 @@ plot_b <-
 plotly::ggplotly(plot_b, tooltip = c("y")) 
 ```
 
-The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ: these are`r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall. 
+The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ: these are `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall. 
 
 While the number of publications in DOAJ-indexed journals is rising constantly, open access provided by other journal types and repositories declined from 2017 to 2018. Indeed, there is a considerable amount of journals that delay open access provision [@Laakso_2013]. A prominent example is the journal [Cell](https://www.cell.com/cell/archive) where all articles are made freely available after an embargo period of twelve months. Also, self-archiving in repositories is often subject to embargo periods imposed by publishers, or researchers upload their publications later [@Bj_rk_2013]. A more detailed analysis of delayed open access, however, is challenging using Unpaywall data only, because Unpaywall has not tracked so far the point of time when articles were made open access.
 
@@ -262,13 +262,12 @@ For each evidence type we want to see how many records were identified as open a
 evidence_df %>%
   group_by(evidence) %>%
   summarize(N_records = sum(number_of_articles)) %>%
-  arrange(N_records) %>%
+  arrange(desc(N_records)) %>%
   mutate(
     prop = N_records / sum(N_records) * 100,
-    cum_prop = cumsum(N_records) / sum(N_records) * 100
+    cum_prop = cumsum(prop)
   ) -> articles_per_type_df
 articles_per_type_df %>%
-  arrange(desc(N_records)) %>%
   knitr::kable(
     col.names = c(
       "Evidence Types",
@@ -367,7 +366,7 @@ Many open access articles are accessible through a number of locations, includin
 
 ### Overlap between Host Types
 
-To present articles that are both provided by publishers and repositories, we use the BigQuery SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg) to create a new variable where we concatenate the different host_types per open access article (for more details, see the full SQL queries [`host_type_intersect_08_12.sql`](database/host_type_intersect_08_12.sql) and [`host_type_intersect_13_18.sql`](database/host_type_intersect_13_18.sql)].
+To present articles that are both provided by publishers and repositories, we use the BigQuery SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg) to create a new variable where we concatenate the different host_types per open access article (for more details, see the full SQL queries [`host_type_intersect_08_12.sql`](database/host_type_intersect_08_12.sql) and [`host_type_intersect_13_18.sql`](database/host_type_intersect_13_18.sql).
 
 ```{r}
 host_type_intersect_08_12_query <- readLines("database/host_type_intersect_08_12.sql") %>%

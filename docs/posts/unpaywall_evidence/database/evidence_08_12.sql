@@ -8,7 +8,6 @@ SELECT
         UNNEST(oa_locations)
     WHERE
         genre = 'journal-article'
-        AND data_standard = 2
     GROUP BY
         evidence,
         year,

@@ -10,7 +10,6 @@ SELECT
         genre = 'journal-article' 
         AND year < 2019 
         AND is_best = true
-        AND data_standard = 2
     GROUP BY
         year,
         host_type,
