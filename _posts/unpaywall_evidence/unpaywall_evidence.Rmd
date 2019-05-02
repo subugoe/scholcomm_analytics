@@ -446,7 +446,7 @@ The figure shows that Unpaywall found most open access full-text on publisher we
 
 The categorization of evidence types is not exclusive, either. Therefore, many records will be associated with more than one evidence type.
 
-To better understand this overlap, we generate a new column specifying all found combinations of evidence types using concatenation with the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg). The SQL queries we use ([evidence_single_cat_08_12.sql](database/evidence_single_cat_08_12.sql) and [evidence_single_cat_08_12.sql](database/evidence_single_cat_08_12.sql)) can be found in the source code repository.
+To better understand this overlap, we generate a new column specifying all found combinations of evidence types using concatenation with the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg). The SQL queries we use ([evidence_single_cat_08_12.sql](database/evidence_single_cat_08_12.sql) and [evidence_single_cat_13_18.sql](database/evidence_single_cat_13_18.sql)) can be found in the source code repository.
 
 ```{r}
 library(tidyverse)
