@@ -540,7 +540,7 @@ library(UpSetR)
 # fetch data for upset graph
 evidence_categories_upset_08_12_query <- readLines("database/evidence_overlap_08_12.sql") %>%
   paste(collapse = "")
-evidence_categories_upset_13_18_query <- readLines("database/evidence_overlap_08_12.sql") %>%
+evidence_categories_upset_13_18_query <- readLines("database/evidence_overlap_13_18.sql") %>%
   paste(collapse = "")
 evidence_categories_upset_08_12 <- dbGetQuery(con, evidence_categories_upset_08_12_query)
 # export to csv
