@@ -278,7 +278,7 @@ articles_per_type_df %>%
   )
 ```
 
-It can be seen that the long tail of the least frequent 8 categories at the bottom of the table only makes up `r articles_per_type_df$cum_prop[sum(articles_per_type_df$cum_prop <= 5)]` % of all articles, which is why we will aggregate these evidence types in the category `Other` in the following.
+It can be seen that the long tail of the least frequent 8 categories at the bottom of the table only makes up `r (1 - (articles_per_type_df %>% filter(prop > 1) %>% .$N_records %>% sum() / sum(articles_per_type_df$N_records))) * 100` % of all articles, which is why we will aggregate these evidence types in the category `Other` in the following.
 
 So far, we only examined the best open access location per DOI, indicated by `is_best`, a variable defined by Unpaywall algorithm that prioritises publisher-hosted content. However,  evidence types in Unpaywall are not exclusive categories. On the contrary, many records are associated with several evidence types, because various ways to openly access full-texts have been found by Unpaywall. For this reason, the following figure distinguishes whether a given evidence type is classified as best open access location by Unpaywall or not. It is clearly visible that Unpaywall prioritises publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository`), as they state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (likely even without licensing information) is prioritised over journal level classifications as for example being indexed in DOAJ.
 
@@ -286,8 +286,7 @@ So far, we only examined the best open access location per DOI, indicated by `is
 # collate least frequent articles as 'Other'
 articles_per_type_df %>%
   mutate(evidence = as_factor(evidence)) %>%
-  mutate(evidence_grouped = fct_relevel(fct_other(evidence, keep = evidence[.$cum_prop >
-                                                                              5]), "Other")) %>%
+  mutate(evidence_grouped = fct_relevel(fct_other(evidence, keep = evidence[.$prop > 1]), "Other")) %>%
   group_by(evidence_grouped) %>%
   summarize(number_of_articles = sum(N_records)) %>%
   mutate(
@@ -304,6 +303,7 @@ evidence_df %>%
       levels = articles_per_type_grouped_df$evidence_grouped
     )
   ) %>%
+  mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other")) %>%
   group_by(evidence_grouped, is_best) %>%
   summarize(number_of_articles = sum(number_of_articles)) %>%
   #create plot
@@ -339,6 +339,7 @@ evidence_df %>%
       levels = articles_per_type_grouped_df$evidence_grouped
     )
   ) %>%
+  mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other")) %>%
   #create plot
   ggplot(aes(year, number_of_articles, fill = is_best)) +
   geom_bar(stat = "identity") +
@@ -486,6 +487,7 @@ evidence_single_cat_grouped_df <- evidence_single_cat_df %>%
       levels = articles_per_type_grouped_df$evidence_grouped
     )
   ) %>%
+  mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other")) %>%
   group_by(evidence_grouped) %>%
   summarize(
     number_of_articles = sum(number_of_articles),
@@ -541,7 +543,11 @@ evidence_categories_upset_08_12_query <- readLines("database/evidence_overlap_08
 evidence_categories_upset_13_18_query <- readLines("database/evidence_overlap_08_12.sql") %>%
   paste(collapse = "")
 evidence_categories_upset_08_12 <- dbGetQuery(con, evidence_categories_upset_08_12_query)
+# export to csv
+write_csv(evidence_categories_upset_08_12, "data/results_evidence_overlap_08_12.csv")
 evidence_categories_upset_13_18 <- dbGetQuery(con, evidence_categories_upset_13_18_query)
+# export to csv
+write_csv(evidence_categories_upset_13_18, "data/results_evidence_overlap_13_18.csv")
 evidence_categories_upset_df <- bind_rows(evidence_categories_upset_08_12, evidence_categories_upset_13_18) %>%
   group_by(ev_cat) %>% 
   summarise(n = sum(number_of_articles))
