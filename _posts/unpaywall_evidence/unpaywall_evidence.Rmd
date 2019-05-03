@@ -1,7 +1,7 @@
 ---
 title: "Open Access Evidence in Unpaywall"
 description: |
-  We investigated more than 31 million scholarly journal articles published between 2008-2018 that are indexed in Unpaywall, a widely used open access discovery tool. Using Google BigQuery and R, we determined over 11,6 million journal articles with open access full-text links in Unpaywall, corresponding to an open access share of 37 %. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to responsibly re-use Unpaywall data in bibliometric research and open access monitoring.
+  We investigated more than 31 million scholarly journal articles published between 2008 and 2018 that are indexed in Unpaywall, a widely used open access discovery tool. Using Google BigQuery and R, we determined over 11,6 million journal articles with open access full-text links in Unpaywall, corresponding to an open access share of 37 %. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to responsibly re-use Unpaywall data in bibliometric research and open access monitoring.
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
@@ -42,7 +42,7 @@ In this blog post, we describe how we loaded Unpaywall's data dump into [Google 
 
 ## Store and analyse large datasets with Google BigQuery 
 
-The Unpaywall data dump from February 2019 comprises more than 100 million records amounting to a file size of more than 100 GB. Working with datasets of such a large size is generally non-trivial. We therefore chose Google's BigQuery as a cloud-based solution. From our perspective BigQuery has several advantages. Firstly, it is a highly performant tool enabling us to query and manipulate large datasets very fast. We would not be able to achieve an similarly satisfying performance with a local database deployed on our standard laptops. Secondly, using this cloud-based service gives us the possibility to share access to our database with colleagues and collaborators. Finally, the already existing interfaces to BigQuery from R allow us to incorporate this environment into our familiar data analytics workflow.
+The Unpaywall data dump from February 2019 comprises more than 100 million records amounting to a file size of more than 100 GB. Working with datasets of such a large size is generally non-trivial. We therefore chose Google's BigQuery as a cloud-based solution. From our perspective BigQuery has several advantages. Firstly, it is a highly performant tool enabling us to query and manipulate large datasets very fast. We would not be able to achieve a similarly satisfying performance with a local database deployed on our standard laptops. Secondly, using this cloud-based service gives us the possibility to share access to our database with colleagues and collaborators. Finally, the already existing interfaces to BigQuery from R allow us to incorporate this environment into our familiar data analytics workflow.
 
 As a preparatory step, we loaded the entire dataset into a local [Mongo DB database](https://www.mongodb.com), exported relevant fields and rows for the study of the open access status of scholarly output as compressed JSON Lines files, and uploaded them to [Google Cloud Storage](https://cloud.google.com/storage/). To import these files into [BigQuery](https://cloud.google.com/bigquery/), we had to specify a [schema](database/bq_schema.json), which we share in the source code repository of this blog. We used the BigQuery user interface, where the files are automatically decompressed and the corresponding tables are created.
 
@@ -441,11 +441,11 @@ plot_host_intersect <-
 plotly::ggplotly(plot_host_intersect, tooltip = c("y")) 
 ```
 
-The figure shows that Unpaywall found most open access full-text on publisher websites, of which a large proportion was not archived in a repository. The overlap of open access provided by both routes deserves attention: around `r filter(host_type_intersect, host != "Publisher only") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access articles was provided in open access using both publisher web sites and repositories.
+The figure shows that Unpaywall found most open access full-text on publisher websites (`r filter(host_type_intersect, grepl("Publisher", host, ignore.case = TRUE, fixed = FALSE)) %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100`%).  `r filter(host_type_intersect, host == "Publisher only") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` percent of all open access full-texts was not archived in a repository. The overlap of open access provided by both routes also deserves attention: a proportion of around `r filter(host_type_intersect, host == "Publisher & Repository") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access articles was accessible from both publisher web sites and repositories.
 
 ### Overlaps between Evidence types
 
-The categorization of evidence types is not exclusive, either. Therefore, many records will be associated with more than one evidence type.
+The categorisation of evidence types is not exclusive, either. Therefore, many records will be associated with more than one evidence type.
 
 To better understand this overlap, we generate a new column specifying all found combinations of evidence types using concatenation with the SQL function [STRING_AGG](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#string_agg). The SQL queries we use ([evidence_single_cat_08_12.sql](database/evidence_single_cat_08_12.sql) and [evidence_single_cat_13_18.sql](database/evidence_single_cat_13_18.sql)) can be found in the source code repository.
 
