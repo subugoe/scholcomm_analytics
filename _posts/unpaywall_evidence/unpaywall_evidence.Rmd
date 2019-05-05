@@ -469,36 +469,31 @@ evidence_categories_df %>%
 We first illustrate for each evidence type - collating again the least frequent types in the category `Other` - the amount of articles which corresponds exclusively to this type and no others.
 
 ```{r, layout = "l-page", fig.cap="Proportion of articles per evidence type. In blue, the amount of articles uniquely associated with the corresponding evidence type is shown."}
-#determine number of articles corresponding only to one evidence type
-evidence_single_cat_df <- evidence_df %>%
-  group_by(evidence) %>%
-  summarize(number_of_articles = sum(number_of_articles)) %>%
-  left_join(evidence_categories_df, by = c("evidence" = "ev_cat")) %>%
-  rename(number_of_articles = number_of_articles.x, number_of_single_cat = number_of_articles.y) %>%
-  mutate(number_of_articles = replace_na(number_of_articles, 0),
-         number_of_single_cat = replace_na(number_of_single_cat, 0))
-#aggregate least frequent types as category `Other`
-evidence_single_cat_grouped_df <- evidence_single_cat_df %>%
-  ungroup() %>%
-  mutate(evidence = as_factor(evidence)) %>%
+# determine number of articles corresponding only to one evidence type
+evidence_unique <-
+  evidence_categories_df %>%
+  filter(!grepl("&", ev_cat, ignore.case = TRUE, fixed = FALSE)) %>%
+  group_by(ev_cat) %>%
+  summarize(single = sum(number_of_articles)) %>%
+  arrange(desc(single)) %>%
+  mutate(ev_cat = as_factor(ev_cat)) %>%
   mutate(
     evidence_grouped = factor(
-      fct_other(evidence, keep = articles_per_type_grouped_df$evidence_grouped),
+      fct_other(ev_cat, keep = articles_per_type_grouped_df$evidence_grouped),
       levels = articles_per_type_grouped_df$evidence_grouped
     )
   ) %>%
-  mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other")) %>%
-  group_by(evidence_grouped) %>%
-  summarize(
-    number_of_articles = sum(number_of_articles),
-    number_of_single_cat = sum(number_of_single_cat)
-  ) %>%
-  #arrange data in order to enable stacked barplots
-  mutate(multiple = number_of_articles-number_of_single_cat, single = number_of_single_cat) %>%
+  mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other"))
+# join with data.frame that contains all distinct occurences per DOI to obtain
+# number of articles where more than one evidence type was found
+evidence_unique %>%
+  inner_join(articles_per_type_df, by = c("ev_cat" = "evidence")) %>%
+  mutate(multiple = N_records - single) %>%
   select(evidence_grouped, single, multiple) %>%
-  gather(is_single, number_of_articles, -evidence_grouped)
-#create aggregated proportions barplot
-evidence_single_cat_grouped_df %>%
+  gather(single, multiple, key = "is_single", value = "number_of_articles") %>%
+  group_by(evidence_grouped, is_single) %>%
+  summarise(number_of_articles = sum(number_of_articles)) %>%
+  # prepare plot
   ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_single)) +
   geom_bar(stat = "identity", position = "fill") +
   scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is unique?") +
@@ -510,8 +505,6 @@ evidence_single_cat_grouped_df %>%
   theme(panel.grid.major.y = element_blank()) +
   theme(panel.border = element_blank()) +
   coord_flip() +
-  theme(legend.position = "top",
-        legend.justification = "right") +
   labs(y = "Proportion of Articles", x = "Evidence Type",
        title = "Proportion of Articles per Evidence Type") -> plot_ev_types_is_single_prop
 #create interactive plot
