@@ -177,7 +177,7 @@ host_type_13_18_query <- readLines("database/host_type_13_18.sql") %>%
   paste(collapse = "")
 ```
 
-After calling BigQuery using SQL with the [DBI](https://www.r-dbi.org/) interface, we bind the two resulting data frames into one. Using `case_when()`from dplyr, we create a `host` column distinguishing between "DOAJ-listed Journal", "Other Journals" and "Repositories only" open access provision.
+After calling BigQuery using SQL with the [DBI](https://www.r-dbi.org/) interface, we bind the two resulting data frames into one. Using `case_when()` from dplyr, we create a `host` column distinguishing between "DOAJ-listed Journal", "Other Journals" and "Repositories only" open access provision.
 
 ```{r}
 host_type_08_12_query_df <- dbGetQuery(con, host_type_08_12_query)
@@ -253,7 +253,7 @@ evidence_df <- bind_rows(evidence_08_12, evidence_13_18) %>%
   mutate(year = lubridate::ymd(paste0(year, "-01-01")))
 ```
 
-The `evidence` field indicates how Unpaywall found the article at a specific location and identified it as OA, for example via PubMed Central or via license information from Crossref.
+The `evidence` field indicates how Unpaywall found the article at a specific location and identified it as open access, for example via PubMed Central or via license information from Crossref.
 
 For each evidence type we want to see how many records were identified as open access in this way. To this end, we created the following table that shows the total number of records per evidence type. The columns also present the total number of associated records, the proportion with respect to the number of all articles and the cumulative proportion of articles associated with all evidence types below.
 
@@ -280,9 +280,7 @@ articles_per_type_df %>%
 
 It can be seen that the long tail of the least frequent 8 categories at the bottom of the table with proportions smaller than 1 % of all articles only makes up `r (1 - (articles_per_type_df %>% filter(prop > 1) %>% .$N_records %>% sum() / sum(articles_per_type_df$N_records))) * 100` % of all articles, which is why we will aggregate these evidence types in the category `Other` in the following.
 
-So far, we only examined the best open access location per DOI, indicated by `is_best`, a variable defined by Unpaywall algorithm that prioritises publisher-hosted content. However,  evidence types in Unpaywall are not exclusive categories. On the contrary, many records are associated with several evidence types, because various ways to openly access full-texts have been found by Unpaywall. For this reason, the following figure distinguishes whether a given evidence type is classified as best open access location by Unpaywall or not. It is clearly visible that Unpaywall prioritises publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository`), as they state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (likely even without licensing information) is prioritised over journal level classifications as for example being indexed in DOAJ.
-
-```{r, layout = "l-page", fig.cap="Number of articles per evidence type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
+```{r}
 # collate least frequent articles as 'Other'
 articles_per_type_df %>%
   mutate(evidence = as_factor(evidence)) %>%
@@ -306,6 +304,11 @@ evidence_grouped_df <- evidence_df %>%
   mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other")) %>%
   group_by(evidence_grouped, is_best, year) %>%
   summarize(number_of_articles = sum(number_of_articles))
+```
+
+So far, we only examined the best open access location per DOI, indicated by `is_best`, a variable defined by Unpaywall algorithm that prioritises publisher-hosted content. However,  evidence types in Unpaywall are not exclusive categories. On the contrary, many records are associated with several evidence types, because various ways to openly access full-texts have been found by Unpaywall. For this reason, the following figure distinguishes whether a given evidence type is classified as best open access location by Unpaywall or not. It is clearly visible that Unpaywall prioritises publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository`), as they state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (likely even without licensing information) is prioritised over journal level classifications as for example being indexed in DOAJ.
+
+```{r, layout = "l-page", fig.cap="Number of articles per evidence type. Least frequent evidence types are collated as category `Other`. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is shown."}
 evidence_grouped_df %>%
   group_by(evidence_grouped, is_best) %>%
   summarize(number_of_articles = sum(number_of_articles)) %>%
@@ -430,7 +433,7 @@ plot_host_intersect <-
 plotly::ggplotly(plot_host_intersect, tooltip = c("y")) 
 ```
 
-The figure shows that Unpaywall found most open access full-text on publisher websites (`r filter(host_type_intersect, grepl("Publisher", host, ignore.case = TRUE, fixed = FALSE)) %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100`%).  `r filter(host_type_intersect, host == "Publisher only") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` percent of all open access full-texts was not archived in a repository. The overlap of open access provided by both routes also deserves attention: a proportion of around `r filter(host_type_intersect, host == "Publisher & Repository") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access articles was accessible from both publisher web sites and repositories.
+The figure shows that Unpaywall found most open access full-text on publisher websites (`r filter(host_type_intersect, grepl("Publisher", host, ignore.case = TRUE, fixed = FALSE)) %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100`%).  `r filter(host_type_intersect, host == "Publisher only") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access full-texts was not archived in a repository. The overlap of open access provided by both routes also deserves attention: a proportion of around `r filter(host_type_intersect, host == "Publisher & Repository") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access articles was accessible from both publisher web sites and repositories.
 
 ### Overlaps between Evidence types
 
