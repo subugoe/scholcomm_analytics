@@ -278,7 +278,7 @@ articles_per_type_df %>%
   )
 ```
 
-It can be seen that the long tail of the least frequent 8 categories at the bottom of the table only makes up `r (1 - (articles_per_type_df %>% filter(prop > 1) %>% .$N_records %>% sum() / sum(articles_per_type_df$N_records))) * 100` % of all articles, which is why we will aggregate these evidence types in the category `Other` in the following.
+It can be seen that the long tail of the least frequent 8 categories at the bottom of the table with proportions smaller than 1 % of all articles only makes up `r (1 - (articles_per_type_df %>% filter(prop > 1) %>% .$N_records %>% sum() / sum(articles_per_type_df$N_records))) * 100` % of all articles, which is why we will aggregate these evidence types in the category `Other` in the following.
 
 So far, we only examined the best open access location per DOI, indicated by `is_best`, a variable defined by Unpaywall algorithm that prioritises publisher-hosted content. However,  evidence types in Unpaywall are not exclusive categories. On the contrary, many records are associated with several evidence types, because various ways to openly access full-texts have been found by Unpaywall. For this reason, the following figure distinguishes whether a given evidence type is classified as best open access location by Unpaywall or not. It is clearly visible that Unpaywall prioritises publisher hosted content (`open`, `oa_journal`) over repository depositions (`oa_repository`), as they state on their website. However, the figure also shows that an existing free pdf version on the publisher's website (likely even without licensing information) is prioritised over journal level classifications as for example being indexed in DOAJ.
 
@@ -295,7 +295,7 @@ articles_per_type_df %>%
       100
   ) -> articles_per_type_grouped_df
 # group according to categorization with "Other"
-evidence_df %>%
+evidence_grouped_df <- evidence_df %>%
   mutate(evidence = as_factor(evidence)) %>%
   mutate(
     evidence_grouped = factor(
@@ -304,9 +304,12 @@ evidence_df %>%
     )
   ) %>%
   mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other")) %>%
+  group_by(evidence_grouped, is_best, year) %>%
+  summarize(number_of_articles = sum(number_of_articles))
+evidence_grouped_df %>%
   group_by(evidence_grouped, is_best) %>%
   summarize(number_of_articles = sum(number_of_articles)) %>%
-  #create plot
+#create plot
   ggplot(aes(x = evidence_grouped, y = number_of_articles, fill = is_best)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is best?") +
@@ -317,10 +320,6 @@ evidence_df %>%
   theme(panel.grid.major.y = element_blank()) +
   theme(panel.border = element_blank()) +
   coord_flip() +
-  scale_y_continuous(
-    labels = function(x)
-      format(x, scientific = TRUE)
-  ) +
   labs(y = "Number of Open Access Articles", x = "Evidence Type",
        title = "Number of Open Access Articles per Unpaywall Evidence Type") -> plot_ev_types_is_best
 #create interactive plot
@@ -330,17 +329,8 @@ plotly::ggplotly(plot_ev_types_is_best, tooltip = c("y"))
 To investigate the development of the most prevalent evidence types over time, we use a faceted graph. We again observe declines in the proportion repository-based evidences which are chosen as best location.
 
 ```{r, layout = "l-page", fig.cap="Development of the number of articles per evidence type over time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is highlighted.", fig.height=6}
-#collate least frequent categories as 'Other'
-evidence_df %>%
-  mutate(evidence = as_factor(evidence)) %>%
-  mutate(
-    evidence_grouped = factor(
-      fct_other(evidence, keep = articles_per_type_grouped_df$evidence_grouped),
-      levels = articles_per_type_grouped_df$evidence_grouped
-    )
-  ) %>%
-  mutate(evidence_grouped = fct_relevel(fct_rev(evidence_grouped), "Other")) %>%
-  #create plot
+# use collated data frame
+evidence_grouped_df %>%
   ggplot(aes(year, number_of_articles, fill = is_best)) +
   geom_bar(stat = "identity") +
   facet_wrap( ~ fct_rev(evidence_grouped), ncol = 2) +
@@ -350,15 +340,14 @@ evidence_df %>%
   theme(axis.ticks = element_blank()) +
   theme(panel.grid.major.x = element_blank()) +
   theme(panel.border = element_blank()) +
-  scale_y_continuous(
-    labels = function(x)
-      format(x, scientific = TRUE)
-  ) +
   scale_x_date(date_labels = "%y") +
   labs(x = "Publication Year", y = "Number of Open Access Articles",
        title = "Unpaywall Open Access Evidence Categories per Year") -> plot_ev_types_per_year
 #create interactive plot
-plotly::ggplotly(plot_ev_types_per_year, tooltip = c("y"))
+plotly::ggplotly(plot_ev_types_per_year, tooltip = c("y")) -> plotlyfacetfig
+# move y-axes label to the left to ensure readability
+plotlyfacetfig[['x']][['layout']][['annotations']][[2]][['x']] <- -0.08
+plotlyfacetfig
 ```
 
 ## Overlap of Open Access Provision and Evidence Types
@@ -459,11 +448,11 @@ evidence_single_cat_13_18_query <- readLines("database/evidence_single_cat_13_18
 # fetch records and bind them to one data frame
 evidence_categories_08_12 <- dbGetQuery(con, evidence_single_cat_08_12_query)
 evidence_categories_13_18 <- dbGetQuery(con, evidence_single_cat_13_18_query)
-evidence_categories_df <- bind_rows(evidence_categories_08_12, evidence_categories_13_18)
-evidence_categories_df %>%
+evidence_categories_df <- bind_rows(evidence_categories_08_12, evidence_categories_13_18) %>%
   group_by(ev_cat) %>%
   summarize(number_of_articles = sum(number_of_articles)) %>%
   arrange(desc(number_of_articles))
+evidence_categories_df
 ```
 
 We first illustrate for each evidence type - collating again the least frequent types in the category `Other` - the amount of articles which corresponds exclusively to this type and no others.
