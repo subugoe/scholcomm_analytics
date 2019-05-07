@@ -1,7 +1,7 @@
 ---
 title: "Open Access Evidence in Unpaywall"
 description: |
-  We investigated more than 31 million scholarly journal articles published between 2008 and 2018 that are indexed in Unpaywall, a widely used open access discovery tool. Using Google BigQuery and R, we determined over 11,6 million journal articles with open access full-text links in Unpaywall, corresponding to an open access share of 37 %. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to responsibly re-use Unpaywall data in bibliometric research and open access monitoring.
+  We investigated more than 31 million scholarly journal articles published between 2008 and 2018 that are indexed in Unpaywall, a widely used open access discovery tool. Using Google BigQuery and R, we determined over 11.6 million journal articles with open access full-text links in Unpaywall, corresponding to an open access share of 37 %. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to responsibly re-use Unpaywall data in bibliometric research and open access monitoring.
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
