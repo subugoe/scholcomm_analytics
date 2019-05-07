@@ -205,7 +205,7 @@ all_articles <- host_type_df %>%
   summarise(number_of_articles = sum(number_of_articles))
 
 plot_b <-
-  ggplot(host_type_df, aes(x = year, y = number_of_articles)) +
+  ggplot(host_type_df, aes(x = year, y = number_of_articles, text = paste0("Publication year: ", year(year)))) +
   geom_bar(
     data = all_articles,
     aes(fill = "All OA Articles"),
@@ -227,7 +227,7 @@ plot_b <-
   theme(panel.grid.major.x = element_blank()) +
   theme(panel.border = element_blank())
 # turn ggplot object into interactive plotly chart
-plotly::ggplotly(plot_b, tooltip = c("y", "x")) 
+plotly::ggplotly(plot_b, tooltip = c("y", "text")) 
 ```
 
 The figure shows that most publisher-provided open access links were obtained from journals that were not indexed in the DOAJ: these are `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum()` articles, representing `r host_type_df %>% filter(host == "Other Journals") %>% .$number_of_articles %>% sum() / host_type_df %>% .$number_of_articles %>% sum() * 100` % of all journal articles with openly available full-text identified by Unpaywall. 
@@ -336,7 +336,7 @@ To investigate the development of the most prevalent evidence types over time, w
 ```{r, layout = "l-page", fig.cap="Development of the number of articles per evidence type over time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is highlighted.", fig.height=6}
 # use collated data frame
 evidence_grouped_df %>%
-  ggplot(aes(year, number_of_articles, fill = is_best)) +
+  ggplot(aes(year, number_of_articles, fill = is_best, text = paste0("Publication year: ", year(year)))) +
   geom_bar(stat = "identity") +
   facet_wrap( ~ fct_rev(evidence_grouped), ncol = 2) +
   scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is best?") +
@@ -349,7 +349,7 @@ evidence_grouped_df %>%
   labs(x = "Publication Year", y = "Number of Open Access Articles",
        title = "Unpaywall Open Access Evidence Categories per Year") -> plot_ev_types_per_year
 #create interactive plot
-plotly::ggplotly(plot_ev_types_per_year, tooltip = c("y", "x")) -> plotlyfacetfig
+plotly::ggplotly(plot_ev_types_per_year, tooltip = c("y", "text")) -> plotlyfacetfig
 # move y-axes label to the left to ensure readability
 plotlyfacetfig[['x']][['layout']][['annotations']][[2]][['x']] <- -0.08
 plotlyfacetfig
@@ -411,7 +411,7 @@ host_type_all <- host_type_intersect %>%
   summarise(prop = sum(prop))
 # make a ggplot graphic
 plot_host_intersect <-
-  ggplot(host_type_intersect, aes(x = year, y = prop)) +
+  ggplot(host_type_intersect, aes(x = year, y = prop, text = paste0("Publication year: ", year(year)))) +
   geom_bar(
     data = host_type_all,
     aes(fill = "All OA Articles"),
@@ -432,7 +432,7 @@ plot_host_intersect <-
   theme(panel.grid.major.x = element_blank()) +
   theme(panel.border = element_blank())
 # turn ggplot object into interactive plotly chart
-plotly::ggplotly(plot_host_intersect, tooltip = c("y", "x")) 
+plotly::ggplotly(plot_host_intersect, tooltip = c("y", "text")) 
 ```
 
 The figure shows that Unpaywall found most open access full-text on publishers' websites (`r filter(host_type_intersect, grepl("Publisher", host, ignore.case = TRUE, fixed = FALSE)) %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100`%).  `r filter(host_type_intersect, host == "Publisher only") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access full-texts was not archived in a repository. The overlap of open access provided by both routes also deserves attention: a proportion of around `r filter(host_type_intersect, host == "Publisher & Repository") %>% .$number_of_articles %>% sum() / host_type_intersect %>% .$number_of_articles %>% sum() * 100` % of all open access articles was accessible from both publishers' websites and repositories.
@@ -570,6 +570,8 @@ Our Unpaywall data analysis revealed various open access location and evidence t
 In future, we will use these insights from our data analysis to work on a matching procedure between Unpaywall and the Web of Science in-house database from the [German Competence Center for Bibliometrics](http://www.bibliometrie.info/) in our [OAUNI project](https://www.wihoforschung.de/de/oauni-2182.php). In doing so, we want to represent Unpaywall's open access evidence as comprehensive as possible to allow for a pluralist view on open access to journal articles from researchers affiliated with German Universities.
 
 ## Acknowledgments {.appendix}
+
+We are very grateful for helpful feedback on this post and ongoing discussions on the usage of Unpaywall data for bibliometric analyses with our project partners in Bielefeld, Niels Taubert and Elham Iravani, the related project [OASE](https://www.wihoforschung.de/de/oase-1969.php), in particular Nick Fraser and Philipp Mayr-Schlegel, Stephan Stahlschmidt and Ali Akbaritabar from the [DZHW](https://www.dzhw.eu/en/), as well as Daniel Bangert and Birgit Schmidt from the [SUB Göttingen](https://www.sub.uni-goettingen.de/en/).
 
 We acknowledge financial support from the the Federal Ministry of Education and Research of Germany (BMBF) in the framework [Quantitative research on the science sector](https://www.wihoforschung.de/en/quantitative-research-on-the-science-sector-1573.php) (Project: "OAUNI Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland", Förderkennzeichen: 01PU17023A).
 
