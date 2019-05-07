@@ -571,7 +571,7 @@ In future, we will use these insights from our data analysis to work on a matchi
 
 ## Acknowledgments {.appendix}
 
-We are very grateful for helpful feedback on this post and ongoing discussions on the usage of Unpaywall data for bibliometric analyses with our project partners in Bielefeld, Niels Taubert and Elham Iravani, the related project [OASE](https://www.wihoforschung.de/de/oase-1969.php), in particular Nick Fraser and Philipp Mayr-Schlegel, Stephan Stahlschmidt and Ali Akbaritabar from the [DZHW](https://www.dzhw.eu/en/), as well as Daniel Bangert and Birgit Schmidt from the [SUB Göttingen](https://www.sub.uni-goettingen.de/en/).
+We are very grateful for helpful feedback on this post and ongoing discussions on the usage of Unpaywall data for bibliometric analyses with our project partners in Bielefeld, Dr. Niels Taubert and Elham Iravani, the related project [OASE](https://www.wihoforschung.de/de/oase-1969.php), in particular Nicholas Fraser and Prof. Dr. Philipp Mayr-Schlegel, Dr. Stephan Stahlschmidt and Dr. Aliakbar Akbaritabar from the [DZHW](https://www.dzhw.eu/en/), as well as Dr. Daniel Bangert and Dr. Birgit Schmidt from the [SUB Göttingen](https://www.sub.uni-goettingen.de/en/).
 
 We acknowledge financial support from the the Federal Ministry of Education and Research of Germany (BMBF) in the framework [Quantitative research on the science sector](https://www.wihoforschung.de/en/quantitative-research-on-the-science-sector-1573.php) (Project: "OAUNI Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland", Förderkennzeichen: 01PU17023A).
 

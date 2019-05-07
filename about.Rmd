@@ -17,4 +17,4 @@ We are based at the [Göttingen State and University Library](https://www.sub.un
 
 We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to start a blog about our work. As a technical framework for the blog, we are using [Distill for R Markdown](https://rstudio.github.io/distill/), a new web publishing format optimized for scientific and technical writing. 
 
-*Anne Hobert*, *Najko Jahn*
+*Dr. Anne Hobert*, *Najko Jahn*
