@@ -16,23 +16,8 @@
     "date": "2019-05-07",
     "categories": [],
     "preview": "posts/unpaywall_evidence/distill-preview.png",
-    "last_modified": "2019-05-07T10:37:29+02:00",
+    "last_modified": "2019-05-07T12:43:08+02:00",
     "preview_width": 1248,
     "preview_height": 768
-  },
-  {
-    "path": "posts/welcome/",
-    "title": "Welcome to Scholarly Communication Analytics with R",
-    "description": "Welcome to our new blog, Scholarly Communication Analytics with R. We hope you enjoy \nreading what we have to say!",
-    "author": [
-      {
-        "name": "Najko Jahn",
-        "url": "https://twitter.com/najkoja"
-      }
-    ],
-    "date": "2019-04-14",
-    "categories": [],
-    "preview": {},
-    "last_modified": "2019-04-15T13:18:53+02:00"
   }
 ]

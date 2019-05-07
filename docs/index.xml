@@ -22,14 +22,5 @@ decision-making around scholarly communication in libraries using R.
       <pubDate>Tue, 07 May 2019 00:00:00 +0000</pubDate>
       <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/unpaywall_evidence/distill-preview.png" medium="image" type="image/png" width="1248" height="768"/>
     </item>
-    <item>
-      <title>Welcome to Scholarly Communication Analytics with R</title>
-      <dc:creator>Najko Jahn</dc:creator>
-      <link>https://subugoe.github.io/scholcomm_analytics/posts/welcome</link>
-      <description>Welcome to our new blog, Scholarly Communication Analytics with R. We hope you enjoy 
-reading what we have to say!</description>
-      <guid>https://subugoe.github.io/scholcomm_analytics/posts/welcome</guid>
-      <pubDate>Sun, 14 Apr 2019 00:00:00 +0000</pubDate>
-    </item>
   </channel>
 </rss>
