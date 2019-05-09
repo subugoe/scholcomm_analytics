@@ -1,7 +1,7 @@
 ---
 title: "Open Access Evidence in Unpaywall"
 description: |
-  We investigated more than 31 million scholarly journal articles published between 2008 and 2018 that are indexed in Unpaywall, a widely used open access discovery tool. Using Google BigQuery and R, we determined over 11,6 million journal articles with open access full-text links in Unpaywall, corresponding to an open access share of 37 %. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to responsibly re-use Unpaywall data in bibliometric research and open access monitoring.
+  We investigated more than 31 million scholarly journal articles published between 2008 and 2018 that are indexed in Unpaywall, a widely used open access discovery tool. Using Google BigQuery and R, we determined over 11.6 million journal articles with open access full-text links in Unpaywall, corresponding to an open access share of 37 %. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to responsibly re-use Unpaywall data in bibliometric research and open access monitoring.
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
@@ -105,7 +105,7 @@ Here are the three data variables from the `oa_locations` object that we will fo
 
 To start with, we retrieve the number and proportion of journal articles with open access full-text published between 2008 and 2018 using Unpaywall's most basic open access indicator `is_oa`, a logical value, which is `TRUE` when at least one open access full-text was found. After matching and summarising the `is_oa` observations by year with dplyr, `collect()` from the dplyr database complement [dbplyr](https://cran.r-project.org/web/packages/dbplyr/index.html) loads the aggregated data from BigQuery into a local tibble. We use the [lubridate package](https://lubridate.tidyverse.org/) to transform the year variable to a date object.
 
-```{r cache=TRUE}
+```{r}
 library(lubridate)
 oa_08_12 <- upw_08_12 %>%
   # query and aggregate with dpylr 
@@ -205,7 +205,7 @@ all_articles <- host_type_df %>%
   summarise(number_of_articles = sum(number_of_articles))
 
 plot_b <-
-  ggplot(host_type_df, aes(x = year, y = number_of_articles, text = paste0("Publication year: ", year(year)))) +
+  ggplot(host_type_df, aes(x = year, y = number_of_articles, text = paste0("Publication year: ", lubridate::year(year)))) +
   geom_bar(
     data = all_articles,
     aes(fill = "All OA Articles"),
@@ -336,7 +336,7 @@ To investigate the development of the most prevalent evidence types over time, w
 ```{r, layout = "l-page", fig.cap="Development of the number of articles per evidence type over time. Least frequent evidence types are collated as category `Other`. For each type the total number of articles per year is shown for publication years from 2008 to 2018. In blue, the amount of articles where the corresponding evidence type is classified as `best_oa_location` by Unpaywall is highlighted.", fig.height=6}
 # use collated data frame
 evidence_grouped_df %>%
-  ggplot(aes(year, number_of_articles, fill = is_best, text = paste0("Publication year: ", year(year)))) +
+  ggplot(aes(year, number_of_articles, fill = is_best, text = paste0("Publication year: ", lubridate::year(year)))) +
   geom_bar(stat = "identity") +
   facet_wrap( ~ fct_rev(evidence_grouped), ncol = 2) +
   scale_fill_manual(values = c("#b3b3b3a0", "#56B4E9"), name = "Is best?") +
@@ -571,7 +571,7 @@ In future, we will use these insights from our data analysis to work on a matchi
 
 ## Acknowledgments {.appendix}
 
-We are very grateful for helpful feedback on this post and ongoing discussions on the usage of Unpaywall data for bibliometric analyses with our project partners in Bielefeld, Dr. Niels Taubert and Elham Iravani, the related project [OASE](https://www.wihoforschung.de/de/oase-1969.php), in particular Nicholas Fraser and Prof. Dr. Philipp Mayr-Schlegel, Dr. Stephan Stahlschmidt and Dr. Aliakbar Akbaritabar from the [DZHW](https://www.dzhw.eu/en/), as well as Dr. Daniel Bangert and Dr. Birgit Schmidt from the [SUB Göttingen](https://www.sub.uni-goettingen.de/en/).
+We are very grateful for helpful feedback on this post and ongoing discussions on the usage of Unpaywall data for bibliometric analyses with our project partners in Bielefeld, Niels Taubert and Elham Iravani, the related project [OASE](https://www.wihoforschung.de/de/oase-1969.php), in particular Nicholas Fraser and Philipp Mayr-Schlegel, Stephan Stahlschmidt and Aliakbar Akbaritabar from the [DZHW](https://www.dzhw.eu/en/), as well as Daniel Bangert and Birgit Schmidt from the [SUB Göttingen](https://www.sub.uni-goettingen.de/en/).
 
 We acknowledge financial support from the the Federal Ministry of Education and Research of Germany (BMBF) in the framework [Quantitative research on the science sector](https://www.wihoforschung.de/en/quantitative-research-on-the-science-sector-1573.php) (Project: "OAUNI Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland", Förderkennzeichen: 01PU17023A).
 
