@@ -19,27 +19,27 @@
  <!--/radix_placeholder_import_source-->
 
   <!--radix_placeholder_meta_tags-->
-  <title>Scholarly Communication Analytics: About our Blog</title>
+  <title>Scholarly Communication Analytics: Untitled</title>
   
   
   <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
   
   
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Scholarly Communication Analytics: About our Blog"/>
+  <meta property="og:title" content="Scholarly Communication Analytics: Untitled"/>
   <meta property="og:type" content="article"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Scholarly Communication Analytics"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Scholarly Communication Analytics: About our Blog"/>
+  <meta property="twitter:title" content="Scholarly Communication Analytics: Untitled"/>
   
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title"]}},"value":[{"type":"character","attributes":{},"value":["About our Blog"]}]}
+  {"type":"list","attributes":{},"value":[]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -1255,10 +1255,6 @@
   </script>
   
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
-  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
-  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
-  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
   <style type="text/css">
   .distill-site-nav {
@@ -1300,7 +1296,7 @@
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"About our Blog","authors":[]}
+{"title":"Untitled","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1325,22 +1321,32 @@
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>About our Blog</h1>
+<h1>README.utf8.md</h1>
 
 </div>
 
 
 <div class="d-article">
-<p>Welcome to our Blog! Here, you’ll find insights from our work as Data Analysts in the domain of scholarly communication. With this blog, we want to engage with the broader community about how to support data-driven workflows and decision-making around scholarly communication with R.</p>
-<p>We are based at the <a href="https://www.sub.uni-goettingen.de/en/news/">Göttingen State and University Library</a>, one of the largest academic libraries in Germany. We are using R-based tools in our everyday work and contribute to R package developments and training activities. In this blog, you’ll find news and case-studies around:</p>
-<ul>
-<li>Open Access and Open Science Analytics</li>
-<li>R Packages making use of open databases and helping us in our work</li>
-<li>R Tools for interactive visualizations and dashboard developments</li>
-<li>R-related training and outreach activities</li>
-</ul>
-<p>We want to thank <a href="https://masalmon.eu/">Maëlle Salmon</a> for encouraging us to start a blog about our work. As a technical framework for the blog, we are using <a href="https://rstudio.github.io/distill/">Distill for R Markdown</a>, a new web publishing format optimized for scientific and technical writing.</p>
-<p><em>Dr. Anne Hobert</em>, <em>Najko Jahn</em></p>
+<h2 id="scholarly-communication-analytics-with-r-blog">Scholarly Communication Analytics with R Blog</h2>
+<h3 id="how-to-use-it">How to use it?</h3>
+<p>Overview first steps: <a href="https://rstudio.github.io/distill/" class="uri">https://rstudio.github.io/distill/</a></p>
+<h4 id="clone-the-repo">Clone the repo</h4>
+<pre><code>
+git clone https://github.com/subugoe/scholcomm_analytics.git</code></pre>
+<h4 id="install-r-package-distill">Install R package distill</h4>
+<p>From GitHub using devtools.</p>
+<pre class="r"><code>
+devtools::install_github(&quot;rstudio/distill&quot;)</code></pre>
+<h4 id="creating-an-r-markdown-article-draft">Creating an R Markdown article draft</h4>
+<pre class="r"><code>
+library(rmarkdown)
+rmarkdown::draft(&quot;article.Rmd&quot;, &quot;distill_article&quot;, package = &quot;distill&quot;)</code></pre>
+<p>Reference managing is supported, however, there are some issues with BibTeX conversion, e.g. <code>--</code> is not rendered as emdash.</p>
+<h4 id="build-the-website">Build the website</h4>
+<pre class="r"><code>
+rmarkdown::render_site()</code></pre>
+<h3 id="license">License</h3>
+<p>CC-BY 4.0</p>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
