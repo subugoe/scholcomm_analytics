@@ -1,0 +1,202 @@
+---
+title: "Interfacing the PID Graph with R"
+description: |
+  The PID Graph from DataCite interlinks persistent identifiers (PID) in research like DOIs or ORCIDs. In this blog post, I will present how to interface this graph using the DataCite GraphQL API with R, and will visualise the research information network for a particular researcher.  
+author:
+  - name: Najko Jahn 
+    url: https://twitter.com/najkoja
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: "`r Sys.Date()`"
+output: distill::distill_article
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In his seminal work published in 1965, Derek J. de Solla Price proposed to study the relationships between research articles using bibliographic references [@de_Solla_Price_1965]. Today, research and research information infrastructure projects alike work on making such links discoverable across various domains. The [FREYA project](https://www.project-freya.eu/en/about/mission), funded by the European Commission, connects and interlinks persistent identifier (PID) schemes. It focuses, among others, on PIDs for persons, organisation, publications, research data and software. The project has created a PID Graph, which connects various resources using these persistent links. A GraphQL interface allows accessing these data.
+
+Upon invitation of [Martin Fenner](https://twitter.com/mfenner), Technical Director of DataCite and member of FREYA the team, I attended the half-day workshop [Project FREYA: connecting knowledge in the European Open Science Cloud ](https://www.project-freya.eu/en/events/14th-rda-plenary-meeting), co-located 14th  Plenary Meeting of the global Research Data Alliance. Using data analytics as an outreach strategdy, he prepared a large collection of [Juypter notebooks showcasing how the PID Graph can be interfaced using R and Python](https://github.com/datacite/notebooks). During the workshop, we presented two interactive notebooks provided by [mybinder.org](https://mybinder.org/v2/gh/datacite/notebooks/master), which the participants were able to re-run in the webbrowser. The first notebook [@kpi_notebook] presents the overall indexing coverage, while the second notebook demonstrated how to obtain data about a personal researcher network [@person_network].
+
+In this blog post, I draw on this work, presenting how to access, transform and viualise data from the PID graph with R in a tidy way. 
+
+## Accessing the PID Graph using GraphQL
+
+A first version of the PID graph is accessible via [the DataCite GraphQL API](https://api.datacite.org/graphql). [GraphQL](https://graphql.org/) is a query language designed to make connections across resources in a single request. An query for accessing publications, research data and software by a particular researcher using the DataCite GraphQL API looks like this:
+
+```{r}
+graphql_query <- '{
+  person(id: "https://orcid.org/0000-0003-1444-9135") {
+    id
+    type
+    name
+    publications(first: 50) {
+      totalCount
+      nodes {
+        id
+        type
+        relatedIdentifiers {
+          relatedIdentifier
+        }
+      }
+    }
+    datasets(first: 50) {
+      totalCount
+      nodes {
+        id
+        type
+        relatedIdentifiers {
+          relatedIdentifier
+        }
+      }
+    }
+    softwareSourceCodes(first: 50) {
+      totalCount
+      nodes {
+        id
+        type
+        relatedIdentifiers {
+          relatedIdentifier
+        }
+      }
+    }
+  }
+}'
+```
+
+In this example, I query for publications, research data and software code in the DataCite index authored by Scott Chamberlain, represented by his [ORCID](https://orcid.org/0000-0003-1444-9135). I also retrieve relation among them represented in the `relatedIdentifier` node.
+
+Scott developed an [R client to access GraphQL interfaces](https://github.com/ropensci/ghql), which is maintained by rOpenSci.
+
+```{r}
+# Not on CRAN.
+# Install from GitHub remotes::install_github("ropensci/ghql")
+library(ghql)
+```
+
+Initialize client session
+
+```{r}
+cli <- GraphqlClient$new(
+  url = "https://api.datacite.org/graphql"
+)
+qry <- Query$new()
+```
+
+Call DataCite GraphQL interface stored in `graphql_query`
+
+```{r}
+qry$query('getdata', graphql_query)
+```
+
+The data is represented in json. To parse the API reponse, I use the [jsonlite package](https://CRAN.R-project.org/package=jsonlite).
+
+```{r}
+library(jsonlite)
+my_data <- jsonlite::fromJSON(cli$exec(qry$queries$getdata))
+```
+
+## Data Transformation
+
+The data is represented as a nested list, which will be transformed to a data.frame using [tidyverse tools](https://www.tidyverse.org/). Here, I want to obtain all DOIs representing scholarly articles, datasets and software including the relationships among them. Infortunately, related identifiers of type DOI lack the DOI prefix, which will be also added.
+
+```{r}
+library(dplyr)
+library(tidyr)
+my_df <- bind_rows(
+  # publications
+  my_data$data$person$publications$nodes,
+  # dataset
+  my_data$data$person$datasets$nodes,
+  # software
+  my_data$data$person$softwareSourceCodes$nodes
+) %>%
+  # get related identifiers
+  unnest(cols = c(relatedIdentifiers), keep_empty = TRUE) %>%
+  # unfortunately, related identifiers of type DOI lack DOI prefix
+  mutate(to = ifelse(
+    grepl("^10.", relatedIdentifier),
+    paste0("https://doi.org/", relatedIdentifier),
+    relatedIdentifier)
+  )
+head(my_df)
+```
+
+A network consists of nodes (vertices) and links (edges). Nodes represent an output, while links describes relationships between them (related identifier).
+
+Let's create node
+
+```{r}
+my_nodes <- my_df %>%
+  select(name = id, type) %>%
+  distinct() %>%
+  # person
+  add_row(name = my_data$data$person$id, type = "Person")
+head(my_nodes)
+```
+
+Let's create a data.frame with the relationships between these nodes, i.e. edges
+
+```{r}
+my_edges_pub <- my_df %>%
+  select(source = id, target = to) %>%
+  # we only observe links between them
+  filter(target %in% my_nodes$name)
+#' lets ad relationsships between person and outputs
+my_edges <-
+  tibble(source = my_data$data$person$id, target = my_nodes$name) %>%
+  # no self loop
+  filter(target != my_data$data$person$id) %>%
+  bind_rows(my_edges_pub)
+head(my_edges)
+```
+
+## Network visualisation
+
+For network visualisation, I use the popular netowrk analysis package [igraph](https://igraph.org/redirect.html). First, the node and edge data is transformed to an igraph object. I also want to remove potenial loops.
+
+```{r}
+library(igraph)
+g <-
+  graph_from_data_frame(d = my_edges,
+                        vertices = my_nodes,
+                        directed = FALSE)
+#' remove potential loops
+g <- igraph::simplify(g)
+```
+
+Next, some visualisation parameter are defined including node colors and labels. Here, node colours represent the person and the three different publication types.
+
+```{r}
+#' define node colours
+my_palette <-
+  c("#6da7de", "#9e0059", "#dee000", "#d82222")
+my_color <- my_palette[as.numeric(as.factor(V(g)$type))]
+#' don't display label
+V(g)$label = NA
+```
+
+Now, let's visualise Scott's publication network according to DataCite metadata.
+
+```{r, layout="l-body-outset", height = 6}
+plot(simplify(g), vertex.color = my_color, 
+     vertex.frame.color = my_color,
+     arrow.mode = 0)
+legend(
+  "bottomleft",
+  legend = levels(as.factor(V(g)$type)),
+  col = my_palette,
+  bty = "n",
+  pch = 20 ,
+  pt.cex = 2.5,
+  cex = 1,
+  horiz = FALSE,
+  inset = c(0.1,-0.1)
+)
+```
+
+## Discussion
+
+
