@@ -1,7 +1,7 @@
 ---
 title: "Interfacing the PID Graph with R"
 description: |
-  The PID Graph from DataCite interlinks persistent identifiers (PID) in research like DOIs or ORCIDs. In this blog post, I will present how to interface this graph using the DataCite GraphQL API with R, and will visualise the research information network for a particular researcher.  
+  The PID Graph from DataCite interlinks persistent identifiers (PID) in research. In this blog post, I will present how to interface this graph using the DataCite GraphQL API with R. To illustrate it, I will visualise the research information network of a  person.  
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
@@ -9,22 +9,23 @@ author:
     affiliation_url: https://www.sub.uni-goettingen.de/
 date: "`r Sys.Date()`"
 output: distill::distill_article
-draft: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-In his seminal work published in 1965, Derek J. de Solla Price proposed to study the relationships between research articles using bibliographic references [@de_Solla_Price_1965]. Today, research and research information infrastructure projects alike work on making such links discoverable across various domains. The [FREYA project](https://www.project-freya.eu/en/about/mission), funded by the European Commission, connects and interlinks persistent identifier (PID) schemes. It focuses, among others, on PIDs for persons, organisation, publications, research data and software. The project has created a PID Graph, which connects various resources using these persistent links. A GraphQL interface allows accessing these data.
+In 1965, Derek J. de Solla Price proposed to study the relationships between research articles using bibliographic references [@de_Solla_Price_1965]. Ever since, scholars and librarians have been working on interrelating research activities and making such links discoverable. 
 
-Upon invitation of [Martin Fenner](https://twitter.com/mfenner), Technical Director of DataCite and member of FREYA the team, I attended the half-day workshop [Project FREYA: connecting knowledge in the European Open Science Cloud ](https://www.project-freya.eu/en/events/14th-rda-plenary-meeting), co-located 14th  Plenary Meeting of the global Research Data Alliance. Using data analytics as an outreach strategdy, he prepared a large collection of [Juypter notebooks showcasing how the PID Graph can be interfaced using R and Python](https://github.com/datacite/notebooks). During the workshop, we presented two interactive notebooks provided by [mybinder.org](https://mybinder.org/v2/gh/datacite/notebooks/master), which the participants were able to re-run in the webbrowser. The first notebook [@kpi_notebook] presents the overall indexing coverage, while the second notebook demonstrated how to obtain data about a personal researcher network [@person_network].
+In this context, the [FREYA project](https://www.project-freya.eu/en/about/mission), funded by the European Commission, connects and interlinks persistent identifier (PID) schemes. FREYA focuses, among others, on PIDs for persons (ORCID), organisations (ROR), publications, research data, and software (DOI). The project has created a PID Graph, which connects various resources using persistent identifiers. A GraphQL interface allows accessing these data.
 
-In this blog post, I draw on this work, presenting how to access, transform and viualise data from the PID graph with R in a tidy way. 
+Upon invitation of [Martin Fenner](https://twitter.com/mfenner), Technical Director of DataCite and member of FREYA the team, I attended the half-day workshop [Project FREYA: connecting knowledge in the European Open Science Cloud](https://www.project-freya.eu/en/events/14th-rda-plenary-meeting), co-located [14th Plenary Meeting of the Research Data Alliance](https://www.rd-alliance.org/plenaries/rdas-14th-plenary-helsinki-finland). Using data analytics as an outreach strategy, Martin prepared a large collection of Juypter notebooks showcasing how the PID Graph can be interfaced using R and Python [@martin_blog]. During the workshop, we presented two interactive notebooks deployed on [mybinder.org](https://mybinder.org/v2/gh/datacite/notebooks/master), and invited workshop participants to re-run them in the web browser. The first notebook [@kpi_notebook] presents the overall indexing coverage, while the second notebook demonstrated how to obtain data about a personal researcher network [@person_network].
+
+In this blog post, I want to expand on what I have learned during the FREYA workshop. Although most participants were able to interactively run the Jupyter notebooks, some had problems with understanding the steps along the data transformation path. In the following, I will therefore present an complementary approach of how to access, transform and visualise data from the PID graph with R by using tools from the popular [tidyverse](https://www.tidyverse.org/) package collection.
 
 ## Accessing the PID Graph using GraphQL
 
-A first version of the PID graph is accessible via [the DataCite GraphQL API](https://api.datacite.org/graphql). [GraphQL](https://graphql.org/) is a query language designed to make connections across resources in a single request. An query for accessing publications, research data and software by a particular researcher using the DataCite GraphQL API looks like this:
+A first version of the PID graph is accessible via [the DataCite GraphQL API](https://api.datacite.org/graphql). [GraphQL](https://graphql.org/) is a query language designed to request multiple connections across resources at once. As an example, a query for accessing publications, research data and software by a particular researcher using the DataCite GraphQL API looks like this:
 
 ```{r}
 graphql_query <- '{
@@ -66,9 +67,9 @@ graphql_query <- '{
 }'
 ```
 
-In this example, I query for publications, research data and software code in the DataCite index authored by Scott Chamberlain, represented by his [ORCID](https://orcid.org/0000-0003-1444-9135). I also retrieve relation among them represented in the `relatedIdentifier` node.
+Here, I query for publications, research data and software code authored by Scott Chamberlain, who is represented by his [ORCID](https://orcid.org/0000-0003-1444-9135). I also retrieve relations between his research activities that are represented in the `relatedIdentifier` node. The query is stored in the R object `graphql_query` that will be used to interface the DataCite GraphQL API in the following.
 
-Scott developed an [R client to access GraphQL interfaces](https://github.com/ropensci/ghql), which is maintained by rOpenSci.
+To make GraphQL requests with R, Scott developed the [R package `ghql`](https://github.com/ropensci/ghql), which is maintained by [rOpenSci](https://ropensci.org/). The package is not on CRAN, but can be installed from GitHub.
 
 ```{r}
 # Not on CRAN.
@@ -76,7 +77,7 @@ Scott developed an [R client to access GraphQL interfaces](https://github.com/ro
 library(ghql)
 ```
 
-Initialize client session
+To initialize the client session, call
 
 ```{r}
 cli <- GraphqlClient$new(
@@ -85,13 +86,13 @@ cli <- GraphqlClient$new(
 qry <- Query$new()
 ```
 
-Call DataCite GraphQL interface stored in `graphql_query`
+Next, I can send the query stored in `graphql_query` to the API.
 
 ```{r}
 qry$query('getdata', graphql_query)
 ```
 
-The data is represented in json. To parse the API reponse, I use the [jsonlite package](https://CRAN.R-project.org/package=jsonlite).
+The data is represented in json. To parse the API response, I use the [jsonlite package](https://CRAN.R-project.org/package=jsonlite).
 
 ```{r}
 library(jsonlite)
@@ -100,7 +101,7 @@ my_data <- jsonlite::fromJSON(cli$exec(qry$queries$getdata))
 
 ## Data Transformation
 
-The data is represented as a nested list, which will be transformed to a data.frame using [tidyverse tools](https://www.tidyverse.org/). Here, I want to obtain all DOIs representing scholarly articles, datasets and software including the relationships among them. Infortunately, related identifiers of type DOI lack the DOI prefix, which will be also added.
+The data is represented as a nested list, which can be transformed to a `data.frame` using [tidyverse tools](https://www.tidyverse.org/) `tidyr` and `dplyr`. Here, I want to obtain all DOIs representing scholarly articles, datasets and software including the relationships between them. Unlike the DOIs for research outputs, related identifiers of type DOI lack the DOI prefix. For consistency with the overall dataset, the prefix will be added.
 
 ```{r}
 library(dplyr)
@@ -124,9 +125,9 @@ my_df <- bind_rows(
 head(my_df)
 ```
 
-A network consists of nodes (vertices) and links (edges). Nodes represent an output, while links describes relationships between them (related identifier).
+A network consists of nodes (vertices) and links (edges). Nodes represent an output, while links describes relationships between them (`relatedIdentifier).
 
-Let's create node
+Let's create node `data.frame`
 
 ```{r}
 my_nodes <- my_df %>%
@@ -137,7 +138,7 @@ my_nodes <- my_df %>%
 head(my_nodes)
 ```
 
-Let's create a data.frame with the relationships between these nodes, i.e. edges
+and a `data.frame` with the relationships between these nodes, i.e. edges:
 
 ```{r}
 my_edges_pub <- my_df %>%
@@ -155,7 +156,7 @@ head(my_edges)
 
 ## Network visualisation
 
-For network visualisation, I use the popular netowrk analysis package [igraph](https://igraph.org/redirect.html). First, the node and edge data is transformed to an igraph object. I also want to remove potenial loops.
+For the graph visualisation, I use the popular network analysis package [igraph](https://igraph.org/redirect.html). First, the node and edge data are transformed to an igraph object. I also want to remove potential loops ("self-links").
 
 ```{r}
 library(igraph)
@@ -167,7 +168,7 @@ g <-
 g <- igraph::simplify(g)
 ```
 
-Next, some visualisation parameter are defined including node colors and labels. Here, node colours represent the person and the three different publication types.
+Next, some visualisation parameter are defined including node colours and labels. Here, node colours represent the person and the three different publication types.
 
 ```{r}
 #' define node colours
@@ -180,7 +181,7 @@ V(g)$label = NA
 
 Now, let's visualise Scott's publication network according to DataCite metadata.
 
-```{r, layout="l-body-outset", height = 6}
+```{r, layout="l-body-outset", width = 9, height = 6, dpi = 300}
 plot(simplify(g), vertex.color = my_color, 
      vertex.frame.color = my_color,
      arrow.mode = 0)
@@ -197,6 +198,17 @@ legend(
 )
 ```
 
-## Discussion
+## Discussion and outlook
+
+
+Using data analytics is a great outreach activity to promote the PID Graph. During the workshop, participants were able to run the interactive notebooks with analytical code. This enabled a hands-on experience about how to interface the graph with GraphQL. It also led to great discussions about the PID Graph's indexing coverage and potential use-cases. In particular, participants raised the issue of yet-incomplete PID metadata coverage. In our example, for instance, we likely miss a considerable amount of Scott's software projects linked with a DOI, because the underlying metadata records lack his ORCID.
+
+Besides the fruitful discussion about PID coverage in the metadata, I had the feeling that many participants struggled with following the steps for data transformation. Therefore, I decided to dry out the code from the initial notebook using the packages `tidyr` and `dplyr` from the tidyverse. I hope that such an approach will make the examples clearer. 
+
+In the future, the FREYA team will continuously extend the indexing coverage of the PID Graph in collaboration with related research graph activities from OpenAIRE[@openaire], and the [Wikibase community](https://blog.wikimedia.de/2018/07/13/wikibase-workshop-in-berlin/). On 25 October, there will be a joint meeting of large data providers for [Open Science Graphs at the RDA 14th Plenary](https://www.rd-alliance.org/rda-14th-plenary-programme). Together with the Software Sustainability Institute, FREYA will hold [a day-long hackathon](https://www.eventbrite.com/e/software-graph-hackathon-tickets-75300571035) on 4 December at the British Library so as to further improve data analytics using the PID graph.
+
+## Acknowledgments {.appendix}
+
+I would like to thank Martin Fenner, Kristian Garza, Slava Tykhonov, and Maaike de Jong for having me at the workshop, and their valuable help with the analysis and the use of Jupyter Notebooks. 
 
 
