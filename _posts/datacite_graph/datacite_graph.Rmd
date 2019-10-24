@@ -9,6 +9,7 @@ author:
     affiliation_url: https://www.sub.uni-goettingen.de/
 date: "`r Sys.Date()`"
 output: distill::distill_article
+bibliography: pubs.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -198,7 +199,7 @@ legend(
 )
 ```
 
-## Discussion and outlook
+## Discussion and Outlook
 
 
 Using data analytics is a great outreach activity to promote the PID Graph. During the workshop, participants were able to run the interactive notebooks with analytical code. This enabled a hands-on experience about how to interface the graph with GraphQL. It also led to great discussions about the PID Graph's indexing coverage and potential use-cases. In particular, participants raised the issue of yet-incomplete PID metadata coverage. In our example, for instance, we likely miss a considerable amount of Scott's software projects linked with a DOI, because the underlying metadata records lack his ORCID.
@@ -209,6 +210,6 @@ In the future, the FREYA team will continuously extend the indexing coverage of 
 
 ## Acknowledgments {.appendix}
 
-I would like to thank Martin Fenner, Kristian Garza, Slava Tykhonov, and Maaike de Jong for having me at the workshop, and their valuable help with the analysis and the use of Jupyter Notebooks. 
+I would like to thank Martin Fenner, Kristian Garza, Slava Tykhonov, and Maaike de Jong for having me at the workshop, and their valuable help with the analysis and the use of the PID Graph with Jupyter Notebooks. 
 
 
