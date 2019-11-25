@@ -11,14 +11,23 @@ to publish case-studies rapidely showing how to support data-driven workflows an
 decision-making around scholarly communication in libraries using R.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 23 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Mining and analysing invoice data from Elsevier relative to hybrid open access</title>
+      <dc:creator>Najko Jahn</dc:creator>
+      <link>https://subugoe.github.io/scholcomm_analytics/posts/elsevier_invoice</link>
+      <description>Publishers rarely make publication fee spending for hybrid journals transparent. Elsevier is a remarkable exception, as the publisher provides open and machine-readable data relative to its central invoicing with funding bodies and fee waivers at the article level. This blogpost illustrates how to mine Elsevier full-texts for these data with the data science tool R and presents new insights by analysing the resulting dataset: of 70,657 articles published open access in 1,753 hybrid journals from 2015 to date, around one third of the publication fees were paid through central agreements. Nevertheless, the majority of funding sources for hybrid open access remains unclear.</description>
+      <guid>https://subugoe.github.io/scholcomm_analytics/posts/elsevier_invoice</guid>
+      <pubDate>Mon, 25 Nov 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/elsevier_invoice/distill-preview.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Interfacing the PID Graph with R</title>
       <dc:creator>Najko Jahn</dc:creator>
       <link>https://subugoe.github.io/scholcomm_analytics/posts/datacite_graph</link>
       <description>The PID Graph from DataCite interlinks persistent identifiers (PID) in research. In this blog post, I will present how to interface this graph using the DataCite GraphQL API with R. To illustrate it, I will visualise the research information network of a  person.</description>
       <guid>https://subugoe.github.io/scholcomm_analytics/posts/datacite_graph</guid>
-      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 24 Oct 2019 00:00:00 +0000</pubDate>
       <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/datacite_graph/distill-preview.png" medium="image" type="image/png" width="3900" height="2400"/>
     </item>
     <item>
