@@ -7,6 +7,7 @@ author:
     url: https://twitter.com/najkoja
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
+doi: "21.11101/0000-0007-DFAC-D"
 output: distill::distill_article
 bibliography: literature.bib
 #always_allow_html: true
