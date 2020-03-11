@@ -1,0 +1,13 @@
+---
+title: "Accessing the OpenAIRE Research Graph dumps"
+description: |
+  
+author:
+  - name: Najko Jahn 
+    url: https://twitter.com/najkoja
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: `r Sys.Date()`
+output: distill::distill_article
+bibliography: pubs.bib
+---
