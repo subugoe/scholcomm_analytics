@@ -30,13 +30,15 @@ knitr::knit_hooks$set(
 )
 ```
 
-The OpenAIRE Research Graph provides a wide range of metadata about scholarly communication that includes scholarly publications interlinked with persons, organisations and funding streams. Since December 2019, this data can be accessed as a dump. 
+OpenAIRE has collected and interlinked scholarly communication data from various openly available data sources for over ten years. In December 2019, the open science network released the OpenAIRE Research Graph, a big data dump that contains metadata about  more than 110 milion research publications and 10 milion datasets that are linked to open accss full-texts as well as funder information The data dumps can be downloaded from Zenodo.
 
-While such data dump offers many opportunities for data analyses, working with them is often laborious, especially when tools for importing and transforming data of such size on a regular basis are not available for your statistical computing environment. In this blog post, I present openairegraphs, a R package that helps to load and transform data from the OpenAIRE Research Graph following tidy data principles. Focusing on grant-supported research results from the European Commission's Horizon 2020 funding programme, I present some general data characteristics, followed by a real-world example showcasing the usefulness of the OpenAIRE Research Graph for monitoring the uptake of the European Commission's open science policy.
+The OpenAIRE Research Graph offers many data analytics opportunities, but working with it is challenging. One reason is the size of the dump. Although the OpenAIRE Research Graph is already split into several data files, most of them don't fit the memory of an ordinary laptop (mine is a MacBook Retina Early 2015 with 8 GB Ram and s 256 SDD). Another challenge is the format. The dump consists of compressed XML-files, in which only certain elements may be needed for a data analysis.
+
+In this blog post, I introduce the R package openairegraphs, a work-in-progress effort, that helps you to transform large data files from the OpenAIRE Research Graph and to retrieve relevant small data for a data analysis. Focusing on grant-supported research results from the European Commission's Horizon 2020 funding programme (H2020), I present how to subset and analyse the graph using this package. My specific question is how the open access compliance rate of grant-supported projects affiliated with the University of Göttingen compares across the H2020 funding programme.
 
 ## What is the R package openairegraphs about?
 
-So far, the R package openairegraphs, which is available on GitHub, contains two sets of functions. The first set provides helpers to split and de-compress a large OpenAIRE Research Graph data file into seperate XML records that can be stored in a dedicated folder on your local computer. The other set consists of parsers that convert data from these XML files to rectangular data frames. This is an essential step before analysing the OpenAIRE Research Graph with R.
+So far, the R package openairegraphs, which is available on GitHub, contains two sets of functions. The first set provides helpers to split a large OpenAIRE Research Graph data file into seperate, decompressed XML records that can be stored in a dedicated folder on your local computer. The other set consists of parsers that convert data from these XML files to a table-like representation following the tidyverse philosophy, a popular approach and toolset for data analysis with R. Splitting, de-compressing and parsing are essential steps before analysing the OpenAIRE Research Graph.
 
 ### Installation 
 
@@ -49,9 +51,9 @@ remotes::install_github("njahn82/openairegraph")
 
 ### Loading a dump into R
 
-Several dumps from the OpenAIRE Research Graph are available on Zenodo. `openairegraph` has been tested to work with the dump `h2020_results.gz`, which comprises research outputs funded by the European Commission's Horizon 2020 funding programme.
+Several dumps from the OpenAIRE Research Graph are available on Zenodo. So far, I developed `openairegraph` to work with the dump `h2020_results.gz`, which comprises research outputs funded by the European Commission's Horizon 2020 funding programme.
 
-After downloading it, the dump `h2020_results.gz` can be imported into R using the jsonlite package. In the json file, each line contains the record identifier and the corresponding Base64-encoded XML record. Base64 is a standard that allows file compression in a text-based format.
+After downloading it, the dump `h2020_results.gz` can be imported into R using the jsonlite package. The following exampel shoas that in the json file, each line contains the record identifier and the corresponding Base64-encoded XML record. Base64 is a standard that allows file compression in a text-based format.
 
 ```{r}
 library(jsonlite) # tools to work with json files
@@ -67,7 +69,7 @@ oaire
 
 The function `openairegraph::oarg_decode`  allows de-coding each record: 
 
-```{r}
+```{r, echo = FALSE}
 library(openairegraph)
 openairegraph::oarg_decode(oaire, records_path = "data/records/", limit = 500, verbose = FALSE)
 ```
