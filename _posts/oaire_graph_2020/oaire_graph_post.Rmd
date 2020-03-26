@@ -30,15 +30,15 @@ knitr::knit_hooks$set(
 )
 ```
 
-OpenAIRE has collected and interlinked scholarly communication data from various openly available data sources for over ten years. In December 2019, the open science network released the OpenAIRE Research Graph, a big data dump that contains metadata about  more than 110 milion research publications and 10 milion datasets that are linked to open accss full-texts as well as funder information The data dumps can be downloaded from Zenodo.
+OpenAIRE has collected and interlinked scholarly data from various openly available sources for over ten years. In December 2019, this open science network released the OpenAIRE Research Graph, a big data dump that contains metadata about more than 110 milion research publications and 10 milion datasets that are connected to open accss full-texts as well as persons, organisations and funders. 
 
-The OpenAIRE Research Graph offers many data analytics opportunities, but working with it is challenging. One reason is the size of the dump. Although the OpenAIRE Research Graph is already split into several data files, most of them don't fit the memory of an ordinary laptop (mine is a MacBook Retina Early 2015 with 8 GB Ram and s 256 SDD). Another challenge is the format. The dump consists of compressed XML-files, in which only certain elements may be needed for a data analysis.
+Like most big data dumps, the OpenAIRE Research Graph offers many data analytics opportunities, but working with it is challenging. One reason is the size of the dump. Although the OpenAIRE Research Graph is already split into several data files, most of them don't fit the memory of a moderately equipped laptop. Another challenge is the format. The dump consists of compressed XML-files, in which only certain elements may be needed for a data analysis.
 
-In this blog post, I introduce the R package openairegraphs, a work-in-progress effort, that helps you to transform large data files from the OpenAIRE Research Graph and to retrieve relevant small data for a data analysis. Focusing on grant-supported research results from the European Commission's Horizon 2020 funding programme (H2020), I present how to subset and analyse the graph using this package. My specific question is how the open access compliance rate of grant-supported projects affiliated with the University of Göttingen compares across the H2020 funding programme.
+In this blog post, I introduce the R package `openairegraph`, a work-in-progress effort, that helps you to transform large data files from the OpenAIRE Research Graph and to retrieve relevant small data for a data analysis. Focusing on grant-supported research results from the European Commission's Horizon 2020 funding programme (H2020), I present how to subset and analyse the graph using this package. My specific question is how the open access compliance rate of grant-supported projects affiliated with the University of Göttingen compares across the H2020 funding programme.
 
-## What is the R package openairegraphs about?
+## What is the R package `openairegraph` about?
 
-So far, the R package openairegraphs, which is available on GitHub, contains two sets of functions. The first set provides helpers to split a large OpenAIRE Research Graph data file into seperate, decompressed XML records that can be stored in a dedicated folder on your local computer. The other set consists of parsers that convert data from these XML files to a table-like representation following the tidyverse philosophy, a popular approach and toolset for data analysis with R. Splitting, de-compressing and parsing are essential steps before analysing the OpenAIRE Research Graph.
+So far, the R package `openairegraph`, which is available on GitHub, has two sets of functions. The first set provides helpers to split a large OpenAIRE Research Graph data file into seperate, decompressed XML records that can be stored individually. The other set consists of parsers that convert data from these XML files to a table-like representation following the tidyverse philosophy, a popular approach and toolset for data analysis with R. Splitting, de-compressing and parsing are essential steps before analysing the OpenAIRE Research Graph.
 
 ### Installation 
 
@@ -51,9 +51,9 @@ remotes::install_github("njahn82/openairegraph")
 
 ### Loading a dump into R
 
-Several dumps from the OpenAIRE Research Graph are available on Zenodo. So far, I developed `openairegraph` to work with the dump `h2020_results.gz`, which comprises research outputs funded by the European Commission's Horizon 2020 funding programme.
+Several dumps from the OpenAIRE Research Graph are available on Zenodo. So far, I tested `openairegraph` to work with the dump `h2020_results.gz`, which comprises research outputs funded by the European Commission's Horizon 2020 funding programme (H2020).
 
-After downloading it, the dump `h2020_results.gz` can be imported into R using the jsonlite package. The following exampel shoas that in the json file, each line contains the record identifier and the corresponding Base64-encoded XML record. Base64 is a standard that allows file compression in a text-based format.
+After downloading it, the file can be imported into R using the jsonlite package. The following example shows that in the json file, each line contains the record identifier and the corresponding Base64-encoded XML record. Base64 is a standard that allows file compression in a text-based format.
 
 ```{r}
 library(jsonlite) # tools to work with json files
@@ -69,12 +69,12 @@ oaire
 
 The function `openairegraph::oarg_decode`  allows de-coding each record: 
 
-```{r, echo = FALSE}
+```{r}
 library(openairegraph)
 openairegraph::oarg_decode(oaire, records_path = "data/records/", limit = 500, verbose = FALSE)
 ```
 
-It writes out each de-coded record to a folder specified by the parameter `records_path`. Because the dumps are quite large, the function furthermore has a parameter that allows setting a limit, which is helpful for inspecting the output first. By default, a progress bar presents the current state of the process.
+It writes out each de-coded record to a specified folder. Because the dumps are quite large, the function furthermore has a parameter that allows setting a limit, which is helpful for inspecting the output first. By default, a progress bar presents the current state of the process.
 
 ### Parsing OpenAIRE records
 
@@ -93,11 +93,21 @@ First, obtain the file paths of the de-coded XML records.
 openaire_records <- list.files("data/records", full.names = TRUE)
 ```
 
-Next, we read each XML file using the xml2 package, and apply three parsers: `openairegraph::oarg_publications_md()`, `openairegraph::oarg_linked_projects()` and `openairegraph::oarg_linked_ftxt()`, resulting in a tibble.
+Storing the records individually allows to process the files independent from each other, which is a common approach when working with big data. Here, we use the `future` package to enable reading and parsing these records simultaneously with multiple R sessions. Running code in parallel reduces the execution time.
+
+In the following, we read each XML file using the xml2 package, and apply three parsers: `openairegraph::oarg_publications_md()`, `openairegraph::oarg_linked_projects()` and `openairegraph::oarg_linked_ftxt()`, resulting in a tibble. 
 
 ```{r}
-library(xml2)
-oaire_df <- purrr::map_df(openaire_records, function(files) {
+library(xml2) # working with xml files
+library(future) # parallel computing
+library(future.apply) # functional programming with parallel computing
+library(tictoc) # timing functions
+
+openaire_records <- list.files("data/records", full.names = TRUE)
+
+future::plan(multisession)
+tic()
+oaire_data <- future.apply::future_lapply(openaire_records, function(files) {
   # load xml file
   doc <- xml2::read_xml(files)
   # parser
@@ -108,13 +118,14 @@ oaire_df <- purrr::map_df(openaire_records, function(files) {
   out$id <- files
   out
 })
-oaire_df
+toc()
+oaire_df <- bind_rows(oaire_data)
 ```
 
-A note on performance: Parsing the whole dump `h2020_results` took me around 25 minutes on my Mac Book Pro (Early 2015) with 8 GB and SSD flash storage. I therefore recommend to back up the resulting data, instead of un-packing the whole dump for each analysis. Using `jsonlite::stream_out` outputs a text-based json-file, that can be versioned and prevents list-columns.
+Parsing the whole dump `h2020_results` took me around 2 hours. I therefore recommend to back up the resulting data, instead of un-packing the whole dump for each analysis. `jsonlite::stream_out()` outputs a text-based json-file. Backing up the data with this function has at least two advantages: it prevents list-columns and the text-based files can be logged with Git.
 
 ```{r}
-jsonlite::stream_out(oaire_df, file("data/h2020_parsed.json"))
+jsonlite::stream_out(oaire_df, file("data/h2020_parsed_short.json"))
 ```
 
 ## Real-World Example: Monitoring the Open Access Compliance across H2020 grant-supported projects at the institutional-level
@@ -128,6 +139,49 @@ oaire_df <- jsonlite::stream_in(file("data/h2020_parsed.json"), verbose = FALSE)
   tibble::as_tibble()
 ```
 
+It contains `r oaire_df %>% distinct(id) %>% nrow()` grant-supported research outputs, of which `r oaire_df %>% distinct(id) %>% nrow()`  In this use case, we will focus on the prevalence of open acess across H2020 projects using the following variables:
+
+```{r}
+pubs_projects <- oaire_df %>%
+  filter(type == "publication") %>%
+  select(id, type, best_access_right, linked_projects) %>%
+  # transform to a regular data frame with a row for each project
+  unnest(linked_projects) 
+pubs_projects
+```
+
+The dataset contains `r pubs_projects %>% distinct(id) %>% nrow()` literature publications from `r pubs_projects %>% filter(funding_level_0 == "H2020") %>% distinct(project_code) %>% nrow()`. What H2020 funding programme published most?
+
+```{r}
+library(cowplot)
+library(scales)
+pubs_projects %>%
+  filter(funding_level_0 == "H2020") %>% 
+  mutate(funding_scheme = fct_infreq(funding_level_1)) %>%
+  group_by(funding_scheme) %>%
+  summarise(n = n_distinct(id)) %>%
+  mutate(tt = fct_other(funding_scheme, keep = levels(funding_scheme)[1:10])) %>%
+  mutate(highlight = ifelse(funding_scheme %in% c("ERC", "RIA"), "yes", "no")) %>%
+  ggplot(aes(reorder(tt, n), n, fill = highlight)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  scale_fill_manual(
+    values = c("#B0B0B0D0", "#56B4E9D0"),
+    name = NULL) +
+  scale_y_continuous(
+    labels = scales::number_format(big.mark = ","),
+    expand = expansion(mult = c(0, 0.05)),
+    breaks =  scales::extended_breaks()(0:25000)
+    ) +
+  labs(x = NULL, y = "Publications", caption = "Data: OpenAIRE Research Graph") +
+  theme_minimal_vgrid() +
+  theme(legend.position = "none")
+```
+
+On average, a project published `r pubs_projects %>% filter(funding_level_0 == "H2020") %>% group_by(project_code) %>% summarise(n = n()) %>% .$n %>% sd()` articles. However, looking closer at the publication performance per H2020 funding programme highlight large variations. 
+
+
+
 Our aim is to analyse open access uptake levels across H2020 projects affiliated with the University of Göttingen relative to overall performance. As a first step, we choose project and access information from the data. Because publications can result from more than one project, funding information is stored in a nested data frame.
 
 ```{r}
@@ -137,31 +191,47 @@ pubs_projects <- oaire_df %>%
 pubs_projects
 ```
 
-Next, we want to identy those H2020 projects where the University of Göttingen participates in. There at least two ways to obtain more detailed project information: One is the OpenAIRE Reasearch Graph providing detailed information in another large dump, the other to merge with [open data provided by the European Commission](https://data.europa.eu/euodp/en/data/dataset/cordisH2020projects). For convenience, we will use the second option.
+Next, we want to identify H2020 projects with University of Göttingen participation. There at least two ways to obtain more detailed project information: One is the from the OpenAIRE Research Graph where project details from 29 funder are provided in a separate dump. Another option is to merge our dataset with [open data provided by the European Commission](https://data.europa.eu/euodp/en/data/dataset/cordisH2020projects). For convenience, we will use the second option.
+
 
 ```{r}
 # load local copy downloaded from the EC open data portal
-cordis_org <- readr::read_delim("data/cordis-h2020organizations .csv", delim = ";",
+cordis_org <- readr::read_delim("data/cordis-h2020organizations.csv", delim = ";",
                                locale = locale(decimal_mark = ",")) %>%
   # data cleaning
   mutate_if(is.double, as.character) 
 ```
 
-Identify projects with Uni Göttingen participation
+After loading the file, we identify projects with Uni Göttingen participation and add this information to the data.frame comprising metadata about H2020 publications using the Grant ID.
 
 ```{r}
 ugoe_projects <- cordis_org %>%
   filter(shortName %in% c("UGOE", "UMG-GOE")) %>% 
   select(project_id = projectID, role, project_acronym = projectAcronym)
-```
 
-Add it to our projects list
+pubs_projects_ugoe <- pubs_projects %>%
+  mutate(ugoe_project = funding_level_0 == "H2020" & project_code %in% ugoe_projects$project_id)
+```
 
 ```{r}
-pubs_projects_ugoe <- pubs_projects %>%
-  mutate(ugoe_project = funding_stream == "H2020" & project_code %in% ugoe_projects$project_id)
+ pubs_projects_ugoe %>%
+  filter(funding_level_0 == "H2020") %>% 
+  mutate(funding_scheme = fct_infreq(funding_level_1)) %>%
+  group_by(funding_scheme, project_code, project_acronym, best_access_right) %>%
+  summarise(oa_n = n_distinct(id)) %>% # per pub
+  mutate(oa_prop = oa_n / sum(oa_n)) %>%
+  filter(best_access_right == "Open Access") %>%
+  ungroup() %>%
+  mutate(all_pub = as.integer(oa_n / oa_prop)) 
+tmp %>% 
+  mutate(tt = fct_other(funding_scheme, keep = levels(funding_scheme)[1:10])) %>% 
+  group_by(tt) %>%
+  summarise(n = sum(all_pub)) %>%
+#  filter(all_pub >= 5) %>%
+  ggplot(aes(tt, n)) +
+  geom_bar(stat = "identity") +
+  coord_flip()
 ```
 
-
-## Conclussion
+## Conclusion
 
