@@ -1,22 +1,5 @@
 [
   {
-    "path": "posts/oaire_graph_2020/",
-    "title": "Accessing and analysing the OpenAIRE Research Graph data dumps",
-    "description": "The OpenAIRE Research Graph provides a wide range of metadata about grant-supported research publications. This blog post presents an experimental R package with helpers for splitting, de-compressing and parsing the underlying data dumps. I will demonstrate how to use them by examining the compliance of funded projects with the open access mandate in Horizon 2020.",
-    "author": [
-      {
-        "name": "Najko Jahn",
-        "url": "https://twitter.com/najkoja"
-      }
-    ],
-    "date": "2020-03-29",
-    "categories": [],
-    "preview": "posts/oaire_graph_2020/distill-preview.png",
-    "last_modified": "2020-03-29T17:20:20+02:00",
-    "preview_width": 1248,
-    "preview_height": 768
-  },
-  {
     "path": "posts/elsevier_invoice/",
     "title": "Mining and analysing invoice data from Elsevier relative to hybrid open access",
     "description": "Publishers rarely make publication fee spending for hybrid journals transparent. Elsevier is a remarkable exception, as the publisher provides open and machine-readable data relative to its central invoicing with funding bodies and fee waivers at the article level. This blogpost illustrates how to mine Elsevier full-texts for these data with the data science tool R and presents new insights by analysing the resulting dataset: of 70,657 articles published open access in 1,753 hybrid journals from 2015 to date, around one third of the publication fees were paid through central agreements. Nevertheless, the majority of funding sources for hybrid open access remains unclear.",
