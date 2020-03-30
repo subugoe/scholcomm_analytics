@@ -10,7 +10,7 @@ author:
   - name: Anne Hobert
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
-date: "`r Sys.Date()`"
+date: May 7, 2019
 creative_commons: CC BY
 output: distill::distill_article
 bibliography: pubs.bib
