@@ -81,7 +81,7 @@ openairegraph::oarg_decode(oaire, records_path = "data/records/",
 
 `openairegraph::oarg_decode()` writes out each XML-formatted record as a zip file to a specified folder. Because the dumps are quite large, the function furthermore has a parameter that allows setting a limit, which is helpful for inspecting the output first. By default, a progress bar presents the current state of the process.
 
-### Parsing OpenAIRE OpenAIRE Research Graph records
+### Parsing OpenAIRE Research Graph records
 
 So far, there are four parser available to consume the H2020 results set:
 
