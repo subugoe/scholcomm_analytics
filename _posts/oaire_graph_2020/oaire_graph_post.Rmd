@@ -310,7 +310,8 @@ p <- ggplot(goe_oa, aes(funding_scheme, oa_prop)) +
                aes(label = `H2020 project`),
              colour = "#AF42AE",
              alpha = 0.9,
-             size = 3) +
+             size = 3,
+             width = 0.25) +
   geom_hline(aes(
     yintercept = mean(oa_prop),
     color = paste0("Mean=", as.character(round(
