@@ -99,7 +99,7 @@ openaire_records <- list.files("data/records", full.names = TRUE)
 ```
 
 After that, I read each XML file using the `xml2`[@xml2] package, and apply  three parsers: `openairegraph::oarg_publications_md()`, `openairegraph::oarg_linked_projects()` and `openairegraph::oarg_linked_ftxt()`.  I use the `future`[@future] and `future.apply `[@future_apply] packages to enable reading and parsing these records simultaneously with multiple R sessions. Running code in parallel reduces the execution time.
-# Does R do that internally? I assume how well this works depends on the system conditions, maybe a link to where this is described could  it?
+# Does R do that internally? I assume how well this works depends on the system conditions. A link to where this is described could help.
 
 ```{r}
 library(xml2) # working with xml files
