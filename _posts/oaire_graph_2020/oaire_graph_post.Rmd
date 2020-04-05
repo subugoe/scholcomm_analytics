@@ -345,8 +345,7 @@ plotly::ggplotly(p, tooltip = c("label"))
 ```
 
 Figure \@ref(fig:ugoe) shows that many H2020-projects with University of Göttingen participation have an uptake of open access to grant-supported publications that is above the average in the peer group. At the same time, some perform below expectation. Together, this provides a valuable insight into open access compliance at the university-level, especially for research support librarians who are in charge of helping grantees to make their work open access. They can, for instance, point grantees to OpenAIRE-compliant repositoires for self-archiving their works.
-# How does knowing how  projects compare with others funded by the same institutions help to help grantees make their own work open access? To my knowledge the availability of outlets of acceptable quality for publication is highly field specific and I don't really see how the funder comes into play, unless funders only fund certain fields. 
-# NJ: self-archiving is also possible to comply with the EC's oa mandate, added a sentence
+
 
 ## Discussion and conclusion
 
