@@ -2,12 +2,12 @@
 title: "Accessing and analysing the OpenAIRE Research Graph data dumps"
 description: | 
   The OpenAIRE Research Graph provides a wide range of metadata about grant-supported research publications. This blog post presents an experimental R package with helpers for splitting, de-compressing and parsing the underlying data dumps. I will demonstrate how to use them by examining the compliance of funded projects with the open access mandate in Horizon 2020.
-draft: true
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
+date: "`r Sys.Date()`"
 output: distill::distill_article
 bibliography: literature.bib
 resources:
@@ -144,6 +144,8 @@ In this use case, I will illustrate how to make use of the OpenAIRE Research Gra
 ### Overview
 
 As a start, I load a dataset, which was compiled following the above-described methods using the whole `h2020_results.gz` dump.
+
+<aside>The parsed file is shared as <a href="https://github.com/subugoe/scholcomm_analytics/releases/tag/oaire_graph_post"> GitHub release asset</a></aside>
 
 ```{r}
 oaire_df <-
