@@ -1,10 +1,10 @@
 ---
-title: "Exploring the Open Access Evidence base in Unpaywall with Python"
+title: "Exploring the Open Access Evidence Base in Unpaywall with Python"
 description: |
   Open Access evidence sources constantly change. In this blog post, I present a Python based approach for analysing the most recent snapshots from the open access discovery service Unpaywall. Results shows a growth in open access content, partly because of newly introduced evidence sources like Semantic Scholar. 
 author: 
   - Nick Haupka
-date: "`r Sys.Date()`"
+date: March 30, 2020
 preview: distill-preview.png
 creative_commons: CC BY
 output: distill::distill_article
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 In this blog post, I discuss the results from the former blog post "[Open Access Evidence in Unpaywall](https://subugoe.github.io/scholcomm_analytics/posts/unpaywall_evidence/)" by comparing different database snapshots obtained from Unpaywall. Since the article´s publication on May 7th, 2019, Unpaywall has updated its data snapshots. Therefore, I want to explore potential changes in the Unpaywall data over time. For this post I used the most recent Unpaywall data dump from February 2020. Instead of using R, I present how to analyse the Unpaywall dump with Python.
 
-The SUB scholarly communication analytics team regularly stores the Unpaywall snapshot on Google BigQuery. To query it in Python, I use the [google-cloud-bigquery](https://googleapis.dev/python/bigquery/latest/index.html) package. By default, this package does not ship with [pandas](https://pandas.pydata.org/). However, I recommend to use this package along with pandas for a better experience, because the queried data can be represented as a pandas DataFrame. 
+The SUB scholarly communication analytics team regularly stores the Unpaywall snapshot on Google BigQuery. To query it in Python, I use the [google-cloud-bigquery](https://googleapis.dev/python/bigquery/latest/index.html) package. By default, this package does not ship with the data analysis tool [pandas](https://pandas.pydata.org/). However, I recommend to use this package along with pandas for a better experience, because the queried data can be represented as a pandas DataFrame. 
 
 ```{python}
 from google.cloud import bigquery
