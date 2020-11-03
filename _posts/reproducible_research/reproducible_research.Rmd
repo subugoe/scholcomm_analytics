@@ -1,0 +1,63 @@
+---
+title: "How we tried to make our data analysis reproducible"
+description: |
+  We conducted a data analysis investigating the open access (OA) uptake of German universities and non-university research institutions, taking into consideration the particular structure of the German research landscape. Based on several data sources we derived the OA share of their publication output, differentiating distinct OA types. In the spirit of good scientific practise and Open Science principles, we made an effort to ensure reproducibility of our empirical study. This report describes our line of action, why the result is still not thoroughly reproducible and the approach that we propose to address the open issues.
+author:
+  - name: Najko Jahn 
+    url: https://twitter.com/najkoja
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+  - name: Anne Hobert
+    url: https://twitter.com/anhobert
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+  - name: Maximilian Held
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: 
+creative_commons: CC BY
+output: distill::distill_article
+bibliography: pubs.bib
+draft: true
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE
+)
+```
+
+  Within the framework of our BMBF funded research project [OAUNI - Open-access publication at universities in Germany: Development and influencing factors](https://www.wihoforschung.de/en/oauni-2182.php) we conducted a data analysis investigating the open access (OA) uptake of German universities and non-university research institutions, taking into consideration the particular structure of the German research landscape. We consulted the Web of Science in house instance of the [German Competence Center for Bibliometrics](http://www.forschungsinfo.de/Bibliometrie/en/index.php?id=home) in order to obtain the journal publications by authors affiliated with German research institutions which were published in the period from 2010 to 2018. From the ISSN-Gold-OA 3.0 list provided by Bielefeld university <!-- add citation--> and the OA discovery service [Unpaywall](https://unpaywall.org/), developed and maintained by the team of [Our Research](https://ourresearch.org/), we gathered information on their OA status. Using additionally [OpenDOAR](https://v2.sherpa.ac.uk/opendoar/) for a repository classification, we derived not only the overall OA share of individual institutions and research sectors but also prevalences of distinct OA types based on a systematic classification scheme.
+  
+  In the spirit of good scientific practise and Open Science principles, we made an effort to ensure that our empirical study is as reproducible as possible. Also practical considerations played a role since we expect us and colleagues to be able to work much more efficiently in future projects if our methods are documented openly and designed to be reused in other contexts. The first part of this report describes the line of action we took during the process of this data analysis. We then illustrate why the result is still not thoroughly reproducible and what aspects can be improved. Lastly, we propose an approach that adresses the open issues and that we want to put into practise ourselves in the future. The main idea is to conduct pacakge oriented research projects instead of focusing on (print-)papers as the primary research output.
+ 
+## Line of action 
+ 
+ Data sources used, data wrangling
+ 
+ Github repository
+ 
+ Dashboard
+ 
+ Preprint
+ 
+## Remaining obstacles preventing thorough reproducibility
+ 
+ data: proprietary dataset, different aggregation levels
+ 
+ scripts, not functions
+ 
+## Future plans
+
+muggle, package oriented research with executable papers as output
+ 
+## Acknowledgments {.appendix}
+
+<!-- coauthors of the paper, potentially proof-readers -->
+
+We acknowledge financial support from the the Federal Ministry of Education and Research of Germany (BMBF) in the framework [Quantitative research on the science sector](https://www.wihoforschung.de/en/quantitative-research-on-the-science-sector-1573.php) (Project: "OAUNI Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland", Förderkennzeichen: 01PU17023A).
+
