@@ -1,0 +1,90 @@
+---
+title: "Open Scholarly Data @ SUB"
+description: |
+ In this blog post, we describe how and for what purpose we set up a data infrastructure for open scholarly data at the SUB Göttingen. 
+author: 
+  - Nick Haupka
+  - Anne Hobert
+  - Najko Jahn
+date: May 9, 2022
+creative_commons: CC BY
+output:
+ - distill::distill_article
+ - html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE
+)
+```
+
+## Motivation
+
+At the SUB Göttingen we regularly conduct data analyses of scholarly communication in the context of bibliometric research but also to enable informed decision making at our institution and for our collaborators. The motive for setting up a data infrastructure for open scholarly data is to have the information contained in various metadata collections that we heavily use directly at hand. Additonally, the cloud-based solution we implemented facilitates the collaboration internally and with our colleagues from other organisations.
+
+We started out by downloading and processing the Unpaywall data snapshots, which we then used to first investigate the data source itself and [explored the extent of open access status information in Unpaywall](https://subugoe.github.io/scholcomm_analytics/posts/unpaywall_evidence/) and its development over time [@Jahn&2021]. We further used the Unpaywall data in a large scale study on the uptake of open access in Germany[@hobert_open_2021] within the BMBF funded project [OAUNI](https://www.sub.uni-goettingen.de/en/projects-research/project-details/projekt/oauni/).
+
+Over time, we refined our data preparation routines and added more data sources, like Crossref or OpenAlex.
+
+## Data available within our Google BigQuery instance
+
+We offer several datasets on our BigQuery instance. Each dataset consists of at least one table. A dataset represents a specific data source (crossref, unpaywall, etc.). Furthermore, we distinguish between datasets that bundle historical snapshots and datasets that offer the most recent snapshot (see table x). Historical snapshots include old snapshots that are taken at regular intervals, e.g. annually, to assess the quality of a database or service and its data. Here you will also find the snapshots that we use in analyses for our publications. The data sets, which contain tables that are kept up to date, are regularly overwritten. We do not apply this to the historical snapshots.
+
+The tables from the datasets can represent an image of the imported database, but can also only cover a limited time period and publication type. For example, the Unpaywall snapshot only includes journals from 2013 to present. For Crossref, we provide journals from publication year 2008 to present. In the case of Openalex, the complete dump is offered, i.e. all publication years as well as publication types. 
+
+## Processing Steps
+Depending on the database, we use different routines to integrate a snapshot into our BigQuery instance. In general, the routines can be divided into the steps download, processing/transformation, upload and table creation. In the first step we transfer the dump to our servers at the Gesellschaft für wissenschaftliche Datenverarbeitung mbH Göttingen (GWDG). In the second step, we transform the dataset to convert it into a suitable data format, convert date entries, and save relevant fields and remove fields that are not relevant for us. For this we make use of the High Performing Cluster (HPC) of the GWDG. This service allows us to perform memory-intensive tasks that would otherwise not be possible with our equipment. In addition, we are not dependent on external services, which would cause additional costs. Under certain circumstances and depending on the selected configuration, the transformation of the data on the HPC can take several hours. Finally, the transformed datasets are loaded into a Google Bucket. From there, a table can be created in BigQuery.
+
+In the following, we will go into the individual steps that we use for the aforementioned databases.
+
+***Unpaywall***:
+
+**Download**: Unpaywall snapshots are published at regular intervals on Amazon S3 cloud storage [link](https://s3-us-west-2.amazonaws.com/unpaywall-data-snapshots). A snapshot consists of a file that is about 16 to 30 GB in size. The download is free of charge. An account is not required. The file is in JSON Lines format. 
+
+**Processing**: When extracting the file we use the command-line tool [jq](https://stedolan.github.io/jq/). jq is designed for processing JSON data. It allows filtering content as well as making adjustments to the content (e.g. renaming keys). Furthermore we use the program [parallel](https://www.gnu.org/software/parallel/), which allows parallel processing. The result are many small files. These are compressed and then loaded into a Google Bucket. 
+
+The used script is deposited in the following [Github Repo](https://github.com/naustica/unpaywall_bq).
+
+***Crossref***:
+
+**Download**: Crossref publishes a database snapshot every month. These can be downloaded in XML or JSON format. The snapshot is divided into many small files that are combined in a tar archive. For the download a paid account is needed. This can be requested under [Link](). The snapshots are usually very large (100 to 160 GB).
+
+**Processing**: The script we use for processing is based on the procedure of the [Academic Observatory](https://github.com/The-Academic-Observatory/academic-observatory-workflows). We have modified it slightly so that it runs on our servers. 
+
+The script used is deposited in the following [Github repo](https://github.com/naustica/crossref_bq).
+
+***OpenAlex***:
+
+**Download**: The OpenAlex snapshot is divided into five entities. These are Works, Authors, Venues, Institutions, and Concepts. Each entity can be downloaded individually or together with the other entities. The download is free of charge. An account is not required. However, the [aws Command Line Interface](https://aws.amazon.com/cli/) is required for the download. The entities are of different sizes. For example, the Works entity is over 500 GB, while the Authors entity is about 60 GB. The files are in JSON lines format.
+
+**Processing**: Since the files are in JSON lines format, they can be loaded directly into a Google Bucket. However, for manual correction on the data, we also have a script that is based on the Crossref script.
+
+The script used is deposited in the following [Github repo](https://github.com/naustica/openalex).
+
+
+## Accessing the Data (Najko)
+
+ - Weboberfläche / SQL Editor
+    - R / Python Clients (dplyr Syntax)
+    - Automatisierung GitHub Actions
+    - Rechtemanagement über Google, so dass auch Externe nutzen können
+    
+## Let's talk money (Najko)
+
+   - Speicher
+    - Abfrage
+    - Perspektive IAAS
+
+## Discussion and Outlook (alle)
+
+- Vor- und Nachteile BQ
+    - Nachteil: propiertäre Datenbanktechnologie das ins lokale rechenzentrum überführen
+    - Nachteil: personenbezogene Daten und propiertäre wie KB Daten
+
+- Zusammenarbeit mit Academic Observatory intensivieren, deren DAtensätze nachnutzen
+
