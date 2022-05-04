@@ -7,7 +7,6 @@ author:
     url: https://twitter.com/najkoja
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
-doi: "21.11101/0000-0007-DFAC-D"
 output: distill::distill_article
 bibliography: literature.bib
 #always_allow_html: true
@@ -54,13 +53,13 @@ To allow for a data-driven discussion about Elsevier's approach and its potentia
 As a start, I used the [Elsevier publication fee price list](https://www.elsevier.com/__data/promis_misc/j.custom97.pdf), an openly available pdf document, to determine current hybrid open access journals in Elsevier's journal portfolio. The rOpenSci [tabulizer](https://github.com/ropensci/tabulizer) package [@tabulizer] allowed me to extract data about these journals from this file. 
 
 <aside>
-  See analytical script [fetch_apc_list.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/analysis/fetch_apc_list.R) for more details. 
+  See analytical script [fetch_apc_list.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/R/fetch_apc_list.R) for more details. 
 </aside>
 
 Then, I interfaced the Crossref REST API with the R package [rcrossref](https://docs.ropensci.org/rcrossref/) [@rcrossref]. The first API call retrieved facet field counts for license URLs and the yearly article volumes for the period 2015-19 for every journal. After matching Creative Commons license URLs indicating open access articles, a second API call retrieved article-level metadata per journal. Next, I used the metadata field `delay-in-days` to exclude open access articles published after an embargo period ("delayed open access"). Because a few records had different date formats, which were used for the delay calculation by Crossref, I allowed for a lag of 31 days. 
 
 <aside>
-  See analytical script [fetch_cr_md.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/analysis/fetch_cr_md.R) for more details. 
+  See analytical script [fetch_cr_md.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/R/fetch_cr_md.R) for more details. 
 </aside>
 
 Elsevier participates in the [Crossref Text and Data Mining Services (Crossref-TDM)](https://support.crossref.org/hc/en-us/articles/215750183-Crossref-Text-and-Data-Mining-Services) and provides access to full-texts as `html` and `xml` documents. Surprisingly, the `xml` representation not only contains the full-text, but also comprises embedded metadata including information about open access sponsorship in the `<core>` node: 
@@ -84,14 +83,14 @@ Elsevier participates in the [Crossref Text and Data Mining Services (Crossref-T
 After downloading the Elsevier full-texts with the [crminer](https://docs.ropensci.org/crminer/) package[@crminer], I extracted the above-highlighted open access information from the `xml` documents. 
 
 <aside>
-  See analytical script [tdm_oa_info.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/analysis/tdm_oa_info.R) for more details.
+  See analytical script [tdm_oa_info.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/R/tdm_oa_info.R) for more details.
 </aside>
 
 Moreover, I parsed the first occurrence of an author email, assuming that email domains roughly indicate the affiliation of the relevant corresponding author at the time of publication. The package [urltools](https://CRAN.R-project.org/package=urltools) [@urltools] made it possible to extract email domains and to split them into meaningful parts. 
 
 
 <aside>
-  See analytical script [extract_email_domains.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/analysis/extract_email_domains.R) for more details.
+  See analytical script [extract_email_domains.R](https://github.com/subugoe/elsevier_hybrid_volume/blob/master/R/extract_email_domains.R) for more details.
 </aside>
 
 Finally, to measure the overlap between crowd-sourced and publisher-provided invoice data, I downloaded spending data from the Open APC Initiative [@openapc]. To my knowledge, the Open APC Initiative maintains the largest evidence-base for institutional spending on open access publication fees.
@@ -265,7 +264,9 @@ email_df <- hybrid_df %>%
   mutate(suffix = fct_rev(suffix)) %>%
   mutate(suffix = fct_relevel(suffix, "other")) 
 ggplot(email_df, aes(suffix, prop)) +
-  geom_bar(stat = "identity", fill = c(rep("grey60", 7), "#56B4E9")) +
+  geom_bar(stat = "identity" #, 
+        #  fill = c(rep("grey60", 7), "#56B4E9")
+          ) +
   geom_text(aes(label = paste0(round(prop*100, 1), "%")),
              color="white", hjust=1.1) +
   coord_flip() +
