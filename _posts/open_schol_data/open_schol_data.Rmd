@@ -82,9 +82,10 @@ The script used is deposited in the following [Github repo](https://github.com/n
 
 ## Discussion and Outlook (alle)
 
-- Vor- und Nachteile BQ
-    - Nachteil: propiertäre Datenbanktechnologie das ins lokale rechenzentrum überführen
-    - Nachteil: personenbezogene Daten und propiertäre wie KB Daten
+Granted, there are some disadvantages to using Google's BigQuery for our data infrastructure. By doing so, we are using a proprietary data base technology. Moreover, depending on the specific use cases, data protection has to be given special consideration. This would, for example, be relevant for a study based on confidential personal data or in the situation where we work with proprietary data to which the access is licensed only for particular research interests by the providers.
+
+Still, we've come to the conclusion that for us, the advantages outweigh the weaknesses of this approach. Firstly, we enjoy the high performance: Being able to query large data set as quickly as BigQuery allows us to do is just amazing. We would not be able to achieve something comparable with a self-hosted data base. Secondly, using a cloud-based data infrastructure facilitates the collaboration for us internally, since we can easily access it also from the home office that most of us are working at these days, but also with colleagues from other institutions - all you need to bring is a Google account. Lastly, what makes things much easier in our daily work is that BigQuery integrates well with our analytical environments based on R, or python resp.
+
 
 - Zusammenarbeit mit Academic Observatory intensivieren, deren DAtensätze nachnutzen
 
