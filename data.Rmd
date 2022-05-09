@@ -1,0 +1,80 @@
+---
+title: "Open Scholarly Data @ SUB Göttingen - Overview"
+description: "On this page you will find an overview of datasets we provide on our Google BigQuery instance."
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Working with large bibliometric databases has become a major part of our analyses and publications at the SUB Göttingen in recent years. In this context, we have been using the Google BigQuery service, which allows us to query and analyze large datasets quickly, efficiently, and cost-effectively. Since we make our results publicly available to our project partners as well as for transparency purposes, we are constantly working on an effective management and clear presentation of the data.
+
+Several bibliometric databases are accessible via our Google Big Query instance. In particular, we focus on the [Unpaywall](https://unpaywall.org), [Crossref](https://www.crossref.org) and [OpenAlex](https://openalex.org) databases. We manage and curate these databases and provide regular updates, which we take over from the database operators. Our focus in analysis and provision is on journal articles. The dumps we provide do not have to be the same as the dumps provided by the database providers. For example, we do not take over all data fields. Also we clean up the data (e.g. time formats).
+
+The structure of our instance consists of providing both a current snapshot and historical snapshots for the respective databases. This is to ensure that one can retrieve both current information and changes to the data of a database over a longer period of time. 
+
+An overview of our currently maintained data sets can be found below.
+
+## Status Crossref
+
+### Current Snapshot (cr_instant)
+
+::: l-body-outset
+
+| Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
+|  2022/02        | all.json.tar.gz | cr_instant.snapshot | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  20.03.2022  | 2013-2022 |  35.050.841 |
+
+:::
+
+### Historical Snapshots (cr_history)
+
+::: l-body-outset
+
+| Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
+|  2018/04        | all.json.tar.gz | cr_history.cr_apr18 | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  20.02.2022  | 2013-2018 | 16.766.035 |
+|  2019/04        | all.json.tar.gz | cr_history.cr_apr19 | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  29.10.2021  | 2013-2019 | 20.715.644 |
+|  2020/04        | all.json.tar.gz | cr_history.cr_apr20 | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  29.10.2021  | 2013-2020 | 25.334.525 |
+|  2021/04        | all.json.tar.gz | cr_history.cr_apr21 | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  29.10.2021  | 2013-2021 | 30.579.119 |
+
+:::
+
+## Status Unpaywall
+
+### Current Snapshot (upw_instant)
+
+::: l-body-outset
+
+| Snapshot| File                                          | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|---------|-----------------------------------------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2022/03 | unpaywall_snapshot_2022-03-09T083001.jsonl.gz | upw_instant.snapshot | bq_schema_mar22.json | [Repo](https://github.com/naustica/unpaywall_bq) |  14.03.2022 | 2008-2022 | 67.424.819 |
+
+:::
+
+### Historical Snapshots (upw_history)
+
+::: l-body-outset
+
+| Snapshot| File                                          | Table                       | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|---------|-----------------------------------------------|-----------------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2018/03 | unpaywall_snapshot_2018-03-29T113154.jsonl.gz | upw_history.upw_Mar18_08_20 | bq_schema_mar18.json | [Repo](https://github.com/naustica/unpaywall_bq) |  29.10.2021  | 2008-2018 | 36.557.043 |
+| 2019/02 | unpaywall_snapshot_2019-02-21T031509.jsonl.gz | upw_history.upw_Feb19_08_19 | bq_schema_feb19.json | [Repo](https://github.com/naustica/unpaywall_bq) |  10.11.2021  | 2008-2019 | 42.143.979 |
+| 2020/02 | unpaywall_snapshot_2020-02-25T115244.jsonl.gz | upw_history.upw_Feb20_08_20 | bq_schema_feb20.json | [Repo](https://github.com/naustica/unpaywall_bq) |  30.10.2021  | 2008-2020 | 49.717.710 |
+| 2021/02 | unpaywall_snapshot_2021-02-18T160139.jsonl.gz | upw_history.upw_Feb21_08_21 | bq_schema_feb21.json | [Repo](https://github.com/naustica/unpaywall_bq) |  29.10.2021  | 2008-2021 | 58.437.927 |
+| 2022/03 | unpaywall_snapshot_2022-03-09T083001.jsonl.gz | upw_history.upw_Mar22_08_22 | bq_schema_mar22.json | [Repo](https://github.com/naustica/unpaywall_bq) |  14.03.2022 | 2008-2022 | 67.424.819 |
+
+:::
+
+## Status Openalex
+
+::: l-body-outset
+
+| Snapshot   | Directory     | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
+|------------|---------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
+| 2022-03-10 | authors/      | openalex.authors      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  22.03.2022  | All       | 214.377.081 |
+| 2022-03-10 | institutions/ | openalex.institutions | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  22.03.2022  | All       | 108.660 |
+| 2022-03-10 | venues/       | openalex.venues       | schema_openalex_venue.json        | [Repo](https://github.com/naustica/openalex) |  22.03.2022  | All       | 124.066 |
+| 2022-03-11 | works/        | openalex.works        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  23.03.2022  | All       | 209.421.212 |
+
+:::

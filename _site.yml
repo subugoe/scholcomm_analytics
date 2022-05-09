@@ -17,6 +17,8 @@ navbar:
   right:
     - text: "Home"
       href: index.html
+    - text: "Data"
+      href: data.html
     - text: "About"
       href: about.html
 output: 
