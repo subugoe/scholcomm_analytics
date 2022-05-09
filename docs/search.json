@@ -1,0 +1,19 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "About our Blog",
+      "author": [],
+      "contents": "\nWelcome to our Blog! Here, you’ll find insights from our work as Data Analysts in the domain of scholarly communication. With this blog, we want to engage with the broader community about how to support data-driven workflows and decision-making around scholarly communication with R.\nWe are based at the Göttingen State and University Library, one of the largest academic libraries in Germany. We are using R-based tools in our everyday work and contribute to R package developments and training activities. In this blog, you’ll find news and case-studies around:\nOpen Access and Open Science Analytics\nR Packages making use of open databases and helping us in our work\nR Tools for interactive visualizations and dashboard developments\nR-related training and outreach activities\nWe want to thank Maëlle Salmon for encouraging us to start a blog about our work. As a technical framework for the blog, we are using Distill for R Markdown, a new web publishing format optimized for scientific and technical writing.\nDr. Anne Hobert, Najko Jahn\n\n\n\n",
+      "last_modified": "2022-05-04T19:33:47+02:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Blog | Scholarly Communication Analytics with R",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2022-05-04T19:33:48+02:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}
