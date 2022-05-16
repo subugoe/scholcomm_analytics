@@ -1,19 +1,19 @@
 ---
 title: "Open Scholarly Data @ SUB Göttingen - Overview"
-description: "On this page you will find an overview of datasets we provide on our Google BigQuery instance."
+output:
+  distill::distill_article:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Working with large bibliometric databases has become a major part of our analyses and publications at the SUB Göttingen in recent years. In this context, we have been using the Google BigQuery service, which allows us to query and analyze large datasets quickly, efficiently, and cost-effectively. Since we make our results publicly available to our project partners as well as for transparency purposes, we are constantly working on an effective management and clear presentation of the data.
+We use Google Big Query to work with large open scholarly data. Our main data sources are [Unpaywall](https://unpaywall.org), [Crossref](https://www.crossref.org) and [OpenAlex](https://openalex.org).
 
-Several bibliometric databases are accessible via our Google Big Query instance. In particular, we focus on the [Unpaywall](https://unpaywall.org), [Crossref](https://www.crossref.org) and [OpenAlex](https://openalex.org) databases. We manage and curate these databases and provide regular updates, which we take over from the database operators. Our focus in analysis and provision is on journal articles. The dumps we provide do not have to be the same as the dumps provided by the database providers. For example, we do not take over all data fields. Also we clean up the data (e.g. time formats).
-
-The structure of our instance consists of providing both a current snapshot and historical snapshots for the respective databases. This is to ensure that one can retrieve both current information and changes to the data of a database over a longer period of time. 
-
-An overview of our currently maintained data sets can be found below.
+An overview of our data warehouse including procedures to load the data into BigQuery can be found below.
 
 ## Status Crossref
 

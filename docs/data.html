@@ -90,7 +90,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_meta_tags-->
   <title>Scholarly Communication Analytics: Open Scholarly Data @ SUB Göttingen - Overview</title>
 
-  <meta property="description" itemprop="description" content="On this page you will find an overview of datasets we provide on our Google BigQuery instance."/>
 
   <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
 
@@ -98,20 +97,18 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Scholarly Communication Analytics: Open Scholarly Data @ SUB Göttingen - Overview"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="On this page you will find an overview of datasets we provide on our Google BigQuery instance."/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Scholarly Communication Analytics"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
   <meta property="twitter:title" content="Scholarly Communication Analytics: Open Scholarly Data @ SUB Göttingen - Overview"/>
-  <meta property="twitter:description" content="On this page you will find an overview of datasets we provide on our Google BigQuery instance."/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description"]}},"value":[{"type":"character","attributes":{},"value":["Open Scholarly Data @ SUB Göttingen - Overview"]},{"type":"character","attributes":{},"value":["On this page you will find an overview of datasets we provide on our Google BigQuery instance."]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","output"]}},"value":[{"type":"character","attributes":{},"value":["Open Scholarly Data @ SUB Göttingen - Overview"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_float","toc_depth"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[2]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2118,7 +2115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Open Scholarly Data @ SUB Göttingen - Overview","description":"On this page you will find an overview of datasets we provide on our Google BigQuery instance.","authors":[]}
+{"title":"Open Scholarly Data @ SUB Göttingen - Overview","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2148,36 +2145,27 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h1>Open Scholarly Data @ SUB Göttingen - Overview</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p>On this page you will find an overview of datasets we provide on our
-Google BigQuery instance.</p>
+
 </div>
 
 
 <div class="d-article">
-<p>Working with large bibliometric databases has become a major part of
-our analyses and publications at the SUB Göttingen in recent years. In
-this context, we have been using the Google BigQuery service, which
-allows us to query and analyze large datasets quickly, efficiently, and
-cost-effectively. Since we make our results publicly available to our
-project partners as well as for transparency purposes, we are constantly
-working on an effective management and clear presentation of the
-data.</p>
-<p>Several bibliometric databases are accessible via our Google Big
-Query instance. In particular, we focus on the <a
-href="https://unpaywall.org">Unpaywall</a>, <a
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#status-crossref">Status Crossref</a></li>
+<li><a href="#status-unpaywall">Status Unpaywall</a></li>
+<li><a href="#status-openalex">Status Openalex</a></li>
+</ul>
+</nav>
+</div>
+<p>We use Google Big Query to work with large open scholarly data. Our
+main data sources are <a href="https://unpaywall.org">Unpaywall</a>, <a
 href="https://www.crossref.org">Crossref</a> and <a
-href="https://openalex.org">OpenAlex</a> databases. We manage and curate
-these databases and provide regular updates, which we take over from the
-database operators. Our focus in analysis and provision is on journal
-articles. The dumps we provide do not have to be the same as the dumps
-provided by the database providers. For example, we do not take over all
-data fields. Also we clean up the data (e.g. time formats).</p>
-<p>The structure of our instance consists of providing both a current
-snapshot and historical snapshots for the respective databases. This is
-to ensure that one can retrieve both current information and changes to
-the data of a database over a longer period of time.</p>
-<p>An overview of our currently maintained data sets can be found
-below.</p>
+href="https://openalex.org">OpenAlex</a>.</p>
+<p>An overview of our data warehouse including procedures to load the
+data into BigQuery can be found below.</p>
 <h2 id="status-crossref">Status Crossref</h2>
 <h3 id="current-snapshot-cr_instant">Current Snapshot (cr_instant)</h3>
 <div class="l-body-outset">
