@@ -11,15 +11,7 @@ to publish case-studies rapidely showing how to support data-driven workflows an
 decision-making around scholarly communication in libraries using R.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Sat, 23 Oct 2021 00:00:00 +0000</lastBuildDate>
-    <item>
-      <title>How open are hybrid journals included in nationwide transformative agreements in Germany</title>
-      <dc:creator>Najko Jahn</dc:creator>
-      <link>https://subugoe.github.io/scholcomm_analytics/posts/oam_intro</link>
-      <description>How open are hybrid journals included in nationwide transformative agreements in Germany</description>
-      <guid>https://subugoe.github.io/scholcomm_analytics/posts/oam_intro</guid>
-      <pubDate>Sat, 23 Oct 2021 00:00:00 +0000</pubDate>
-    </item>
+    <lastBuildDate>Tue, 07 Apr 2020 00:00:00 +0000</lastBuildDate>
     <item>
       <title>Accessing and analysing the OpenAIRE Research Graph data dumps</title>
       <dc:creator>Najko Jahn</dc:creator>
