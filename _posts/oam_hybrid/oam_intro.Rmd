@@ -1,0 +1,594 @@
+---
+title: "How open are hybrid journals included in nationwide transformative agreements in Germany?"
+author:
+  - name: Najko Jahn 
+    url: https://twitter.com/najkoja
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: May 20, 2022
+output: distill::distill_article
+---
+
+Assessing the volume and share of open access articles in hybrid journals is crucial for the planning of open access funding programs and licensing models (Proser 2003; Schimmer, Geschuhn, and Vogler 2015). However, library consortia often lack data, which allow for measuring the impact of transformative agreements in terms of open access uptake across publisher portfolios and countries over time. Here, we present hoaddata, an R data package that combines openly available journal-level data about nationwide transformative agreements in Germany  with article-level open access status information and country affiliations. To demonstrate its potential, we will use this package to analyze the current state of the transition of subscription-based publishing models to fully open access relative to consortial transformative agreements in Germany. 
+
+## What is R package hoaddata about?
+
+hoaddata interfaces various open scholarly datasets, which we store on Google Big Query, to obtain information about the openess of hybrid journals. The main purpose of hoaddata is to ship data for monitoring dashboards about the progress of nationwide transformative agreements, which we currently develop with the support of the Deutsche Forschungsgemeinschaft. By providing the data as an R package, we can draw on a standardized way to document, test and share our work.
+
+The data package is automatically build with GitHub Actions. Each merge event into the main branch triggers a data update. Data changes will be incorporated in the package and tracked with Git. This makes it easy to update and reproduce different version of the data contained in hoaddata.
+
+You can install hoaddata from GitHub with:
+
+```r
+# install.packages("remotes")
+remotes::install_github("subugoe/hoaddash", dependencies = "Imports")
+```
+
+## Data and methods
+
+hoaddata focuses on nationwide transformative agreements in Germany. We draw on Pollack et al to obtain a list of journals under these agreements, which is used by the German Open Access Monitor (OAM). We merged all journals into a single data file and enriched it with ISSN variants including ISSN-L. Because there seems to be no direct data exchange between ISSN agencies and Crossref, we furthermore matched the OAM journal list with Crossref title list to link ISSN variants to journals. 
+
+After obtaining a list of hybrid journals linked to transformative agreements, we determined the article volume by journal and year from Crossref. To determine the open access status, we used Creative Commons license information provided by Crossref, which were mapped to the different license versions. 
+
+Because country affiliations are a key data point for nationwide transformative agreements, we used OpenAlex to determine the country share per journal and publisher portfolio. To our knowledge, OpenAlex does not provide information about corresponding authors and their affiliation. Instead, we made use of first-author affiliations instead. A first author is often considered as lead author(https://en.wikipedia.org/wiki/Lead_author) who has usually undertaken most of the research presented in the article, although author roles can vary across disciplines. In case where OpenALEX did not record an country affiliation, we extracted country names from the metadata field `display_name` using regular expressions.
+
+As a result, hoaddata  provides the following datasets:
+
+- [oam_hybrid_jns](https://subugoe.github.io/hoaddata/reference/oam_hybrid_jns.html): Hybrid Journals listed in the Open Access Monitor. Data were gathered from https://doi.org/10.26165/JUELICH-DATA/VTQXLM, validated and enriched with ISSN variants.
+
+- [cc_jn_ind](https://subugoe.github.io/hoaddata/reference/cc_jn_ind.html): Prevalence of Creative Commons license variants by year and hybrid journal as obtained from Crossref.
+
+- [cc_openalex_inst_jn_ind](https://subugoe.github.io/hoaddata/reference/cc_openalex_inst_jn_ind.html): First author country affiliations per journal, year and Creative Commons license
+
+Article-level data
+
+- [cc_openalex_inst](https://subugoe.github.io/hoaddata/reference/cc_openalex_inst.html): Article-level affiliation data from first authors as obtained from OpenAlex. Covers only open access articles under a Creative Commons license in a hybrid journal.
+
+## Use-Case: Open access uptake in hybrid journals included in nationwide transformative agreements in Germany
+
+```{r, echo=FALSE}
+library(hoaddata)
+library(dplyr)
+```
+
+At the time of writing, hoaddata comprises information about `r length(unique(hoaddata::cc_jn_ind$cr_journal_id))` hybrid journals included in twenty consortial transformative agreements in Germany. In these journals, `r length(unique(hoaddata::cc_openalex_inst$doi))` articles were published with an Creative Commons License according to Crossref since 2017, representing an share of `r round(length(unique(hoaddata::cc_openalex_inst$doi)) / hoaddata::cc_openalex_inst_jn_ind %>% distinct(cr_journal_id, cr_year, articles_total) %>% pull(articles_total) %>% sum(), 3) * 100`%. 
+
+Using affiliation information from OpenAlex, we can break down the performance of transformative agreements to countries. Highlighting the publication year 2021, Table 1 compares the global publication volume including open access with that of German lead authors by hybrid journal portfolio. It shows the dominant position of transformative agreements negotiated by the DEAL consortium in terms of articles published and open access. Note that DEAL has reached no agreement with Elsevier so far. The table furthermore highlights large discrepancies between the global open access uptake in hybrid journals and Germany's. Interestingly, Germany's open access share in 2021 is in many cases below 80%, suggesting that not all authors made use of open access options, or were not eligible to publish open access, likely because their institution was not part of a consortium or the article type was not covered. For hybrid journals included in the agreements with ACM, AIP, Hogrefe and SPIE, no Creative Commons license information could be obtained from Crossref.
+
+
+```{r, message=FALSE, echo=FALSE}
+
+my_jn_df <- oam_hybrid_jns |>
+  distinct(agreement, lead, cr_journal_id) |>
+  inner_join(cc_jn_ind, by = "cr_journal_id")
+## Portflio-specific statistics per year
+pubs_per_year <- my_jn_df |>
+  distinct(agreement, lead, cr_journal_id, jn_all, cr_year) |>
+  group_by(agreement, lead, cr_year) |>
+  summarize(n_journals = n_distinct(cr_journal_id),
+            articles = sum(jn_all))
+
+cc_pubs_per_year <- my_jn_df |>
+  group_by(agreement, lead, cr_year) |>
+  summarise(cc_articles = sum(cc_total))
+
+agreement_per_year <- left_join(pubs_per_year, cc_pubs_per_year, 
+                                by = c("agreement", "lead", "cr_year")) %>%
+  mutate(cc_share = cc_articles / articles)
+  
+## German lead author statistics per year
+de_pubs <- cc_openalex_inst_jn_ind |>
+  filter(country_code == "DE") |>
+  inner_join(oam_hybrid_jns, by = "cr_journal_id")
+de_total <- de_pubs |>
+  distinct(agreement, lead, cr_year, cr_journal_id, articles_total) %>%
+  group_by(agreement, lead, cr_year) %>%
+  summarize(de_n_journals = n_distinct(cr_journal_id),
+            de_articles = sum(articles_total))
+de_cc <- de_pubs |>
+  filter(!is.na(cc)) |>
+  distinct(agreement, lead, cr_year, cr_journal_id, articles_under_cc_variant) |>
+  group_by(agreement, lead, cr_year) |>
+  summarize(cc_de_n_journals = n_distinct(cr_journal_id),
+            cc_de_articles = sum(articles_under_cc_variant))
+
+de_df <- left_join(de_total, de_cc, by = c("agreement", "lead", "cr_year")) |>
+  mutate(cr_year = factor(cr_year)) %>%
+  mutate(de_cc_share = cc_de_articles / de_articles) %>%
+  mutate_if(is.numeric, ~replace(., is.na(.), 0))
+
+agreement_tbl_df <- inner_join(agreement_per_year, de_df, 
+                               by = c("agreement", "lead", "cr_year"))
+```
+
+```{r, echo = FALSE}
+#' React bar chart helper
+#'
+#' From <https://glin.github.io/reactable/articles/building-twitter-followers.html>
+#'
+#' @importFrom htmltools div
+#'
+#' @noRd
+react_bar_chart <-
+  function(label,
+           width = "100%",
+           height = "14px",
+           fill = "#00bfc4",
+           background = NULL) {
+    bar <-
+      htmltools::div(style = list(
+        background = fill,
+        width = width,
+        height = height
+      ))
+    chart <-
+      htmltools::div(style = list(
+        flexGrow = 1,
+        marginLeft = "6px",
+        background = background
+      ),
+      bar)
+    htmltools::div(style = list(display = "flex", alignItems = "center", marginLeft = "10px"), label, chart)
+  }
+```
+
+```{r, message=FALSE, echo = FALSE}
+#' Sparkline widget
+#' 
+cc_trend <- agreement_tbl_df %>% 
+  group_by(agreement, lead) %>%
+  summarise(cc_trend = list(round(cc_share * 100, 1)),
+            cc_de_trend = list(round(de_cc_share * 100, 1))) %>%
+  mutate(cc_trend_spark = NA, cc_de_trend_spark = NA)
+
+agreement_tbl_df <- left_join(agreement_tbl_df, cc_trend, by = c("agreement", "lead")) %>%
+  relocate(cc_trend_spark, .after = cc_share) %>%
+  relocate(cc_de_trend_spark, .after = de_cc_share) %>%
+  mutate(cr_year = as.numeric(as.character(cr_year)))
+
+
+```
+
+```{r, echo=FALSE}
+library(crosstalk)
+library(htmltools)
+
+# Initialize shared Crosstalk data
+
+shared_df <- agreement_tbl_df %>%
+  # only 2021
+  filter(cr_year == "2021") %>% 
+  SharedData$new()
+```
+
+```{r, echo = FALSE}
+library(reactable)
+library(sparkline)
+
+g <- reactable::reactable(
+  shared_df,
+  pagination = TRUE,
+  highlight = TRUE,
+  # new in v0.2.3.9000
+  defaultColDef = colDef(vAlign = "center", headerClass = "header2"),
+  defaultSorted = "articles",
+  defaultSortOrder = "desc",
+  defaultSelected = 1:20,
+  style = list(#fontFamily = "Karla",
+               whiteSpace = "pre"),
+  columns = list(
+    agreement = colDef(
+      "Agreement",
+      cell = function(value, index) {
+        lead <- shared_df$data()$lead[index]
+        htmltools::tagList(htmltools::div(style = list(
+          fontWeight = 600, color = "#333"
+        ), value),
+        htmltools::div(style = list(fontSize = 10), lead))
+      },
+      width = 150,
+      align = "left",
+      style = list(whiteSpace = "pre"),
+      sticky = "left"
+    ),
+    n_journals = colDef(
+      "Journals",
+      format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 95,
+      style = list(whiteSpace = "pre"),
+      show = FALSE
+    ),
+    # Articles
+    articles  = colDef(
+      "Articles",
+      format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 110,
+      style = list(whiteSpace = "pre"),
+      class = "number border-left",
+    ),
+    de_articles = colDef(
+      name = "Articles",
+      format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 110,
+      style = list(whiteSpace = "pre"),
+      class = "number border-left"
+    ),
+    # CC Shares Global / Germany
+    cc_share = colDef(
+      name = "% OA CC license",
+      # Render the bar charts using a custom cell render function
+      cell = function(value) {
+        value <- paste0(format(round(value * 100, 1), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#0093c7ff",
+                        background = "#e1e1e1")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 130
+    ),
+    de_cc_share = colDef(
+      "% OA CC license",
+      # Render the bar charts using a custom cell render function
+      cell = function(value) {
+        value <- paste0(format(round(value * 100, 1), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#00c7ab",
+                        background = "#e1e1e1")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      minWidth = 130
+    ),
+    # Render trend as sparklines
+    cc_trend_spark = colDef(
+      "Trend 2017-22",
+#      header = with_tooltip("Trend 2017-22", "Percentage of articles under Creative Commons license over time"),
+      cell = function(value, index) {
+        sparkline(
+          shared_df$data()$cc_trend[[index]],
+          lineColor = "#0093c7ff",
+          fillColor = "transparent",
+          highlightSpotColor = "#0093c7ff",
+          minSpotColor = FALSE,
+          maxSpotColor = FALSE,
+          spotColor = FALSE,
+          lineWidth = 2.5,
+          spotRadius = 4,
+          width = 100
+        )
+      },
+      align = "center",
+      sortable = FALSE,
+      minWidth = 115
+    ),
+    cc_de_trend_spark = colDef(
+      "Trend 2017-22",
+      cell = function(value, index) {
+        sparkline(
+          shared_df$data()$cc_de_trend[[index]],
+          lineColor = "#00c7ab",
+          fillColor = "transparent",
+          highlightSpotColor = "#00c7ab",
+                    highlightSpotColor = "#00c7ab",
+
+          minSpotColor = FALSE,
+          maxSpotColor = FALSE,
+          spotColor = FALSE,
+          lineWidth = 2.5,
+          spotRadius = 4,
+          width = 100
+        )
+      },
+      align = "center",
+      sortable = FALSE,
+      minWidth = 115
+    ),
+    # Don't show columns that are used for filtering or calculations
+    lead = colDef(show = FALSE),
+    cr_year = colDef(show = FALSE),
+    de_n_journals = colDef(show = FALSE),
+    cc_de_n_journals = colDef(show = FALSE),
+    cc_articles = colDef(show = FALSE),
+    cc_de_articles = colDef(show = FALSE),
+    cc_trend = colDef(show = FALSE),
+    cc_de_trend = colDef(show = FALSE)
+  ),
+  # Create column groups
+  columnGroups = list(
+    colGroup(
+      name = "Global Publication Volume",
+      columns = c("articles", "cc_share", "cc_trend_spark"),
+      headerClass = "group-header"
+    ),
+    colGroup(
+      name = "German Lead Authors",
+      columns = c("de_articles", "de_cc_share", "cc_de_trend_spark"),
+      headerClass = "group-header"
+    )
+  ),
+  compact = TRUE,
+  defaultPageSize = 6,
+  language = reactableLang(
+      pageInfo = "{rowStart}\u2013{rowEnd} of {rows} consortial agreements in Germany",
+      pagePrevious = "\u276e",
+      pageNext = "\u276f",
+    ),
+elementId = "years-filter-table"
+)
+```
+
+
+::: l-body-outset
+
+```{r,echo=FALSE, eval = TRUE}
+htmltools::div(
+  class = "agreement-tbl",
+  htmltools::h3("Open Access Uptake in Consortial Transformative Agreements in Germany in 2021"),
+  # filters,
+  htmltools::div(
+    class = "filters",
+    htmltools::div(
+      class = "filter-input",
+      filter_select(
+        "filter_vertrag",
+        "Consortium Lead",
+        shared_df,
+        ~ lead,
+        multiple = TRUE
+      )
+    ),
+  ),
+  # table
+  g,
+  # footer
+  htmltools::div(
+    class = "agreement-footer",  paste(
+      "Data sources: Open Access Monitor Zeitschriftenlisten (v2), Crossref, OpenAlex. Last updated:", Sys.Date(), ".")
+  )
+)
+```
+
+:::
+
+```{r, echo =FALSE}
+tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
+```
+
+```{css, echo=FALSE}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  margin-left: -32px;
+}
+
+.filter-input {
+  margin-top: 4px;
+  margin-left: 32px;
+  flex: 1;
+  max-width: 250px;
+}
+
+.filter-input label {
+  color: hsl(0, 0%, 45%);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.group-header {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.filter-input select,
+.filter-input input[type="search"] {
+  padding: 0 6px;
+  height: 32px;
+}
+
+.filter-input input[type="search"] {
+  /* Reset Bootstrap 3 styles */
+  -webkit-appearance: searchfield;
+}
+
+.filter-input input[type="search"]::-webkit-search-cancel-button {
+  /* Reset Bootstrap 3 styles */
+  -webkit-appearance: searchfield-cancel-button;
+}
+
+
+.followers-tbl a {
+  color: inherit;
+}
+.header2 {
+  border-bottom: 2px solid #555;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.header:hover {
+  background-color: #eee;
+}
+/* Highlight headers when sorting */
+.header:hover,
+.header[aria-sort="ascending"],
+.header[aria-sort="descending"] {
+  background-color: rgba(236, 236, 237, 1);
+}
+.agreement-footer {
+  margin: 18px 0;
+  font-size: 10px;
+  font-family: "Karla", Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.agreement-tbl {
+  margin: 18px 0;
+  font-size: 14px;
+}
+
+.bar-cell {
+  display: flex;
+  align-items: center;
+}
+
+.number {
+  font-family: "Fira Mono", Consolas, Monaco, monospace;
+  font-size: 13.5px;
+  white-space: pre;
+}
+
+.bar-chart {
+  flex-grow: 1;
+  margin-left: 6px;
+  height: 14px;
+}
+
+.bar {
+  height: 100%;
+}
+
+
+.border-left {
+  border-left: 1px solid #b5b5b5;
+}
+
+.name {
+  font-weight: 900;
+}
+```
+
+Percentage of articles with a Creative Commons license per country. Showing the Top 20 most productive countries in terms of articles published between 2017 and 2022 in hybrid journals included in nationwide transformative agreements in Germany. Country-specific charts are sorted by the total number of lead author articles.
+
+```{r, warning=FALSE, message = FALSE, echo = FALSE}
+library(forcats)
+library(ggplot2)
+library(ggiraph)
+
+country_by_year <- cc_openalex_inst_jn_ind |>
+  distinct(cr_year, country_code, cr_journal_id, articles_total) |>
+  group_by(cr_year, country_code) |>
+  summarise(all = sum(articles_total))
+
+cc_country_by_year <- cc_openalex_inst_jn_ind |>
+  filter(!is.na(cc)) |>
+  group_by(cr_year, country_code) |>
+  summarise(cc = sum(articles_under_cc_variant))
+
+# prepare label and facets
+all_pubs <- cc_jn_ind %>% distinct(cr_journal_id, cr_year, jn_all) %>% .$jn_all %>% sum()
+
+# top 20 countries in terms of total publication volume
+top_20 <- cc_openalex_inst_jn_ind |>
+  distinct(cr_year, country_code, cr_journal_id, articles_total) |>
+  filter(!is.na(country_code)) |>
+  group_by(country_code) |>
+  summarise(n = sum(articles_total)) %>%
+  arrange(desc(n)) %>%
+  mutate(position = row_number()) %>%
+  mutate(
+    country_name = countrycode::countrycode(country_code, origin = "iso2c", destination = "country.name")
+  ) %>%
+  mutate(country_name = ifelse(position <= 20, country_name, "Others")) %>%
+  group_by(country_name) %>%
+  summarise(n = sum(n)) %>%
+  mutate(pub_share = n / all_pubs) %>%
+  mutate(country_label = paste0(toupper(country_name), "\n",
+                                paste0(format(round(n / 1e3, 0), trim = TRUE), 
+                                "k / ", round(pub_share * 100, 1), "%"))) %>%
+  arrange(desc(n)) %>%
+  mutate(country_name = fct_inorder(country_name)) %>%
+  mutate(country_name = fct_relevel(country_name, "Others", after = Inf)) %>%
+  arrange(country_name) %>%
+  mutate(country_label = fct_inorder(country_label))
+  
+# relative
+country_df_rel <- inner_join(country_by_year, cc_country_by_year, 
+                             by = c("cr_year", "country_code")) %>%
+  mutate(
+    country_name = countrycode::countrycode(country_code, origin = "iso2c", destination = "country.name")
+  ) %>%
+  mutate(country_name = ifelse(country_name %in% top_20$country_name, country_name, "Others")) %>%
+  inner_join(top_20, by = "country_name") %>%
+  group_by(cr_year, country_name, country_label) %>%
+  summarise(all = sum(all),
+           cc = (sum(cc))) %>%
+  mutate(prop = cc / all) %>%
+  # Highlight Germany
+  mutate(my_cols = ifelse(country_name == "Germany", "#00c7ab", "#B0B0B0D0")) %>%
+  mutate(cr_year = gsub("^20", "'", cr_year))
+
+# tooltips
+# ranges for retangles plot, which we want to use for data hover per period
+my_rects <- tibble::tibble(
+  starts = as.character(2017:2021),
+  ends = as.character(2018:2022),
+  group = seq_along(2017:2021),
+  my_tooltip = as.character(2018:2022)) |>
+  mutate(across(, function(x) gsub("^20", "'", x))) %>%
+  inner_join(country_df_rel, by = c("my_tooltip" = "cr_year")) %>%
+  mutate(tooltip_text = glue::glue('<small>{country_name}</small><br><b>{format(cc, big.mark = ",")} / {round(prop * 100, 1)}%</b><br><small>articles with CC license in {my_tooltip}</smalL>'))
+
+
+country_multiples <- ggplot(country_df_rel, aes(cr_year, prop, fill = my_cols, group = my_cols)) +
+    geom_area(stat = "identity") +
+    geom_rect_interactive(
+    data = my_rects,
+    inherit.aes = FALSE,
+    aes(
+      xmin = starts,
+      xmax = ends,
+      ymin = 0,
+      ymax = 0.75,
+      group = group,
+      tooltip = tooltip_text
+    ),
+    color = "transparent",
+    fill = "transparent",
+    alpha = 0.01
+  ) +
+  facet_wrap(~country_label, nrow = 3) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1L),
+                     expand = expansion(mult = c(0, 0.05)),
+                     breaks = c(0, .25, .5, .75)) +
+  scale_fill_identity() +
+  theme_minimal(base_family = "Source Sans Pro") +
+  labs(y = "OA Percentage", x = "2017 - 2022", 
+  #       title = "Open Access in Hybrid Journals",
+         subtitle = "Country\n Lead Author Articles / Global Market Share") +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.ontop = FALSE,
+        strip.text = element_text(size = rel(.52)),
+        axis.text.y = element_text(size = rel(.8)),
+        plot.subtitle = element_text(size = rel(.58), hjust = 0.5),
+        panel.spacing = unit(1, "lines"),
+        axis.text.x=element_blank())
+```
+
+::: l-body-outset
+
+```{r, echo=FALSE}
+ggiraph::girafe(
+  ggobj = country_multiples,
+  width_svg = 6,
+  height_svg = 5 * 0.618,
+ options = list(opts_tooltip(
+    css="background-color:white;
+;font-size:1.15em;padding:10px;border-radius:5px;box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5)",
+    opacity = .95)))
+```
+
+:::
