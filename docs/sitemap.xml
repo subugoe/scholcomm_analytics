@@ -2,34 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/about.html</loc>
-    <lastmod>2022-05-09T13:45:48+02:00</lastmod>
+    <lastmod>2022-05-16T10:08:38+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/data.html</loc>
-    <lastmod>2022-05-09T14:05:35+02:00</lastmod>
+    <lastmod>2022-05-11T17:26:24+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/</loc>
-    <lastmod>2022-05-09T13:45:49+02:00</lastmod>
+    <lastmod>2022-05-09T11:54:13+02:00</lastmod>
+  </url>
+  <url>
+    <loc>https://subugoe.github.io/scholcomm_analytics/posts/oam_intro/</loc>
+    <lastmod>2022-05-12T19:32:05+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/oaire_graph_2020/</loc>
-    <lastmod>2022-05-09T13:48:57+02:00</lastmod>
+    <lastmod>2022-05-11T17:26:24+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/unpaywall_python/</loc>
-    <lastmod>2022-05-09T13:45:48+02:00</lastmod>
+    <lastmod>2022-05-09T11:54:13+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/elsevier_invoice/</loc>
-    <lastmod>2022-05-09T13:48:57+02:00</lastmod>
+    <lastmod>2022-05-11T17:26:24+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/datacite_graph/</loc>
-    <lastmod>2022-05-09T13:48:57+02:00</lastmod>
+    <lastmod>2022-05-11T17:26:24+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/unpaywall_evidence/</loc>
-    <lastmod>2022-05-09T13:48:57+02:00</lastmod>
+    <lastmod>2022-05-11T17:26:24+02:00</lastmod>
   </url>
 </urlset>
