@@ -23,7 +23,7 @@ An overview of our data warehouse including procedures to load the data into Big
 
 | Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
 |-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
-|  2022/02        | all.json.tar.gz | cr_instant.snapshot | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  20.03.2022  | 2013-2022 |  35.050.841 |
+|  2022/04        | all.json.tar.gz | cr_instant.snapshot | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  14.05.2022  | 2013-2022 |  35.939.195 |
 
 :::
 
@@ -72,9 +72,9 @@ An overview of our data warehouse including procedures to load the data into Big
 
 | Snapshot   | Directory     | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|---------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
-| 2022-03-10 | authors/      | openalex.authors      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  22.03.2022  | All       | 214.377.081 |
-| 2022-03-10 | institutions/ | openalex.institutions | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  22.03.2022  | All       | 108.660 |
-| 2022-03-10 | venues/       | openalex.venues       | schema_openalex_venue.json        | [Repo](https://github.com/naustica/openalex) |  22.03.2022  | All       | 124.066 |
-| 2022-03-11 | works/        | openalex.works        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  23.03.2022  | All       | 209.421.212 |
+| 2022-05-11 | authors/      | openalex.authors      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  23.05.2022  | All       | 220.870.815 |
+| 2022-04-14 | institutions/ | openalex.institutions | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  10.05.2022  | All       |  108.660 |
+| 2022-04-12 | venues/       | openalex.venues       | schema_openalex_venue.json        | [Repo](https://github.com/naustica/openalex) |  10.05.2022  | All       | 124.066 |
+| 2022-05-12 | works/        | openalex.works        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  16.05.2022  | All (error threshold <= 1000) | 211.003.388 |
 
 :::
