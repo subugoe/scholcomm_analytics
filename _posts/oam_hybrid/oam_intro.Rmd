@@ -7,30 +7,34 @@ author:
     affiliation_url: https://www.sub.uni-goettingen.de/
 date: May 20, 2022
 output: distill::distill_article
+bibliography: literature.bib
 ---
 
-Assessing the volume and share of open access articles in hybrid journals is crucial for the planning of open access funding programs and licensing models (Proser 2003; Schimmer, Geschuhn, and Vogler 2015). However, library consortia often lack data, which allow for measuring the impact of transformative agreements in terms of open access uptake across publisher portfolios and countries over time. Here, we present hoaddata, an R data package that combines openly available journal-level data about nationwide transformative agreements in Germany  with article-level open access status information and country affiliations. To demonstrate its potential, we will use this package to analyze the current state of the transition of subscription-based publishing models to fully open access relative to consortial transformative agreements in Germany. 
+Assessing the volume and share of open access articles in hybrid journals is crucial for the planning of open access funding programs and licensing models [@Prosser_2003; @Schimmer_2015].
+However, library consortia often lack data, which allow for measuring the impact of transformative agreements in terms of open access uptake across publisher portfolios and institutions over time. Here, we present [hoaddata](https://subugoe.github.io/hoaddata/), an R data package, in which openly available journal-level data about nationwide transformative agreements in Germany are combined with article-level open access status information and country affiliations. 
 
-## What is R package hoaddata about?
+R packages like hoaddata are a standardised way to organise, document, test and publicly share a data analytics worklfow [@Marwick_2018]. In our specific case, hoaddata not only contains datasets about hybrid open access, but also code used to compile them by interfacing data dumps of the open scholarly data sources Crossref and OpenAlex, which [we store on Google Big Query](https://subugoe.github.io/scholcomm_analytics/data.html). 
 
-hoaddata interfaces various open scholarly datasets, which we store on Google Big Query, to obtain information about the openess of hybrid journals. The main purpose of hoaddata is to ship data for monitoring dashboards about the progress of nationwide transformative agreements, which we currently develop with the support of the Deutsche Forschungsgemeinschaft. By providing the data as an R package, we can draw on a standardized way to document, test and share our work.
+The main purpose of hoaddata is to ship data for monitoring dashboards about the progress of nationwide transformative agreements, which we currently develop in the [HOAD project with the support of the Deutsche Forschungsgemeinschaft](https://gepris.dfg.de/gepris/projekt/416115939). The package is automatically build with GitHub Actions. Each merge event into the main branch triggers a data update. Data changes will be incorporated in the package and tracked with Git. This makes it possible to reproduce different version of the data contained in hoaddata. 
 
-The data package is automatically build with GitHub Actions. Each merge event into the main branch triggers a data update. Data changes will be incorporated in the package and tracked with Git. This makes it easy to update and reproduce different version of the data contained in hoaddata.
+In this blog post, we describe the data analytics workflow behind hoaddata. To demonstrate its potential, we will use this package to illustrate the current state of the transition of hybrid journals to fully open access relative to those journals, wich are included in consortial transformative agreements in Germany. 
 
-You can install hoaddata from GitHub with:
-
-```r
-# install.packages("remotes")
-remotes::install_github("subugoe/hoaddash", dependencies = "Imports")
-```
 
 ## Data and methods
 
-hoaddata focuses on nationwide transformative agreements in Germany. We draw on Pollack et al to obtain a list of journals under these agreements, which is used by the German Open Access Monitor (OAM). We merged all journals into a single data file and enriched it with ISSN variants including ISSN-L. Because there seems to be no direct data exchange between ISSN agencies and Crossref, we furthermore matched the OAM journal list with Crossref title list to link ISSN variants to journals. 
+hoaddata focuses on nationwide transformative agreements in Germany. As a first step, we draw on @VTQXLM_2021 to obtain a list of journals under these agreements, which is used by the German Open Access Monitor (OAM). 
+We merged all journals into a single data file and enriched it with ISSN variants. 
+Because there seems to be no direct data exchange between ISSN agencies and Crossref, we furthermore matched the OAM journal list with Crossref's title list to link ISSN variants to journals. 
 
-After obtaining a list of hybrid journals linked to transformative agreements, we determined the article volume by journal and year from Crossref. To determine the open access status, we used Creative Commons license information provided by Crossref, which were mapped to the different license versions. 
+After obtaining a list of hybrid journals linked to transformative agreements, we determined the article volume by journal and year using Crossref. 
+Open access status information was derived from Creative Commons licenses URLs provided by Crossref, which were mapped to the different license versions like CC BY. 
 
-Because country affiliations are a key data point for nationwide transformative agreements, we used OpenAlex to determine the country share per journal and publisher portfolio. To our knowledge, OpenAlex does not provide information about corresponding authors and their affiliation. Instead, we made use of first-author affiliations instead. A first author is often considered as lead author(https://en.wikipedia.org/wiki/Lead_author) who has usually undertaken most of the research presented in the article, although author roles can vary across disciplines. In case where OpenALEX did not record an country affiliation, we extracted country names from the metadata field `display_name` using regular expressions.
+Because country affiliations are a key data point for nationwide transformative agreements, we used OpenAlex to determine the country share per journal and publisher portfolio.
+To our knowledge, OpenAlex does not provide information about corresponding authors and their affiliation.
+Instead, we made use of first-author affiliations.
+A first author is often considered as [lead author](https://en.wikipedia.org/wiki/Lead_author) who has usually undertaken most of the research presented in the article, although author roles can vary across disciplines.
+In case OpenALEX did not record any country affiliation, we extracted country names from the metadata field `display_name` using regular expressions.
+We applied full counting to account for multiple country affiliations.
 
 As a result, hoaddata  provides the following datasets:
 
@@ -44,6 +48,15 @@ Article-level data
 
 - [cc_openalex_inst](https://subugoe.github.io/hoaddata/reference/cc_openalex_inst.html): Article-level affiliation data from first authors as obtained from OpenAlex. Covers only open access articles under a Creative Commons license in a hybrid journal.
 
+
+You can install hoaddata from GitHub with:
+
+```r
+# install.packages("remotes")
+remotes::install_github("subugoe/hoaddash", dependencies = "Imports")
+```
+
+
 ## Use-Case: Open access uptake in hybrid journals included in nationwide transformative agreements in Germany
 
 ```{r, echo=FALSE}
@@ -51,9 +64,16 @@ library(hoaddata)
 library(dplyr)
 ```
 
-At the time of writing, hoaddata comprises information about `r length(unique(hoaddata::cc_jn_ind$cr_journal_id))` hybrid journals included in twenty consortial transformative agreements in Germany. In these journals, `r length(unique(hoaddata::cc_openalex_inst$doi))` articles were published with an Creative Commons License according to Crossref since 2017, representing an share of `r round(length(unique(hoaddata::cc_openalex_inst$doi)) / hoaddata::cc_openalex_inst_jn_ind %>% distinct(cr_journal_id, cr_year, articles_total) %>% pull(articles_total) %>% sum(), 3) * 100`%. 
+At the time of writing, hoaddata comprises information about `r length(unique(hoaddata::cc_jn_ind$cr_journal_id))` hybrid journals included in twenty consortial transformative agreements in Germany. 
+In these journals, `r length(unique(hoaddata::cc_openalex_inst$doi))` articles were published with an Creative Commons License according to Crossref since 2017, representing an share of `r round(length(unique(hoaddata::cc_openalex_inst$doi)) / hoaddata::cc_openalex_inst_jn_ind %>% distinct(cr_journal_id, cr_year, articles_total) %>% pull(articles_total) %>% sum(), 3) * 100`%. 
 
-Using affiliation information from OpenAlex, we can break down the performance of transformative agreements to countries. Highlighting the publication year 2021, Table 1 compares the global publication volume including open access with that of German lead authors by hybrid journal portfolio. It shows the dominant position of transformative agreements negotiated by the DEAL consortium in terms of articles published and open access. Note that DEAL has reached no agreement with Elsevier so far. The table furthermore highlights large discrepancies between the global open access uptake in hybrid journals and Germany's. Interestingly, Germany's open access share in 2021 is in many cases below 80%, suggesting that not all authors made use of open access options, or were not eligible to publish open access, likely because their institution was not part of a consortium or the article type was not covered. For hybrid journals included in the agreements with ACM, AIP, Hogrefe and SPIE, no Creative Commons license information could be obtained from Crossref.
+Using OpenAlex's affiliation information, we can break down the performance of transformative agreements to countries. 
+Highlighting the publication year 2021, Table 1 compares the global publication volume including open access with that of German lead authors by hybrid journal portfolio. 
+It shows the dominant position of transformative agreements negotiated by the [DEAL consortium](https://deal-operations.de/) in terms of articles published and open access.
+Note that DEAL has reached no agreement with Elsevier so far.
+The table furthermore highlights large discrepancies between the global open access uptake in hybrid journals and Germany's.
+Interestingly, Germany's open access share in 2021 is in many cases below 80%, suggesting that not all authors made use of open access options, or were not eligible to publish open access, likely because their institution was not part of a consortium or the article type was not covered.
+For hybrid journals included in the agreements with ACM, AIP, Hogrefe and SPIE, no Creative Commons license information could be obtained from Crossref.
 
 
 ```{r, message=FALSE, echo=FALSE}
