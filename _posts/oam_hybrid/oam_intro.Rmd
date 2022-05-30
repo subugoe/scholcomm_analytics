@@ -1,7 +1,6 @@
 ---
 title: "How open are hybrid journals included in nationwide transformative agreements in Germany?"
-description: "Enhance communication with interactive visualizations"
-preview: https://rstudio.github.io/distill/images/javascript-d3-preview.png
+description: "We present hoaddata, an experimental R package that combines open scholarly data from Crossref and OpenAlex. Using this package, we illustrate the progress made in publishing open access content across hybrid journal portfolios and countries."
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
