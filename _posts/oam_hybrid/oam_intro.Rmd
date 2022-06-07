@@ -363,12 +363,12 @@ g <- reactable::reactable(
   # Create column groups
   columnGroups = list(
     colGroup(
-      name = "Global Publication Volume",
+      name = "Global Publication Volume 2021",
       columns = c("articles", "cc_share", "cc_trend_spark"),
       headerClass = "group-header"
     ),
     colGroup(
-      name = "German Lead Authors",
+      name = "German Lead Authors 2021",
       columns = c("de_articles", "de_cc_share", "cc_de_trend_spark"),
       headerClass = "group-header"
     )
