@@ -11,7 +11,17 @@ to publish case-studies rapidely showing how to support data-driven workflows an
 decision-making around scholarly communication in libraries using R.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Tue, 07 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 07 Jun 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>How open are hybrid journals included in nationwide transformative agreements in Germany?</title>
+      <dc:creator>Najko Jahn</dc:creator>
+      <dc:creator>Nick Haupka</dc:creator>
+      <link>https://subugoe.github.io/scholcomm_analytics/posts/oam_hybrid</link>
+      <description>We present hoaddata, an experimental R package that combines open scholarly data from the German Open Access Monitor, Crossref and OpenAlex. Using this package, we illustrate the progress made in publishing open access content in hybrid journals included in nationwide transformative agreements in Germany across journal portfolios and countries.</description>
+      <guid>https://subugoe.github.io/scholcomm_analytics/posts/oam_hybrid</guid>
+      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/oam_hybrid/distill-preview.png" medium="image" type="image/png" width="1894" height="1058"/>
+    </item>
     <item>
       <title>Accessing and analysing the OpenAIRE Research Graph data dumps</title>
       <dc:creator>Najko Jahn</dc:creator>
