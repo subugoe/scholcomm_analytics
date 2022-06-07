@@ -17,7 +17,7 @@ decision-making around scholarly communication in libraries using R.
       <dc:creator>Najko Jahn</dc:creator>
       <dc:creator>Nick Haupka</dc:creator>
       <link>https://subugoe.github.io/scholcomm_analytics/posts/oam_hybrid</link>
-      <description>We present hoaddata, an experimental R package that combines open scholarly data from the German Open Access Monitor, Crossref and OpenAlex. Using this package, we illustrate the progress made in publishing open access content in hybrid journals that are included in nationwide transformative agreements in Germany across journal portfolios and countries.</description>
+      <description>We present hoaddata, an experimental R package that combines open scholarly data from the German Open Access Monitor, Crossref and OpenAlex. Using this package, we illustrate the progress made in publishing open access content in hybrid journals included in nationwide transformative agreements in Germany across journal portfolios and countries.</description>
       <guid>https://subugoe.github.io/scholcomm_analytics/posts/oam_hybrid</guid>
       <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
       <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/oam_hybrid/distill-preview.png" medium="image" type="image/png" width="1894" height="1058"/>

@@ -1,6 +1,6 @@
 ---
 title: "How open are hybrid journals included in nationwide transformative agreements in Germany?"
-description: "We present hoaddata, an experimental R package that combines open scholarly data from the German Open Access Monitor, Crossref and OpenAlex. Using this package, we illustrate the progress made in publishing open access content in hybrid journals that are included in nationwide transformative agreements in Germany across journal portfolios and countries."
+description: "We present hoaddata, an experimental R package that combines open scholarly data from the German Open Access Monitor, Crossref and OpenAlex. Using this package, we illustrate the progress made in publishing open access content in hybrid journals included in nationwide transformative agreements in Germany across journal portfolios and countries."
 author:
   - name: Najko Jahn 
     url: https://twitter.com/najkoja
@@ -37,8 +37,8 @@ knitr::knit_hooks$set(
 )
 ```
 
-Assessing the volume and share of open access articles in hybrid journals is crucial for the planning and implementation of [transformative agreements](https://esac-initiative.org/about/transformative-agreements/), an evolving type of  contracts between libraries and publishers where subscription spending is repurposed for open access publishing [@Schimmer_2015]. 
-However, library consortia that mainly negotiate such agreements with large commercial publishers often lack these data.
+Assessing the volume and share of open access articles in hybrid journals is crucial for the planning and implementation of [transformative agreements](https://esac-initiative.org/about/transformative-agreements/), an evolving type of contracts between libraries and publishers where subscription spending is repurposed for open access publishing [@Schimmer_2015]. 
+In particular, library consortia who mainly negotiate transformative agreements with large publishers require such publication data according to the recently published [ESAC Reference Guide to Transformative Agreements](https://esac-initiative.org/about/transformative-agreements/reference-guide/).
 Here, we present [hoaddata](https://subugoe.github.io/hoaddata/), an experimental R package, in which openly available journal-level data about nationwide transformative agreements in Germany are combined with article-level open access status information and country affiliations. 
 Accordingly, hoadata provides essential data for the monitoring and benchmarking of transformative agreements across hybrid journal portfolios and countries. <!--, aiming at better understanding the current state of the transition of subscription-based publishing to fully open access.-->
 
@@ -111,7 +111,7 @@ Since 2017, these journals have published `r length(unique(hoaddata::cc_openalex
 
 Using OpenAlex's affiliation information, we can break down the performance of transformative agreements to countries. 
 Showing the publication year 2021, the following interactive table compares the global publication volume including open access with that of lead authors based in Germany by hybrid journal portfolio. 
-It highlights the dominant position of transformative agreements negotiated by the [DEAL consortium](https://deal-operations.de/) in terms of articles published and open access.
+The table highlights the dominant position of transformative agreements negotiated by the [DEAL consortium](https://deal-operations.de/) in terms of articles published and open access.
 It is important to note that [DEAL has reached no agreement with Elsevier](https://www.projekt-deal.de/elsevier-news/) so far, one of the largest scholarly publishers, which is, in turn, not included in the analysis.
 
 
@@ -555,7 +555,7 @@ oa_21_de <- cc_openalex_inst_jn_ind %>%
 
 Interestingly, Germany's open access share in 2021 performed in most cases below 80%, suggesting that not all authors made use of open access options, or were not eligible to publish open access, likely because their institution was not part of a consortium.
 But also some article types might no be included in agreements.
-For instance, many article types in medical specialist journals from Springer Medizin, which are targeted at medical practitioners, are not covered by DEAL.^[See contract <https://pure.mpg.de/rest/items/item_3174351_1/component/file_3189424/content>].
+For instance, many article types in medical specialist journals from Springer Medizin, which are targeted at medical practitioners, are not covered by DEAL.^[See contract <https://pure.mpg.de/rest/items/item_3174351_1/component/file_3189424/content>]
 The low open access uptake in the hybrid journal portfolios from ACM, AIP, Hogrefe and SPIE suggest that these publishers did not share Creative Commons license information through Crossref metadata records.
 
 The table furthermore shows large discrepancies between the global open access uptake in hybrid journals and Germany's.
