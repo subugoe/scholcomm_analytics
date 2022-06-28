@@ -2065,7 +2065,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2160,12 +2160,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </ul>
 </nav>
 </div>
-<p>We use Google Big Query to work with large open scholarly data. Our
-main data sources are <a href="https://unpaywall.org">Unpaywall</a>, <a
-href="https://www.crossref.org">Crossref</a> and <a
-href="https://openalex.org">OpenAlex</a>.</p>
-<p>An overview of our data warehouse including procedures to load the
-data into BigQuery can be found below.</p>
+<p>We use Google Big Query to work with large open scholarly data. Our main data sources are <a href="https://unpaywall.org">Unpaywall</a>, <a href="https://www.crossref.org">Crossref</a> and <a href="https://openalex.org">OpenAlex</a>.</p>
+<p>An overview of our data warehouse including procedures to load the data into BigQuery can be found below.</p>
 <h2 id="status-crossref">Status Crossref</h2>
 <h3 id="current-snapshot-cr_instant">Current Snapshot (cr_instant)</h3>
 <div class="l-body-outset">
@@ -2194,20 +2190,19 @@ data into BigQuery can be found below.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2022/04</td>
+<td>2022/05</td>
 <td>all.json.tar.gz</td>
 <td>cr_instant.snapshot</td>
 <td>schema_crossref.json</td>
 <td><a href="https://github.com/naustica/crossref_bq">Repo</a></td>
-<td>14.05.2022</td>
+<td>12.06.2022</td>
 <td>2013-2022</td>
-<td>35.939.195</td>
+<td>36.394.515</td>
 </tr>
 </tbody>
 </table>
 </div>
-<h3 id="historical-snapshots-cr_history">Historical Snapshots
-(cr_history)</h3>
+<h3 id="historical-snapshots-cr_history">Historical Snapshots (cr_history)</h3>
 <div class="l-body-outset">
 <table>
 <colgroup>
@@ -2273,12 +2268,21 @@ data into BigQuery can be found below.</p>
 <td>2013-2021</td>
 <td>30.579.119</td>
 </tr>
+<tr class="odd">
+<td>2022/04</td>
+<td>all.json.tar.gz</td>
+<td>cr_history.cr_apr22</td>
+<td>schema_crossref.json</td>
+<td><a href="https://github.com/naustica/crossref_bq">Repo</a></td>
+<td>14.05.2022</td>
+<td>2013-2022</td>
+<td>35.939.195</td>
+</tr>
 </tbody>
 </table>
 </div>
 <h2 id="status-unpaywall">Status Unpaywall</h2>
-<h3 id="current-snapshot-upw_instant">Current Snapshot
-(upw_instant)</h3>
+<h3 id="current-snapshot-upw_instant">Current Snapshot (upw_instant)</h3>
 <div class="l-body-outset">
 <table style="width:100%;">
 <colgroup>
@@ -2317,8 +2321,7 @@ data into BigQuery can be found below.</p>
 </tbody>
 </table>
 </div>
-<h3 id="historical-snapshots-upw_history">Historical Snapshots
-(upw_history)</h3>
+<h3 id="historical-snapshots-upw_history">Historical Snapshots (upw_history)</h3>
 <div class="l-body-outset">
 <table style="width:100%;">
 <colgroup>
@@ -2424,50 +2427,49 @@ data into BigQuery can be found below.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2022-05-11</td>
+<td>2022-06-07</td>
 <td>authors/</td>
 <td>openalex.authors</td>
 <td>schema_openalex_author.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>23.05.2022</td>
+<td>28.06.2022</td>
 <td>All</td>
-<td>220.870.815</td>
+<td>244.599.941</td>
 </tr>
 <tr class="even">
-<td>2022-04-14</td>
+<td>2022-06-01</td>
 <td>institutions/</td>
 <td>openalex.institutions</td>
 <td>schema_openalex_institutions.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>10.05.2022</td>
+<td>28.06.2022</td>
 <td>All</td>
-<td>108.660</td>
+<td>108.607</td>
 </tr>
 <tr class="odd">
-<td>2022-04-12</td>
+<td>2022-06-03</td>
 <td>venues/</td>
 <td>openalex.venues</td>
 <td>schema_openalex_venue.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>10.05.2022</td>
+<td>28.06.2022</td>
 <td>All</td>
-<td>124.066</td>
+<td>123.893</td>
 </tr>
 <tr class="even">
-<td>2022-05-12</td>
+<td>2022-05-28</td>
 <td>works/</td>
 <td>openalex.works</td>
 <td>schema_openalex_work.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>16.05.2022</td>
-<td>All (error threshold &lt;= 1000)</td>
-<td>211.003.388</td>
+<td>28.06.2022</td>
+<td>All</td>
+<td>238.429.882</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
@@ -2488,17 +2490,9 @@ class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"><
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
-<p>Articles and posts licensed under <a
-href="https://creativecommons.org/licenses/by/4.0/legalcode">Creative
-Commons Attribution 4.0 International Public License</a>.</p>
-<p>This blog is made with <a
-href="https://distill.pub/about/">Distill</a> and <a
-href="https://rstudio.github.io/distill/">Distill for R Markdown</a>
-licensed under the <a
-href="https://www.apache.org/licenses/LICENSE-2.0">Apache License,
-v2.0</a>.</p>
-<p><a
-href="https://www.sub.uni-goettingen.de/impressum/">Imprint</a></p>
+<p>Articles and posts licensed under <a href="https://creativecommons.org/licenses/by/4.0/legalcode">Creative Commons Attribution 4.0 International Public License</a>.</p>
+<p>This blog is made with <a href="https://distill.pub/about/">Distill</a> and <a href="https://rstudio.github.io/distill/">Distill for R Markdown</a> licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, v2.0</a>.</p>
+<p><a href="https://www.sub.uni-goettingen.de/impressum/">Imprint</a></p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 
