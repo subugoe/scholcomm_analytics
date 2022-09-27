@@ -786,6 +786,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -1858,15 +1859,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        if ($(this).children()[0].nodeName == "D-FOOTNOTE") {
-          var fn = $(this).children()[0]
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
           $(this).html(fn.shadowRoot.querySelector("sup"))
           $(this).id = fn.id
           fn.remove()
         }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -2065,7 +2072,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2174,13 +2181,32 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p><em>Dr. Anne Hobert</em>, <em>Nick Haupka</em>, <em>Najko Jahn</em></p>
 <h2 id="academic-publications">Academic publications</h2>
 <p>We also publish in academic journals about our work.</p>
-<p>Jahn, N., Matthias, L., &amp; Laakso, M. (2022). Toward transparency of hybrid open access through publisher‐provided metadata: An article‐level study of Elsevier. <em>Journal of the Association for Information Science and Technology</em>, 73(1), 104–118. <a href="https://doi.org/10.1002/asi.24549" class="uri">https://doi.org/10.1002/asi.24549</a></p>
-<p>Jahn, N., Held, M., Walter, H., Haupka, N., &amp; Hillenkötter, K. (2022). HOAD: Data Analytics für mehr Transparenz bei Open-Access-Transformationsverträgen. <em>ABI Technik</em>, 42(1), 64–69. <a href="https://doi.org/10.1515/abitech-2022-0007" class="uri">https://doi.org/10.1515/abitech-2022-0007</a></p>
-<p>Fraser, N., Hobert, A., Jahn, N., Mayr, P., &amp; Peters, I. (2021). No Deal: Investigating the Influence of Restricted Access to Elsevier Journals on German Researchers’ Publishing and Citing Behaviours. ArXiv:2105.12078. <a href="http://arxiv.org/abs/2105.12078" class="uri">http://arxiv.org/abs/2105.12078</a></p>
-<p>Hobert, A., Jahn, N., Mayr, P., Schmidt, B., &amp; Taubert, N. (2021). Open access uptake in Germany 2010–2018: adoption in a diverse research landscape. <em>Scientometrics</em>, 126(12), 9751–9777. <a href="https://doi.org/10.1007/s11192-021-04002-0" class="uri">https://doi.org/10.1007/s11192-021-04002-0</a></p>
-<p>Laakso, M., Matthias, L., &amp; Jahn, N. (2021). Open is not forever: A study of vanished open access journals. <em>Journal of the Association for Information Science and Technology</em>, 72(9), 1099–1112. <a href="https://doi.org/10.1002/asi.24460" class="uri">https://doi.org/10.1002/asi.24460</a> (Featured in <a href="https://www.nature.com/articles/d41586-020-02610-z">Nature</a>, <a href="https://doi.org/10.1126/science.abe6998">Science</a> and <a href="https://edition.cnn.com/2020/09/15/us/vanished-open-access-journals-trnd-scn/index.html">CNN</a>)</p>
-<p>Jahn, N., Hobert, A., &amp; Haupka, N. (2021). Entwicklung und Typologie des Datendiensts Unpaywall. <em>Bibliothek Forschung und Praxis</em>, 45(2), 293–303. <a href="https://doi.org/10.1515/bfp-2020-0115" class="uri">https://doi.org/10.1515/bfp-2020-0115</a></p>
-<p>Matthias, L., Jahn, N., &amp; Laakso, M. (2019). The Two-Way Street of Open Access Journal Publishing: Flip It and Reverse It. <em>Publications</em>, 7(2), 23. <a href="https://doi.org/10.3390/publications7020023" class="uri">https://doi.org/10.3390/publications7020023</a></p>
+<p>Jahn, N., Matthias, L., &amp; Laakso, M. (2022). Toward transparency of
+hybrid open access through publisher‐provided metadata: An article‐level
+study of Elsevier. <em>Journal of the Association for Information Science
+and Technology</em>, 73(1), 104–118. <a href="https://doi.org/10.1002/asi.24549" class="uri">https://doi.org/10.1002/asi.24549</a></p>
+<p>Jahn, N., Held, M., Walter, H., Haupka, N., &amp; Hillenkötter, K. (2022).
+HOAD: Data Analytics für mehr Transparenz bei
+Open-Access-Transformationsverträgen. <em>ABI Technik</em>, 42(1), 64–69.
+<a href="https://doi.org/10.1515/abitech-2022-0007" class="uri">https://doi.org/10.1515/abitech-2022-0007</a></p>
+<p>Fraser, N., Hobert, A., Jahn, N., Mayr, P., &amp; Peters, I. (2021). No
+Deal: Investigating the Influence of Restricted Access to Elsevier
+Journals on German Researchers’ Publishing and Citing Behaviours.
+ArXiv:2105.12078. <a href="http://arxiv.org/abs/2105.12078" class="uri">http://arxiv.org/abs/2105.12078</a></p>
+<p>Hobert, A., Jahn, N., Mayr, P., Schmidt, B., &amp; Taubert, N. (2021). Open
+access uptake in Germany 2010–2018: adoption in a diverse research
+landscape. <em>Scientometrics</em>, 126(12), 9751–9777.
+<a href="https://doi.org/10.1007/s11192-021-04002-0" class="uri">https://doi.org/10.1007/s11192-021-04002-0</a></p>
+<p>Laakso, M., Matthias, L., &amp; Jahn, N. (2021). Open is not forever: A
+study of vanished open access journals. <em>Journal of the Association for
+Information Science and Technology</em>, 72(9), 1099–1112.
+<a href="https://doi.org/10.1002/asi.24460" class="uri">https://doi.org/10.1002/asi.24460</a> (Featured in <a href="https://www.nature.com/articles/d41586-020-02610-z">Nature</a>, <a href="https://doi.org/10.1126/science.abe6998">Science</a> and <a href="https://edition.cnn.com/2020/09/15/us/vanished-open-access-journals-trnd-scn/index.html">CNN</a>)</p>
+<p>Jahn, N., Hobert, A., &amp; Haupka, N. (2021). Entwicklung und Typologie des
+Datendiensts Unpaywall. <em>Bibliothek Forschung und Praxis</em>, 45(2),
+293–303. <a href="https://doi.org/10.1515/bfp-2020-0115" class="uri">https://doi.org/10.1515/bfp-2020-0115</a></p>
+<p>Matthias, L., Jahn, N., &amp; Laakso, M. (2019). The Two-Way Street of Open
+Access Journal Publishing: Flip It and Reverse It. <em>Publications</em>, 7(2),
+23. <a href="https://doi.org/10.3390/publications7020023" class="uri">https://doi.org/10.3390/publications7020023</a></p>
 <h2 id="theses">Theses</h2>
 <p>Haupka, N. (2021). Analyse der Entwicklung des Open Access-Discovery-Services Unpaywall seit 2018 [Bachelor Thesis, Hochschule Hannover]. <a href="https://doi.org/10.25968/opus-1899" class="uri">https://doi.org/10.25968/opus-1899</a></p>
 <h2 id="third-party-funded-projects">Third-party funded projects</h2>

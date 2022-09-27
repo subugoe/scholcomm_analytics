@@ -786,6 +786,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -1858,15 +1859,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        if ($(this).children()[0].nodeName == "D-FOOTNOTE") {
-          var fn = $(this).children()[0]
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
           $(this).html(fn.shadowRoot.querySelector("sup"))
           $(this).id = fn.id
           fn.remove()
         }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -2065,7 +2072,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2190,14 +2197,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </thead>
 <tbody>
 <tr class="odd">
-<td>2022/06</td>
+<td>2022/08</td>
 <td>all.json.tar.gz</td>
 <td>cr_instant.snapshot</td>
 <td>schema_crossref.json</td>
 <td><a href="https://github.com/naustica/crossref_bq">Repo</a></td>
-<td>18.07.2022</td>
+<td>26.09.2022</td>
 <td>2013-2022</td>
-<td>36.942.872</td>
+<td>37.846.354</td>
 </tr>
 </tbody>
 </table>
@@ -2427,44 +2434,44 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </thead>
 <tbody>
 <tr class="odd">
-<td>2022-07-09</td>
+<td>2022-09-07</td>
 <td>authors/</td>
 <td>openalex.authors</td>
 <td>schema_openalex_author.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>25.07.2022</td>
+<td>27.09.2022</td>
 <td>All</td>
-<td>247.115.514</td>
+<td>253.779.827</td>
 </tr>
 <tr class="even">
-<td>2022-07-09</td>
+<td>2022-08-23</td>
 <td>institutions/</td>
 <td>openalex.institutions</td>
 <td>schema_openalex_institutions.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>25.07.2022</td>
+<td>27.09.2022</td>
 <td>All</td>
 <td>108.617</td>
 </tr>
 <tr class="odd">
-<td>2022-07-09</td>
+<td>2022-08-28</td>
 <td>venues/</td>
 <td>openalex.venues</td>
 <td>schema_openalex_venue.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>25.07.2022</td>
+<td>27.09.2022</td>
 <td>All</td>
-<td>123.893</td>
+<td>123.885</td>
 </tr>
 <tr class="even">
-<td>2022-07-09</td>
+<td>2022-07-24</td>
 <td>works/</td>
 <td>openalex.works</td>
 <td>schema_openalex_work.json</td>
 <td><a href="https://github.com/naustica/openalex">Repo</a></td>
-<td>25.07.2022</td>
+<td>27.09.2022</td>
 <td>All</td>
-<td>239.155.684</td>
+<td>241.047.697</td>
 </tr>
 </tbody>
 </table>
