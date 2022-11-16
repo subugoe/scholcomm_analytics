@@ -1,0 +1,22 @@
+---
+title: "Recent Changes in OA Publishing in the German Research Landscape"
+description: |
+In 2021 we published a study on the uptake of Open Access Publishing in the German research landscape, which was based on data from mid-2019. At the end of 2021 we updated the dataset and performed a statistical analysis of variations of OA shares of the investigated institutions. In this post, we compare both datasets and explore the differences with respect to the OA status of pulications.
+author:
+  - name: Anne Hobert 
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+  - name: Nick Haupka
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: "`r Sys.Date()`"
+output: distill::distill_article
+draft: TRUE
+---
+
+
+
+
+
+
+
