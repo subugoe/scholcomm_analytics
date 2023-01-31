@@ -1,7 +1,7 @@
 ---
 title: "Recent Changes in OA Publishing in the German Research Landscape"
 description: |
-In 2021 we published a study on the uptake of Open Access Publishing in the German research landscape, which was based on data from mid-2019. At the end of 2021 we updated the dataset and performed a statistical analysis of variations of OA shares of the investigated institutions. In this post, we compare both datasets and explore the differences with respect to the OA status of pulications.
+In 2021 we published a study on the uptake of Open Access Publishing in the German research landscape, which was based on data from mid-2019. At the end of 2021 we updated the dataset and performed a statistical analysis of variations of OA shares of the investigated institutions. In this post, we compare both datasets and explore the differences with respect to the OA status of publications.
 author:
   - name: Anne Hobert 
     affiliation: State and University Library Göttingen
@@ -14,6 +14,47 @@ output: distill::distill_article
 draft: TRUE
 ---
 
+## Introduction
+Beschreibung Ursprungsdatensätze, Aufbereitung, Workflows, Links zu Studien, Nennung der Verwendeten BDB/snapshots
+
+## Descriptive Statistics
+Hier einige Kennzahlen für beide Datensätze einfügen, Gesamtanteil OA und nach Kategorie, ggf. auch mean, sd, median über die einzelnen Institutionen hinweg.
+
+## Matching procedure
+
+Beschreibung ZUsammenfügen der DAtensätze, Auswahl Felder, Verkettung oa_category
+
+## Exploration
+
+### Occurances in the data sets
+How many articles are in both data sets, how many disappeared from the older to the newer version and how many were added?
+ -> haben wir hier diejenigen die nur im alten sind genauer angesehen? Man würde ja eigentlich vermuten, dass nur welche dazu kommen.
+
+### Comparison of OA category
+Jetzt: nur noch die Artikel, die in beiden enthalten sind.
+
+Wie viele sind identisch und bei wie vielen hat sich matching status (upw_matched) oder oa_category geändert?
+
+Bei denen mit Änderung: welche Änderungen kommen wie häufig vor?
+
+### Investigation of the most notice-able patterns of change in the oa category
+
+1) Genauere Untersuchung der Änderungen bei opendoar_other und opendoar_subject: Um welche Repos handelt es sich hier? Interessant 
+ sind die Repos, die zu den Veränderungen am meisten beitragen.
+ 
+ Großer Faktor: arxiv.org war ursprünglich nur disciplinary, jetzt disciplinary und institutionally und damit opendoar_other bei uns -> vielleicht wäre eine Operationalisierung wenn inst und subject, dann wird es bei beidem gezählt besser
+
+ 2) Welche(s) Repo(s) führt zur starken Abnahme von other_repo (Hypothese: Semantic scholar)? Semantic Scholar nimmt tatäschlich stark ab, ist aber noch vorhanden (wundert mich, eignetlich sollte es im neuen ausgeschlossen sein?)
+
+
+### Discrepancies in publication year
+ Untersuchung der Diskrepanzen im Publikationsjahr: Wie oft tritt das auf? Ist das Jahr im neuen Datensatz älter oder jünger? Welche Publikationsdaten sind bei Crossref für die  zugehörigen dois hinterlegt und korreliert das mit den Daten im neuen/alten Datensatz (zB Datum vom alten stimmt immer mit deposited überein, im neuen mit issued)?
+ 
+ 
+## Summary
+FAzit: 
+- Kaum Veränderungen bei journal_oa (ist das so?)
+- Veränderungen bei Repo hauptsächlich aufgrund der Operationalisierung bzw. Klassifizierung in Originaldaten -> ist zwar identische Vorgehensweise, aber Repodefinitionen haben sich in OpenDOAR geändert bzw. SemanticScholar aus Upw herausgenommen.
 
 
 
