@@ -15,22 +15,27 @@ draft: TRUE
 ---
 
 ## Introduction
+<!-- Anne -->
 Beschreibung Ursprungsdatensätze, Aufbereitung, Workflows, Links zu Studien, Nennung der Verwendeten BDB/snapshots
 
 ## Descriptive Statistics
+<!-- Anne -->
 Hier einige Kennzahlen für beide Datensätze einfügen, Gesamtanteil OA und nach Kategorie, ggf. auch mean, sd, median über die einzelnen Institutionen hinweg.
 
 ## Matching procedure
+<!-- Nick -->
 
 Beschreibung ZUsammenfügen der DAtensätze, Auswahl Felder, Verkettung oa_category
 
 ## Exploration
 
 ### Occurances in the data sets
+<!-- Nick -->
 How many articles are in both data sets, how many disappeared from the older to the newer version and how many were added?
  -> haben wir hier diejenigen die nur im alten sind genauer angesehen? Man würde ja eigentlich vermuten, dass nur welche dazu kommen.
 
 ### Comparison of OA category
+<!-- Nick -->
 Jetzt: nur noch die Artikel, die in beiden enthalten sind.
 
 Wie viele sind identisch und bei wie vielen hat sich matching status (upw_matched) oder oa_category geändert?
@@ -38,6 +43,7 @@ Wie viele sind identisch und bei wie vielen hat sich matching status (upw_matche
 Bei denen mit Änderung: welche Änderungen kommen wie häufig vor?
 
 ### Investigation of the most notice-able patterns of change in the oa category
+<!-- Nick, Anne -->
 
 1) Genauere Untersuchung der Änderungen bei opendoar_other und opendoar_subject: Um welche Repos handelt es sich hier? Interessant 
  sind die Repos, die zu den Veränderungen am meisten beitragen.
@@ -48,10 +54,12 @@ Bei denen mit Änderung: welche Änderungen kommen wie häufig vor?
 
 
 ### Discrepancies in publication year
+<!-- Nick, Anne -->
  Untersuchung der Diskrepanzen im Publikationsjahr: Wie oft tritt das auf? Ist das Jahr im neuen Datensatz älter oder jünger? Welche Publikationsdaten sind bei Crossref für die  zugehörigen dois hinterlegt und korreliert das mit den Daten im neuen/alten Datensatz (zB Datum vom alten stimmt immer mit deposited überein, im neuen mit issued)?
  
  
 ## Summary
+<!-- Anne -->
 FAzit: 
 - Kaum Veränderungen bei journal_oa (ist das so?)
 - Veränderungen bei Repo hauptsächlich aufgrund der Operationalisierung bzw. Klassifizierung in Originaldaten -> ist zwar identische Vorgehensweise, aber Repodefinitionen haben sich in OpenDOAR geändert bzw. SemanticScholar aus Upw herausgenommen.
