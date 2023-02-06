@@ -1,7 +1,7 @@
 ---
 title: "Recent Changes in OA Publishing in the German Research Landscape"
 description: |
-In 2021 we published a study on the uptake of Open Access Publishing in the German research landscape, which was based on data from mid-2019. At the end of 2021 we updated the dataset and performed a statistical analysis of variations of OA shares of the investigated institutions. In this post, we compare both datasets and explore the differences with respect to the OA status of publications.
+  In 2021 we published a study on the uptake of Open Access Publishing in the German research landscape, which was based on data from mid-2019. At the end of 2021 we updated the dataset and performed a statistical analysis of variations of OA shares of the investigated institutions. In this post, we compare both datasets and explore the differences with respect to the OA status of publications.
 author:
   - name: Anne Hobert 
     affiliation: State and University Library Göttingen
@@ -11,12 +11,34 @@ author:
     affiliation_url: https://www.sub.uni-goettingen.de/
 date: "`r Sys.Date()`"
 output: distill::distill_article
+bibliography: pubs.bib
 draft: TRUE
 ---
 
 ## Introduction
 <!-- Anne -->
-Beschreibung Ursprungsdatensätze, Aufbereitung, Workflows, Links zu Studien, Nennung der Verwendeten BDB/snapshots
+In 2021 we published a study on the uptake of Open Access (OA) Publishing in the German research landscape, where we investigated the development of the proportions of articles that are openly available on the national level as well as the insitutional level. Special regard was paid to the particular structure of the German research landscape including universities as well as non-university research institutes. Moreover, a systematic classification of distinct categories of OA publishing allows to identify different patterns of adoption to OA (@hobert_open_2021). Details of the data collection and processing can be found in the published paper and in the corresponding [code repository](https://github.com/subugoe/oauni), however, a brief overview is given in the following.
+
+Our study is based on a set of the following publications indexed in the most recent bibliometric database in the WoS instance of the [German Competence Center for bibliometrics](http://www.bibliometrie.info/) (WoS-KB) at the time (namely `wos_b_2019`), which are associated with a German university or non-university research institution:
+
+- Web of Science core collections SCI, SSCI and AHCI
+- document types `Article` and `Review`
+- publication years 2010 until 2020
+
+To identify German university affiliations in WoS, we used data from the Competence Centre for Bibliometrics, in particular the result of the project “Institutional address disambiguation” @rimmert_2017. Based on disambiguated addresses, this data categorizes the research institution according to Germany’s research landscape.
+
+The general outline of the steps undertaken for gathering the needed information is as follows:
+
+- Extract publications of German institutions
+- Identify fully OA journals using the ISSN-Gold-OA list provided by Bielefeld University (@issn-gold-3)
+- Collect relevant OA information from Unpaywall (snapshot released February 2020)
+- Gather repository information from OpenDOAR (by querying the API in March 2020)
+- ISSN to ISSN-L conversion list from [here](http://www.issn.org/wp-content/uploads/2014/03/issnltables.zip) for categorisation of journal-based OA
+
+This is visualised in the following chart (taken from @hobert_open_2021):
+![Study design: schematic display of gathering, matching, and preprocessing of data.](flowchart_methodology.png)
+
+For our follow-up study investigating explanatory models that quantify the influence of different discpline-specific and organisational factors on the OA shares of the included institutions, we updated the dataset. The main reason for this was that we wanted to be able to include (early) effects of recent developments like the transformative agreements negotiated by the DEAL consortium or the removal of Semantic Scholar as a data source from Unpaywall. The updated dataset from 2021 used the same methodology but more recent bibliometric data. More specifically, we now used the bibliometric database `wos_b_2021` of the KB based on Web of Science data, the updated ISSN-Gold-OA list (@issn-gold-4) and the Unpaywall snapshot released in July 2021. Repository data from OpenDOAR was gathered in November 2021.
 
 ## Descriptive Statistics
 <!-- Anne -->
