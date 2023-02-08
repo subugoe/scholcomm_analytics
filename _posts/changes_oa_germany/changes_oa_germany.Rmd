@@ -23,7 +23,7 @@ Our study is based on a set of the following publications indexed in the most re
 
 - Web of Science core collections SCI, SSCI and AHCI
 - document types `Article` and `Review`
-- publication years 2010 until 2020
+- publication years 2010 until 2018
 
 To identify German university affiliations in WoS, we used data from the Competence Centre for Bibliometrics, in particular the result of the project “Institutional address disambiguation” @rimmert_2017. Based on disambiguated addresses, this data categorizes the research institution according to Germany’s research landscape.
 
@@ -38,11 +38,85 @@ The general outline of the steps undertaken for gathering the needed information
 This is visualised in the following chart (taken from @hobert_open_2021):
 ![Study design: schematic display of gathering, matching, and preprocessing of data.](flowchart_methodology.png)
 
-For our follow-up study investigating explanatory models that quantify the influence of different discpline-specific and organisational factors on the OA shares of the included institutions, we updated the dataset. The main reason for this was that we wanted to be able to include (early) effects of recent developments like the transformative agreements negotiated by the DEAL consortium or the removal of Semantic Scholar as a data source from Unpaywall. The updated dataset from 2021 used the same methodology but more recent bibliometric data. More specifically, we now used the bibliometric database `wos_b_2021` of the KB based on Web of Science data, the updated ISSN-Gold-OA list (@issn-gold-4) and the Unpaywall snapshot released in July 2021. Repository data from OpenDOAR was gathered in November 2021.
+For our follow-up study investigating explanatory models that quantify the influence of different discpline-specific and organisational factors on the OA shares of the included institutions, we updated the dataset and extended it to include publications up to publication year 2020. The main reason for this was that we wanted to be able to include (early) effects of recent developments like the transformative agreements negotiated by the DEAL consortium or the removal of Semantic Scholar as a data source from Unpaywall. The updated dataset from 2021 used the same methodology but more recent bibliometric data. More specifically, we now used the bibliometric database `wos_b_2021` of the KB based on Web of Science data, the updated ISSN-Gold-OA list (@issn-gold-4) and the Unpaywall snapshot released in July 2021. Repository data from OpenDOAR was gathered in November 2021.
+
+We start out by comparing some summary statistics of both datasets in order to gain some insights into what quantities were subject to the strongest changes from the first data gathering point of time in mid-2019 to the time of data update in late 2020. Afterwards, we investigate a matched dataset, where we mapped single articles from one dataset to the other via identical UT, the unique Web of Science identifier. In this part of the analysis we focus on changes in the OA category, since this is the field we mainly rely upon in our follow up regression study.
 
 ## Descriptive Statistics
 <!-- Anne -->
-Hier einige Kennzahlen für beide Datensätze einfügen, Gesamtanteil OA und nach Kategorie, ggf. auch mean, sd, median über die einzelnen Institutionen hinweg.
+The generation of the datasets we used is documented in the project's [Github repository](https://github.com/subugoe/oauni). Here, we load the data, select relevant information and calculate some high-level descriptive statistics, like, for example, the mean, median and standard deviation of the institutional OA shares.
+
+```{r load_data}
+library(tidyverse)
+detailed_data_old <- read_csv("data/pubs_cat_details.csv", col_types = "dcccdcddcccllllccccclccclclccccccccccccc")
+
+data_old <- detailed_data_old %>% 
+  select(UT_EID, PUBYEAR,INST_NAME, sector, upw_matched, oa_category) %>% 
+  distinct() %>% 
+  mutate(sector = case_when(
+            sector == "Hochschulen" ~ "Universities (UNI)",
+            sector == "Helmholtz-Gemeinschaft" ~ "Helmholtz Association (HGF)",
+            sector == "Max-Planck-Gesellschaft" ~ "Max Planck Society (MPS)",
+            sector == "Leibniz-Gemeinschaft" ~ "Leibniz Association (WGL)",
+            sector == "Fraunhofer-Gesellschaft" ~ "Fraunhofer Society (FhS)",
+            sector == "Ressortforschung" ~ "Government Research\n Agencies (GRA)"
+        ),
+        oa_category = factor(
+           oa_category,
+           levels = c(
+              "full_oa_journal",
+              "other_oa_journal",
+              "opendoar_inst",
+              "opendoar_subject",
+              "opendoar_other",
+              "other_repo",
+              "not_oa"
+          )
+        )
+  )
+  
+excl_from_analysis <- readr::read_csv("data/exclude_from_analysis.csv")
+data_old <- data_old %>% 
+  anti_join(excl_from_analysis, by = c("INST_NAME" = "Universitäten"))
+rm(detailed_data_old)
+
+
+detailed_data_new <- read_csv("data/pubs_cat_details_new.csv", col_types = "dcccdcddcccllllccccclccclclccccccccccccc")
+
+data_new <- detailed_data_new %>% 
+  select(UT_EID, PUBYEAR,INST_NAME, sector, upw_matched, oa_category) %>% 
+  distinct() %>% 
+  mutate(sector = case_when(
+            sector == "Hochschulen" ~ "Universities (UNI)",
+            sector == "Helmholtz-Gemeinschaft" ~ "Helmholtz Association (HGF)",
+            sector == "Max-Planck-Gesellschaft" ~ "Max Planck Society (MPS)",
+            sector == "Leibniz-Gemeinschaft" ~ "Leibniz Association (WGL)",
+            sector == "Fraunhofer-Gesellschaft" ~ "Fraunhofer Society (FhS)",
+            sector == "Ressortforschung" ~ "Government Research\n Agencies (GRA)"
+        ),
+        oa_category = factor(
+           oa_category,
+           levels = c(
+              "full_oa_journal",
+              "other_oa_journal",
+              "opendoar_inst",
+              "opendoar_subject",
+              "opendoar_other",
+              "other_repo",
+              "not_oa"
+          )
+        )
+  )
+
+data_new <- data_new %>% 
+  anti_join(excl_from_analysis, by = c("INST_NAME" = "Universitäten"))
+rm(excl_from_analysis)
+rm(detailed_data_new)
+```
+
+The total number of journal articles increased from `r data_old %>% summarise(n = n_distinct(UT_EID)) %>% .$n` in the original dataset by `r data_new %>% summarise(n = n_distinct(UT_EID)) %>% .$n - data_old %>% summarise(n = n_distinct(UT_EID)) %>% .$n` to `r data_new %>% summarise(n = n_distinct(UT_EID)) %>% .$n` publications in the updated dataset. However, there are almost as many publications (`r data_new %>% filter(PUBYEAR > 2018) %>% summarise(n = n_distinct(UT_EID)) %>% .$n`) in the updated dataset with publication year 2019 or 2020, which were not included in the original dataset. The proportion of articles that were available in OA rose from`r round(data_old %>% mutate(oa_category = fct_collapse(oa_category, not_oa = "not_oa", other_level = "OA")) %>% group_by(oa_category) %>% summarise(n = n_distinct(UT_EID)) %>% mutate(prop = n / sum(n)) %>% filter(oa_category == "OA") %>% .$prop*100, 2)`% to `r round(data_new %>% mutate(oa_category = fct_collapse(oa_category, not_oa = "not_oa", other_level = "OA")) %>% group_by(oa_category) %>% summarise(n = n_distinct(UT_EID)) %>% mutate(prop = n / sum(n)) %>% filter(oa_category == "OA") %>% .$prop*100, 2)`%. Again, this increase is mainly due to articles published after the original data gathering: for the updated dataset, the OA share of articles published in 2018 or earlier is `r round(data_new %>% mutate(is_old = ifelse(PUBYEAR < 2019, TRUE, FALSE), oa_category = fct_collapse(oa_category, not_oa = "not_oa", other_level = "OA")) %>% group_by(is_old) %>% mutate(n_total = n_distinct(UT_EID)) %>% ungroup() %>% group_by(oa_category, is_old, n_total) %>% summarise(n = n_distinct(UT_EID)) %>% mutate(prop = n / n_total) %>% filter(oa_category == "OA", is_old == TRUE) %>% .$prop*100, 2)`%, and the OA share of articles published in 2019 and 2020 is `r round(data_new %>% mutate(is_old = ifelse(PUBYEAR < 2019, TRUE, FALSE), oa_category = fct_collapse(oa_category, not_oa = "not_oa", other_level = "OA")) %>% group_by(is_old) %>% mutate(n_total = n_distinct(UT_EID)) %>% ungroup() %>% group_by(oa_category, is_old, n_total) %>% summarise(n = n_distinct(UT_EID)) %>% mutate(prop = n / n_total) %>% filter(oa_category == "OA", is_old == FALSE) %>% .$prop*100, 2)`%.
+
+We also want to compare oa shares with respect to individual institutions (mean, median, sd), sectors and oa categories.
 
 ## Matching procedure
 <!-- Nick -->
