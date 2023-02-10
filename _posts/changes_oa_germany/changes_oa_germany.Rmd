@@ -1,9 +1,9 @@
 ---
 title: "Recent Changes in OA Publishing in the German Research Landscape"
 description: |
-In 2021 we published a study on the uptake of Open Access Publishing in the German research landscape, which was based on data from mid-2019. At the end of 2021 we updated the dataset and performed a statistical analysis of variations of OA shares of the investigated institutions. In this post, we compare both datasets and explore the differences with respect to the OA status of publications.
+  In 2021 we published a study on the uptake of Open Access Publishing in the German research   landscape, which was based on data from mid-2019. At the end of 2021 we updated the dataset and performed a statistical analysis of variations of OA shares of the investigated institutions. In this post, we compare both datasets and explore the differences with respect to the OA status of publications.
 author:
-  - name: Anne Hobert 
+  - name: Anne Hobert
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
   - name: Nick Haupka
@@ -25,6 +25,8 @@ Hier einige Kennzahlen für beide Datensätze einfügen, Gesamtanteil OA und nac
 ## Matching procedure
 <!-- Nick -->
 
+To analyze the old and new datasets, we first excluded specific institutions and paratexts. Next, we removed fields from the datasets that were not needed for this study. Ultimately, we worked with the `UT_EID`, `sector`, `is_oa`, `oa_status`, `PUBYEAR`, `upw_matched`, and `oa_category` fields. Some of the fields were only present in a nested form. Thus, we flattened the dataset. To do this, we packed multiple rows from the nested field `oa_category` belonging to a `UT_EID` into a single alphabetically sorted list so that each publication made up only one row of the dataset. A new column `set_version` was added to each of the two tables to indicate which dataset a row belonged to. The tables were then matched using the `UT_EID`. From this aggregated table it is now possible to derive information on which `UT_EID`s have been added, which have been removed, which have been changed and which have remained unchanged.
+
 Beschreibung ZUsammenfügen der DAtensätze, Auswahl Felder, Verkettung oa_category
 
 ## Exploration
@@ -34,6 +36,8 @@ Beschreibung ZUsammenfügen der DAtensätze, Auswahl Felder, Verkettung oa_categ
 How many articles are in both data sets, how many disappeared from the older to the newer version and how many were added?
  -> haben wir hier diejenigen die nur im alten sind genauer angesehen? Man würde ja eigentlich vermuten, dass nur welche dazu kommen.
 
+There are 1077655 publications in the new dataset. This is 254094 more texts than in the old dataset, which consists of 823561 publications. However, 946 texts were also removed from the dataset between 2020 and 2022, which is why a total of 255040 publications were added. It is still unclear why these texts were removed.
+
 ### Comparison of OA category
 <!-- Nick -->
 Jetzt: nur noch die Artikel, die in beiden enthalten sind.
@@ -42,30 +46,30 @@ Wie viele sind identisch und bei wie vielen hat sich matching status (upw_matche
 
 Bei denen mit Änderung: welche Änderungen kommen wie häufig vor?
 
+In total, 199737 publications have changed OA categorization. For 622878 texts it has remained the same. For publications where the OA categorization changed, mainly OA categories were removed or one category was exchanged for another. For example, a publication could be assigned only two categories instead of three. Or a publication was no longer assigned `other_repo`, but `opendoar_other`. In Figure x, which represents ..., it can be seen that the categories `opendoar_subject` and `other_repo` were still significantly more common in the old dataset. In contrast, more publications were identified as `opendoar_inst` or `opendoar_other` in the new dataset.
+
 ### Investigation of the most notice-able patterns of change in the oa category
 <!-- Nick, Anne -->
 
-1) Genauere Untersuchung der Änderungen bei opendoar_other und opendoar_subject: Um welche Repos handelt es sich hier? Interessant 
+1) Genauere Untersuchung der Änderungen bei opendoar_other und opendoar_subject: Um welche Repos handelt es sich hier? Interessant
  sind die Repos, die zu den Veränderungen am meisten beitragen.
- 
+
  Großer Faktor: arxiv.org war ursprünglich nur disciplinary, jetzt disciplinary und institutionally und damit opendoar_other bei uns -> vielleicht wäre eine Operationalisierung wenn inst und subject, dann wird es bei beidem gezählt besser
+
+The proportion of publications on disciplinary repositories and repositories that are neither institutional nor disciplinary has significantly reversed compared to the old dataset. While 22605 texts were classified as `opendoar_other` in the old dataset, over 103095 publications were counted as `opendoar_other` in the new dataset. On disciplinary repositories there were 124889 publications in the old dataset. This amount has decreased in the new dataset. As a result, there are only 47789 texts on institutional repositories in the new dataset. This is mainly due to the fact that the arxiv.org repository is no longer classified as a disciplinary repository, but as an `opendoar_other` repository. The service arxiv.org includes over 80000 publications in both datasets.
 
  2) Welche(s) Repo(s) führt zur starken Abnahme von other_repo (Hypothese: Semantic scholar)? Semantic Scholar nimmt tatäschlich stark ab, ist aber noch vorhanden (wundert mich, eignetlich sollte es im neuen ausgeschlossen sein?)
 
+The number of publications that are not in an institutional or disciplinary repository has decreased in the new dataset. In the old dataset, 90454 publications were assigned to the category `other_repo`. In the new dataset, only 19187 texts are counted for this particular category. One reason for this is that publications coming from Semantic Scholar are no longer included in the new dataset. While in the old dataset 81077 publications come from Sematic Scholar, in the new dataset there are only 6852. However, it is unclear why there are still publications from Semantic Scholar in the new dataset at all. Because ???
 
 ### Discrepancies in publication year
 <!-- Nick, Anne -->
  Untersuchung der Diskrepanzen im Publikationsjahr: Wie oft tritt das auf? Ist das Jahr im neuen Datensatz älter oder jünger? Welche Publikationsdaten sind bei Crossref für die  zugehörigen dois hinterlegt und korreliert das mit den Daten im neuen/alten Datensatz (zB Datum vom alten stimmt immer mit deposited überein, im neuen mit issued)?
- 
- 
+
+When analyzing changes between the old and new data set, it has been noticed that in a few cases the year of publication was different. In total, this occurred 86 times. Generally, the publication year in the newer data set is more current. A comparison with Crossref, where we matched DOIs of the publications, showed that the publication year in the new dataset is mostly identical to the corresponding field `deposited` in Crossref. The field `deposited` indicates when a publication was last updated. It is unclear why a different publication year was previously specified.
+
 ## Summary
 <!-- Anne -->
-FAzit: 
+FAzit:
 - Kaum Veränderungen bei journal_oa (ist das so?)
 - Veränderungen bei Repo hauptsächlich aufgrund der Operationalisierung bzw. Klassifizierung in Originaldaten -> ist zwar identische Vorgehensweise, aber Repodefinitionen haben sich in OpenDOAR geändert bzw. SemanticScholar aus Upw herausgenommen.
-
-
-
-
-
-
