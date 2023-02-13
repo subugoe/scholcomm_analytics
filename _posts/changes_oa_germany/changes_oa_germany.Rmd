@@ -123,6 +123,47 @@ We also want to compare oa shares with respect to individual institutions (mean,
 
 To analyze the old and new datasets, we first excluded specific institutions and paratexts. Next, we removed fields from the datasets that were not needed for this study. Ultimately, we worked with the `UT_EID`, `sector`, `is_oa`, `oa_status`, `PUBYEAR`, `upw_matched`, and `oa_category` fields. Some of the fields were only present in a nested form. Thus, we flattened the dataset. To do this, we packed multiple rows from the nested field `oa_category` belonging to a `UT_EID` into a single alphabetically sorted list so that each publication made up only one row of the dataset. A new column `set_version` was added to each of the two tables to indicate which dataset a row belonged to. The tables were then matched using the `UT_EID`. From this aggregated table it is now possible to derive information on which `UT_EID`s have been added, which have been removed, which have been changed and which have remained unchanged.
 
+```{python eval=FALSE}
+df_old = pd.read_csv('pubs_cat_details.csv', converters={'UT_EID': lambda x: str(x)})
+df_new = pd.read_csv('pubs_cat_details_new.csv', converters={'UT_EID': lambda x: str(x)})
+
+df_old = df_old[df_old.is_paratext == False]
+df_new = df_new[df_new.is_paratext == False]
+
+exclude_df = pd.read_csv('exclude_from_analysis.csv')
+df_old = df_old[~df_old['PK_KB_INST'].isin(exclude_list)]
+df_new = df_new[~df_new['PK_KB_INST'].isin(exclude_list)]
+
+df_old_cat = df_old[['UT_EID', 'sector', 'is_oa', 'PUBYEAR', 'upw_matched', 'oa_category']].copy()
+df_new_cat = df_new[['UT_EID', 'sector', 'is_oa', 'PUBYEAR', 'upw_matched', 'oa_category']].copy()
+
+df_old_cat.drop_duplicates(inplace=True, ignore_index=True)
+df_new_cat.drop_duplicates(inplace=True, ignore_index=True)
+
+df_old_cat_sorted_category = df_old_cat.groupby(['UT_EID'])['oa_category'].apply(list)\
+                                        .agg(sorted).reset_index(name='sorted_oa_category')
+
+df_new_cat_sorted_category = df_new_cat.groupby(['UT_EID'])['oa_category'].apply(list)\
+                                        .agg(sorted).reset_index(name='sorted_oa_category')
+
+df_old_cat = df_old_cat.merge(df_old_cat_sorted_category, on='UT_EID')
+df_new_cat = df_new_cat.merge(df_new_cat_sorted_category, on='UT_EID')
+
+df_old_cat = df_old_cat[['UT_EID', 'PUBYEAR', 'upw_matched', 'sorted_oa_category']]
+df_new_cat = df_new_cat[['UT_EID', 'PUBYEAR', 'upw_matched', 'sorted_oa_category']]
+
+df_old_cat['sorted_oa_category'] = df_old_cat['sorted_oa_category'].astype(str)
+df_new_cat['sorted_oa_category'] = df_new_cat['sorted_oa_category'].astype(str)
+
+df_old_cat.drop_duplicates(inplace=True, ignore_index=True)
+df_new_cat.drop_duplicates(inplace=True, ignore_index=True)
+
+df_old_cat['set_version'] = 'old'
+df_new_cat['set_version'] = 'new'
+
+df_cat = pd.concat([df_old_cat, df_new_cat], ignore_index=True)
+```
+
 <!--
 Beschreibung ZUsammenfügen der DAtensätze, Auswahl Felder, Verkettung oa_category
 -->
@@ -148,7 +189,52 @@ Wie viele sind identisch und bei wie vielen hat sich matching status (upw_matche
 Bei denen mit Änderung: welche Änderungen kommen wie häufig vor?
 -->
 
-In total, 199737 publications have changed OA categorization. For 622878 texts it has remained the same. For publications where the OA categorization changed, mainly OA categories were removed or one category was exchanged for another. For example, a publication could be assigned only two categories instead of three. Or a publication was no longer assigned `other_repo`, but `opendoar_other`. In Figure x, which represents ..., it can be seen that the categories `opendoar_subject` and `other_repo` were still significantly more common in the old dataset. In contrast, more publications were identified as `opendoar_inst` or `opendoar_other` in the new dataset.
+In total, 199737 publications have changed OA categorization. For 622878 texts it has remained the same. For publications where the OA categorization changed, mainly OA categories were removed or one category was exchanged for another. For example, a publication could be assigned only two categories instead of three. Or a publication was no longer assigned `other_repo`, but `opendoar_other`. In Figure 1, which shows the number of publications per OA category for both the old and the new dataset, it can be seen that the categories `opendoar_subject` and `other_repo` were significantly more common in the old dataset. In contrast, more publications were identified as `opendoar_inst` or `opendoar_other` in the new dataset.
+
+```{python eval=FALSE}
+df_cat_changes = df_cat[df_cat.duplicated(['UT_EID'], keep=False)].sort_values(['UT_EID'], ignore_index=True)
+
+df_cat_changes['sorted_oa_category'] = df_cat_changes['sorted_oa_category'].apply(lambda x: literal_eval(x))
+
+df_cat_plot = df_cat_changes.explode('sorted_oa_category')[['UT_EID', 'sorted_oa_category', 'set_version']]\
+                .groupby(['sorted_oa_category', 'set_version'], as_index=False).nunique()
+                
+plt.figure(figsize=(12, 6))
+
+cols = ['#b3b3b3' if version=='new' else '#56B4E9' for version in df_cat_plot.set_version]
+
+ax = sns.barplot(x='sorted_oa_category', 
+                 y='UT_EID', 
+                 hue='set_version',
+                 hue_order=['old', 'new'],
+                 data=df_cat_plot,
+                 alpha=0.9,
+                 saturation=1,
+                 palette=cols)
+
+plt.box(False)
+plt.xlabel('OA category')
+plt.ylabel('Number of Publications')
+
+handles, labels = ax.get_legend_handles_labels()
+
+plt.grid(True, which='both', axis='y')
+plt.tick_params(axis='y', which='both', length=0)
+
+plt.legend(handles, ['old', 'new'], 
+           title='set version', 
+           fontsize='medium', 
+           bbox_to_anchor=(1.15, 1.02), 
+           labelspacing=1.2)
+
+plt.tight_layout()
+
+plt.show()
+```
+
+```{r echo=FALSE, layout='l-body-outset', fig.cap='', out.extra='style="margin-left: 4%;"'}
+knitr::include_graphics('./media/figures/plot1.svg', dpi=NA)
+```
 
 ### Investigation of the most notice-able patterns of change in the oa category
 <!-- Nick, Anne -->
