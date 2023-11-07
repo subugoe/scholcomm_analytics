@@ -22,7 +22,7 @@
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -2098,7 +2098,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2309,6 +2309,25 @@ function init_posts_list() {
 <div class="posts-container posts-apply-limit l-page">
 <div class="posts-list">
 <h1 class="posts-list-caption" data-caption="Blog | Scholarly Communication Analytics with R">Blog | Scholarly Communication Analytics with R</h1>
+<a href="posts/oalex_oa_status/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Nov. 6, 2023</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+<div class="dt-author">Nick Haupka</div>
+<div class="dt-author">Anne Hobert</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/oalex_oa_status/distill-preview.png"/>
+</div>
+<div class="description">
+<h2>Analysing and re-classifying open access information in OpenAlex</h2>
+<div class="dt-tags"></div>
+<p>We investigated OpenAlex and found over four million records with incompatible metadata about open access works. To illustrate this issue, we applied Unpaywall's methodology to OpenAlex data. The comparative analysis revealed a shift, with over one million journal articles published in 2023 that were previously labelled as "closed" in OpenAlex, being re-classified as "gold", "hybrid", "green", or "bronze".</p>
+</div>
+</a>
 <a href="posts/oam_hybrid/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":[]}</script>
 <div class="metadata">
@@ -2387,7 +2406,7 @@ function init_posts_list() {
 </div>
 </div>
 <div class="thumbnail">
-<img src="posts/datacite_graph/distill-preview.png"/>
+<img data-src="posts/datacite_graph/distill-preview.png"/>
 </div>
 <div class="description">
 <h2>Interfacing the PID Graph with R</h2>

@@ -1,0 +1,387 @@
+---
+title: "Analysing and re-classifying open access information in OpenAlex"
+output: distill::distill_article
+date: "2023-11-07"
+author:
+  - name: Najko Jahn 
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0000-0001-5105-1463
+  - name: Nick Haupka
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0009-0002-6478-6789
+  - name: Anne Hobert
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0000-0003-2429-2995
+description: We investigated OpenAlex and found over four million records with incompatible metadata about open access works. To illustrate this issue, we applied Unpaywall's methodology to OpenAlex data. The comparative analysis revealed a shift, with over one million journal articles published in 2023 that were previously labelled as "closed" in OpenAlex, being re-classified as "gold", "hybrid", "green", or "bronze".
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  fig.width = 6,
+  fig.asp = 0.618,
+  out.width = "99%",
+  fig.align = "center",
+  dpi = 300
+)
+options(scipen = 999, digits = 4)
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.numeric(x)) {
+      return(prettyNum(x, big.mark = ","))
+    } else{
+      return(x)
+    }
+  }
+)
+library(tidyverse)
+library(bigrquery)
+library(DBI)
+library(patchwork)
+library(ggsankey)
+library(ggiraph)
+
+
+## Database connection
+
+library(DBI)
+con <- dbConnect(
+  bigrquery::bigquery(),
+  project = "subugoe-collaborative",
+  dataset = "openalex",
+  billing = "subugoe-collaborative"
+)
+```
+
+Over the last few months, we have switched our data source for open access analytics from [Unpaywall](https://unpaywall.org/) to [OpenAlex](https://openalex.org/). Both open scholarly data services are developed by [OurResearch](https://ourresearch.org/) and have a similar metadata format for describing open access full-texts. However, OpenAlex provides monthly data dumps, which find particularly helpful as the release of free snapshot versions from Unpaywall appear to have been discontinued since March 2022.
+
+While transitioning from Unpaywall to OpenAlex, we noticed more than four million OpenAlex records with contradictory open access information. This blog post aims to explore this issue. To better understand this, we re-implemented Unpaywall's open access classification using OpenAlex data, and compared our re-labelled open access status information against OpenAlex' existing data.
+
+## What is the issue?
+
+OpenAlex provides various methods for identifying open access literature. Within the [work object](https://docs.openalex.org/api-entities/works/work-object), the [`open_access`](https://docs.openalex.org/api-entities/works/work-object#open_access) and [`best_oa_location`](https://docs.openalex.org/api-entities/works/work-object#best_oa_location) elements, among others, contain information about the open access status at the article level. The [sources object](https://docs.openalex.org/api-entities/sources), on the other hand, gives information about the open access model of a journal.
+
+The issue we have identified is that [filtering for open access works with `is_oa:true` returns more than four million records with the `oa_status` marked as `closed`](http://api.openalex.org/works?filter=open_access.is_oa:true,open_access.oa_status:closed), a discrepancy that is inconsistent with OpenAlex’s own documentation. 
+Accordingly, OpenAlex follows Unpaywall’s methodology, tagging openly available works ([`is_oa`](https://docs.openalex.org/api-entities/works/work-object#is_oa)) and qualifying their open access status ([`oa_status`](https://docs.openalex.org/api-entities/works/work-object#oa_status)) using the following labels:
+
+-	gold: Published in an open access journal.
+-	green: Toll-access on the publisher landing page, but there is a free copy in an OA repository.
+-	hybrid: Free under an open license in a toll-access journal.
+-	bronze: Free to read on the publisher landing page, but without any identifiable license.
+
+In case no open access full-text could be found, the open access status is marked as "closed".
+
+## Understanding the issue
+
+To better understand this issue, we analysed the most recent OpenAlex snapshot from October 2023. After importing the data into our [BigQuery data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html), we created a subset focusing on journal articles published since 2013, excluding retractions and non-scholarly content published in journals.
+
+
+```{sql create_dataset, connection = con, echo=TRUE, cache=TRUE}
+CREATE OR REPLACE TABLE
+  subugoe-collaborative.resources.oalex_cr_journal_articles_13_23 AS (
+  SELECT
+  doi,
+  publication_year,
+  open_access,
+  best_oa_location,
+  sources.is_oa AS journal_is_oa,
+  sources.is_in_doaj AS journal_is_in_doaj,
+  sources.host_organization_name AS publisher_name
+FROM
+  `subugoe-collaborative.openalex.works`
+LEFT JOIN
+  `subugoe-collaborative.openalex.sources` AS sources
+ON
+  primary_location.source.id = sources.id
+WHERE
+  type_crossref = "journal-article"
+  AND is_paratext = FALSE
+  AND is_retracted = FALSE
+  AND publication_year BETWEEN 2013
+  AND 2023 )
+```
+
+We then analysed the open access prevalence over the years, aggregating the record counts across both  `is_oa` and `oa_status`.
+
+```{sql, label=oa_stats, connection = con, output.var="oa_stats", echo=TRUE}
+SELECT
+  COUNT(DISTINCT doi) AS articles,
+  publication_year,
+  open_access.is_oa,
+  open_access.oa_status
+FROM
+  `subugoe-collaborative.resources.oalex_cr_journal_articles_13_23`
+GROUP BY
+  open_access.is_oa,
+  open_access.oa_status,
+  publication_year
+ORDER BY
+  publication_year DESC
+```
+
+The resulting figure shows the distribution of open access evidence in OpenAlex over the years. All possible open access status values, as known from Unpaywall, were also represented in OpenAlex. The figure also presents the number of records with (blue bar chart stacks) or without (grey bar chart stacks) open access full-text according to the information provided by `is_oa`. Notably, the bulk of contradictory open access information could be found in records representing journal articles published in 2023, with `r oa_stats |> filter(publication_year == "2023", is_oa == TRUE, oa_status == "closed") |> pull(articles)` articles tagged as open access, but assigned the open access status "closed". 
+
+
+```{r layout="l-body-outset"}
+p_is_closed <- oa_stats |>
+  mutate(oa_status = factor(
+    oa_status,
+    levels = c("gold", "hybrid", "green", "bronze", "closed")
+  )) |>
+  filter(oa_status == "closed") |>
+  ggplot(aes(
+    as.character(publication_year),
+    articles,
+    fill = is_oa,
+    tooltip = paste(
+      format(articles, big.mark = ",", scientific = FALSE),
+      "journal articles in",
+      publication_year
+    )
+  )) +
+  geom_bar_interactive(stat = "identity") +
+  scale_fill_manual("is_oa", values = c(`FALSE` = "#b3b3b3a0", `TRUE` = "#56B4E9")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = scales::comma) +
+  facet_wrap( ~ oa_status) +
+  theme_minimal() +
+  labs(y = "Articles", x = NULL)
+
+p_not_closed <- oa_stats |>
+  mutate(oa_status = factor(
+    oa_status,
+    levels = c("gold", "hybrid", "green", "bronze", "closed")
+  )) |>
+  filter(oa_status != "closed") |>
+  ggplot(aes(
+    as.character(publication_year),
+    articles,
+    fill = is_oa,
+    tooltip = paste(
+      format(articles, big.mark = ",", scientific = FALSE),
+      "journal articles in",
+      publication_year
+    )
+  )) +
+  geom_bar_interactive(stat = "identity") +
+  scale_fill_manual("is_oa", values = c(`FALSE` = "#b3b3b3a0", `TRUE` = "#56B4E9")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = scales::comma) +
+  facet_wrap( ~ oa_status) +
+  theme_minimal() +
+  # theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) +
+  labs(y = NULL, x = NULL)
+
+
+fig_oa_stats <- wrap_plots(
+  A = p_is_closed,
+  B = p_not_closed,
+  design = "AB",
+  widths = c(1, 2),
+  heights = c(1, 1),
+  guides = "collect"
+) &
+  theme(
+    legend.position = "top",
+    legend.justification = "right",
+    legend.direction = "horizontal",
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "grey50", fill = NA),
+    text = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.title.x = element_text(margin = margin(t = 10))
+  )
+
+ggiraph::girafe(ggobj = fig_oa_stats,
+                options = list(opts_tooltip(
+                  use_fill = TRUE),
+                  opts_toolbar(saveaspng = FALSE)))
+```
+
+
+## Re-classification and analysis of changes
+
+To address this inconsistency, we re-implemented [Unpaywall's open access classification methodology](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-). The  SQL code snippet shows how we approached re-classification. 
+
+
+```{sql, label=reclassify, connection=con, echo=TRUE}
+CREATE OR REPLACE TABLE
+  `subugoe-collaborative.resources.oalex_reclassify_oa` AS (
+  SELECT
+    DISTINCT doi,
+    publication_year,
+    open_access.is_oa,
+    open_access.oa_status,
+    CASE
+      WHEN best_oa_location IS NULL THEN "closed"
+      WHEN best_oa_location.source.type = "repository" THEN "green"
+      WHEN (journal_is_in_doaj = TRUE OR journal_is_oa = TRUE) THEN "gold"
+      WHEN (journal_is_in_doaj = FALSE
+      AND journal_is_oa = FALSE )
+    AND best_oa_location.license IS NOT NULL THEN "hybrid"
+      WHEN (journal_is_in_doaj = FALSE AND journal_is_oa = FALSE ) AND best_oa_location.license IS NULL THEN "bronze"
+    ELSE
+    NULL
+  END
+    AS oa_new
+  FROM
+    `subugoe-collaborative.resources.oalex_cr_journal_articles_13_23` )
+```
+
+Because of the inconsistent use `is_oa` compared to the open access status labels, we used the `best_oa_location` element instead to determine the availability of at least one open access full-text. If this metadata element was absent, we categorised the work as "closed". For open access works not exclusively provided by a repository ("green"), we used open access journal information from the source object to distinguish between "gold", "hybrid", and "bronze".
+
+After re-classification, we calculated the updated open access statistics.
+
+```{sql, connection=con, output.var="oa_cat_changes", echo=TRUE}
+SELECT
+  COUNT(DISTINCT doi) AS n,
+  oa_status,
+  oa_new,
+  publication_year
+FROM
+  `subugoe-collaborative.resources.oalex_reclassify_oa`
+GROUP BY
+  oa_status,
+  oa_new,
+  publication_year
+```
+
+The following figure compares OpenAlex open access classification (black bars) with our approach (pink bars). Notably, the re-classification resulted in many journal articles published in 2023 that were previously tagged as "closed" having one of the open access values "gold", "hybrid", "green", or "bronze".
+
+```{r layout="l-body-outset"}
+after <- oa_cat_changes |>
+  group_by(oa_status = oa_new, publication_year) |>
+  summarise(n = sum(n)) |>
+  mutate(cat = "after")
+before <- oa_cat_changes |>
+  group_by(oa_status = oa_status, publication_year) |>
+  summarise(n = sum(n)) |>
+  mutate(cat = "before")
+cat_df <- bind_rows(before, after) |>
+  mutate(cat = factor(cat, levels = c("before", "after"))) |>
+  mutate(oa_status = factor(
+    oa_status,
+    levels = c("gold", "hybrid", "green", "bronze", "closed")
+  ))
+
+
+p_is_closed_new <- cat_df |>
+  filter(oa_status == "closed") |>
+  ggplot(aes(
+    as.character(publication_year),
+    n,
+    fill = cat,
+    tooltip = paste(
+      format(n, big.mark = ",", scientific = FALSE),
+      "journal articles in",
+      publication_year
+    )
+  )) +
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+  scale_fill_manual(NULL, values = c(`after` = "#fc5185", `before` = "#4d4d4d")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = scales::comma) +
+  facet_wrap( ~ oa_status) +
+  theme_minimal() +
+  labs(y = "Articles", x = NULL)
+
+p_is_open_new <- cat_df |>
+  filter(oa_status != "closed") |>
+  ggplot(aes(
+    as.character(publication_year),
+    n,
+    fill = cat,
+    tooltip = paste(
+      format(n, big.mark = ",", scientific = FALSE),
+      "journal articles in",
+      publication_year
+    )
+  )) +
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+  scale_fill_manual(NULL, values = c(`after` = "#fc5185", `before` = "#4d4d4d")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = scales::comma) +
+  facet_wrap( ~ oa_status) +
+  theme_minimal() +
+  labs(y = NULL, x = NULL)
+
+fig_after <- wrap_plots(
+  A = p_is_closed_new,
+  B = p_is_open_new,
+  design = "AB",
+  widths = c(1, 2),
+  heights = c(1, 1),
+  guides = "collect"
+) &
+  theme(
+    legend.position = "top",
+    legend.justification = "right",
+    legend.direction = "horizontal",
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "grey50", fill = NA),
+    text = element_text(size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.title.x = element_text(margin = margin(t = 10))
+  )
+
+ggiraph::girafe(ggobj = fig_after,
+                options = list(opts_tooltip(use_fill = TRUE),
+                               opts_toolbar(saveaspng = FALSE)))
+```
+
+Overall, we re-classified a total of `r oa_cat_changes |> filter(!is.na(oa_new)) |> filter(oa_status != oa_new) |> pull(n) |> sum()` records representing journal articles published since 2013, with `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new) |> pull(n) |> sum()` of them being published in 2023. 
+The following figure demonstrates changes in open access status after our re-classification for 2023.
+The "gold" category gained `r  oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "gold") |> pull(n) |> sum()` additional records in 2023, "hybrid" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "hybrid") |> pull(n) |> sum()`, "green" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "green") |> pull(n) |> sum()`, and "bronze" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "bronze") |> pull(n) |> sum()`. The figure also highlights that we not only re-labelled records that previously belonged to the "closed" category but that there were also changes between other categories.
+
+
+```{r, cache=TRUE}
+my_df <- oa_cat_changes |>
+  filter(publication_year == 2023, !is.na(oa_new)) |>
+  uncount(n) |>
+  rename(before = oa_status, after = oa_new) |>
+  make_long(before, after)
+```
+
+```{r}
+my_df |>
+  mutate(across(contains("node"), ~ factor(.x, levels = rev(
+    c("gold", "hybrid", "green", "bronze", "closed")
+  )))) |>
+  ggplot(aes(
+    x = x,
+    next_x = next_x,
+    node = node,
+    next_node = next_node,
+    fill = node,
+    label = node
+  )) +
+  geom_sankey(flow.alpha = .6,
+              node.color = "gray30") +
+  scale_fill_manual("OA Status",
+    values = c(
+      `gold` = "#F5C710",
+      `hybrid` = "#56B4E9",
+      `green` = "#009E73",
+      `bronze` = "#E69F00",
+      `closed` = "#b3b3b3a0"
+    ),
+    guide = guide_legend(reverse = TRUE)
+  ) +
+  theme_sankey() +
+  labs(x = NULL)
+```
+
+## Discussion and conclusion
+
+Analysing and re-classifying open access data in OpenAlex revealed inconsistencies in the actual implementation. The `is_oa` filter, which indicates the availability of open access full texts, did not always match the open access status information.
+
+In response, we share this detailed problem description to contribute to the ongoing improvement of OpenAlex, a scholarly data source that we enjoy working with on a daily basis. As a practical suggestion in the meantime, we recommend not relying solely on the open access information provided. Instead, we suggest re-classifying open access status information based on OpenAlex’ comprehensive metadata about open access full-text availability, for example by reusing the code snippets provided within this blog post.
+
+
+## Funding {.appendix}
+
+This work is funded by the Bundesministerium für Bildung und Forschung (BMBF) projects KBMINE (16WIK2101F) and KBOPENBIB (16WIK2301E). We acknowledge the support of the [German Competence Center for Bibliometrics](https://bibliometrie.info/).
+
