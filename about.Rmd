@@ -26,9 +26,16 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 *Dr. Anne Hobert*, *Nick Haupka*, *Najko Jahn*
 
-## Academic publications
+## Journal publications
 
-We also publish in academic journals about our work.
+We also publish in scholarly journals about our work.
+
+Fraser, N., Hobert, A., Jahn, N., Mayr, P., & Peters, I. (2023). No deal: German researchers’ publishing and citing behaviors after Big Deal negotiations with Elsevier.
+*Quantitative Science Studies*, 4(2), 325--352. <https://doi.org/10.1162/qss_a_00255>
+
+Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2023). Understanding differences of the OA uptake within the German university landscape (2010–2020): part 1—journal-based OA. *Scientometrics*, 128(6), 3601–3625. <https://doi.org/10.1007/s11192-023-04716-3>
+
+Haupka, N., Jahn, N., & Hobert, N. (2022). Praxisbericht Big Scholarly Data an der SUB Göttingen. *LIBREAS. Library Ideas*, 41 (2022). <https://libreas.eu/ausgabe41/haupka/>
 
 Jahn, N., Matthias, L., & Laakso, M. (2022). Toward transparency of
 hybrid open access through publisher‐provided metadata: An article‐level
@@ -40,10 +47,7 @@ HOAD: Data Analytics für mehr Transparenz bei
 Open-Access-Transformationsverträgen. *ABI Technik*, 42(1), 64--69.
 <https://doi.org/10.1515/abitech-2022-0007>
 
-Fraser, N., Hobert, A., Jahn, N., Mayr, P., & Peters, I. (2021). No
-Deal: Investigating the Influence of Restricted Access to Elsevier
-Journals on German Researchers' Publishing and Citing Behaviours.
-ArXiv:2105.12078. <http://arxiv.org/abs/2105.12078>
+Stisser, A., Jahn, N., & Schmidt, B. (2022). Stand und Perspektiven bibliometriegestützter Open-Access-Services an Universitäten in Deutschland. *Bibliothek Forschung und Praxis*, 46(2), 275–283. <https://doi.org/10.1515/bfp-2021-0098>
 
 Hobert, A., Jahn, N., Mayr, P., Schmidt, B., & Taubert, N. (2021). Open
 access uptake in Germany 2010--2018: adoption in a diverse research
@@ -67,17 +71,34 @@ Access Journal Publishing: Flip It and Reverse It. *Publications*, 7(2),
 
 Haupka, N. (2021). Analyse der Entwicklung des Open Access-Discovery-Services Unpaywall seit 2018 [Bachelor Thesis, Hochschule Hannover]. <https://doi.org/10.25968/opus-1899>
 
+## Software
+
+R-Packages (selection):
+
+Jahn, N. *europepmc: R Interface to the Europe PubMed Central RESTful Web Service*. <https://CRAN.R-project.org/package=europepmc> | <https://docs.ropensci.org/europepmc/>
+  
+Chamberlain, S., Zhu, H., Jahn, N., Boettiger, C., Ram, K. *rcrossref: Client for Various 'CrossRef' 'APIs'*. <https://CRAN.R-project.org/package=rcrossref> <https://docs.ropensci.org/rcrossref/>
+  
+Jahn, N (2022). *roadoi: Find Free Versions of Scholarly Publications via Unpaywall*. <https://CRAN.R-project.org/package=roadoi> | <https://docs.ropensci.org/roadoi/>.
+
+Dashboards (selection):
+
+[Hybrid Open Access Dashboard (HOAD)](https://subugoe.github.io/hoaddash/). See our blog post: <https://www.coalition-s.org/blog/introducing-the-hybrid-open-access-dashboard-hoad/>
+
 ## Third-party funded projects
 
 ### BMBF 
 
-- [OAUNI - Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/oauni/)
+- Kompetenznetzwerk Bibliometrie: Komparative Analyse und Kuratierung Deutscher Metadaten in Offenen Bibliometriedaten, Teilprojekt: Bereitstellung und Analyse Dokumenttypen
+- Kompetenznetzwerk Bibliometrie, Teilprojekt: Datenergänzung: Open-Access-Nachweise
+- [indi:oa - Verantwortungsbewusste Bewertung und Qualitätssicherung von Open-Access Publikationen mittels bibliometrischer Indikatoren](https://open-access.network/vernetzen/open-access-projekte/indioa) (concluded)
+- [OAUNI - Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/oauni/) (concluded)
 
 ### DFG
 
-- [Hybrid OA Dashboards: Mehrwertorientierte Analytics-Anwendungen zur Förderung der Kostentransparenz bei Transformationsverträgen](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/hybrid-oa-dashboards/)
+- [Hybrid OA Dashboards: Mehrwertorientierte Analytics-Anwendungen zur Förderung der Kostentransparenz bei Transformationsverträgen](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/hybrid-oa-dashboards/) (concluded)
 
 ### European Commission
 
-- [On-Merrit](https://on-merrit.eu/)
-- [OpenAIRE Nexus](https://www.openaire.eu/openaire-nexus-project)
+- [On-Merrit](https://on-merrit.eu/) (concluded)
+- [OpenAIRE Nexus](https://www.openaire.eu/openaire-nexus-project) (concluded)
