@@ -62,18 +62,19 @@ con <- dbConnect(
 Over the last few months, we have switched our data basis for open access analytics from [Unpaywall](https://unpaywall.org/) to [OpenAlex](https://openalex.org/). Both open scholarly data services are developed by [OurResearch](https://ourresearch.org/) and have a similar metadata format for describing open access full-texts. However, OpenAlex offers monthly data dumps, which we've found particularly helpful as the free snapshot releases from Unpaywall, which we used before, appear to have ceased as of March 2022.
 
 While transitioning from Unpaywall to OpenAlex, we noticed a considerable number of around 4 million OpenAlex records with contradictory open access information. This blog post aims to explore this issue. To better understand it, we've re-implemented Unpaywall's open access classification using OpenAlex data, and compared it against OpenAlex's existing classification.
+<!-- I would use the hyphen after re- here and elsewhere (title, rest of document), but just my personal preference. -->
 
 ## What is the issue?
 
-OpenAlex provides various methods for identifying open access literature. Within the [work object](https://docs.openalex.org/api-entities/works/work-object), the [`open_access`](https://docs.openalex.org/api-entities/works/work-object#open_access) and [`best_oa_location`](https://docs.openalex.org/api-entities/works/work-object#best_oa_location) nodes contain information about the open access status at the article level. The [sources object](https://docs.openalex.org/api-entities/sources), on the other hand, gives information about the open access model of a journal.
+OpenAlex provides various methods for identifying open access literature. Within the [work object](https://docs.openalex.org/api-entities/works/work-object), the [`open_access`](https://docs.openalex.org/api-entities/works/work-object#open_access) and [`best_oa_location`](https://docs.openalex.org/api-entities/works/work-object#best_oa_location) nodes, among others, contain information about the open access status at the article level. The [sources object](https://docs.openalex.org/api-entities/sources), on the other hand, gives information about the open access model of a journal.
 
-The issue we've identified is that [filtering for open access works with `is_oa:true` returns around 4 million records with the `oa_status` marked as `closed`](http://api.openalex.org/works?filter=open_access.is_oa:true,open_access.oa_status:closed), a discrepancy we find inconsistent with OpenAlex’s own documentation. 
+The issue we've identified is that [filtering for open access works with `is_oa:true` returns around 4 million records with the `oa_status` marked as `closed`](http://api.openalex.org/works?filter=open_access.is_oa:true,open_access.oa_status:closed), a discrepancy we find is inconsistent with OpenAlex’s own documentation. 
 Accordingly, OpenAlex follows Unpaywall’s methodology tagging openly available works ([`is_oa`](https://docs.openalex.org/api-entities/works/work-object#is_oa)) and qualifying their open access status ([`oa_status`](https://docs.openalex.org/api-entities/works/work-object#oa_status)) using the following values:
 
 -	gold: Published in an open access journal.
--	green: Toll-access on the publisher landing page, but there is a free copy in an OA repository.
+-	green: Toll-access on the publisher's landing page, but there is a free copy in an OA repository.
 -	hybrid: Free under an open license in a toll-access journal.
--	bronze: Free to read on the publisher landing page, but without any identifiable license.
+-	bronze: Free to read on the publisher's landing page, but without any identifiable license.
 -	closed: All other articles.
 
 ## Understanding the issue
@@ -126,7 +127,7 @@ ORDER BY
 ```
 
 
-The resulting figure shows the distribution of open access evidence in OpenAlex over years. All possible open access status values as known from Unpaywall were also represented in OpenAlex. The figure also presents the number of records tagged as open (blue colored bar chart stacks) and closed (colored bar chart stacks) access in the `is_oa` node. Notably,  the bulk of contradictory open access information could be found in records representing journal articles published in 2023, with `r oa_stats |> filter(publication_year == "2023", is_oa == TRUE, oa_status == "closed") |> pull(articles)` articles tagged as open access, but assigned the open access status "closed". 
+The resulting figure shows the distribution of open access evidence in OpenAlex over years. All possible open access status values as known from Unpaywall were also represented in OpenAlex. The figure also presents the number of records tagged as open (blue colored bar chart stacks) and closed (gray colored bar chart stacks) access in the `is_oa` node. Notably,  the bulk of contradictory open access information could be found in records representing journal articles published in 2023, with `r oa_stats |> filter(publication_year == "2023", is_oa == TRUE, oa_status == "closed") |> pull(articles)` articles tagged as open access, but assigned the open access status "closed". 
 
 ```{r layout="l-body-outset"}
 p_is_closed <- oa_stats |>
@@ -322,7 +323,7 @@ my_df |>
 
 Analysing and re-classifying open access data in OpenAlex has revealed inconsistencies in the actual implementation.
 
-In response, we are sharing this detailed problem description in order to contribute to the ongoing improvement of OpenAlex, a scholarly data source that we enjoy working with on a daily basis. As a practical suggestion in the meantime, we recommend not to rely solely on the open access information provided. Instead, we suggest re-classifying open access status information.
+In response, we are sharing this detailed problem description in order to contribute to the ongoing improvement of OpenAlex, a scholarly data source that we enjoy working with on a daily basis. As a practical suggestion in the meantime, we recommend not to rely solely on the open access information provided. Instead, we suggest re-classifying open access status information, for example by reusing the snippets provided within this blog post.
 
 ## Funding {.appendix}
 
