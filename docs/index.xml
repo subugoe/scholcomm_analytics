@@ -11,16 +11,16 @@ to publish case-studies rapidely showing how to support data-driven workflows an
 decision-making around scholarly communication in libraries using R.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Mon, 06 Nov 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 07 Nov 2023 00:00:00 +0000</lastBuildDate>
     <item>
-      <title>Analysing and re-classifying open access information in OpenAlex</title>
+      <title>Analysing and reclassifying open access information in OpenAlex</title>
       <dc:creator>Najko Jahn</dc:creator>
       <dc:creator>Nick Haupka</dc:creator>
       <dc:creator>Anne Hobert</dc:creator>
       <link>https://subugoe.github.io/scholcomm_analytics/posts/oalex_oa_status</link>
-      <description>We investigated OpenAlex and found over four million records with incompatible metadata about open access works. To illustrate this issue, we applied Unpaywall's methodology to OpenAlex data. The comparative analysis revealed a shift, with over one million journal articles published in 2023 that were previously labelled as "closed" in OpenAlex, being re-classified as "gold", "hybrid", "green", or "bronze".</description>
+      <description>We investigated OpenAlex and found over four million records with incompatible metadata about open access works. To illustrate this issue, we applied Unpaywall's methodology to OpenAlex data. The comparative analysis revealed a shift, with over one million journal articles published in 2023 that were previously labelled as "closed" in OpenAlex, being reclassified as "gold", "hybrid", "green", or "bronze".</description>
       <guid>https://subugoe.github.io/scholcomm_analytics/posts/oalex_oa_status</guid>
-      <pubDate>Mon, 06 Nov 2023 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 07 Nov 2023 00:00:00 +0000</pubDate>
       <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/oalex_oa_status/distill-preview.png" medium="image" type="image/png" width="3600" height="2224"/>
     </item>
     <item>

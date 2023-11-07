@@ -1,5 +1,5 @@
 ---
-title: "Analysing and re-classifying open access information in OpenAlex"
+title: "Analysing and reclassifying open access information in OpenAlex"
 output: distill::distill_article
 date: "2023-11-07"
 author:
@@ -15,7 +15,7 @@ author:
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
     orcid_id: 0000-0003-2429-2995
-description: We investigated OpenAlex and found over four million records with incompatible metadata about open access works. To illustrate this issue, we applied Unpaywall's methodology to OpenAlex data. The comparative analysis revealed a shift, with over one million journal articles published in 2023 that were previously labelled as "closed" in OpenAlex, being re-classified as "gold", "hybrid", "green", or "bronze".
+description: We investigated OpenAlex and found over four million records with incompatible metadata about open access works. To illustrate this issue, we applied Unpaywall's methodology to OpenAlex data. The comparative analysis revealed a shift, with over one million journal articles published in 2023 that were previously labelled as "closed" in OpenAlex, being reclassified as "gold", "hybrid", "green", or "bronze".
 ---
 
 ```{r setup, include=FALSE}
@@ -62,7 +62,7 @@ con <- dbConnect(
 
 Over the last few months, we have switched our data source for open access analytics from [Unpaywall](https://unpaywall.org/) to [OpenAlex](https://openalex.org/). Both open scholarly data services are developed by [OurResearch](https://ourresearch.org/) and have a similar metadata format for describing open access full-texts. However, OpenAlex provides monthly data dumps, which find particularly helpful as the release of free snapshot versions from Unpaywall appear to have been discontinued since March 2022.
 
-While transitioning from Unpaywall to OpenAlex, we noticed more than four million OpenAlex records with contradictory open access information. This blog post aims to explore this issue. To better understand this, we re-implemented Unpaywall's open access classification using OpenAlex data, and compared our re-labelled open access status information against OpenAlex' existing data.
+While transitioning from Unpaywall to OpenAlex, we noticed more than four million OpenAlex records with contradictory open access metadata. This blog post aims to explore this issue. To better understand this, we reimplemented Unpaywall's open access classification using OpenAlex data, and compared our relabelled open access status information against OpenAlex' existing data.
 
 ## What is the issue?
 
@@ -204,9 +204,9 @@ ggiraph::girafe(ggobj = fig_oa_stats,
 ```
 
 
-## Re-classification and analysis of changes
+## Reclassification and analysis of changes
 
-To address this inconsistency, we re-implemented [Unpaywall's open access classification methodology](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-). The  SQL code snippet shows how we approached re-classification. 
+To address this inconsistency, we reimplemented [Unpaywall's open access classification methodology](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-). The  SQL code snippet shows how we approached reclassification. 
 
 
 ```{sql, label=reclassify, connection=con, echo=TRUE}
@@ -235,7 +235,7 @@ CREATE OR REPLACE TABLE
 
 Because of the inconsistent use `is_oa` compared to the open access status labels, we used the `best_oa_location` element instead to determine the availability of at least one open access full-text. If this metadata element was absent, we categorised the work as "closed". For open access works not exclusively provided by a repository ("green"), we used open access journal information from the source object to distinguish between "gold", "hybrid", and "bronze".
 
-After re-classification, we calculated the updated open access statistics.
+After reclassification, we calculated the updated open access statistics.
 
 ```{sql, connection=con, output.var="oa_cat_changes", echo=TRUE}
 SELECT
@@ -251,7 +251,7 @@ GROUP BY
   publication_year
 ```
 
-The following figure compares OpenAlex open access classification (black bars) with our approach (pink bars). Notably, the re-classification resulted in many journal articles published in 2023 that were previously tagged as "closed" having one of the open access values "gold", "hybrid", "green", or "bronze".
+The following figure compares OpenAlex open access classification (black bars) with our approach (pink bars). Notably, the reclassification resulted in many journal articles published in 2023 that were previously tagged as "closed" having one of the open access values "gold", "hybrid", "green", or "bronze".
 
 ```{r layout="l-body-outset"}
 after <- oa_cat_changes |>
@@ -332,9 +332,9 @@ ggiraph::girafe(ggobj = fig_after,
                                opts_toolbar(saveaspng = FALSE)))
 ```
 
-Overall, we re-classified a total of `r oa_cat_changes |> filter(!is.na(oa_new)) |> filter(oa_status != oa_new) |> pull(n) |> sum()` records representing journal articles published since 2013, with `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new) |> pull(n) |> sum()` of them being published in 2023. 
-The following figure demonstrates changes in open access status after our re-classification for 2023.
-The "gold" category gained `r  oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "gold") |> pull(n) |> sum()` additional records in 2023, "hybrid" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "hybrid") |> pull(n) |> sum()`, "green" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "green") |> pull(n) |> sum()`, and "bronze" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "bronze") |> pull(n) |> sum()`. The figure also highlights that we not only re-labelled records that previously belonged to the "closed" category but that there were also changes between other categories.
+Overall, we reclassified a total of `r oa_cat_changes |> filter(!is.na(oa_new)) |> filter(oa_status != oa_new) |> pull(n) |> sum()` records representing journal articles published since 2013, with `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new) |> pull(n) |> sum()` of them being published in 2023. 
+The following figure demonstrates changes in open access status after our reclassification for 2023.
+The "gold" category gained `r  oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "gold") |> pull(n) |> sum()` additional records in 2023, "hybrid" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "hybrid") |> pull(n) |> sum()`, "green" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "green") |> pull(n) |> sum()`, and "bronze" gained `r oa_cat_changes |> filter(publication_year == 2023, !is.na(oa_new)) |> filter(oa_status != oa_new, oa_new == "bronze") |> pull(n) |> sum()`. The figure also highlights that we not only relabelled records that previously belonged to the "closed" category but that there were also changes between other categories.
 
 
 ```{r, cache=TRUE}
@@ -376,9 +376,9 @@ my_df |>
 
 ## Discussion and conclusion
 
-Analysing and re-classifying open access data in OpenAlex revealed inconsistencies in the actual implementation. The `is_oa` filter, which indicates the availability of open access full texts, did not always match the open access status information.
+Analysing and reclassifying open access data in OpenAlex revealed inconsistencies in the actual implementation. The `is_oa` filter, which indicates the availability of open access full texts, did not always match the open access status information.
 
-In response, we share this detailed problem description to contribute to the ongoing improvement of OpenAlex, a scholarly data source that we enjoy working with on a daily basis. As a practical suggestion in the meantime, we recommend not relying solely on the open access information provided. Instead, we suggest re-classifying open access status information based on OpenAlex’ comprehensive metadata about open access full-text availability, for example by reusing the code snippets provided within this blog post.
+In response, we share this detailed problem description to contribute to the ongoing improvement of OpenAlex, a scholarly data source that we enjoy working with on a daily basis. As a practical suggestion in the meantime, we recommend not relying solely on the open access information provided. Instead, we suggest reclassifying open access status information based on OpenAlex’ comprehensive metadata about open access full-text availability, for example by reusing the code snippets provided within this blog post.
 
 
 ## Funding {.appendix}
