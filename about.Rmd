@@ -85,6 +85,10 @@ Dashboards (selection):
 
 [Hybrid Open Access Dashboard (HOAD)](https://subugoe.github.io/hoaddash/). See our blog post: <https://www.coalition-s.org/blog/introducing-the-hybrid-open-access-dashboard-hoad/>
 
+[metacheck: Open Access Metadata Compliance Checker](https://subugoe.github.io/metacheck/)
+
+[Open Access uptake in Germany 2010-2018: Interactive Supplement](https://subugoe.shinyapps.io/oauni_10_18/)
+
 ## Third-party funded projects
 
 ### BMBF 
