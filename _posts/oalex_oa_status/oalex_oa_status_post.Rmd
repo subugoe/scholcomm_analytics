@@ -60,7 +60,7 @@ con <- dbConnect(
 )
 ```
 
-Over the last few months, we have switched our data source for open access analytics from [Unpaywall](https://unpaywall.org/) to [OpenAlex](https://openalex.org/). Both open scholarly data services are developed by [OurResearch](https://ourresearch.org/) and have a similar metadata format for describing open access full-texts. However, OpenAlex provides monthly data dumps, which find particularly helpful as the release of free snapshot versions from Unpaywall appear to have been discontinued since March 2022.
+Over the last few months, we have switched our data source for open access analytics from [Unpaywall](https://unpaywall.org/) to [OpenAlex](https://openalex.org/). Both open scholarly data services are developed by [OurResearch](https://ourresearch.org/) and have a similar metadata format for describing open access full-texts. However, OpenAlex provides monthly data dumps, which we find particularly helpful as the release of free snapshot versions from Unpaywall appear to have been discontinued since March 2022.
 
 While transitioning from Unpaywall to OpenAlex, we noticed more than four million OpenAlex records with contradictory open access metadata. This blog post aims to explore this issue. To better understand this, we reimplemented Unpaywall's open access classification using OpenAlex data, and compared our relabelled open access status information against OpenAlex' existing data.
 
