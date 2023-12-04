@@ -74,11 +74,11 @@ An overview of our data warehouse including procedures to load the data into Big
 
 | Snapshot   | Directory     | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|---------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
-| 2023-10-18 | authors/      | openalex.authors      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  25.10.2023  | All | 93.003.987 |
-| 2023-10-19 | institutions/ | openalex.institutions | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  25.10.2023  | All | 106.956 |
-| 2023-10-19 | sources/      | openalex.sources      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  25.10.2023  | All | 247.955 |
-| 2023-10-18 | works/        | openalex.works        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  25.10.2023  | All | 245.207.435 |
-| 2023-10-19 | funders/      | openalex.funders      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  25.10.2023  | All | 32.437 |
-| 2023-10-19 | publishers/   | openalex.publishers   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  26.10.2023  | All | 10.250 |
+| 2023-11-14 | authors/      | openalex.authors      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  30.11.2023  | All | 79.238.203 |
+| 2023-11-20 | institutions/ | openalex.institutions | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  30.11.2023  | All | 107.246 |
+| 2023-11-20 | sources/      | openalex.sources      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  30.11.2023  | All | 248.643 |
+| 2023-11-20 | works/        | openalex.works        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  30.11.2023  | All | 246.328.942 |
+| 2023-11-20 | funders/      | openalex.funders      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  30.11.2023  | All | 26.540 |
+| 2023-11-20 | publishers/   | openalex.publishers   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  30.11.2023  | All | 10.250 |
 
 :::
