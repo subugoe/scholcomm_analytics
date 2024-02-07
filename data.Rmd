@@ -23,7 +23,7 @@ An overview of our data warehouse including procedures to load the data into Big
 
 | Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
 |-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
-|  2023/12        | all.json.tar.gz | cr_instant.snapshot | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  15.01.2024  | 2013-2023 | 45.680.245 |
+|  2024/01        | all.json.tar.gz | cr_instant.snapshot | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  06.02.2024  | 2013-2024 | 46.185.131 |
 
 :::
 
