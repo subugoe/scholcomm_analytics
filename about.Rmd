@@ -30,6 +30,10 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 We also publish in scholarly journals about our work.
 
+Jahn, N. (2024). How open are hybrid journals included in transformative agreements? <https://arxiv.org/abs/2402.18255>
+
+Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2024). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <https://arxiv.org/abs/2401.16359>
+
 Fraser, N., Hobert, A., Jahn, N., Mayr, P., & Peters, I. (2023). No deal: German researchers’ publishing and citing behaviors after Big Deal negotiations with Elsevier.
 *Quantitative Science Studies*, 4(2), 325--352. <https://doi.org/10.1162/qss_a_00255>
 
@@ -100,6 +104,8 @@ Dashboards (selection):
 
 ### DFG
 
+
+- [OA-Datenpraxis: Datenpraxis zur Gestaltung der Open-Access-Transformation - Analyse, Empfehlung, Training & Vernetzung](https://www.ibi.hu-berlin.de/de/forschung/infomanagement/projekte/oa-datenpraxis)
 - [Hybrid OA Dashboards: Mehrwertorientierte Analytics-Anwendungen zur Förderung der Kostentransparenz bei Transformationsverträgen](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/hybrid-oa-dashboards/) (concluded)
 
 ### European Commission
