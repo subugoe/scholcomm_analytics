@@ -63,7 +63,10 @@ landscape. *Scientometrics*, 126(12), 9751--9777.
 Laakso, M., Matthias, L., & Jahn, N. (2021). Open is not forever: A
 study of vanished open access journals. *Journal of the Association for
 Information Science and Technology*, 72(9), 1099--1112.
-<https://doi.org/10.1002/asi.24460> (Featured in [Nature](https://www.nature.com/articles/d41586-020-02610-z), [Science](https://doi.org/10.1126/science.abe6998) and [CNN](https://edition.cnn.com/2020/09/15/us/vanished-open-access-journals-trnd-scn/index.html))
+<https://doi.org/10.1002/asi.24460> ([JASIST Best Paper Award 2022](https://www.asist.org/2022/06/15/2022-best-jasist-paper-award/). Featured in [Nature](https://www.nature.com/articles/d41586-020-02610-z),
+[Nature](https://www.nature.com/articles/d41586-024-00616-5),
+[Science](https://doi.org/10.1126/science.abe6998), [CNN](https://edition.cnn.com/2020/09/15/us/vanished-open-access-journals-trnd-scn/index.html),
+[DLF](https://www.deutschlandfunknova.de/nachrichten/wissenschaft-millionen-arbeiten-sind-nicht-richtig-archiviert))
 
 Jahn, N., Hobert, A., & Haupka, N. (2021). Entwicklung und Typologie des
 Datendiensts Unpaywall. *Bibliothek Forschung und Praxis*, 45(2),
@@ -107,7 +110,7 @@ Dashboards (selection):
 ### DFG
 
 
-- [OA-Datenpraxis: Datenpraxis zur Gestaltung der Open-Access-Transformation - Analyse, Empfehlung, Training & Vernetzung](https://www.ibi.hu-berlin.de/de/forschung/infomanagement/projekte/oa-datenpraxis)
+- [OA-Datenpraxis: Datenpraxis zur Gestaltung der Open-Access-Transformation - Analyse, Empfehlung, Training & Vernetzung](https://oa-datenpraxis.de/)
 - [Hybrid OA Dashboards: Mehrwertorientierte Analytics-Anwendungen zur Förderung der Kostentransparenz bei Transformationsverträgen](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/hybrid-oa-dashboards/) (concluded)
 
 ### European Commission
