@@ -34,10 +34,12 @@ Jahn, N. (2024). How open are hybrid journals included in transformative agreeme
 
 Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2024). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <https://arxiv.org/abs/2401.16359>
 
+Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2024). Understanding differences of the OA uptake within the German University landscape (2010–2020): Part 2—repository-provided OA. Scientometrics. <https://doi.org/10.1007/s11192-024-05003-5>
+
 Fraser, N., Hobert, A., Jahn, N., Mayr, P., & Peters, I. (2023). No deal: German researchers’ publishing and citing behaviors after Big Deal negotiations with Elsevier.
 *Quantitative Science Studies*, 4(2), 325--352. <https://doi.org/10.1162/qss_a_00255>
 
-Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2023). Understanding differences of the OA uptake within the German university landscape (2010–2020): part 1—journal-based OA. *Scientometrics*, 128(6), 3601–3625. <https://doi.org/10.1007/s11192-023-04716-3>
+Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2023). Understanding differences of the OA uptake within the German university landscape (2010–2020): Part 1—journal-based OA. *Scientometrics*, 128(6), 3601–3625. <https://doi.org/10.1007/s11192-023-04716-3>
 
 Haupka, N., Jahn, N., & Hobert, N. (2022). Praxisbericht Big Scholarly Data an der SUB Göttingen. *LIBREAS. Library Ideas*, 41 (2022). <https://libreas.eu/ausgabe41/haupka/>
 
