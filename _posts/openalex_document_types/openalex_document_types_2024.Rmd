@@ -1,0 +1,42 @@
+---
+title: "Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus"
+description: In June 2024, we published a preprint on the classification of document types in Openalex compared to Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and WoS. 
+author:
+  - name: Nick Haupka 
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+  - name: Sophia Dörner
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+  - name: Najko Jahn
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: "`r Sys.Date()`"
+output: distill::distill_article
+bibliography: literature.bib
+draft: TRUE
+---
+Over the last months, OpenAlex has revised its classification of document types, making it more independent of Crossref, and also introduces new document types such as [preprints and reviews](https://groups.google.com/g/openalex-users/c/YujaIIjY02A). In addition, document types are now also adopted from [PubMed](https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0), which raises the question of how these changes affect the analysis of data from OpenAlex. 
+
+Here, we build on the former results of our preprint [@haupka_2024] from June 2024 and provide an updated insight. Our investigation highlighted differences in the curation strategies by scholarly database operators which complicates the inquiry of accurate bibliometric figures. Similar findings were obtained by @donner_document_2017, @visser_large-scale_2021 and @alperin_analysis_2024 which reported deviations between numbers of publication derived from bibliometric databases when restricting to certain document types.
+
+The correct classification of documents is crucial for bibliometric surveys as the are used for various measurements and reports and also for searches in databases and catalogues. The diverge classification of a publication can lead to imprecise assertions about the scholarly landscape, e.g. if a document is labelled as an article in one database and as a letter in another. As our preprint has shown, there is a relatively large gap between publications in scholarly databases that are labelled as research texts and publications that are associated with editorial texts. As of 2023, 1% of the publications analysed in OpenAlex were labelled as editorial texts, compared to over 10% in the commercial databases (based on publications in journals from 2012 to 2022). A change to the document types contained in OpenAlex could also have an impact on the CWTS Leiden Ranking Open Edition [@van_eck_2024_10949622], which is based on the document types in OpenAlex.
+
+In this blog post, we examine the recent changes in document type classification in OpenAlex and contrast the findings with the approaches of Scopus and Web of Science. 
+
+## Data and Methods
+For our analysis we reused the dataset that was compiled for the preprint and updated the respective document types to match current developments. The initial dataset included approximately 9.5 million publications that occur in OpenAlex as well as in Scopus, WoS, PubMed and Semantic Scholar. In addition, to align with the methods applied in the preprint, we restricted the data to the publication years 2012 to 2022 and only considered items from journals. OpenAlex data used in this report is from July 2024. Scopus and WoS data is from April 2024. The initial dataset was compiled using data from mid 2023. 
+
+## Findings
+
+Plot 1: Comparison OpenAlex and Scopus
+
+Plot 2: Comparison OpenAlex and Web of Science
+
+Table 1: Comparison shares research and editorial discourse 
+
+## Discussion and Conclusion
+
+## Funding {.appendix}
+
+This work is funded by the Bundesministerium für Bildung und Forschung (BMBF) project KBOPENBIB (16WIK2301E). We acknowledge the support of the [German Competence Center for Bibliometrics](https://bibliometrie.info/).
