@@ -1,6 +1,6 @@
 ---
 title: "Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus"
-description: In June 2024, we published a preprint on the classification of document types in Openalex compared to Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and WoS. 
+description: In June 2024, we published a preprint on the classification of document types in Openalex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and WoS. 
 author:
   - name: Nick Haupka 
     affiliation: State and University Library Göttingen
@@ -36,6 +36,7 @@ Plot 2: Comparison OpenAlex and Web of Science
 Table 1: Comparison shares research and editorial discourse 
 
 ## Discussion and Conclusion
+Our updated results demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased by x%. This also indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the rule-based string matching for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. This development strengthens OpenAlex's position as a free provider of bibliometric data and makes it more attractive as a competitor to the established bibliometric databases. 
 
 ## Funding {.appendix}
 
