@@ -1,63 +1,582 @@
 ---
 title: "Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus"
-description: In June 2024, we published a preprint on the classification of document types in Openalex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and WoS. 
+description: In June 2024, we published a preprint on the classification of document types in Openalex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and Web of Science. 
 author:
   - name: Nick Haupka 
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0009-0002-6478-6789
   - name: Sophia Dörner
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0000-0001-8747-3422
   - name: Najko Jahn
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0000-0001-5105-1463
 date: "`r Sys.Date()`"
 output: distill::distill_article
 bibliography: literature.bib
 draft: TRUE
+css: vis.css
 ---
-Over the last months, OpenAlex has revised its classification of document types, making it more independent of Crossref, and also introduces new document types such as [preprints and reviews](https://groups.google.com/g/openalex-users/c/YujaIIjY02A). In addition, document types are now also adopted from [PubMed](https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0), which raises the question of how these changes affect the analysis of data from OpenAlex. 
 
-Here, we build on the former results of our preprint [@haupka_2024] from June 2024 and provide an updated insight. Our investigation highlighted differences in the curation strategies by scholarly database operators which complicates the inquiry of accurate bibliometric figures. Similar findings were obtained by @donner_document_2017, @visser_large-scale_2021 and @alperin_analysis_2024 which reported deviations between numbers of publication derived from bibliometric databases when restricting to certain document types.
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE
+)
+options(scipen = 999, digits = 2)
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.numeric(x)) {
+      return(prettyNum(x, big.mark = ","))
+    } else{
+      return(x)
+    }
+  }
+)
+```
 
-The correct classification of documents is crucial for bibliometric surveys as the are used for various measurements and reports and also for searches in databases and catalogues. The diverge classification of a publication can lead to imprecise assertions about the scholarly landscape, e.g. if a document is labelled as an article in one database and as a letter in another. As our preprint has shown, there is a relatively large gap between publications in scholarly databases that are labelled as research texts and publications that are associated with editorial texts. As of 2023, 1% of the publications analysed in OpenAlex were labelled as editorial texts, compared to over 10% in the commercial databases (based on publications in journals from 2012 to 2022). A change to the document types contained in OpenAlex could also have an impact on the CWTS Leiden Ranking Open Edition [@van_eck_2024_10949622], which is based on the document types in OpenAlex.
+```{r, echo=FALSE,message = FALSE, warning = FALSE}
+library(here)
+library(tidyverse)
+library(networkD3)
+library(htmlwidgets)
+library(reactable)
+library(htmltools)
+library(sankeyD3)
+```
 
-In this blog post, we examine the recent changes in document type classification in OpenAlex and contrast the findings with the approaches of Scopus and Web of Science. 
+Over the last months, OpenAlex has revised its classification of document types, making it more independent of Crossref, and also introduced new document types such as [preprints and reviews](https://groups.google.com/g/openalex-users/c/YujaIIjY02A). In addition, document types are now adopted from [PubMed](https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0), which raises the question of how these changes affect the analysis of data from OpenAlex. 
+
+Here, we build on the former results of our preprint [@haupka_2024] from June 2024 and provide an updated insight. Our investigation highlighted differences in the curation strategies by scholarly database operators which complicates the inquiry of accurate bibliometric figures. Similar findings were obtained by @donner_document_2017, @visser_large-scale_2021 and @alperin_analysis_2024 which reported deviations between numbers of publications derived from bibliometric databases when restricting to certain document types.
+
+The assignment of document types to publications is an essential prerequisite for bibliometric surveys as distinct and potentially only a restricted subset of document types are utilised for various metrics, reports or searches in databases and catalogues. However, the document type assignment of publications indexed in several bibliometric databasis might not always correspond. Although divergences in document type classification of a single publication can, in fact, lead to imprecise assertions about the scholarly landscape, e.g. if a document is labelled as an article in one database and as a letter in another. As we have shown in our [preprint](https://arxiv.org/abs/2406.15154), there is a relatively large gap between publications in scholarly databases that are labelled as research texts and publications that are associated with editorial texts. As of 2023, 1% of the publications analysed in OpenAlex were labelled as editorial texts, compared to over 10% in the commercial databases (based on publications in journals from 2012 to 2022). A change to the document types contained in OpenAlex could also have an impact on the CWTS Leiden Ranking Open Edition [@van_eck_2024_10949622], which is based on the document types in OpenAlex.
+
+In this blog post, we examine the recent changes in document type classification in OpenAlex and contrast the findings with the approaches of Scopus and Web of Science (WoS). 
 
 ## Data and Methods
-For our analysis we reused the dataset that was compiled for the preprint and updated the respective document types to match current developments. The initial dataset included approximately 9.5 million publications that occur in OpenAlex as well as in Scopus, WoS, PubMed and Semantic Scholar. In addition, to align with the methods applied in the preprint, we restricted the data to the publication years 2012 to 2022 and only considered items from journals. OpenAlex data used in this report is from July 2024. Scopus and WoS data is from April 2024. The initial dataset was compiled using data from mid 2023. Data is hosted by the [German Competence Network of Bibliometrics](https://bibliometrie.info).
+For our analysis we reused the dataset that was compiled for @haupka_2024 using data from mid 2023 and updated the respective document types to match current developments. The initial dataset included approximately 9.5 million publications that occur in OpenAlex as well as in Scopus, WoS, PubMed and Semantic Scholar. In addition, to align with the methods applied in our [preprint](https://arxiv.org/abs/2406.15154), we restricted the data to the publication years 2012 to 2022 and only considered items from journals. OpenAlex data used in this report is from July 2024. Scopus and WoS data is from April 2024. Data is hosted by the [German Competence Network of Bibliometrics](https://bibliometrie.info).
 
-However, after matching data from OpenAlex with Scopus and Web of Science, we found that the numbers retrieved from the databases are very similar. To avoid a bias stemming from the PubMed data we originally worked with, whose document types OpenAlex has adopted with the latest changes, we performed a full comparison of OpenAlex with Scopus and WoS. The restriction to the publication type "Journal" and the years 2012 to 2022 have been retained.
+After matching data from OpenAlex with Scopus and Web of Science, we found that the absolute numbers for the shared document type categories are very similar between the databases. To avoid bias stemming from the PubMed data we originally worked with, whose document types OpenAlex has adopted with the latest changes, we performed a full comparison of OpenAlex with Scopus and WoS. The restrictions to the publication type "Journal" and the years 2012 to 2022 have been retained.
 
 ## Findings
 
-The following figures compare the OpenAlex classification system with Scopus and Web of Science. Notably, the proportion of articles and reviews is relatively equal between the data sources. This is a important improvement compared to 2023, where OpenAlex does not distinguish between research articles and reviews. 
+The following figures compare the OpenAlex classification system with that of Scopus and Web of Science. Notably, the proportion of articles and reviews is relatively equal between the data sources. This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews. 
 
-```{r echo=FALSE, layout='l-body', fig.cap='Comparison of OpenAlex and Scopus (Placeholder)'}
-knitr::include_graphics('./media/oal_scp_type_2024.png', dpi=NA)
+Comparing OpenAlex and Scopus, figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified 22,142,129 publications (89.68%) as articles while Scopus classified 20,796,642 publications (84.23%) with this document type. Concerning publications classified as reviews, figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to 1,510,182 publications (6.12 %) and within Scopus to 1,777,955 (7.20 %). 
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+oal_scp <- read_csv(here("_posts/openalex_document_types/data","oal_scp.csv"))
+oal_wos <- read_csv(here("_posts/openalex_document_types/data","oal_wos.csv"))
+scp_oal <- read_csv(here("_posts/openalex_document_types/data","scp_oal.csv"))
+wos_oal <- read_csv(here("_posts/openalex_document_types/data","wos_oal.csv"))
 ```
 
-Nevertheless, the figures, especially Figure 2, demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. It can be seen that a number of articles in OpenAlex are labelled as editorials or letters in Scopus and Web of Science.
 
-```{r echo=FALSE, layout='l-body', fig.cap='Comparison of OpenAlex and Web of Science (Placeholder)'}
-knitr::include_graphics('./media/oal_wos_type_2024.png', dpi=NA)
+```{r oalscp, echo=FALSE,message=FALSE, warning=FALSE, fig.cap="Comparison of OpenAlex and Scopus"}
+node_names <- oal_scp %>%
+              mutate(source = as.character(oal_type), target = as.character(scp_type)) %>%
+              group_by(source,target) %>%
+              select(source, target) %>%
+              unlist() %>%
+              unique()
+
+nodes <- node_names %>%
+         enframe("name","label")
+
+links <- oal_scp %>%
+         mutate(source = as.character(oal_type), target = as.character(scp_type)) %>%
+         mutate(source = match(source, node_names) - 1,
+         target = match(target, node_names) - 1) %>%
+         group_by(source,target) %>%
+         select(source, target, n) %>%
+         arrange(desc(n))
+
+# Gruppen für jeden Knoten erstellen
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7,8,9), "source", "target"))
+
+# Farben für die source und target Knoten definieren
+colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#4d4d4d", "#d82222a0"])'
+
+# sankeyNetwork erstellen
+oal_scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source", 
+                    Target = "target", Value = "n", NodeID = "label", fontSize = 14, nodePadding = 20, 
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0, NodeGroup="group", colourScale = colours, xAxisDomain = c("OpenAlex","Scopus"),xScalingFactor = .4, height=550, dragX = TRUE,dragY = TRUE)
+
+oal_scp_sn <- onRender(
+  oal_scp_sn,
+  '
+  function(el,x){
+    // Regular expressions for identifying lowercase and uppercase strings
+    var lowerCase = /^[a-z]/;
+    var upperCase = /^[A-Z]/;
+      
+    // select all our node text
+    d3.select(el)
+    .selectAll(".node text")
+    .filter(function(d) { return lowerCase.test(d.name); })
+    .attr("x", -10)
+    .attr("text-anchor", "end");
+
+    // select all target node text
+    d3.select(el)
+    .selectAll(".node text")
+    .filter(function(d) { return upperCase.test(d.name); })
+    .attr("x", x.options.nodeWidth + 10)
+    .attr("text-anchor", "start");
+    
+    // select the top-level div of the widget and add the desired style options
+    d3.select(el)
+    .style("margin-left", "auto")
+    .style("margin-right", "auto")
+    .style("display", "block");  
+    
+    // append absolute count to label
+    d3.select(el)
+    .selectAll(".node text")
+    .text(d => d.name + " (" + d3.format("(,d")(d.value) + ")");
+    
+    // add the transform attribute to the zoom-layer class
+    var width = d3.select(el).node().getBoundingClientRect().width;
+    var height = d3.select(el).node().getBoundingClientRect().height;
+    
+    var translateX = width * 0.25; 
+    var translateY = height * -0.05;
+
+    d3.select(el)
+    .select(".zoom-layer")
+    .attr("transform", "translate(" + translateX + "," + translateY + ") scale(1)");
+  }
+  '
+)
+oal_scp_sn
 ```
 
-This observation is encouraged when looking at the following table. Here, the document types contained in each database are reclassified into the categories editorial discourse and research discourse. The proportion of editorial content labelled in OpenAlex is still about 3% lower than in Scopus and Web of Science. Mapping tables that we used for reclassifying the document types can be found in the appendix of our preprint.
 
-```{r echo=FALSE, layout='l-body-outset', results='asis', fig.cap='Comparison shares research and editorial discourse'}
-tabl <- "
-|                     | OpenAlex <br>(^Scopus)      |   Scopus <br>(^OpenAlex)   | OpenAlex <br>(^Web of Science) | Web of Science <br>(^OpenAlex)      |
-|---------------------|:----------------------------|:---------------------------|:---------------------------|:---------------------|
-| Research Discourse  | 23,652,311 <br> __(95.87%)__ | 22,574,597 <br> __(91.43%)__ | 20,932,541 <br> __(95.88%)__ | 18,519,346 <br> __(84.78%)__ |
-| Editorial Discourse | 1,018,040 <br> __(4.13%)__   | 1,762,295 <br> __(7.14%)__   | 899,965 <br> __(4.12%)__    | 1,733,705 <br> __(7.94%)__   |
-| Not assigned        | 215 <br> __(0.00%)__       | 353,769 <br> __(1.43%)__    | 6 <br> __(0.00%)__            | 1,591,132 <br> __(7.28%)__   |
-"
-cat(tabl)
+When comparing OpenAlex and Web of Science and considering publications indexed in both data sources, figure \@ref(fig:oalwos) shows that OpenAlex classified 19,570,477 publications (89.59%) as articles while WoS classified 17,276,719 publications (79.09%) with this document type. In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. Regarding publications classified as reviews, figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is assigned to 1,362,064 publications (6.24 %) and within WoS to 1,242,627 (5.69 %). The proportion of these document types is thus noticeably higher in OpenAlex.
+
+Additionally, figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. Of the publications classified as articles in OpenAlex, the figures show that a total amount of 339,616 (Scopus) and 656,439 (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
+
+
+```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science"}
+node_names <- oal_wos %>%
+              mutate(source = as.character(oal_type), target = as.character(wos_type)) %>%
+              group_by(source,target) %>%
+              select(source, target) %>%
+              unlist() %>%
+              unique()
+
+nodes <- node_names %>%
+         enframe("name","label")
+
+links <- oal_wos %>%
+         mutate(source = as.character(oal_type), target = as.character(wos_type)) %>%
+         mutate(source = match(source, node_names) - 1,
+         target = match(target, node_names) - 1) %>%
+         group_by(source,target) %>%
+         select(source, target, n) %>%
+         arrange(desc(n))
+
+# Gruppen für jeden Knoten erstellen
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7,8,9,10), "source", "target"))
+
+# Farben für die source und target Knoten definieren
+colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#4d4d4d", "#9e0059a0"])'
+
+# sankeyNetwork erstellen
+oal_wos_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source", 
+                    Target = "target", Value = "n", NodeID = "label", fontSize = 14, nodePadding = 20, 
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0, NodeGroup="group", colourScale = colours, xScalingFactor = .4,height=550,xAxisDomain = c("OpenAlex","Web of Science"), dragX = TRUE,dragY = TRUE)
+
+oal_wos_sn <- onRender(
+  oal_wos_sn,
+  '
+  function(el,x){
+    // Regular expressions for identifying lowercase and uppercase strings
+    var lowerCase = /^[a-z]/;
+    var upperCase = /^[A-Z]/;
+      
+    // select all our node text
+    d3.select(el)
+    .selectAll(".node text")
+    .filter(function(d) { return lowerCase.test(d.name); })
+    .attr("x", -10)
+    .attr("text-anchor", "end");
+
+    // select all target node text
+    d3.select(el)
+    .selectAll(".node text")
+    .filter(function(d) { return upperCase.test(d.name); })
+    .attr("x", x.options.nodeWidth + 10)
+    .attr("text-anchor", "start");
+    
+    // select the top-level div of the widget and add the desired style options
+    d3.select(el)
+    .style("margin-left", "auto")
+    .style("margin-right", "auto")
+    .style("display", "block");  
+    
+    // append absolute count to label
+    d3.select(el)
+    .selectAll(".node text")
+    .text(d => d.name + " (" + d3.format("(,d")(d.value) + ")");
+    
+    // add the transform attribute to the zoom-layer class
+    var width = d3.select(el).node().getBoundingClientRect().width;
+    var height = d3.select(el).node().getBoundingClientRect().height;
+    
+    var translateX = width * 0.25; 
+    var translateY = height * -0.05;
+
+    d3.select(el)
+    .select(".zoom-layer")
+    .attr("transform", "translate(" + translateX + "," + translateY + ") scale(1)");
+  }
+  '
+)
+oal_wos_sn
 ```
+
+
+This observation is corroborated by a view of the following tables. Here, the document types contained in each database were aggregated in three overarching categories: research discourse, editorial discourse and not assigned. Mapping tables that we used for reclassifying the document types can be found in the appendix of @haupka_2024. In addition, publications with the document type "preprint", which was added to OpenAlex in [May 2024](https://groups.google.com/g/openalex-users/c/YujaIIjY02A), were also assigned to the research discourse category. Both tables show that for the editorial discourse category the proportion of publications labelled as editorial content in OpenAlex is still about 3% lower than in Scopus and Web of Science. 
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+react_bar_chart <-
+  function(label,
+           width = "100%",
+           height = "14px",
+           fill = "#00bfc4",
+           background = NULL) {
+    bar <-
+      htmltools::div(style = list(
+        background = fill,
+        width = width,
+        height = height
+      ))
+    chart <-
+      htmltools::div(
+        style = list(
+          flexGrow = 1,
+          marginLeft = "6px",
+          background = background
+        ),
+        bar
+      )
+    htmltools::div(
+      style = list(
+        display = "flex",
+        alignItems = "center",
+        justifyContent = "flex-end"
+      ),
+      label,
+      chart
+    )
+  }
+```
+
+
+```{r,layout='l-body-outset', echo=FALSE, message=FALSE, warning=FALSE}
+scp_oal_reactable <- reactable(scp_oal,
+  pagination = TRUE,
+  highlight = TRUE,
+  defaultColDef = colDef(vAlign = "center", headerClass = "header", headerVAlign = "center", align = "center"),
+  compact = TRUE,
+  columns = list(
+     name = colDef(name="", align = "left",minWidth = 90),
+     rd_total = colDef(name = "Total",
+                       format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 150,
+      style = list(whiteSpace = "pre"),
+      class = "number  border-left",
+      cell = function(value, index) {
+        width <- paste0(value * 100 / max(scp_oal$rd_total), "%")
+        value <- format(value, big.mark = ",")
+        value <- format(value, width = 10, justify = "right")
+        bar <- div(
+          class = "bar-chart",
+          style = list(marginRight = "6px"),
+          div(
+            class = "bar",
+            style = list(width = width, backgroundColor = "#c3c3c3")
+          )
+        )
+        ### bring it all together, with the 'value' (number) preceding the bar itself
+        div(class = "bar-cell", span(class = "number", value), bar)
+      },
+      align = "center"
+    ),
+    rd_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+                             cell = function(value) {
+        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#000000",
+                        background = "#c3c3c3")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 100
+    ),
+     ed_total = colDef(name = "Total",
+                       format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 150,
+      style = list(whiteSpace = "pre"),
+      class = "number border-left",
+      cell = function(value, index) {
+        width <- paste0(value * 100 / max(scp_oal$ed_total), "%")
+        value <- format(value, big.mark = ",")
+        value <- format(value, width = 10, justify = "right")
+        bar <- div(
+          class = "bar-chart",
+          style = list(marginRight = "6px"),
+          div(
+            class = "bar",
+            style = list(width = width, backgroundColor = "#c3c3c3")
+          )
+        )
+        ### bring it all together, with the 'value' (number) preceding the bar itself
+        div(class = "bar-cell", span(class = "number", value), bar)
+      },
+      align = "center"
+    ),
+    ed_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+                             cell = function(value) {
+        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#000000",
+                        background = "#c3c3c3")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 100
+    ),
+    na_total = colDef(name = "Total",
+                       format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 150,
+      style = list(whiteSpace = "pre"),
+      class = "number border-left",
+      cell = function(value, index) {
+        width <- paste0(value * 100 / max(scp_oal$na_total), "%")
+        value <- format(value, big.mark = ",")
+        value <- format(value, width = 10, justify = "right")
+        bar <- div(
+          class = "bar-chart",
+          style = list(marginRight = "6px"),
+          div(
+            class = "bar",
+            style = list(width = width, backgroundColor = "#c3c3c3")
+          )
+        )
+        ### bring it all together, with the 'value' (number) preceding the bar itself
+        div(class = "bar-cell", span(class = "number", value), bar)
+      },
+      align = "center"
+    ),
+    na_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+                             cell = function(value) {
+        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#000000",
+                        background = "#c3c3c3")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 100
+    )),
+  # Create column groups
+  columnGroups = list(
+    colGroup(
+      name = "Research Discourse",
+      columns = c("rd_total", "rd_pct"),
+      headerClass = "group-header"
+    ),
+    colGroup(
+      name = "Editorial Discourse",
+      columns = c("ed_total", "ed_pct"),
+      headerClass = "group-header"
+    ),
+    colGroup(
+      name = "Not Assigned",
+      columns = c("na_total", "na_pct"),
+      headerClass = "group-header"
+    )
+  ),
+  searchable = FALSE,
+  defaultPageSize = 10,
+  showPageSizeOptions = TRUE
+  )
+scp_oal_reactable$sizingPolicy$padding <- 4
+scp_oal_reactable$sizingPolicy$browser$fill <- TRUE
+scp_oal_reactable
+```
+
+```{r, layout='l-body-outset', echo=FALSE, message=FALSE, warning=FALSE}
+wos_oal_reactable <- reactable(wos_oal,
+  pagination = TRUE,
+  highlight = TRUE,
+  defaultColDef = colDef(vAlign = "center", headerClass = "header", headerVAlign = "center", align = "center"),
+  compact = TRUE,
+  columns = list(
+     name = colDef(name="", align = "left",minWidth = 90),
+     rd_total = colDef(name = "Total",
+                       format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 150,
+      style = list(whiteSpace = "pre"),
+      class = "number border-left",
+      cell = function(value, index) {
+        width <- paste0(value * 100 / max(scp_oal$rd_total), "%")
+        value <- format(value, big.mark = ",")
+        value <- format(value, width = 10, justify = "right")
+        bar <- div(
+          class = "bar-chart",
+          style = list(marginRight = "6px"),
+          div(
+            class = "bar",
+            style = list(width = width, backgroundColor = "#c3c3c3")
+          )
+        )
+        ### bring it all together, with the 'value' (number) preceding the bar itself
+        div(class = "bar-cell", span(class = "number", value), bar)
+      },
+      align = "center"
+    ),
+    rd_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+                             cell = function(value) {
+        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#000000",
+                        background = "#c3c3c3")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 100
+    ),
+     ed_total = colDef(name = "Total",
+                       format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 150,
+      style = list(whiteSpace = "pre"),
+      class = "number border-left",
+      cell = function(value, index) {
+        width <- paste0(value * 100 / max(scp_oal$ed_total), "%")
+        value <- format(value, big.mark = ",")
+        value <- format(value, width = 10, justify = "right")
+        bar <- div(
+          class = "bar-chart",
+          style = list(marginRight = "6px"),
+          div(
+            class = "bar",
+            style = list(width = width, backgroundColor = "#c3c3c3")
+          )
+        )
+        ### bring it all together, with the 'value' (number) preceding the bar itself
+        div(class = "bar-cell", span(class = "number", value), bar)
+      },
+      align = "center"
+    ),
+    ed_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+                             cell = function(value) {
+        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#000000",
+                        background = "#c3c3c3")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 100
+    ),
+    na_total = colDef(name = "Total",
+                       format = colFormat(separators = TRUE, locales = "en-GB"),
+      width = 150,
+      style = list(whiteSpace = "pre"),
+      class = "number border-left",
+      cell = function(value, index) {
+        width <- paste0(value * 100 / max(scp_oal$na_total), "%")
+        value <- format(value, big.mark = ",")
+        value <- format(value, width = 10, justify = "right")
+        bar <- div(
+          class = "bar-chart",
+          style = list(marginRight = "6px"),
+          div(
+            class = "bar",
+            style = list(width = width, backgroundColor = "#c3c3c3")
+          )
+        )
+        ### bring it all together, with the 'value' (number) preceding the bar itself
+        div(class = "bar-cell", span(class = "number", value), bar)
+      },
+      align = "center"
+    ),
+    na_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+                             cell = function(value) {
+        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- format(value, width = 5, justify = "right")
+        react_bar_chart(value,
+                        width = value,
+                        fill = "#000000",
+                        background = "#c3c3c3")
+      },
+      align = "center",
+      style = list(whiteSpace = "pre"),
+      class = "number",
+      html = TRUE,
+      minWidth = 100
+    )),
+  # Create column groups
+  columnGroups = list(
+    colGroup(
+      name = "Research Discourse",
+      columns = c("rd_total", "rd_pct"),
+      headerClass = "group-header"
+    ),
+    colGroup(
+      name = "Editorial Discourse",
+      columns = c("ed_total", "ed_pct"),
+      headerClass = "group-header"
+    ),
+    colGroup(
+      name = "Not Assigned",
+      columns = c("na_total", "na_pct"),
+      headerClass = "group-header"
+    )
+  ),
+  searchable = FALSE,
+  defaultPageSize = 10,
+  showPageSizeOptions = TRUE
+  ) 
+wos_oal_reactable$sizingPolicy$padding <- 4
+wos_oal_reactable$sizingPolicy$browser$fill <- TRUE
+wos_oal_reactable
+```
+
 
 ## Discussion and Conclusion
-Our updated results demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased remarkably. This also indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the rule-based string matching for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. This development strengthens OpenAlex's position as a free provider of bibliometric data and makes it more attractive as a competitor to the established bibliometric databases.
+Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased remarkably. This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the rule-based string matching for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. This development strengthens OpenAlex's position as a free provider of bibliometric data and makes it more attractive as a competitor to the established bibliometric databases.
 
 ## Funding {.appendix}
 
