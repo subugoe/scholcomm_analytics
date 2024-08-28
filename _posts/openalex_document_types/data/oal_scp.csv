@@ -1,0 +1,84 @@
+oal_type,scp_type,n
+article,Article,20313708
+review,Review,1044685
+article,Review,701739
+review,Article,393568
+article,Note,391929
+letter,Letter,365614
+article,Editorial,223102
+article,Conference Paper,220182
+editorial,Editorial,182505
+erratum,Erratum,137028
+article,Letter,116514
+letter,Note,107882
+article,Erratum,87263
+letter,Editorial,86449
+article,Short Survey,59120
+letter,Article,54725
+review,Note,26006
+review,Short Survey,20711
+preprint,Article,17201
+letter,Review,16035
+article,Tombstone,14825
+letter,Short Survey,14416
+editorial,Review,12881
+article,Data Paper,12309
+editorial,Note,10416
+editorial,Article,8351
+review,Conference Paper,8239
+retraction,Erratum,8039
+review,Letter,7916
+paratext,Article,6821
+review,Editorial,4605
+review,Erratum,3882
+preprint,Review,2168
+erratum,Article,1884
+article,Chapter,1394
+editorial,Conference Paper,608
+review,Tombstone,550
+editorial,Letter,495
+paratext,Note,468
+editorial,Short Survey,415
+paratext,Editorial,414
+letter,Erratum,401
+paratext,Review,334
+letter,Conference Paper,247
+erratum,Letter,224
+preprint,Conference Paper,219
+other,Article,198
+retraction,Article,186
+retraction,Tombstone,179
+preprint,Note,175
+erratum,Note,174
+letter,Tombstone,159
+preprint,Letter,150
+preprint,Editorial,138
+erratum,Editorial,125
+editorial,Erratum,106
+erratum,Review,92
+paratext,Letter,85
+paratext,Erratum,78
+article,Other,44
+retraction,Letter,39
+erratum,Tombstone,35
+paratext,Conference Paper,35
+retraction,Note,35
+preprint,Short Survey,26
+retraction,Editorial,16
+retraction,Review,14
+preprint,Erratum,13
+review,Data Paper,13
+erratum,Short Survey,9
+other,Review,7
+review,Chapter,7
+editorial,Tombstone,6
+erratum,Conference Paper,6
+other,Note,5
+letter,Data Paper,4
+paratext,Short Survey,4
+preprint,Data Paper,4
+other,Editorial,2
+other,Erratum,2
+other,Conference Paper,1
+preprint,Tombstone,1
+retraction,Conference Paper,1
