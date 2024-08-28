@@ -159,9 +159,9 @@ oal_scp_sn
 ```
 
 
-When comparing OpenAlex and Web of Science and considering publications indexed in both data sources, figure \@ref(fig:oalwos) shows that OpenAlex classified 19,570,477 publications (89.59%) as articles while WoS classified 17,276,719 publications (79.09%) with this document type. In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. Regarding publications classified as reviews, figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is assigned to 1,362,064 publications (6.24 %) and within WoS to 1,242,627 (5.69 %). The proportion of these document types is thus noticeably higher in OpenAlex.
+When comparing OpenAlex and Web of Science and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that OpenAlex classified 19,570,477 publications (89.59%) as articles while WoS classified 17,276,719 publications (79.09%) with this document type. In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is assigned to 1,362,064 publications (6.24 %) and within WoS to 1,242,627 (5.69 %). The proportion of these document types is thus noticeably higher in OpenAlex.
 
-Additionally, figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. Of the publications classified as articles in OpenAlex, the figures show that a total amount of 339,616 (Scopus) and 656,439 (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
+Additionally, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. Of the publications classified as articles in OpenAlex, the figures show that a total amount of 339,616 (Scopus) and 656,439 (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
 
 
 ```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science"}
@@ -245,6 +245,9 @@ oal_wos_sn
 
 
 This observation is corroborated by a view of the following tables. Here, the document types contained in each database were aggregated in three overarching categories: research discourse, editorial discourse and not assigned. Mapping tables that we used for reclassifying the document types can be found in the appendix of @haupka_2024. In addition, publications with the document type "preprint", which was added to OpenAlex in [May 2024](https://groups.google.com/g/openalex-users/c/YujaIIjY02A), were also assigned to the research discourse category. Both tables show that for the editorial discourse category the proportion of publications labelled as editorial content in OpenAlex is still about 3% lower than in Scopus and Web of Science. 
+
+<p/>
+<p/>
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -428,6 +431,8 @@ scp_oal_reactable$sizingPolicy$browser$fill <- TRUE
 scp_oal_reactable
 ```
 
+<p/>
+
 ```{r, layout='l-body-outset', echo=FALSE, message=FALSE, warning=FALSE}
 wos_oal_reactable <- reactable(wos_oal,
   pagination = TRUE,
@@ -576,7 +581,7 @@ wos_oal_reactable
 
 
 ## Discussion and Conclusion
-Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased remarkably. This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the rule-based string matching for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. This development strengthens OpenAlex's position as a free provider of bibliometric data and makes it more attractive as a competitor to the established bibliometric databases.
+Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased noticeably. This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the [rule-based string matching](https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py) for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. This development strengthens OpenAlex's position as a free provider of bibliometric data and makes it more attractive as a competitor to the established bibliometric databases.
 
 ## Funding {.appendix}
 
