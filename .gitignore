@@ -8,3 +8,7 @@ rsconnect
 *_cache
 issues
 dev
+oal_scp.csv
+oal_wos.csv
+scp_oal.csv
+wos_oal.csv
