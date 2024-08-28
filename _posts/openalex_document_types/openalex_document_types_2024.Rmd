@@ -68,7 +68,7 @@ After matching data from OpenAlex with Scopus and Web of Science, we found that 
 
 The following figures compare the OpenAlex classification system with that of Scopus and Web of Science. Notably, the proportion of articles and reviews is relatively equal between the data sources. This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews. 
 
-Comparing OpenAlex and Scopus, figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified 22,142,129 publications (89.68%) as articles while Scopus classified 20,796,642 publications (84.23%) with this document type. Concerning publications classified as reviews, figure \@ref(fig:oalscp) shows, that within OpenAlex this document type is assigned to 1,510,182 publications (6.12 %) and within Scopus to 1,777,955 (7.20 %). 
+Comparing OpenAlex and Scopus, figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified 22,142,129 publications (89.68%) as articles while Scopus classified 20,796,642 publications (84.23%) with this document type. Concerning publications classified as reviews, figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to 1,510,182 publications (6.12 %) and within Scopus to 1,777,955 (7.20 %). 
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -102,7 +102,7 @@ links <- oal_scp %>%
 nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7,8,9), "source", "target"))
 
 # Farben für die source und target Knoten definieren
-colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#000000", "#e9711c"])'
+colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#4d4d4d", "#d82222a0"])'
 
 # sankeyNetwork erstellen
 oal_scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source", 
@@ -187,7 +187,7 @@ links <- oal_wos %>%
 nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7,8,9,10), "source", "target"))
 
 # Farben für die source und target Knoten definieren
-colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#000000", "#B175E1"])'
+colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#4d4d4d", "#9e0059a0"])'
 
 # sankeyNetwork erstellen
 oal_wos_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source", 
