@@ -32,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -116,8 +116,8 @@ margin-left: 2em;
 
 
   <!--  https://schema.org/Article -->
-  <meta property="article:published" itemprop="datePublished" content="2024-08-28" />
-  <meta property="article:created" itemprop="dateCreated" content="2024-08-28" />
+  <meta property="article:published" itemprop="datePublished" content="2024-08-30" />
+  <meta property="article:created" itemprop="dateCreated" content="2024-08-30" />
   <meta name="article:author" content="Nick Haupka" />
   <meta name="article:author" content="Sophia Dörner" />
   <meta name="article:author" content="Najko Jahn" />
@@ -136,14 +136,11 @@ margin-left: 2em;
   <!--/radix_placeholder_meta_tags-->
   
   <meta name="citation_reference" content="citation_title=Analysis of the publication and document types in OpenAlex, web of science, scopus, PubMed and semantic scholar;citation_author=Nick Haupka;citation_author=Jack H. Culbert;citation_author=Alexander Schniedermann;citation_author=Najko Jahn;citation_author=Philipp Mayr" />
-  <meta name="citation_reference" content="citation_title=Document type assignment accuracy in the journal citation index data of Web of Science;citation_volume=113;citation_doi=10.1007/s11192-017-2483-y;citation_issn=1588-2861;citation_author=Paul Donner" />
-  <meta name="citation_reference" content="citation_title=Large-scale comparison of bibliographic data sources: Scopus, Web of Science, Dimensions, Crossref, and Microsoft Academic;citation_volume=2;citation_doi=10.1162/qss_a_00112;citation_issn=2641-3337;citation_author=Martijn Visser;citation_author=Nees Jan Eck;citation_author=Ludo Waltman" />
   <meta name="citation_reference" content="citation_title=An analysis of the suitability of OpenAlex for bibliometric analyses;citation_publisher=arXiv;citation_doi=10.48550/arXiv.2404.17663;citation_author=Juan Pablo Alperin;citation_author=Jason Portenoy;citation_author=Kyle Demes;citation_author=Vincent Larivière;citation_author=Stefanie Haustein" />
-  <meta name="citation_reference" content="citation_title=A methodology for identifying core sources and core publications in OpenAlex;citation_publisher=Zenodo;citation_doi=10.5281/zenodo.10949622;citation_author=Nees Jan Van Eck;citation_author=Ludo Waltman" />
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output","bibliography","draft","css"]}},"value":[{"type":"character","attributes":{},"value":["Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus"]},{"type":"character","attributes":{},"value":["In June 2024, we published a preprint on the classification of document types in Openalex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and Web of Science."]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Nick Haupka"]},{"type":"character","attributes":{},"value":["State and University Library Göttingen"]},{"type":"character","attributes":{},"value":["https://www.sub.uni-goettingen.de/"]},{"type":"character","attributes":{},"value":["0009-0002-6478-6789"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Sophia Dörner"]},{"type":"character","attributes":{},"value":["State and University Library Göttingen"]},{"type":"character","attributes":{},"value":["https://www.sub.uni-goettingen.de/"]},{"type":"character","attributes":{},"value":["0000-0001-8747-3422"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Najko Jahn"]},{"type":"character","attributes":{},"value":["State and University Library Göttingen"]},{"type":"character","attributes":{},"value":["https://www.sub.uni-goettingen.de/"]},{"type":"character","attributes":{},"value":["0000-0001-5105-1463"]}]}]},{"type":"character","attributes":{},"value":["2024-08-28"]},{"type":"character","attributes":{},"value":["distill::distill_article"]},{"type":"character","attributes":{},"value":["literature.bib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["vis.css"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output","bibliography","draft","css"]}},"value":[{"type":"character","attributes":{},"value":["Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus"]},{"type":"character","attributes":{},"value":["In June 2024, we published a preprint on the classification of document types in Openalex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and Web of Science."]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Nick Haupka"]},{"type":"character","attributes":{},"value":["State and University Library Göttingen"]},{"type":"character","attributes":{},"value":["https://www.sub.uni-goettingen.de/"]},{"type":"character","attributes":{},"value":["0009-0002-6478-6789"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Sophia Dörner"]},{"type":"character","attributes":{},"value":["State and University Library Göttingen"]},{"type":"character","attributes":{},"value":["https://www.sub.uni-goettingen.de/"]},{"type":"character","attributes":{},"value":["0000-0001-8747-3422"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation","affiliation_url","orcid_id"]}},"value":[{"type":"character","attributes":{},"value":["Najko Jahn"]},{"type":"character","attributes":{},"value":["State and University Library Göttingen"]},{"type":"character","attributes":{},"value":["https://www.sub.uni-goettingen.de/"]},{"type":"character","attributes":{},"value":["0000-0001-5105-1463"]}]}]},{"type":"character","attributes":{},"value":["2024-08-30"]},{"type":"character","attributes":{},"value":["distill::distill_article"]},{"type":"character","attributes":{},"value":["literature.bib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["vis.css"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   
@@ -3854,7 +3851,553 @@ var d=null!=c&&c.hydratedSources||null,e=!1,f="",g=bj;null!==c&&void 0!==c&&(!0=
 function(a,b,c){if(!Vd(b))throw Error(n(200));return Wd(null,a,b,!1,c)};Q.unmountComponentAtNode=function(a){if(!Vd(a))throw Error(n(40));return a._reactRootContainer?(zb(function(){Wd(null,null,a,!1,function(){a._reactRootContainer=null;a[Ja]=null})}),!0):!1};Q.unstable_batchedUpdates=Tf;Q.unstable_renderSubtreeIntoContainer=function(a,b,c,d){if(!Vd(c))throw Error(n(200));if(null==a||void 0===a._reactInternals)throw Error(n(38));return Wd(a,b,c,!1,d)};Q.version="18.2.0-next-9e3b772b8-20220608"});
 })();
 </script>
-  <script src="data:application/octet-stream;base64,KGZ1bmN0aW9uKHMsdSl7dHlwZW9mIGV4cG9ydHM9PSJvYmplY3QiJiZ0eXBlb2YgbW9kdWxlPCJ1Ij91KGV4cG9ydHMpOnR5cGVvZiBkZWZpbmU9PSJmdW5jdGlvbiImJmRlZmluZS5hbWQ/ZGVmaW5lKFsiZXhwb3J0cyJdLHUpOihzPXR5cGVvZiBnbG9iYWxUaGlzPCJ1Ij9nbG9iYWxUaGlzOnN8fHNlbGYsdShzLnJlYWN0Uj17fSkpfSkodGhpcyxmdW5jdGlvbihzKXsidXNlIHN0cmljdCI7ZnVuY3Rpb24gdShuLHQpe2lmKHR5cGVvZiB0PT0ic3RyaW5nIilyZXR1cm4gdDtpZih0Lm5hbWVbMF09PT10Lm5hbWVbMF0udG9VcHBlckNhc2UoKSYmIW4uaGFzT3duUHJvcGVydHkodC5uYW1lKSl0aHJvdyBuZXcgRXJyb3IoIlVua25vd24gY29tcG9uZW50OiAiK3QubmFtZSk7Zm9yKGxldCBpIGluIHQuYXR0cmlicylnKHQuYXR0cmlic1tpXSkmJih0LmF0dHJpYnNbaV09dShuLHQuYXR0cmlic1tpXSkpO2Zvcih2YXIgYT1uLmhhc093blByb3BlcnR5KHQubmFtZSk/blt0Lm5hbWVdOnQubmFtZSxyPVthLHQuYXR0cmlic10sZT0wO2U8dC5jaGlsZHJlbi5sZW5ndGg7ZSsrKXIucHVzaCh1KG4sdC5jaGlsZHJlbltlXSkpO3JldHVybiBSZWFjdC5jcmVhdGVFbGVtZW50LmFwcGx5KFJlYWN0LHIpfWNvbnN0IG89e3dpZHRoUHJvcGVydHk6IndpZHRoIixoZWlnaHRQcm9wZXJ0eToiaGVpZ2h0IixhcHBlbmRQeDohMSxyZW5kZXJPblJlc2l6ZTohMX07ZnVuY3Rpb24geShuKXt2YXIgdD17fTtmb3IodmFyIGEgaW4gbyl0W2FdPW9bYV07Zm9yKHZhciBhIGluIG4pe2lmKCFvLmhhc093blByb3BlcnR5KGEpKXRocm93IG5ldyBFcnJvcigiVW5yZWNvZ25pemVkIG9wdGlvbjogIithKTt0W2FdPW5bYV19cmV0dXJuIHR9ZnVuY3Rpb24gZChuLHQpe3JldHVybiB0LmFwcGVuZFB4P24rInB4IjpufWZ1bmN0aW9uIGcobil7cmV0dXJuIHR5cGVvZiBuPT0ib2JqZWN0IiYmbi5oYXNPd25Qcm9wZXJ0eSgibmFtZSIpJiZuLmhhc093blByb3BlcnR5KCJhdHRyaWJzIikmJm4uaGFzT3duUHJvcGVydHkoImNoaWxkcmVuIil9ZnVuY3Rpb24gYihuLHQsYSxyKXt2YXIgZT15KHIpO3dpbmRvdy5IVE1MV2lkZ2V0cy53aWRnZXQoe25hbWU6bix0eXBlOnQsZmFjdG9yeTpmdW5jdGlvbihpLGMsbCl7dmFyIHAsUD17fSxoPWZ1bmN0aW9uKGYpe2UucmVuZGVyT25SZXNpemUmJih0eXBlb2YgZi50YWc9PSJvYmplY3QiJiYoZi50YWcuYXR0cmlic1tlLndpZHRoUHJvcGVydHldPWQoYyksZi50YWcuYXR0cmlic1tlLmhlaWdodFByb3BlcnR5XT1kKGwpKSxwPWYpLHRoaXMuaW5zdGFuY2UuY29tcG9uZW50PVJlYWN0RE9NLnJlbmRlcih1KGEsZi50YWcpLGkpfTtyZXR1cm57aW5zdGFuY2U6UCxyZW5kZXJWYWx1ZTpoLHJlc2l6ZTpmdW5jdGlvbihmLFYpe2UucmVuZGVyT25SZXNpemUmJihjPWYsbD1WLGgocCkpfX19fSl9ZnVuY3Rpb24gTyhuLHtjb25maWd1cmF0aW9uOnQsdmFsdWU6YX0pe2xldCByPSExO3QhPT12b2lkIDAmJih0aGlzLnNldElucHV0Q29uZmlndXJhdGlvbihuLHQpLHI9ITApLGEhPT12b2lkIDAmJih0aGlzLnNldElucHV0VmFsdWUobixhKSxyPSEwKSxyJiYodGhpcy5nZXRDYWxsYmFjayhuKSgpLHRoaXMucmVuZGVyKG4pKX1jb25zdCB3PXtyZWNlaXZlTWVzc2FnZTpPLHR5cGU6ITEscmF0ZVBvbGljeTpudWxsfTtmdW5jdGlvbiBtKG4sdCxhLHIpe3I9T2JqZWN0LmFzc2lnbih7fSx3LHIpLFNoaW55LmlucHV0QmluZGluZ3MucmVnaXN0ZXIobmV3IGNsYXNzIGV4dGVuZHMgU2hpbnkuSW5wdXRCaW5kaW5ne2ZpbmQoZSl7cmV0dXJuICQoZSkuZmluZChuKX1nZXRWYWx1ZShlKXtyZXR1cm4gdGhpcy5nZXRJbnB1dFZhbHVlKGUpfXNldFZhbHVlKGUsaSxjPSExKXskKGUpLmRhdGEoImNhbGxiYWNrIikhPT12b2lkIDAmJih0aGlzLnNldElucHV0VmFsdWUoZSxpKSx0aGlzLmdldENhbGxiYWNrKGUpKGMpLHRoaXMucmVuZGVyKGUpKX1pbml0aWFsaXplKGUpeyQoZSkuZGF0YSgidmFsdWUiLEpTT04ucGFyc2UoJChlKS5uZXh0KCkudGV4dCgpKSksJChlKS5kYXRhKCJjb25maWd1cmF0aW9uIixKU09OLnBhcnNlKCQoZSkubmV4dCgpLm5leHQoKS50ZXh0KCkpKX1zdWJzY3JpYmUoZSxpKXskKGUpLmRhdGEoImNhbGxiYWNrIixpKSx0aGlzLnJlbmRlcihlKX11bnN1YnNjcmliZShlKXtSZWFjdERPTS5yZW5kZXIobnVsbCxlKX1yZWNlaXZlTWVzc2FnZShlLGkpe3IucmVjZWl2ZU1lc3NhZ2UuY2FsbCh0aGlzLGUsaSl9Z2V0VHlwZShlKXtpZih0eXBlb2Ygci50eXBlPT0iZnVuY3Rpb24iKXJldHVybiByLnR5cGUuY2FsbCh0aGlzLGUpO2lmKHIudHlwZT09PSExfHx0eXBlb2Ygci50eXBlPT0ic3RyaW5nIilyZXR1cm4gci50eXBlO3Rocm93IG5ldyBFcnJvcigib3B0aW9ucy50eXBlIG11c3QgYmUgZmFsc2UsIGEgc3RyaW5nLCBvciBhIGZ1bmN0aW9uIil9Z2V0UmF0ZVBvbGljeSgpe3JldHVybiByLnJhdGVQb2xpY3l9Z2V0SW5wdXRWYWx1ZShlKXtyZXR1cm4gJChlKS5kYXRhKCJ2YWx1ZSIpfXNldElucHV0VmFsdWUoZSxpKXskKGUpLmRhdGEoInZhbHVlIixpKX1nZXRJbnB1dENvbmZpZ3VyYXRpb24oZSl7cmV0dXJuICQoZSkuZGF0YSgiY29uZmlndXJhdGlvbiIpfXNldElucHV0Q29uZmlndXJhdGlvbihlLGkpeyQoZSkuZGF0YSgiY29uZmlndXJhdGlvbiIsaSl9Z2V0Q2FsbGJhY2soZSl7cmV0dXJuICQoZSkuZGF0YSgiY2FsbGJhY2siKX1yZW5kZXIoZSl7Y29uc3QgaT1SZWFjdC5jcmVhdGVFbGVtZW50KGEse2NvbmZpZ3VyYXRpb246dGhpcy5nZXRJbnB1dENvbmZpZ3VyYXRpb24oZSksdmFsdWU6dGhpcy5nZXRWYWx1ZShlKSxzZXRWYWx1ZTp0aGlzLnNldFZhbHVlLmJpbmQodGhpcyxlKSxlbDplfSk7UmVhY3RET00ucmVuZGVyKGksZSl9fSx0KX1zLmh5ZHJhdGU9dSxzLnJlYWN0U2hpbnlJbnB1dD1tLHMucmVhY3RXaWRnZXQ9YixPYmplY3QuZGVmaW5lUHJvcGVydHkocyxTeW1ib2wudG9TdHJpbmdUYWcse3ZhbHVlOiJNb2R1bGUifSl9KTsNCg=="></script>
+  <script>/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./srcjs/react-tools.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./srcjs/input.js":
+/*!************************!*\
+  !*** ./srcjs/input.js ***!
+  \************************/
+/*! exports provided: reactShinyInput */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactShinyInput", function() { return reactShinyInput; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var shiny__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! shiny */ "shiny");
+/* harmony import */ var shiny__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(shiny__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_3__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+/*
+ * This default receiveMessage implementation expects data to contain whole
+ * configuration and value properties. If either is present, it will be set and
+ * the component will be re-rendered. Because receiveMessage is typically used
+ * by input authors to perform incremental updates, this default implementation
+ * can be overriden by the user with the receiveMessage arguments to
+ * reactShinyInput.
+ */
+
+function defaultReceiveMessage(el, _ref) {
+  var configuration = _ref.configuration,
+      value = _ref.value;
+  var dirty = false;
+
+  if (configuration !== undefined) {
+    this.setInputConfiguration(el, configuration);
+    dirty = true;
+  }
+
+  if (value !== undefined) {
+    this.setInputValue(el, value);
+    dirty = true;
+  }
+
+  if (dirty) {
+    this.getCallback(el)();
+    this.render(el);
+  }
+}
+
+var defaultOptions = {
+  receiveMessage: defaultReceiveMessage,
+  type: false,
+  ratePolicy: null
+};
+/**
+ * Installs a new Shiny input binding based on a React component.
+ *
+ * @param {string} selector - jQuery selector that should identify the set of
+ * container elements within the scope argument of Shiny.InputBinding.find.
+ * @param {string} name - A name such as 'acme.FooInput' that should uniquely
+ * identify the component.
+ * @param {Object} component - React Component, either class or function.
+ * @param {Object} options - Additional configuration options. Supported
+ * options are:
+ * - receiveMessage: Implementation of Shiny.InputBinding to use in place of
+ *   the default. Typically overridden as an optimization to perform
+ *   incremental value updates.
+ * - type: `false`, a string, or a function.
+ *     - `false` (the default): denotes that the value produced by this input
+ *       should not be intercepted by any handlers registered in R on the
+ *       server using shiny::registerInputHandler().
+ *     - string: denotes the input's *type* and should correspond to the
+ *       type parameter of shiny::registerInputHandler().
+ *     - function: A function called with `this` bound to the InputBinding
+ *       instance and passed a single argument, the input's containing DOM
+ *       element. The function should return either `false` or a string
+ *       corresponding to the type parameter of shiny::registerInputHandler().
+ * - ratePolicy: A rate policy object as defined in the documentation for
+ *     getRatePolicy(): https://shiny.rstudio.com/articles/building-inputs.html
+ *     A rate policy object has two members:
+ *     - `policy`: Valid values are the strings "direct", "debounce", and
+ *       "throttle". "direct" means that all events are sent immediately.
+ *     - `delay`: Number indicating the number of milliseconds that should be
+ *       used when debouncing or throttling. Has no effect if the policy is
+ *       direct.
+ *     The specified rate policy is only applied when `true` is passed as the
+ *     second argument to the `setValue` function passed as a prop to the
+ *     input component.
+ *
+ */
+
+function reactShinyInput(selector, name, component, options) {
+  options = Object.assign({}, defaultOptions, options);
+  shiny__WEBPACK_IMPORTED_MODULE_2___default.a.inputBindings.register(new ( /*#__PURE__*/function (_Shiny$InputBinding) {
+    _inherits(_class, _Shiny$InputBinding);
+
+    var _super = _createSuper(_class);
+
+    function _class() {
+      _classCallCheck(this, _class);
+
+      return _super.apply(this, arguments);
+    }
+
+    _createClass(_class, [{
+      key: "find",
+
+      /*
+       * Methods override those in Shiny.InputBinding
+       */
+      value: function find(scope) {
+        return jquery__WEBPACK_IMPORTED_MODULE_3___default()(scope).find(selector);
+      }
+    }, {
+      key: "getValue",
+      value: function getValue(el) {
+        return this.getInputValue(el);
+      }
+    }, {
+      key: "setValue",
+      value: function setValue(el, value) {
+        var rateLimited = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+        /*
+         * We have to check whether $(el).data('callback') is undefined here
+         * in case shiny::renderUI() is involved. If an input is contained in a
+         * shiny::uiOutput(), the following strange thing happens occasionally:
+         *
+         *   1. setValue() is bound to an el in this.render(), below
+         *   2. An event that will call setValue() is enqueued
+         *   3. While the event is still enqueued, el is unbound and removed
+         *      from the DOM by the JS code associated with shiny::uiOutput()
+         *      - That code uses jQuery .html() in output_binding_html.js
+         *      - .html() removes el from the DOM and clears ist data and events
+         *   4. By the time the setValue() bound to the original el is invoked,
+         *      el has been unbound and its data cleared.
+         *
+         *  Since the original input is gone along with its callback, it
+         *  seems to make the most sense to do nothing.
+         */
+        if (jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('callback') !== undefined) {
+          this.setInputValue(el, value);
+          this.getCallback(el)(rateLimited);
+          this.render(el);
+        }
+      }
+    }, {
+      key: "initialize",
+      value: function initialize(el) {
+        jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('value', JSON.parse(jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).next().text()));
+        jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('configuration', JSON.parse(jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).next().next().text()));
+      }
+    }, {
+      key: "subscribe",
+      value: function subscribe(el, callback) {
+        jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('callback', callback);
+        this.render(el);
+      }
+    }, {
+      key: "unsubscribe",
+      value: function unsubscribe(el) {
+        react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(null, el);
+      }
+    }, {
+      key: "receiveMessage",
+      value: function receiveMessage(el, data) {
+        options.receiveMessage.call(this, el, data);
+      }
+    }, {
+      key: "getType",
+      value: function getType(el) {
+        if (typeof options.type === 'function') {
+          return options.type.call(this, el);
+        } else if (options.type === false || typeof options.type === 'string') {
+          return options.type;
+        } else {
+          throw new Error('options.type must be false, a string, or a function');
+        }
+      }
+    }, {
+      key: "getRatePolicy",
+      value: function getRatePolicy() {
+        return options.ratePolicy;
+      }
+      /*
+       * Methods not present in Shiny.InputBinding but accessible to users
+       * through `this` in receiveMessage
+       */
+
+    }, {
+      key: "getInputValue",
+      value: function getInputValue(el) {
+        return jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('value');
+      }
+    }, {
+      key: "setInputValue",
+      value: function setInputValue(el, value) {
+        jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('value', value);
+      }
+    }, {
+      key: "getInputConfiguration",
+      value: function getInputConfiguration(el) {
+        return jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('configuration');
+      }
+    }, {
+      key: "setInputConfiguration",
+      value: function setInputConfiguration(el, configuration) {
+        jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('configuration', configuration);
+      }
+    }, {
+      key: "getCallback",
+      value: function getCallback(el) {
+        return jquery__WEBPACK_IMPORTED_MODULE_3___default()(el).data('callback');
+      }
+    }, {
+      key: "render",
+      value: function render(el) {
+        var element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(component, {
+          configuration: this.getInputConfiguration(el),
+          value: this.getValue(el),
+          setValue: this.setValue.bind(this, el),
+          el: el
+        });
+        react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(element, el);
+      }
+    }]);
+
+    return _class;
+  }(shiny__WEBPACK_IMPORTED_MODULE_2___default.a.InputBinding))(), name);
+}
+
+/***/ }),
+
+/***/ "./srcjs/react-tools.js":
+/*!******************************!*\
+  !*** ./srcjs/react-tools.js ***!
+  \******************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _widget__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./widget */ "./srcjs/widget.js");
+/* harmony import */ var _input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./input */ "./srcjs/input.js");
+
+
+window.reactR = {
+  reactShinyInput: _input__WEBPACK_IMPORTED_MODULE_1__["reactShinyInput"],
+  reactWidget: _widget__WEBPACK_IMPORTED_MODULE_0__["reactWidget"],
+  hydrate: _widget__WEBPACK_IMPORTED_MODULE_0__["hydrate"]
+};
+
+/***/ }),
+
+/***/ "./srcjs/widget.js":
+/*!*************************!*\
+  !*** ./srcjs/widget.js ***!
+  \*************************/
+/*! exports provided: hydrate, defaultOptions, mergeOptions, formatDimension, isTag, reactWidget */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hydrate", function() { return hydrate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultOptions", function() { return defaultOptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mergeOptions", function() { return mergeOptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatDimension", function() { return formatDimension; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTag", function() { return isTag; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactWidget", function() { return reactWidget; });
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/**
+ * Recursively transforms tag, a JSON representation of an instance of a
+ * React component and its children, into a React element suitable for
+ * passing to ReactDOM.render.
+ * @param {Object} components
+ * @param {Object} tag
+ */
+function hydrate(components, tag) {
+  if (typeof tag === 'string') return tag;
+
+  if (tag.name[0] === tag.name[0].toUpperCase() && !components.hasOwnProperty(tag.name)) {
+    throw new Error("Unknown component: " + tag.name);
+  }
+
+  var elem = components.hasOwnProperty(tag.name) ? components[tag.name] : tag.name,
+      args = [elem, tag.attribs];
+
+  for (var i = 0; i < tag.children.length; i++) {
+    args.push(hydrate(components, tag.children[i]));
+  }
+
+  return React.createElement.apply(React, args);
+}
+var defaultOptions = {
+  // The name of the property on the root tag to use for the width, if
+  // it's updated.
+  widthProperty: "width",
+  // The name of the property on the root tag to use for the height, if
+  // it's updated.
+  heightProperty: "height",
+  // Whether or not to append the string 'px' to the width and height
+  // properties when they change.
+  appendPx: false,
+  // Whether or not to dynamically update the width and height properties
+  // of the last known tag when the computed width and height change in
+  // the browser.
+  renderOnResize: false
+};
+function mergeOptions(options) {
+  var merged = {};
+
+  for (var k in defaultOptions) {
+    merged[k] = defaultOptions[k];
+  }
+
+  for (var k in options) {
+    if (!defaultOptions.hasOwnProperty(k)) {
+      throw new Error("Unrecognized option: " + k);
+    }
+
+    merged[k] = options[k];
+  }
+
+  return merged;
+}
+function formatDimension(dim, options) {
+  if (options.appendPx) {
+    return dim + 'px';
+  } else {
+    return dim;
+  }
+}
+function isTag(value) {
+  return _typeof(value) === 'object' && value.hasOwnProperty('name') && value.hasOwnProperty('attribs') && value.hasOwnProperty('children');
+}
+/**
+ * Creates an HTMLWidget that is updated by rendering a React component.
+ * React component constructors are made available by specifying them by
+ * name in the components object.
+ * @param {string} name
+ * @param {string} type
+ * @param {Object} components
+ * @param {Object} options
+ */
+
+function reactWidget(name, type, components, options) {
+  var actualOptions = mergeOptions(options);
+  window.HTMLWidgets.widget({
+    name: name,
+    type: type,
+    factory: function factory(el, width, height) {
+      var lastValue,
+          instance = {},
+          renderValue = function renderValue(value) {
+        if (actualOptions.renderOnResize) {
+          // value.tag might be a primitive string, in which
+          // case there is no attribs property.
+          if (_typeof(value.tag) === 'object') {
+            value.tag.attribs[actualOptions["widthProperty"]] = formatDimension(width);
+            value.tag.attribs[actualOptions["heightProperty"]] = formatDimension(height);
+          }
+
+          lastValue = value;
+        } // with functional stateless components this will be null
+        // see https://reactjs.org/docs/react-dom.html#render for more details
+
+
+        this.instance.component = ReactDOM.render(hydrate(components, value.tag), el);
+      };
+
+      return {
+        instance: instance,
+        renderValue: renderValue,
+        resize: function resize(newWidth, newHeight) {
+          if (actualOptions.renderOnResize) {
+            width = newWidth;
+            height = newHeight;
+            renderValue(lastValue);
+          }
+        }
+      };
+    }
+  });
+}
+
+/***/ }),
+
+/***/ "jquery":
+/*!********************************!*\
+  !*** external "window.jQuery" ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = window.jQuery;
+
+/***/ }),
+
+/***/ "react":
+/*!*******************************!*\
+  !*** external "window.React" ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = window.React;
+
+/***/ }),
+
+/***/ "react-dom":
+/*!**********************************!*\
+  !*** external "window.ReactDOM" ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = window.ReactDOM;
+
+/***/ }),
+
+/***/ "shiny":
+/*!*******************************!*\
+  !*** external "window.Shiny" ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = window.Shiny;
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=react-tools.js.map</script>
   <style type="text/css">@layer htmltools {
 .html-fill-container {
 display: flex;
@@ -5002,7 +5545,7 @@ font-weight: 900;
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus","description":"In June 2024, we published a preprint on the classification of document types in Openalex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and Web of Science.","authors":[{"author":"Nick Haupka","authorURL":"#","affiliation":"State and University Library Göttingen","affiliationURL":"https://www.sub.uni-goettingen.de/","orcidID":"0009-0002-6478-6789"},{"author":"Sophia Dörner","authorURL":"#","affiliation":"State and University Library Göttingen","affiliationURL":"https://www.sub.uni-goettingen.de/","orcidID":"0000-0001-8747-3422"},{"author":"Najko Jahn","authorURL":"#","affiliation":"State and University Library Göttingen","affiliationURL":"https://www.sub.uni-goettingen.de/","orcidID":"0000-0001-5105-1463"}],"publishedDate":"2024-08-28T00:00:00.000+02:00","citationText":"Haupka, et al., 2024"}
+{"title":"Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus","description":"In June 2024, we published a preprint on the classification of document types in Openalex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and Web of Science.","authors":[{"author":"Nick Haupka","authorURL":"#","affiliation":"State and University Library Göttingen","affiliationURL":"https://www.sub.uni-goettingen.de/","orcidID":"0009-0002-6478-6789"},{"author":"Sophia Dörner","authorURL":"#","affiliation":"State and University Library Göttingen","affiliationURL":"https://www.sub.uni-goettingen.de/","orcidID":"0000-0001-8747-3422"},{"author":"Najko Jahn","authorURL":"#","affiliation":"State and University Library Göttingen","affiliationURL":"https://www.sub.uni-goettingen.de/","orcidID":"0000-0001-5105-1463"}],"publishedDate":"2024-08-30T00:00:00.000+02:00","citationText":"Haupka, et al., 2024"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -5026,7 +5569,7 @@ font-weight: 900;
   
 ,   Najko Jahn  (State and University Library Göttingen)<a href="https://www.sub.uni-goettingen.de/" class="uri">https://www.sub.uni-goettingen.de/</a>
   
-<br />2024-08-28
+<br />2024-08-30
 </div>
 
 <div class="d-article">
@@ -5036,23 +5579,35 @@ font-weight: 900;
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<p>Over the last months, OpenAlex has revised its classification of document types, making it more independent of Crossref, and also introduced new document types such as <a href="https://groups.google.com/g/openalex-users/c/YujaIIjY02A">preprints and reviews</a>. In addition, document types are now adopted from <a href="https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0">PubMed</a>, which raises the question of how these changes affect the analysis of data from OpenAlex.</p>
-<p>Here, we build on the former results of our preprint <span class="citation" data-cites="haupka_2024">(<a href="#ref-haupka_2024" role="doc-biblioref">Haupka et al. 2024</a>)</span> from June 2024 and provide an updated insight. Our investigation highlighted differences in the curation strategies by scholarly database operators which complicates the inquiry of accurate bibliometric figures. Similar findings were obtained by <span class="citation" data-cites="donner_document_2017">Donner (<a href="#ref-donner_document_2017" role="doc-biblioref">2017</a>)</span>, <span class="citation" data-cites="visser_large-scale_2021">Visser, Eck, and Waltman (<a href="#ref-visser_large-scale_2021" role="doc-biblioref">2021</a>)</span> and <span class="citation" data-cites="alperin_analysis_2024">Alperin et al. (<a href="#ref-alperin_analysis_2024" role="doc-biblioref">2024</a>)</span> which reported deviations between numbers of publications derived from bibliometric databases when restricting to certain document types.</p>
-<p>The assignment of document types to publications is an essential prerequisite for bibliometric surveys as distinct and potentially only a restricted subset of document types are utilised for various metrics, reports or searches in databases and catalogues. However, the document type assignment of publications indexed in several bibliometric databases might not always correspond. Although divergences in document type classification of a single publication can, in fact, lead to imprecise assertions about the scholarly landscape, e.g. if a document is labelled as an article in one database and as a letter in another. As we have shown in our <a href="https://arxiv.org/abs/2406.15154">preprint</a>, there is a relatively large gap between publications in scholarly databases that are labelled as research texts and publications that are associated with editorial texts. As of 2023, 1% of the publications analysed in OpenAlex were labelled as editorial texts, compared to over 10% in the commercial databases (based on publications in journals from 2012 to 2022). A change to the document types contained in OpenAlex could also have an impact on the CWTS Leiden Ranking Open Edition <span class="citation" data-cites="van_eck_2024_10949622">(<a href="#ref-van_eck_2024_10949622" role="doc-biblioref">Van Eck and Waltman 2024</a>)</span>, which is based on the document types in OpenAlex.</p>
-<p>In this blog post, we examine the recent changes in document type classification in OpenAlex and contrast the findings with the approaches of Scopus and Web of Science (WoS).</p>
+<p>In June 2024, we submitted an analysis of publication and document types in OpenAlex in comparison with the proprietary databases Web of Science and Scopus and the open data sources SemanticScholar and PubMed <span class="citation" data-cites="haupka_2024">(<a href="#ref-haupka_2024" role="doc-biblioref">Haupka et al. 2024</a>)</span>.
+We found substantial differences between these databases: While Web of Science and Scopus provided a comprehensive set of document types to describe work published in journals, OpenAlex supported only a comparably limited number of types.
+Notably, OpenAlex lacked a distinction between research articles and reviews, which can be crucial when calculating citation indicators.
+In line with related studies <span class="citation" data-cites="alperin_analysis_2024">(<a href="#ref-alperin_analysis_2024" role="doc-biblioref">Alperin et al. 2024</a>)</span>, we also observed discrepancies in the number of publications when restricting to certain document types.</p>
+<p>Meanwhile, in <a href="(https://groups.google.com/g/openalex-users/c/YujaIIjY02A)">late May</a> and <a href="https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0">late July 2024</a>, OpenAlex introduced extended approaches to obtain publication and document types.
+Among the four new categories were preprints and reviews. Using <a href="https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0">PubMed</a>, OpenAlex identified approximately 4 million journal articles as editorials, erratum, letters, preprints, reviews, or retractions.</p>
+<p>Of course, we wanted to to know how these improvements affect our findings.
+We therefore replicated our methods and re-applied it to the recent changes.
+Using the same shared corpus of works published in journals between 2012 and 2022, we demonstrate that OpenAlex’s recent changes provide a more nuanced set of document types to refine scholarly works.
+However, the comparison with Web of Science and Scopus reveals that there remain considerable differences.</p>
 <h2 id="data-and-methods">Data and Methods</h2>
-<p>For our analysis we reused the dataset that was compiled for <span class="citation" data-cites="haupka_2024">Haupka et al. (<a href="#ref-haupka_2024" role="doc-biblioref">2024</a>)</span> using data from mid 2023 and updated the respective document types to match current developments. The initial dataset included approximately 9.5 million publications that occur in OpenAlex as well as in Scopus, WoS, PubMed and Semantic Scholar. In addition, to align with the methods applied in our <a href="https://arxiv.org/abs/2406.15154">preprint</a>, we restricted the data to the publication years 2012 to 2022 and only considered items from journals. OpenAlex data used in this report is from July 2024. Scopus and WoS data is from April 2024. Data is hosted by the <a href="https://bibliometrie.info">German Competence Network of Bibliometrics</a>.</p>
-<p>After matching data from OpenAlex with Scopus and Web of Science, we found that the absolute numbers for the shared document type categories are very similar between the databases. To avoid bias stemming from the PubMed data we originally worked with, whose document types OpenAlex has adopted with the latest changes, we performed a full comparison of OpenAlex with Scopus and WoS. The restrictions to the publication type “Journal” and the years 2012 to 2022 have been retained.</p>
+<p>We reused the dataset that was compiled for <span class="citation" data-cites="haupka_2024">Haupka et al. (<a href="#ref-haupka_2024" role="doc-biblioref">2024</a>)</span> using data from mid 2023 and updated the respective document types to match current developments.
+Our initial dataset included approximately 9.5 million publications that were included in OpenAlex as well as in Scopus, WoS, PubMed, and Semantic Scholar.
+In addition, to align with the methods applied in our <a href="https://arxiv.org/abs/2406.15154">preprint</a>, we restricted the data to the publication years 2012 to 2022 and only considered items from journals.
+OpenAlex data used were from July 2024.
+The Scopus and WoS data were retrieved from the <a href="https://bibliometrie.info">German Competence Network of Bibliometrics</a>, using the April 2024 snapshots.</p>
+<p>After matching data from OpenAlex with Scopus and Web of Science by DOI, we found that the absolute numbers for the shared document type categories are very similar between the databases.
+To avoid bias stemming from the PubMed data we originally worked with, whose document types OpenAlex has adopted with the latest changes, we performed a pairwise comparison of OpenAlex with Scopus and WoS.</p>
 <h2 id="findings">Findings</h2>
 <p>The following figures compare the OpenAlex classification system with that of Scopus and Web of Science. Notably, the proportion of articles and reviews is relatively equal between the data sources. This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews.</p>
+<!-- use inline R code https://bookdown.org/yihui/rmarkdown-cookbook/r-code.html -->
 <p>Comparing OpenAlex and Scopus, figure <a href="#fig:oalscp">1</a> shows, regarding publications indexed in both data sources, that OpenAlex classified 22,142,129 publications (89.68%) as articles while Scopus classified 20,796,642 publications (84.23%) with this document type. Concerning publications classified as reviews, figure <a href="#fig:oalscp">1</a> shows that within OpenAlex this document type is assigned to 1,510,182 publications (6.12 %) and within Scopus to 1,777,955 (7.20 %).</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="figure"><span style="display:block;" id="fig:oalscp"></span>
-<div id="htmlwidget-378b9822252c75126e36" style="width:624px;height:550px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-378b9822252c75126e36">{"x":{"links":{"source":[0,1,0,1,0,2,0,0,3,4,0,2,0,2,0,2,1,1,5,2,0,2,3,0,3,3,1,6,1,7,1,1,5,4,0,3,1,3,7,3,7,2,7,2,4,5,8,6,6,5,4,2,5,5,4,3,4,7,7,0,6,4,7,6,5,6,6,5,1,4,8,1,3,4,8,2,7,5,8,8,8,5,6],"target":[9,10,10,9,11,12,13,14,13,15,12,11,15,13,16,9,11,16,9,10,17,16,10,18,11,9,14,15,12,9,13,15,10,9,19,14,17,12,11,16,13,15,10,14,12,14,9,9,17,11,11,17,12,13,13,15,10,12,15,20,12,17,14,11,16,13,10,15,18,16,10,19,17,14,11,18,16,18,13,15,14,17,14],"value":[20313708,1044685,701739,393568,391929,365614,223102,220182,182505,137028,116514,107882,87263,86449,59120,54725,26006,20711,17201,16035,14825,14416,12881,12309,10416,8351,8239,8039,7916,6821,4605,3882,2168,1884,1394,608,550,495,468,415,414,401,334,247,224,219,198,186,179,175,174,159,150,138,125,106,92,85,78,44,39,35,35,35,26,16,14,13,13,9,7,7,6,6,5,4,4,4,2,2,1,1,1]},"nodes":{"name":["article","review","letter","editorial","erratum","preprint","retraction","paratext","other","Article","Review","Note","Letter","Editorial","Conference Paper","Erratum","Short Survey","Tombstone","Data Paper","Chapter","Other"],"group":["source","source","source","source","source","source","source","source","source","target","target","target","target","target","target","target","target","target","target","target","target"]},"options":{"NodeID":"label","NodeGroup":"group","LinkGroup":null,"colourScale":"d3.scaleOrdinal() .domain([\"source\", \"target\"]) .range([\"#4d4d4d\", \"#d82222a0\"])","fontSize":14,"fontFamily":"sans-serif","fontColor":null,"nodeWidth":15,"nodePadding":20,"nodeStrokeWidth":1,"nodeCornerRadius":0,"dragX":true,"dragY":true,"numberFormat":",d","orderByPath":false,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":0,"zoom":true,"linkType":"bezier","curvature":0.5,"highlightChildLinks":false,"doubleclickTogglesChildren":false,"showNodeValues":false,"align":"justify","xAxisDomain":["OpenAlex","Scopus"],"title":null,"nodeLabelMargin":2,"linkColor":"#A0A0A0","linkOpacity":0.5,"linkGradient":false,"nodeShadow":false,"scaleNodeBreadthsByString":false,"xScalingFactor":0.4,"yOrderComparator":null}},"evals":[],"jsHooks":{"render":[{"code":"\n  function(el,x){\n    // Regular expressions for identifying lowercase and uppercase strings\n    var lowerCase = /^[a-z]/;\n    var upperCase = /^[A-Z]/;\n      \n    // select all our node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return lowerCase.test(d.name); })\n    .attr(\"x\", -10)\n    .attr(\"text-anchor\", \"end\");\n\n    // select all target node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return upperCase.test(d.name); })\n    .attr(\"x\", x.options.nodeWidth + 10)\n    .attr(\"text-anchor\", \"start\");\n    \n    // select the top-level div of the widget and add the desired style options\n    d3.select(el)\n    .style(\"margin-left\", \"auto\")\n    .style(\"margin-right\", \"auto\")\n    .style(\"display\", \"block\");  \n    \n    // append absolute count to label\n    d3.select(el)\n    .selectAll(\".node text\")\n    .text(d => d.name + \" (\" + d3.format(\"(,d\")(d.value) + \")\");\n    \n    // add the transform attribute to the zoom-layer class\n    var width = d3.select(el).node().getBoundingClientRect().width;\n    var height = d3.select(el).node().getBoundingClientRect().height;\n    \n    var translateX = width * 0.25; \n    var translateY = height * -0.05;\n\n    d3.select(el)\n    .select(\".zoom-layer\")\n    .attr(\"transform\", \"translate(\" + translateX + \",\" + translateY + \") scale(1)\");\n  }\n  ","data":null}]}}</script>
+<div id="htmlwidget-ab1a2a01d7cc60c57393" style="width:624px;height:550px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ab1a2a01d7cc60c57393">{"x":{"links":{"source":[0,1,0,1,0,2,0,0,3,4,0,2,0,2,0,2,1,1,5,2,0,2,3,0,3,3,1,6,1,7,1,1,5,4,0,3,1,3,7,3,7,2,7,2,4,5,8,6,6,5,4,2,5,5,4,3,4,7,7,0,6,4,7,6,5,6,6,5,1,4,8,1,3,4,8,2,7,5,8,8,8,5,6],"target":[9,10,10,9,11,12,13,14,13,15,12,11,15,13,16,9,11,16,9,10,17,16,10,18,11,9,14,15,12,9,13,15,10,9,19,14,17,12,11,16,13,15,10,14,12,14,9,9,17,11,11,17,12,13,13,15,10,12,15,20,12,17,14,11,16,13,10,15,18,16,10,19,17,14,11,18,16,18,13,15,14,17,14],"value":[20313708,1044685,701739,393568,391929,365614,223102,220182,182505,137028,116514,107882,87263,86449,59120,54725,26006,20711,17201,16035,14825,14416,12881,12309,10416,8351,8239,8039,7916,6821,4605,3882,2168,1884,1394,608,550,495,468,415,414,401,334,247,224,219,198,186,179,175,174,159,150,138,125,106,92,85,78,44,39,35,35,35,26,16,14,13,13,9,7,7,6,6,5,4,4,4,2,2,1,1,1]},"nodes":{"name":["article","review","letter","editorial","erratum","preprint","retraction","paratext","other","Article","Review","Note","Letter","Editorial","Conference Paper","Erratum","Short Survey","Tombstone","Data Paper","Chapter","Other"],"group":["source","source","source","source","source","source","source","source","source","target","target","target","target","target","target","target","target","target","target","target","target"]},"options":{"NodeID":"label","NodeGroup":"group","LinkGroup":null,"colourScale":"d3.scaleOrdinal() .domain([\"source\", \"target\"]) .range([\"#4d4d4d\", \"#d82222a0\"])","fontSize":14,"fontFamily":"sans-serif","fontColor":null,"nodeWidth":15,"nodePadding":20,"nodeStrokeWidth":1,"nodeCornerRadius":0,"dragX":true,"dragY":true,"numberFormat":",d","orderByPath":false,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":0,"zoom":true,"linkType":"bezier","curvature":0.5,"highlightChildLinks":false,"doubleclickTogglesChildren":false,"showNodeValues":false,"align":"justify","xAxisDomain":["OpenAlex","Scopus"],"title":null,"nodeLabelMargin":2,"linkColor":"#A0A0A0","linkOpacity":0.5,"linkGradient":false,"nodeShadow":false,"scaleNodeBreadthsByString":false,"xScalingFactor":0.4,"yOrderComparator":null}},"evals":[],"jsHooks":{"render":[{"code":"\n  function(el,x){\n    // Regular expressions for identifying lowercase and uppercase strings\n    var lowerCase = /^[a-z]/;\n    var upperCase = /^[A-Z]/;\n      \n    // select all our node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return lowerCase.test(d.name); })\n    .attr(\"x\", -10)\n    .attr(\"text-anchor\", \"end\");\n\n    // select all target node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return upperCase.test(d.name); })\n    .attr(\"x\", x.options.nodeWidth + 10)\n    .attr(\"text-anchor\", \"start\");\n    \n    // select the top-level div of the widget and add the desired style options\n    d3.select(el)\n    .style(\"margin-left\", \"auto\")\n    .style(\"margin-right\", \"auto\")\n    .style(\"display\", \"block\");  \n    \n    // append absolute count to label\n    d3.select(el)\n    .selectAll(\".node text\")\n    .text(d => d.name + \" (\" + d3.format(\"(,d\")(d.value) + \")\");\n    \n    // add the transform attribute to the zoom-layer class\n    var width = d3.select(el).node().getBoundingClientRect().width;\n    var height = d3.select(el).node().getBoundingClientRect().height;\n    \n    var translateX = width * 0.25; \n    var translateY = height * -0.05;\n\n    d3.select(el)\n    .select(\".zoom-layer\")\n    .attr(\"transform\", \"translate(\" + translateX + \",\" + translateY + \") scale(1)\");\n  }\n  ","data":null}]}}</script>
 <p class="caption">
 Figure 1: Comparison of OpenAlex and Scopus
 </p>
@@ -5062,8 +5617,8 @@ Figure 1: Comparison of OpenAlex and Scopus
 <p>Additionally, Figures <a href="#fig:oalscp">1</a> and <a href="#fig:oalwos">2</a> demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. Of the publications classified as articles in OpenAlex, the figures show that a total amount of 339,616 (Scopus) and 656,439 (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="figure"><span style="display:block;" id="fig:oalwos"></span>
-<div id="htmlwidget-688432601b79417c6bdd" style="width:624px;height:550px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-688432601b79417c6bdd">{"x":{"links":{"source":[0,0,1,0,2,0,1,0,2,3,4,0,0,0,0,1,0,2,1,5,1,1,6,0,1,3,2,1,1,6,7,3,4,2,2,4,2,3,5,3,5,7,2,6,4,3,5,2,5,4,2,1,6,3,4,3,1,3,7,6,3,4,7,7,5,5,7,6,2,6,4,4,5,7,7,5,5,7,3,4,4,6,7,8,8,9,8,8],"target":[10,11,12,13,14,15,10,12,13,13,16,14,16,17,18,13,19,10,15,10,11,14,20,20,16,10,17,18,17,16,10,19,18,18,12,10,11,14,15,18,12,13,16,11,13,12,13,15,11,14,19,19,10,11,11,15,20,17,15,18,16,20,12,14,18,14,11,14,20,13,15,12,16,16,18,19,17,19,20,19,17,12,17,16,17,10,10,13],"value":[16924772,1189665,969674,578176,355227,318480,315809,271804,219275,163571,119180,78263,70963,59202,47204,36947,28135,20059,12491,10650,10464,8065,5703,3813,3554,3502,3483,2560,2282,1466,1348,944,758,705,611,455,428,377,313,305,269,238,233,214,209,204,186,174,157,140,136,130,122,120,104,98,88,84,64,63,56,49,44,41,32,32,29,25,21,21,18,18,12,11,11,11,9,5,4,4,3,3,2,2,1,1,1,1]},"nodes":{"name":["article","review","letter","editorial","erratum","preprint","retraction","paratext","other","reference-entry","Article","Other","Review","Editorial Material","Letter","Proceedings Paper","Correction","News Item","Early Access","Biographical-Item","Retraction"],"group":["source","source","source","source","source","source","source","source","source","source","target","target","target","target","target","target","target","target","target","target","target"]},"options":{"NodeID":"label","NodeGroup":"group","LinkGroup":null,"colourScale":"d3.scaleOrdinal() .domain([\"source\", \"target\"]) .range([\"#4d4d4d\", \"#9e0059a0\"])","fontSize":14,"fontFamily":"sans-serif","fontColor":null,"nodeWidth":15,"nodePadding":20,"nodeStrokeWidth":1,"nodeCornerRadius":0,"dragX":true,"dragY":true,"numberFormat":",d","orderByPath":false,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":0,"zoom":true,"linkType":"bezier","curvature":0.5,"highlightChildLinks":false,"doubleclickTogglesChildren":false,"showNodeValues":false,"align":"justify","xAxisDomain":["OpenAlex","Web of Science"],"title":null,"nodeLabelMargin":2,"linkColor":"#A0A0A0","linkOpacity":0.5,"linkGradient":false,"nodeShadow":false,"scaleNodeBreadthsByString":false,"xScalingFactor":0.4,"yOrderComparator":null}},"evals":[],"jsHooks":{"render":[{"code":"\n  function(el,x){\n    // Regular expressions for identifying lowercase and uppercase strings\n    var lowerCase = /^[a-z]/;\n    var upperCase = /^[A-Z]/;\n      \n    // select all our node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return lowerCase.test(d.name); })\n    .attr(\"x\", -10)\n    .attr(\"text-anchor\", \"end\");\n\n    // select all target node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return upperCase.test(d.name); })\n    .attr(\"x\", x.options.nodeWidth + 10)\n    .attr(\"text-anchor\", \"start\");\n    \n    // select the top-level div of the widget and add the desired style options\n    d3.select(el)\n    .style(\"margin-left\", \"auto\")\n    .style(\"margin-right\", \"auto\")\n    .style(\"display\", \"block\");  \n    \n    // append absolute count to label\n    d3.select(el)\n    .selectAll(\".node text\")\n    .text(d => d.name + \" (\" + d3.format(\"(,d\")(d.value) + \")\");\n    \n    // add the transform attribute to the zoom-layer class\n    var width = d3.select(el).node().getBoundingClientRect().width;\n    var height = d3.select(el).node().getBoundingClientRect().height;\n    \n    var translateX = width * 0.25; \n    var translateY = height * -0.05;\n\n    d3.select(el)\n    .select(\".zoom-layer\")\n    .attr(\"transform\", \"translate(\" + translateX + \",\" + translateY + \") scale(1)\");\n  }\n  ","data":null}]}}</script>
+<div id="htmlwidget-521dea4cbde2bfea78f3" style="width:624px;height:550px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-521dea4cbde2bfea78f3">{"x":{"links":{"source":[0,0,1,0,2,0,1,0,2,3,4,0,0,0,0,1,0,2,1,5,1,1,6,0,1,3,2,1,1,6,7,3,4,2,2,4,2,3,5,3,5,7,2,6,4,3,5,2,5,4,2,1,6,3,4,3,1,3,7,6,3,4,7,7,5,5,7,6,2,6,4,4,5,7,7,5,5,7,3,4,4,6,7,8,8,9,8,8],"target":[10,11,12,13,14,15,10,12,13,13,16,14,16,17,18,13,19,10,15,10,11,14,20,20,16,10,17,18,17,16,10,19,18,18,12,10,11,14,15,18,12,13,16,11,13,12,13,15,11,14,19,19,10,11,11,15,20,17,15,18,16,20,12,14,18,14,11,14,20,13,15,12,16,16,18,19,17,19,20,19,17,12,17,16,17,10,10,13],"value":[16924772,1189665,969674,578176,355227,318480,315809,271804,219275,163571,119180,78263,70963,59202,47204,36947,28135,20059,12491,10650,10464,8065,5703,3813,3554,3502,3483,2560,2282,1466,1348,944,758,705,611,455,428,377,313,305,269,238,233,214,209,204,186,174,157,140,136,130,122,120,104,98,88,84,64,63,56,49,44,41,32,32,29,25,21,21,18,18,12,11,11,11,9,5,4,4,3,3,2,2,1,1,1,1]},"nodes":{"name":["article","review","letter","editorial","erratum","preprint","retraction","paratext","other","reference-entry","Article","Other","Review","Editorial Material","Letter","Proceedings Paper","Correction","News Item","Early Access","Biographical-Item","Retraction"],"group":["source","source","source","source","source","source","source","source","source","source","target","target","target","target","target","target","target","target","target","target","target"]},"options":{"NodeID":"label","NodeGroup":"group","LinkGroup":null,"colourScale":"d3.scaleOrdinal() .domain([\"source\", \"target\"]) .range([\"#4d4d4d\", \"#9e0059a0\"])","fontSize":14,"fontFamily":"sans-serif","fontColor":null,"nodeWidth":15,"nodePadding":20,"nodeStrokeWidth":1,"nodeCornerRadius":0,"dragX":true,"dragY":true,"numberFormat":",d","orderByPath":false,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":0,"zoom":true,"linkType":"bezier","curvature":0.5,"highlightChildLinks":false,"doubleclickTogglesChildren":false,"showNodeValues":false,"align":"justify","xAxisDomain":["OpenAlex","Web of Science"],"title":null,"nodeLabelMargin":2,"linkColor":"#A0A0A0","linkOpacity":0.5,"linkGradient":false,"nodeShadow":false,"scaleNodeBreadthsByString":false,"xScalingFactor":0.4,"yOrderComparator":null}},"evals":[],"jsHooks":{"render":[{"code":"\n  function(el,x){\n    // Regular expressions for identifying lowercase and uppercase strings\n    var lowerCase = /^[a-z]/;\n    var upperCase = /^[A-Z]/;\n      \n    // select all our node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return lowerCase.test(d.name); })\n    .attr(\"x\", -10)\n    .attr(\"text-anchor\", \"end\");\n\n    // select all target node text\n    d3.select(el)\n    .selectAll(\".node text\")\n    .filter(function(d) { return upperCase.test(d.name); })\n    .attr(\"x\", x.options.nodeWidth + 10)\n    .attr(\"text-anchor\", \"start\");\n    \n    // select the top-level div of the widget and add the desired style options\n    d3.select(el)\n    .style(\"margin-left\", \"auto\")\n    .style(\"margin-right\", \"auto\")\n    .style(\"display\", \"block\");  \n    \n    // append absolute count to label\n    d3.select(el)\n    .selectAll(\".node text\")\n    .text(d => d.name + \" (\" + d3.format(\"(,d\")(d.value) + \")\");\n    \n    // add the transform attribute to the zoom-layer class\n    var width = d3.select(el).node().getBoundingClientRect().width;\n    var height = d3.select(el).node().getBoundingClientRect().height;\n    \n    var translateX = width * 0.25; \n    var translateY = height * -0.05;\n\n    d3.select(el)\n    .select(\".zoom-layer\")\n    .attr(\"transform\", \"translate(\" + translateX + \",\" + translateY + \") scale(1)\");\n  }\n  ","data":null}]}}</script>
 <p class="caption">
 Figure 2: Comparison of OpenAlex and Web of Science
 </p>
@@ -5076,13 +5631,13 @@ Figure 2: Comparison of OpenAlex and Web of Science
 
 </div>
 <div class="layout-chunk" data-layout="l-body-outset">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-c1200f07120c37e62a3f" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-c1200f07120c37e62a3f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"name":["Scopus","OpenAlex"],"rd_total":[22574597,23672406],"ed_total":[1762295,1009531],"na_total":[353769,8724],"rd_pct":[0.914296988646841,0.95875950830154],"ed_pct":[0.0713749597364805,0.0408871581363921],"na_pct":[0.0143280484016708,0.000353331960079679]},"columns":[{"id":"name","name":"","type":"character","align":"left","vAlign":"center","headerVAlign":"center","headerClassName":"header","minWidth":90},{"id":"rd_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["22,574,597"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"95.362495050144%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["23,672,406"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"100%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number  border-left","style":{"whiteSpace":"pre"}},{"id":"ed_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,762,295"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"100%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,009,531"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"57.2850175481404%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"na_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["   353,769"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"100%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["     8,724"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"2.46601595956684%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"rd_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["91.4%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"91.4%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["95.9%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"95.9%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"ed_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 7.1%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 7.1%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 4.1%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 4.1%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"na_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 1.4%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 1.4%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["0.04%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"0.04%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}}],"columnGroups":[{"name":"Research Discourse","headerClassName":"group-header","columns":["rd_total","rd_pct"]},{"name":"Editorial Discourse","headerClassName":"group-header","columns":["ed_total","ed_pct"]},{"name":"Not Assigned","headerClassName":"group-header","columns":["na_total","na_pct"]}],"defaultPageSize":10,"showPageSizeOptions":true,"highlight":true,"compact":true,"dataKey":"b7059f838e54dca9742ebdf6f324847f"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-3d8dbc3a800c136abdcd" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-3d8dbc3a800c136abdcd">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"name":["Scopus","OpenAlex"],"rd_total":[22574597,23672406],"ed_total":[1762295,1009531],"na_total":[353769,8724],"rd_pct":[0.914296988646841,0.95875950830154],"ed_pct":[0.0713749597364805,0.0408871581363921],"na_pct":[0.0143280484016708,0.000353331960079679]},"columns":[{"id":"name","name":"","type":"character","align":"left","vAlign":"center","headerVAlign":"center","headerClassName":"header","minWidth":90},{"id":"rd_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["22,574,597"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"95.362495050144%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["23,672,406"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"100%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number  border-left","style":{"whiteSpace":"pre"}},{"id":"ed_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,762,295"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"100%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,009,531"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"57.2850175481404%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"na_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["   353,769"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"100%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["     8,724"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"2.46601595956684%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"rd_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["91.4%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"91.4%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["95.9%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"95.9%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"ed_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 7.1%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 7.1%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 4.1%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 4.1%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"na_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 1.4%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 1.4%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["0.04%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"0.04%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}}],"columnGroups":[{"name":"Research Discourse","headerClassName":"group-header","columns":["rd_total","rd_pct"]},{"name":"Editorial Discourse","headerClassName":"group-header","columns":["ed_total","ed_pct"]},{"name":"Not Assigned","headerClassName":"group-header","columns":["na_total","na_pct"]}],"defaultPageSize":10,"showPageSizeOptions":true,"highlight":true,"compact":true,"dataKey":"b7059f838e54dca9742ebdf6f324847f"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 <p></p>
 <div class="layout-chunk" data-layout="l-body-outset">
-<div class="reactable html-widget html-fill-item" id="htmlwidget-c485af1898c5c3215f4f" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-c485af1898c5c3215f4f">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"name":["Web of Science","OpenAlex"],"rd_total":[18519346,20944212],"ed_total":[1711015,892348],"na_total":[1613822,7623],"rd_pct":[0.847793025722225,0.958800427555473],"ed_pct":[0.0783281724747463,0.0408505990282369],"na_pct":[0.0738787956308222,0.000348971607276417]},"columns":[{"id":"name","name":"","type":"character","align":"left","vAlign":"center","headerVAlign":"center","headerClassName":"header","minWidth":90},{"id":"rd_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["18,519,346"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"78.2317859874488%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["20,944,212"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"88.4752145599395%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"ed_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,711,015"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"97.0901580041934%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["   892,348"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"50.635563285375%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"na_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,613,822"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"456.179597420916%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["     7,623"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"2.1547959261552%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"rd_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["84.8%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"84.8%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["95.9%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"95.9%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"ed_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 7.8%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 7.8%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 4.1%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 4.1%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"na_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 7.4%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 7.4%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["0.03%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"0.03%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}}],"columnGroups":[{"name":"Research Discourse","headerClassName":"group-header","columns":["rd_total","rd_pct"]},{"name":"Editorial Discourse","headerClassName":"group-header","columns":["ed_total","ed_pct"]},{"name":"Not Assigned","headerClassName":"group-header","columns":["na_total","na_pct"]}],"defaultPageSize":10,"showPageSizeOptions":true,"highlight":true,"compact":true,"dataKey":"37fb49cad780fed6a4012858fbb2c567"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-8f0ced6633e1aeb3d974" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8f0ced6633e1aeb3d974">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"name":["Web of Science","OpenAlex"],"rd_total":[18519346,20944212],"ed_total":[1711015,892348],"na_total":[1613822,7623],"rd_pct":[0.847793025722225,0.958800427555473],"ed_pct":[0.0783281724747463,0.0408505990282369],"na_pct":[0.0738787956308222,0.000348971607276417]},"columns":[{"id":"name","name":"","type":"character","align":"left","vAlign":"center","headerVAlign":"center","headerClassName":"header","minWidth":90},{"id":"rd_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["18,519,346"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"78.2317859874488%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["20,944,212"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"88.4752145599395%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"ed_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,711,015"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"97.0901580041934%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["   892,348"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"50.635563285375%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"na_total","name":"Total","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"separators":true,"locales":"en-GB"},"aggregated":{"separators":true,"locales":"en-GB"}},"cell":[{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":[" 1,613,822"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"456.179597420916%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]},{"name":"div","attribs":{"className":"bar-cell"},"children":[{"name":"span","attribs":{"className":"number"},"children":["     7,623"]},{"name":"div","attribs":{"style":{"marginRight":"6px"},"className":"bar-chart"},"children":[{"name":"div","attribs":{"style":{"width":"2.1547959261552%","backgroundColor":"#c3c3c3"},"className":"bar"},"children":[]}]}]}],"width":150,"className":"number border-left","style":{"whiteSpace":"pre"}},{"id":"rd_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["84.8%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"84.8%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["95.9%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"95.9%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"ed_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 7.8%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 7.8%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 4.1%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 4.1%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}},{"id":"na_pct","name":"Pct","type":"numeric","align":"center","vAlign":"center","headerVAlign":"center","headerClassName":"header","format":{"cell":{"digits":4,"percent":true},"aggregated":{"digits":4,"percent":true}},"cell":[{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":[" 7.4%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":" 7.4%","height":"14px"}},"children":[]}]}]},{"name":"div","attribs":{"style":{"display":"flex","alignItems":"center","justifyContent":"flex-end"}},"children":["0.03%",{"name":"div","attribs":{"style":{"flexGrow":1,"marginLeft":"6px","background":"#c3c3c3"}},"children":[{"name":"div","attribs":{"style":{"background":"#000000","width":"0.03%","height":"14px"}},"children":[]}]}]}],"html":true,"minWidth":100,"className":"number","style":{"whiteSpace":"pre"}}],"columnGroups":[{"name":"Research Discourse","headerClassName":"group-header","columns":["rd_total","rd_pct"]},{"name":"Editorial Discourse","headerClassName":"group-header","columns":["ed_total","ed_pct"]},{"name":"Not Assigned","headerClassName":"group-header","columns":["na_total","na_pct"]}],"defaultPageSize":10,"showPageSizeOptions":true,"highlight":true,"compact":true,"dataKey":"37fb49cad780fed6a4012858fbb2c567"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
 </div>
 <h2 id="discussion-and-conclusion">Discussion and Conclusion</h2>
 <p>Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased noticeably. This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the <a href="https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py">rule-based string matching</a> for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. This development strengthens OpenAlex’s position as a free provider of bibliometric data and makes it more attractive as a competitor to the established bibliometric databases.</p>
@@ -5093,17 +5648,8 @@ Figure 2: Comparison of OpenAlex and Web of Science
 <div id="ref-alperin_analysis_2024" class="csl-entry" role="listitem">
 Alperin, Juan Pablo, Jason Portenoy, Kyle Demes, Vincent Larivière, and Stefanie Haustein. 2024. <span>“An Analysis of the Suitability of <span>OpenAlex</span> for Bibliometric Analyses.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.2404.17663">https://doi.org/10.48550/arXiv.2404.17663</a>.
 </div>
-<div id="ref-donner_document_2017" class="csl-entry" role="listitem">
-Donner, Paul. 2017. <span>“Document Type Assignment Accuracy in the Journal Citation Index Data of <span>Web</span> of <span>Science</span>.”</span> <em>Scientometrics</em> 113 (1): 219–36. <a href="https://doi.org/10.1007/s11192-017-2483-y">https://doi.org/10.1007/s11192-017-2483-y</a>.
-</div>
 <div id="ref-haupka_2024" class="csl-entry" role="listitem">
 Haupka, Nick, Jack H. Culbert, Alexander Schniedermann, Najko Jahn, and Philipp Mayr. 2024. <span>“Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, PubMed and Semantic Scholar.”</span> <a href="https://arxiv.org/abs/2406.15154">https://arxiv.org/abs/2406.15154</a>.
-</div>
-<div id="ref-van_eck_2024_10949622" class="csl-entry" role="listitem">
-Van Eck, Nees Jan, and Ludo Waltman. 2024. <span>“<span class="nocase">A methodology for identifying core sources and core publications in OpenAlex</span>.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.10949622">https://doi.org/10.5281/zenodo.10949622</a>.
-</div>
-<div id="ref-visser_large-scale_2021" class="csl-entry" role="listitem">
-Visser, Martijn, Nees Jan van Eck, and Ludo Waltman. 2021. <span>“Large-Scale Comparison of Bibliographic Data Sources: <span>Scopus</span>, <span>Web</span> of <span>Science</span>, <span>Dimensions</span>, <span>Crossref</span>, and <span>Microsoft</span> <span>Academic</span>.”</span> <em>Quantitative Science Studies</em> 2 (1): 20–41. <a href="https://doi.org/10.1162/qss_a_00112">https://doi.org/10.1162/qss_a_00112</a>.
 </div>
 </div>
 <!--radix_placeholder_article_footer-->
