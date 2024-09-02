@@ -78,10 +78,6 @@ To avoid bias stemming from the PubMed data we originally worked with, whose doc
 ## Findings
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-oal_scp <- read_csv(here("_posts/openalex_document_types/data","oal_scp.csv"))
-oal_wos <- read_csv(here("_posts/openalex_document_types/data","oal_wos.csv"))
-scp_oal <- read_csv(here("_posts/openalex_document_types/data","scp_oal.csv"))
-wos_oal <- read_csv(here("_posts/openalex_document_types/data","wos_oal.csv"))
 oal2324_scp_t <- read_csv(here("_posts/openalex_document_types/data","oal2324_scp_t.csv"))
 oal2324_wos_t <- read_csv(here("_posts/openalex_document_types/data","oal2324_wos_t.csv"))
 scp_oal2324 <- read_csv(here("_posts/openalex_document_types/data","scp_oal2324.csv"))
@@ -92,8 +88,6 @@ The following figures compare the OpenAlex classification system with those of S
 Notably, the proportion of articles and reviews is relatively equal between the data sources. 
 This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews. 
 
-<!-- use inline R code https://bookdown.org/yihui/rmarkdown-cookbook/r-code.html -->
-
 Comparing OpenAlex data from 2023 and 2024 with Scopus data from 2024, Figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) as articles in 2023 and `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) in 2024 while Scopus classified `r formatC(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) with this document type. 
 Concerning publications classified as reviews, Figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) in 2024 and within Scopus to `r formatC(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`). 
 
@@ -101,20 +95,20 @@ Concerning publications classified as reviews, Figure \@ref(fig:oalscp) shows th
 
 
 
-```{r oalscp, echo=FALSE,message=FALSE, warning=FALSE, fig.cap="Comparison of OpenAlex and Scopus"}
-nodes <- oal2324_wos_t %>%
-  group_by(oal23_type,oal24_type,wos_type) %>%
-  select(oal23_type,oal24_type,wos_type) %>%
+```{r oalscp, echo=FALSE,message=FALSE, warning=FALSE, fig.cap="Comparison of OpenAlex and Scopus for publication years 2012-2022"}
+nodes <- oal2324_scp_t %>%
+  group_by(oal23_type,oal24_type,scp_type) %>%
+  select(oal23_type,oal24_type,scp_type) %>%
   unlist() %>%
   unique() %>%
   enframe("name","label") %>%
   mutate(name = as.character(name))
 
 links <- bind_rows(
-         oal2324_wos_t %>% 
+         oal2324_scp_t %>% 
           transmute(source=as.character(oal23_type), target=as.character(oal24_type), value=noal),
-         oal2324_wos_t %>% 
-          transmute(source=as.character(oal24_type), target=as.character(wos_type), value=n24wos)) %>%
+         oal2324_scp_t %>% 
+          transmute(source=as.character(oal24_type), target=as.character(scp_type), value=n24scp)) %>%
          mutate(source = match(source, nodes$label) -1,
                 target = match(target, nodes$label) -1) %>%
          ungroup() %>%
@@ -125,14 +119,14 @@ links <- bind_rows(
 
 # Gruppen für jeden Knoten erstellen
 nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "oal23", 
-                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14,15,16,17), "oal24", "wos")))
+                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14,15,16), "oal24", "scp")))
 
 # Farben für die source und target Knoten definieren
-colours <- 'd3.scaleOrdinal() .domain(["oal23", "oal24","wos"]) .range(["#ffffff","#4d4d4d", "#9e0059a0"])'
+colours <- 'd3.scaleOrdinal() .domain(["oal23", "oal24","scp"]) .range(["#ffffff","#4d4d4d", "#d82222a0"])'
 
 oal_scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
               Target = "target", Value = "value", NodeID = "label", fontSize = 12, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Web of Science (2024)"),xScalingFactor = .7, height=700)
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Scopus (2024)"),xScalingFactor = .9, height=700)
 
 oal_scp_sn <- onRender(
   oal_scp_sn,
@@ -157,7 +151,6 @@ oal_scp_sn <- onRender(
       d3.select(this).text(capitalized + " (" + d3.format(",d")(d.value) + ")");
     });
 
-    // We now use the tested and saved conditions
     labels.attr("transform", function(d) {
         var box = this.getBBox();
         var adjust = box.width 
@@ -174,7 +167,7 @@ oal_scp_sn <- onRender(
 
     var zoomLayer = document.querySelector(".zoom-layer");
     if(zoomLayer){
-      zoomLayer.setAttribute("transform", "translate(198,72) scale(0.75)");
+      zoomLayer.setAttribute("transform", "translate(81,67) scale(0.75)");
     }
 
     labels.filter(function(d) { return d.isAllCaps; })
@@ -201,17 +194,17 @@ oal_scp_sn
 ```
 
 
-When comparing OpenAlex data from 2023 and 2024, respectively with Web of Science data from 2024 and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that publications classified as articles in OpenAlex amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in 2023 and `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in 2024 while in WoS publications with this document type amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`). 
+When comparing OpenAlex data from 2023 and 2024, respectively, with Web of Science data from 2024 and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that publications classified as articles amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in OpenAlex for 2023 and `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in OpenAlex for 2024 while in WoS publications with this document type amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`). 
 In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. 
 Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is merely assigned to publications within the 2024 data set, these amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`).
 Within the WoS data set `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) have been classified as reviews. 
 The proportion of these document types is thus noticeably higher in OpenAlex.
 
 Additionally, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. 
-Of the publications classified as articles in OpenAlex, the figures show that a total amount of 339,616 (Scopus) and 656,439 (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
+Of the publications classified as articles in OpenAlex for 2024, the figures show that a total amount of `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article" & oal2324_scp_t$scp_type %in% c("Editorial", "Letter"), ]$n), big.mark = ",", format = "d")` (Scopus) and `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article" & oal2324_wos_t$wos_type %in% c("Editorial Material", "Letter"), ]$n), big.mark = ",", format = "d")`  (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
 
 
-```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science"}
+```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science for publication years 2012-2022"}
 nodes <- oal2324_wos_t %>%
   group_by(oal23_type,oal24_type,wos_type) %>%
   select(oal23_type,oal24_type,wos_type) %>%
@@ -242,7 +235,7 @@ colours <- 'd3.scaleOrdinal() .domain(["oal23", "oal24","wos"]) .range(["#ffffff
 
 oal_wos_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
               Target = "target", Value = "value", NodeID = "label", fontSize = 12, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Web of Science (2024)"),xScalingFactor = .7, height=700)
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Web of Science (2024)"),xScalingFactor = .9, height=700)
 
 oal_wos_sn <- onRender(
   oal_wos_sn,
@@ -267,7 +260,6 @@ oal_wos_sn <- onRender(
       d3.select(this).text(capitalized + " (" + d3.format(",d")(d.value) + ")");
     });
 
-    // We now use the tested and saved conditions
     labels.attr("transform", function(d) {
         var box = this.getBBox();
         var adjust = box.width 
@@ -284,7 +276,7 @@ oal_wos_sn <- onRender(
 
     var zoomLayer = document.querySelector(".zoom-layer");
     if(zoomLayer){
-      zoomLayer.setAttribute("transform", "translate(198,72) scale(0.75)");
+      zoomLayer.setAttribute("transform", "translate(80,63) scale(0.70)");
     }
 
     labels.filter(function(d) { return d.isAllCaps; })
@@ -311,7 +303,11 @@ oal_wos_sn
 ```
 
 
-This observation is corroborated by a view of the following tables. Here, the document types contained in each database were aggregated in three overarching categories: research discourse, editorial discourse and not assigned. Mapping tables that we used for reclassifying the document types can be found in the appendix of @haupka_2024. In addition, publications with the document type "preprint", which was added to OpenAlex in [May 2024](https://groups.google.com/g/openalex-users/c/YujaIIjY02A), were also assigned to the research discourse category. Both tables show that for the editorial discourse category the proportion of publications labelled as editorial content in OpenAlex is still about 3% lower than in Scopus and Web of Science. 
+This observation is corroborated by a view of the following tables. 
+Here, the document types contained in each database were aggregated in three overarching categories: research discourse, editorial discourse and not assigned. 
+Mapping tables that we used for reclassifying the document types can be found in the appendix of @haupka_2024. 
+In addition, publications with the document type "preprint", which was added to OpenAlex in [May 2024](https://groups.google.com/g/openalex-users/c/YujaIIjY02A), were also assigned to the research discourse category. 
+Both tables show that for the editorial discourse category the proportion of publications labelled as editorial content in OpenAlex in 2024 is still about 3% lower than in Scopus and Web of Science. 
 
 <p/>
 <p/>
@@ -353,20 +349,20 @@ react_bar_chart <-
 
 
 ```{r,layout='l-body-outset', echo=FALSE, message=FALSE, warning=FALSE}
-scp_oal_reactable <- reactable(scp_oal,
+scp_oal2324_reactable <- reactable(scp_oal2324,
   pagination = TRUE,
   highlight = TRUE,
   defaultColDef = colDef(vAlign = "center", headerClass = "header", headerVAlign = "center", align = "center"),
   compact = TRUE,
   columns = list(
-     name = colDef(name="", align = "left",minWidth = 90),
+     name = colDef(name="", align = "left",minWidth = 80),
      rd_total = colDef(name = "Total",
                        format = colFormat(separators = TRUE, locales = "en-GB"),
       width = 150,
       style = list(whiteSpace = "pre"),
       class = "number  border-left",
       cell = function(value, index) {
-        width <- paste0(value * 100 / max(scp_oal$rd_total), "%")
+        width <- paste0(value * 100 / max(scp_oal2324$rd_total), "%")
         value <- format(value, big.mark = ",")
         value <- format(value, width = 10, justify = "right")
         bar <- div(
@@ -382,7 +378,7 @@ scp_oal_reactable <- reactable(scp_oal,
       },
       align = "center"
     ),
-    rd_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+    rd_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 2),
                              cell = function(value) {
         value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
         value <- format(value, width = 5, justify = "right")
@@ -403,7 +399,7 @@ scp_oal_reactable <- reactable(scp_oal,
       style = list(whiteSpace = "pre"),
       class = "number border-left",
       cell = function(value, index) {
-        width <- paste0(value * 100 / max(scp_oal$ed_total), "%")
+        width <- paste0(value * 100 / max(scp_oal2324$ed_total), "%")
         value <- format(value, big.mark = ",")
         value <- format(value, width = 10, justify = "right")
         bar <- div(
@@ -419,7 +415,7 @@ scp_oal_reactable <- reactable(scp_oal,
       },
       align = "center"
     ),
-    ed_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+    ed_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 2),
                              cell = function(value) {
         value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
         value <- format(value, width = 5, justify = "right")
@@ -440,7 +436,7 @@ scp_oal_reactable <- reactable(scp_oal,
       style = list(whiteSpace = "pre"),
       class = "number border-left",
       cell = function(value, index) {
-        width <- paste0(value * 100 / max(scp_oal$na_total), "%")
+        width <- paste0(value * 100 / max(scp_oal2324$na_total), "%")
         value <- format(value, big.mark = ",")
         value <- format(value, width = 10, justify = "right")
         bar <- div(
@@ -456,9 +452,9 @@ scp_oal_reactable <- reactable(scp_oal,
       },
       align = "center"
     ),
-    na_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+    na_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 3),
                              cell = function(value) {
-        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- paste0(format(round(value * 100, 3), nsmall = 1), "%")
         value <- format(value, width = 5, justify = "right")
         react_bar_chart(value,
                         width = value,
@@ -493,28 +489,27 @@ scp_oal_reactable <- reactable(scp_oal,
   defaultPageSize = 10,
   showPageSizeOptions = TRUE
   )
-scp_oal_reactable$sizingPolicy$padding <- 4
-scp_oal_reactable$sizingPolicy$browser$fill <- TRUE
-scp_oal_reactable
+scp_oal2324_reactable$sizingPolicy$padding <- 4
+scp_oal2324_reactable
 ```
 
 <p/>
 
 ```{r, layout='l-body-outset', echo=FALSE, message=FALSE, warning=FALSE}
-wos_oal_reactable <- reactable(wos_oal,
+wos_oal2324_reactable <- reactable(wos_oal2324,
   pagination = TRUE,
   highlight = TRUE,
   defaultColDef = colDef(vAlign = "center", headerClass = "header", headerVAlign = "center", align = "center"),
   compact = TRUE,
   columns = list(
-     name = colDef(name="", align = "left",minWidth = 90),
+     name = colDef(name="", align = "left",minWidth = 80),
      rd_total = colDef(name = "Total",
                        format = colFormat(separators = TRUE, locales = "en-GB"),
       width = 150,
       style = list(whiteSpace = "pre"),
       class = "number border-left",
       cell = function(value, index) {
-        width <- paste0(value * 100 / max(scp_oal$rd_total), "%")
+        width <- paste0(value * 100 / max(wos_oal2324$rd_total), "%")
         value <- format(value, big.mark = ",")
         value <- format(value, width = 10, justify = "right")
         bar <- div(
@@ -530,7 +525,7 @@ wos_oal_reactable <- reactable(wos_oal,
       },
       align = "center"
     ),
-    rd_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+    rd_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 2),
                              cell = function(value) {
         value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
         value <- format(value, width = 5, justify = "right")
@@ -551,7 +546,7 @@ wos_oal_reactable <- reactable(wos_oal,
       style = list(whiteSpace = "pre"),
       class = "number border-left",
       cell = function(value, index) {
-        width <- paste0(value * 100 / max(scp_oal$ed_total), "%")
+        width <- paste0(value * 100 / max(wos_oal2324$ed_total), "%")
         value <- format(value, big.mark = ",")
         value <- format(value, width = 10, justify = "right")
         bar <- div(
@@ -567,7 +562,7 @@ wos_oal_reactable <- reactable(wos_oal,
       },
       align = "center"
     ),
-    ed_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+    ed_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 2),
                              cell = function(value) {
         value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
         value <- format(value, width = 5, justify = "right")
@@ -588,7 +583,7 @@ wos_oal_reactable <- reactable(wos_oal,
       style = list(whiteSpace = "pre"),
       class = "number border-left",
       cell = function(value, index) {
-        width <- paste0(value * 100 / max(scp_oal$na_total), "%")
+        width <- paste0(value * 100 / max(wos_oal2324$na_total), "%")
         value <- format(value, big.mark = ",")
         value <- format(value, width = 10, justify = "right")
         bar <- div(
@@ -604,9 +599,9 @@ wos_oal_reactable <- reactable(wos_oal,
       },
       align = "center"
     ),
-    na_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 4),
+    na_pct = colDef(name = "Pct", format = colFormat(percent = TRUE, digits = 3),
                              cell = function(value) {
-        value <- paste0(format(round(value * 100, 2), nsmall = 1), "%")
+        value <- paste0(format(round(value * 100, 3), nsmall = 1), "%")
         value <- format(value, width = 5, justify = "right")
         react_bar_chart(value,
                         width = value,
@@ -641,9 +636,8 @@ wos_oal_reactable <- reactable(wos_oal,
   defaultPageSize = 10,
   showPageSizeOptions = TRUE
   ) 
-wos_oal_reactable$sizingPolicy$padding <- 4
-wos_oal_reactable$sizingPolicy$browser$fill <- TRUE
-wos_oal_reactable
+wos_oal2324_reactable$sizingPolicy$padding <- 4
+wos_oal2324_reactable
 ```
 
 
