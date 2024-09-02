@@ -77,94 +77,123 @@ To avoid bias stemming from the PubMed data we originally worked with, whose doc
 
 ## Findings
 
-The following figures compare the OpenAlex classification system with that of Scopus and Web of Science. Notably, the proportion of articles and reviews is relatively equal between the data sources. This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews. 
-
-<!-- use inline R code https://bookdown.org/yihui/rmarkdown-cookbook/r-code.html -->
-
-Comparing OpenAlex and Scopus, figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified 22,142,129 publications (89.68%) as articles while Scopus classified 20,796,642 publications (84.23%) with this document type. Concerning publications classified as reviews, figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to 1,510,182 publications (6.12 %) and within Scopus to 1,777,955 (7.20 %). 
-
-
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 oal_scp <- read_csv(here("_posts/openalex_document_types/data","oal_scp.csv"))
 oal_wos <- read_csv(here("_posts/openalex_document_types/data","oal_wos.csv"))
 scp_oal <- read_csv(here("_posts/openalex_document_types/data","scp_oal.csv"))
 wos_oal <- read_csv(here("_posts/openalex_document_types/data","wos_oal.csv"))
+oal2324_scp_t <- read_csv(here("_posts/openalex_document_types/data","oal2324_scp_t.csv"))
+oal2324_wos_t <- read_csv(here("_posts/openalex_document_types/data","oal2324_wos_t.csv"))
+scp_oal2324 <- read_csv(here("_posts/openalex_document_types/data","scp_oal2324.csv"))
+wos_oal2324 <- read_csv(here("_posts/openalex_document_types/data","wos_oal2324.csv"))
 ```
+
+The following figures compare the OpenAlex classification system with those of Scopus and Web of Science. 
+Notably, the proportion of articles and reviews is relatively equal between the data sources. 
+This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews. 
+
+<!-- use inline R code https://bookdown.org/yihui/rmarkdown-cookbook/r-code.html -->
+
+Comparing OpenAlex data from 2023 and 2024 with Scopus data from 2024, Figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) as articles in 2023 and `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) in 2024 while Scopus classified `r formatC(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) with this document type. 
+Concerning publications classified as reviews, Figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) in 2024 and within Scopus to `r formatC(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`). 
+
+
+
 
 
 ```{r oalscp, echo=FALSE,message=FALSE, warning=FALSE, fig.cap="Comparison of OpenAlex and Scopus"}
-node_names <- oal_scp %>%
-              mutate(source = as.character(oal_type), target = as.character(scp_type)) %>%
-              group_by(source,target) %>%
-              select(source, target) %>%
-              unlist() %>%
-              unique()
+nodes <- oal2324_wos_t %>%
+  group_by(oal23_type,oal24_type,wos_type) %>%
+  select(oal23_type,oal24_type,wos_type) %>%
+  unlist() %>%
+  unique() %>%
+  enframe("name","label") %>%
+  mutate(name = as.character(name))
 
-nodes <- node_names %>%
-         enframe("name","label")
-
-links <- oal_scp %>%
-         mutate(source = as.character(oal_type), target = as.character(scp_type)) %>%
-         mutate(source = match(source, node_names) - 1,
-         target = match(target, node_names) - 1) %>%
+links <- bind_rows(
+         oal2324_wos_t %>% 
+          transmute(source=as.character(oal23_type), target=as.character(oal24_type), value=noal),
+         oal2324_wos_t %>% 
+          transmute(source=as.character(oal24_type), target=as.character(wos_type), value=n24wos)) %>%
+         mutate(source = match(source, nodes$label) -1,
+                target = match(target, nodes$label) -1) %>%
+         ungroup() %>%
+         select(source,target,value) %>%
          group_by(source,target) %>%
-         select(source, target, n) %>%
-         arrange(desc(n))
+         arrange(desc(value)) %>%
+         distinct()
 
 # Gruppen für jeden Knoten erstellen
-nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7,8,9), "source", "target"))
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "oal23", 
+                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14,15,16,17), "oal24", "wos")))
 
 # Farben für die source und target Knoten definieren
-colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#4d4d4d", "#d82222a0"])'
+colours <- 'd3.scaleOrdinal() .domain(["oal23", "oal24","wos"]) .range(["#ffffff","#4d4d4d", "#9e0059a0"])'
 
-# sankeyNetwork erstellen
-oal_scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source", 
-                    Target = "target", Value = "n", NodeID = "label", fontSize = 14, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0, NodeGroup="group", colourScale = colours, xAxisDomain = c("OpenAlex","Scopus"),xScalingFactor = .4, height=550, dragX = TRUE,dragY = TRUE)
+oal_scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
+              Target = "target", Value = "value", NodeID = "label", fontSize = 12, nodePadding = 20, 
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Web of Science (2024)"),xScalingFactor = .7, height=700)
 
 oal_scp_sn <- onRender(
   oal_scp_sn,
   '
   function(el,x){
-    // Regular expressions for identifying lowercase and uppercase strings
     var lowerCase = /^[a-z]/;
     var upperCase = /^[A-Z]/;
-      
-    // select all our node text
-    d3.select(el)
-    .selectAll(".node text")
-    .filter(function(d) { return lowerCase.test(d.name); })
-    .attr("x", -10)
-    .attr("text-anchor", "end");
+    var allCaps = /^[A-Z-]+$/;
 
-    // select all target node text
-    d3.select(el)
-    .selectAll(".node text")
-    .filter(function(d) { return upperCase.test(d.name); })
-    .attr("x", x.options.nodeWidth + 10)
-    .attr("text-anchor", "start");
+    var labels = d3.select(el).selectAll(".node text");
+
+    labels.each(function(d) {
+      d.isAllCaps = allCaps.test(d.name);
+      d.isLowerCase = lowerCase.test(d.name);
+      d.isUpperCase = upperCase.test(d.name);
+
+      let text = d.name.toLowerCase();
+      let capitalized = text.replace(/(\\b|-)\\w/g, function(char) {
+        return char.toUpperCase();
+      });
+
+      d3.select(this).text(capitalized + " (" + d3.format(",d")(d.value) + ")");
+    });
+
+    // We now use the tested and saved conditions
+    labels.attr("transform", function(d) {
+        var box = this.getBBox();
+        var adjust = box.width 
+        if (d.isAllCaps) {
+          return "translate(" + (-adjust - 40) + ",0)";
+        }
+        else if (d.isUpperCase) {
+          return "translate(5,0)";
+        }
+        else {
+          return "translate(5,0)";
+        }
+    });
+
+    var zoomLayer = document.querySelector(".zoom-layer");
+    if(zoomLayer){
+      zoomLayer.setAttribute("transform", "translate(198,72) scale(0.75)");
+    }
+
+    labels.filter(function(d) { return d.isAllCaps; })
+      .attr("x",x.options.nodeWidth - 10)
+      .attr("text-anchor", "end")
+
+    labels.filter(function(d) { return d.isLowerCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
     
-    // select the top-level div of the widget and add the desired style options
+    labels.filter(function(d) { return d.isUpperCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
+    
     d3.select(el)
     .style("margin-left", "auto")
     .style("margin-right", "auto")
-    .style("display", "block");  
+    .style("display", "block");
     
-    // append absolute count to label
-    d3.select(el)
-    .selectAll(".node text")
-    .text(d => d.name + " (" + d3.format("(,d")(d.value) + ")");
-    
-    // add the transform attribute to the zoom-layer class
-    var width = d3.select(el).node().getBoundingClientRect().width;
-    var height = d3.select(el).node().getBoundingClientRect().height;
-    
-    var translateX = width * 0.25; 
-    var translateY = height * -0.05;
-
-    d3.select(el)
-    .select(".zoom-layer")
-    .attr("transform", "translate(" + translateX + "," + translateY + ") scale(1)");
   }
   '
 )
@@ -172,84 +201,109 @@ oal_scp_sn
 ```
 
 
-When comparing OpenAlex and Web of Science and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that OpenAlex classified 19,570,477 publications (89.59%) as articles while WoS classified 17,276,719 publications (79.09%) with this document type. In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is assigned to 1,362,064 publications (6.24 %) and within WoS to 1,242,627 (5.69 %). The proportion of these document types is thus noticeably higher in OpenAlex.
+When comparing OpenAlex data from 2023 and 2024, respectively with Web of Science data from 2024 and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that publications classified as articles in OpenAlex amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in 2023 and `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in 2024 while in WoS publications with this document type amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`). 
+In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. 
+Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is merely assigned to publications within the 2024 data set, these amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`).
+Within the WoS data set `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) have been classified as reviews. 
+The proportion of these document types is thus noticeably higher in OpenAlex.
 
-Additionally, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. Of the publications classified as articles in OpenAlex, the figures show that a total amount of 339,616 (Scopus) and 656,439 (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
+Additionally, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. 
+Of the publications classified as articles in OpenAlex, the figures show that a total amount of 339,616 (Scopus) and 656,439 (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
 
 
 ```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science"}
-node_names <- oal_wos %>%
-              mutate(source = as.character(oal_type), target = as.character(wos_type)) %>%
-              group_by(source,target) %>%
-              select(source, target) %>%
-              unlist() %>%
-              unique()
+nodes <- oal2324_wos_t %>%
+  group_by(oal23_type,oal24_type,wos_type) %>%
+  select(oal23_type,oal24_type,wos_type) %>%
+  unlist() %>%
+  unique() %>%
+  enframe("name","label") %>%
+  mutate(name = as.character(name))
 
-nodes <- node_names %>%
-         enframe("name","label")
-
-links <- oal_wos %>%
-         mutate(source = as.character(oal_type), target = as.character(wos_type)) %>%
-         mutate(source = match(source, node_names) - 1,
-         target = match(target, node_names) - 1) %>%
+links <- bind_rows(
+         oal2324_wos_t %>% 
+          transmute(source=as.character(oal23_type), target=as.character(oal24_type), value=noal),
+         oal2324_wos_t %>% 
+          transmute(source=as.character(oal24_type), target=as.character(wos_type), value=n24wos)) %>%
+         mutate(source = match(source, nodes$label) -1,
+                target = match(target, nodes$label) -1) %>%
+         ungroup() %>%
+         select(source,target,value) %>%
          group_by(source,target) %>%
-         select(source, target, n) %>%
-         arrange(desc(n))
+         arrange(desc(value)) %>%
+         distinct()
 
 # Gruppen für jeden Knoten erstellen
-nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7,8,9,10), "source", "target"))
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "oal23", 
+                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14,15,16,17), "oal24", "wos")))
 
 # Farben für die source und target Knoten definieren
-colours <- 'd3.scaleOrdinal() .domain(["source", "target"]) .range(["#4d4d4d", "#9e0059a0"])'
+colours <- 'd3.scaleOrdinal() .domain(["oal23", "oal24","wos"]) .range(["#ffffff","#4d4d4d", "#9e0059a0"])'
 
-# sankeyNetwork erstellen
-oal_wos_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source", 
-                    Target = "target", Value = "n", NodeID = "label", fontSize = 14, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0, NodeGroup="group", colourScale = colours, xScalingFactor = .4,height=550,xAxisDomain = c("OpenAlex","Web of Science"), dragX = TRUE,dragY = TRUE)
+oal_wos_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
+              Target = "target", Value = "value", NodeID = "label", fontSize = 12, nodePadding = 20, 
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Web of Science (2024)"),xScalingFactor = .7, height=700)
 
 oal_wos_sn <- onRender(
   oal_wos_sn,
   '
   function(el,x){
-    // Regular expressions for identifying lowercase and uppercase strings
     var lowerCase = /^[a-z]/;
     var upperCase = /^[A-Z]/;
-      
-    // select all our node text
-    d3.select(el)
-    .selectAll(".node text")
-    .filter(function(d) { return lowerCase.test(d.name); })
-    .attr("x", -10)
-    .attr("text-anchor", "end");
+    var allCaps = /^[A-Z-]+$/;
 
-    // select all target node text
-    d3.select(el)
-    .selectAll(".node text")
-    .filter(function(d) { return upperCase.test(d.name); })
-    .attr("x", x.options.nodeWidth + 10)
-    .attr("text-anchor", "start");
+    var labels = d3.select(el).selectAll(".node text");
+
+    labels.each(function(d) {
+      d.isAllCaps = allCaps.test(d.name);
+      d.isLowerCase = lowerCase.test(d.name);
+      d.isUpperCase = upperCase.test(d.name);
+
+      let text = d.name.toLowerCase();
+      let capitalized = text.replace(/(\\b|-)\\w/g, function(char) {
+        return char.toUpperCase();
+      });
+
+      d3.select(this).text(capitalized + " (" + d3.format(",d")(d.value) + ")");
+    });
+
+    // We now use the tested and saved conditions
+    labels.attr("transform", function(d) {
+        var box = this.getBBox();
+        var adjust = box.width 
+        if (d.isAllCaps) {
+          return "translate(" + (-adjust - 40) + ",0)";
+        }
+        else if (d.isUpperCase) {
+          return "translate(5,0)";
+        }
+        else {
+          return "translate(5,0)";
+        }
+    });
+
+    var zoomLayer = document.querySelector(".zoom-layer");
+    if(zoomLayer){
+      zoomLayer.setAttribute("transform", "translate(198,72) scale(0.75)");
+    }
+
+    labels.filter(function(d) { return d.isAllCaps; })
+      .attr("x",x.options.nodeWidth - 10)
+      .attr("text-anchor", "end")
+
+    labels.filter(function(d) { return d.isLowerCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
     
-    // select the top-level div of the widget and add the desired style options
+    labels.filter(function(d) { return d.isUpperCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
+    
     d3.select(el)
     .style("margin-left", "auto")
     .style("margin-right", "auto")
-    .style("display", "block");  
+    .style("display", "block");
     
-    // append absolute count to label
-    d3.select(el)
-    .selectAll(".node text")
-    .text(d => d.name + " (" + d3.format("(,d")(d.value) + ")");
-    
-    // add the transform attribute to the zoom-layer class
-    var width = d3.select(el).node().getBoundingClientRect().width;
-    var height = d3.select(el).node().getBoundingClientRect().height;
-    
-    var translateX = width * 0.25; 
-    var translateY = height * -0.05;
-
-    d3.select(el)
-    .select(".zoom-layer")
-    .attr("transform", "translate(" + translateX + "," + translateY + ") scale(1)");
   }
   '
 )
