@@ -51,7 +51,7 @@ library(htmltools)
 library(sankeyD3) # Not on CRAN, but here <https://github.com/fbreitwieser/sankeyD3>
 ```
 
-In June 2024, we submitted an analysis of publication and document types in OpenAlex in comparison with the proprietary databases Web of Science and Scopus and the open data sources SemanticScholar and PubMed [@haupka_2024].
+In June 2024, we submitted an analysis of publication and document types in OpenAlex in comparison with the proprietary databases Web of Science and Scopus and the open data sources Semantic Scholar and PubMed [@haupka_2024].
 We found substantial differences between these databases: While Web of Science and Scopus provided a comprehensive set of document types to describe work published in journals, OpenAlex supported only a comparably limited number of types.
 Notably, OpenAlex lacked a distinction between research articles and reviews, which can be crucial when calculating citation indicators. 
 In line with related studies [@alperin_analysis_2024], we also observed discrepancies in the number of publications when restricting to certain document types.
@@ -59,21 +59,20 @@ In line with related studies [@alperin_analysis_2024], we also observed discrepa
 Meanwhile, in [late May]((https://groups.google.com/g/openalex-users/c/YujaIIjY02A)) and [late July 2024](https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0), OpenAlex introduced extended approaches to obtain publication and document types.
 Among the four new categories were preprints and reviews. Using [PubMed](https://groups.google.com/g/openalex-users/c/eXiWOlBXKC0), OpenAlex identified approximately 4 million journal articles as editorials, erratum, letters, preprints, reviews, or retractions. 
 
-Of course, we wanted to to know how these improvements affect our findings.
+Of course, we wanted to know how these improvements affect our findings.
 We therefore replicated our methods and re-applied it to the recent changes.
-Using the same shared corpus of works published in journals between 2012 and 2022, we demonstrate that OpenAlex's recent changes provide a more nuanced set of document types to refine scholarly works. 
+Using works published in journals between 2012 and 2022, we demonstrate that OpenAlex's recent changes provide a more nuanced set of document types to refine scholarly works. 
 However, the comparison with Web of Science and Scopus reveals that there remain considerable differences. 
 
 ## Data and Methods
 
-We reused the dataset that was compiled for @haupka_2024 using data from mid 2023 and updated the respective document types to match current developments. 
-Our initial dataset included approximately 9.5 million publications that were included in OpenAlex as well as in Scopus, WoS, PubMed, and Semantic Scholar. 
-In addition, to align with the methods applied in our [preprint](https://arxiv.org/abs/2406.15154), we restricted the data to the publication years 2012 to 2022 and only considered items from journals. 
-OpenAlex data used were from July 2024. 
+Document types for this analysis were gathered from WoS, Scopus and OpenAlex. WoS data includes the collections SCI, SSCI, AHCI, ISTP and ISSHP. We only considered publications that occur in all of the three databases. In addition, to align with the methods applied in our [preprint](https://arxiv.org/abs/2406.15154), we restricted the data to the publication years 2012 to 2022 and only considered items from journals. 
+To evaluate the recent progression of OpenAlex, we contrast the findings of the July 2024 snapshot with results obtained from OpenAlex in August 2023.
 The Scopus and WoS data were retrieved from the [German Competence Network of Bibliometrics](https://bibliometrie.info), using the April 2024 snapshots.
+We matched items in the respective databases by DOI. DOIs were normalised to lowercase beforehand. In sum, we analysed ... .
+We performed a pairwise comparison of OpenAlex with Scopus and WoS.
 
-After matching data from OpenAlex with Scopus and Web of Science by DOI, we found that the absolute numbers for the shared document type categories are very similar between the databases. 
-To avoid bias stemming from the PubMed data we originally worked with, whose document types OpenAlex has adopted with the latest changes, we performed a pairwise comparison of OpenAlex with Scopus and WoS. 
+As in the preprint, we categorised works in two categories: research discourse and editorial discourse, based on their document type information. Document types that do not match the publication type, e.g. document type "book" and publication type "journal" were not assigned to one of the two categories. Another prevalent example of items that were not assigned are [meeting abstracts](https://webofscience.help.clarivate.com/en-us/Content/document-types.html). Mapping tables that we used for reclassifying the document types can be found in the appendix of @haupka_2024. In addition, publications with the document type "preprint", which was added to OpenAlex in [May 2024](https://groups.google.com/g/openalex-users/c/YujaIIjY02A), were also assigned to the research discourse category. 
 
 ## Findings
 
@@ -90,10 +89,6 @@ This is an important improvement compared to 2023, when OpenAlex did not disting
 
 Comparing OpenAlex data from 2023 and 2024 with Scopus data from 2024, Figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2),"%")`) as articles in 2023 and `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$noal)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2),"%")`) in 2024 while Scopus classified `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n24scp)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`) with this document type. 
 Concerning publications classified as reviews, Figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`) in 2024 and within Scopus to `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`). 
-
-
-
-
 
 ```{r oalscp, echo=FALSE,message=FALSE, warning=FALSE, fig.cap="Comparison of OpenAlex and Scopus for publication years 2012-2022"}
 nodes <- oal2324_scp_t %>%
@@ -190,7 +185,6 @@ oal_scp_sn <- onRender(
 oal_scp_sn
 ```
 
-
 When comparing OpenAlex data from 2023 and 2024, respectively, with Web of Science data from 2024 and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that publications classified as articles amount to `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2),"%")`) in OpenAlex for 2023 and `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2),"%")`) in OpenAlex for 2024 while in WoS publications with this document type amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]) / sum(oal2324_wos_t$n24wos[!duplicated(oal2324_wos_t$n24wos)]) * 100, 2),"%")`). 
 In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. 
 Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is merely assigned to publications within the 2024 data set, these amount to `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos)) / sum(unique(oal2324_wos_t$n24wos)) * 100, 2),"%")`).
@@ -199,7 +193,6 @@ The proportion of these document types is thus noticeably higher in OpenAlex.
 
 Additionally, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. 
 Of the publications classified as articles in OpenAlex for 2024, the figures show that a total amount of `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article" & oal2324_scp_t$scp_type %in% c("Editorial", "Letter"), ]$n), big.mark = ",", format = "d")` (Scopus) and `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article" & oal2324_wos_t$wos_type %in% c("Editorial Material", "Letter"), ]$n), big.mark = ",", format = "d")`  (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
-
 
 ```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science for publication years 2012-2022"}
 nodes <- oal2324_wos_t %>%
@@ -296,16 +289,12 @@ oal_wos_sn <- onRender(
 oal_wos_sn
 ```
 
-
 This observation is corroborated by a view of the following tables. 
 Here, the document types contained in each database were aggregated in three overarching categories: research discourse, editorial discourse and not assigned. 
-Mapping tables that we used for reclassifying the document types can be found in the appendix of @haupka_2024. 
-In addition, publications with the document type "preprint", which was added to OpenAlex in [May 2024](https://groups.google.com/g/openalex-users/c/YujaIIjY02A), were also assigned to the research discourse category. 
 Both tables show that for the editorial discourse category the proportion of publications labelled as editorial content in OpenAlex in 2024 is still about 3% lower than in Scopus and Web of Science. 
 
 <p/>
 <p/>
-
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 react_bar_chart <-
@@ -634,9 +623,10 @@ wos_oal2324_reactable$sizingPolicy$padding <- 4
 wos_oal2324_reactable
 ```
 
+## Outlook
+Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased noticeably. This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the [rule-based string matching](https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py) for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. However, the results also show that the curation of document types has not yet been finalised.
 
-## Discussion and Conclusion
-Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased noticeably. This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the [rule-based string matching](https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py) for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. This development strengthens OpenAlex's position as a free provider of bibliometric data and makes it more attractive as a competitor to the established bibliometric databases.
+Conclusively, we would like to point out that there is no correct classification system per se. Rather different classification systems applied by the database operators can bring advantages and disadvantages. In Semantic Scholar and PubMed, for example, publications are labelled as clinical studies and case reports, which in Scopus, WoS and OpenAlex are predominantly assigned to the document type article. A differentiation of these publications has the potential to increase the quality of bibliometric surveys in the analysed databases. Also, the results from this analysis are only partially comparable with the results from our preprint, as in the preprint we worked with a more restrictive set that included publications from Semantic Scholar and PubMed.
 
 ## Funding {.appendix}
 
