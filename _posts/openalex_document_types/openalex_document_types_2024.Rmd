@@ -88,8 +88,8 @@ The following figures compare the OpenAlex classification system with those of S
 Notably, the proportion of articles and reviews is relatively equal between the data sources. 
 This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews. 
 
-Comparing OpenAlex data from 2023 and 2024 with Scopus data from 2024, Figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) as articles in 2023 and `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) in 2024 while Scopus classified `r formatC(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) with this document type. 
-Concerning publications classified as reviews, Figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`) in 2024 and within Scopus to `r formatC(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n) / sum(oal2324_scp_t$n) * 100, 2),"%")`). 
+Comparing OpenAlex data from 2023 and 2024 with Scopus data from 2024, Figure \@ref(fig:oalscp) shows, regarding publications indexed in both data sources, that OpenAlex classified `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2),"%")`) as articles in 2023 and `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$noal)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2),"%")`) in 2024 while Scopus classified `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n24scp)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`) with this document type. 
+Concerning publications classified as reviews, Figure \@ref(fig:oalscp) shows that within OpenAlex this document type is assigned to `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`) in 2024 and within Scopus to `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`). 
 
 
 
@@ -106,16 +106,13 @@ nodes <- oal2324_scp_t %>%
 
 links <- bind_rows(
          oal2324_scp_t %>% 
-          transmute(source=as.character(oal23_type), target=as.character(oal24_type), value=noal),
+         mutate(source=as.character(oal23_type), target=as.character(oal24_type), value=noal, .keep="none") %>%
+         distinct(),
          oal2324_scp_t %>% 
-          transmute(source=as.character(oal24_type), target=as.character(scp_type), value=n24scp)) %>%
+         mutate(source=as.character(oal24_type), target=as.character(scp_type), value=n24scp, .keep="none") %>%
+         distinct()) %>%
          mutate(source = match(source, nodes$label) -1,
-                target = match(target, nodes$label) -1) %>%
-         ungroup() %>%
-         select(source,target,value) %>%
-         group_by(source,target) %>%
-         arrange(desc(value)) %>%
-         distinct()
+                target = match(target, nodes$label) -1)
 
 # Gruppen für jeden Knoten erstellen
 nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "oal23", 
@@ -194,10 +191,10 @@ oal_scp_sn
 ```
 
 
-When comparing OpenAlex data from 2023 and 2024, respectively, with Web of Science data from 2024 and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that publications classified as articles amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in OpenAlex for 2023 and `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) in OpenAlex for 2024 while in WoS publications with this document type amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`). 
+When comparing OpenAlex data from 2023 and 2024, respectively, with Web of Science data from 2024 and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that publications classified as articles amount to `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2),"%")`) in OpenAlex for 2023 and `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2),"%")`) in OpenAlex for 2024 while in WoS publications with this document type amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]) / sum(oal2324_wos_t$n24wos[!duplicated(oal2324_wos_t$n24wos)]) * 100, 2),"%")`). 
 In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. 
-Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is merely assigned to publications within the 2024 data set, these amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`).
-Within the WoS data set `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n) / sum(oal2324_wos_t$n) * 100, 2),"%")`) have been classified as reviews. 
+Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is merely assigned to publications within the 2024 data set, these amount to `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos)) / sum(unique(oal2324_wos_t$n24wos)) * 100, 2),"%")`).
+Within the WoS data set `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n24wos)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n24wos)) / sum(unique(oal2324_wos_t$n24wos)) * 100, 2),"%")`) have been classified as reviews. 
 The proportion of these document types is thus noticeably higher in OpenAlex.
 
 Additionally, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. 
@@ -215,16 +212,13 @@ nodes <- oal2324_wos_t %>%
 
 links <- bind_rows(
          oal2324_wos_t %>% 
-          transmute(source=as.character(oal23_type), target=as.character(oal24_type), value=noal),
+         mutate(source=as.character(oal23_type), target=as.character(oal24_type), value=noal, .keep="none") %>%
+         distinct(),
          oal2324_wos_t %>% 
-          transmute(source=as.character(oal24_type), target=as.character(wos_type), value=n24wos)) %>%
+         mutate(source=as.character(oal24_type), target=as.character(wos_type), value=n24wos, .keep="none")  %>%
+         distinct()) %>%
          mutate(source = match(source, nodes$label) -1,
-                target = match(target, nodes$label) -1) %>%
-         ungroup() %>%
-         select(source,target,value) %>%
-         group_by(source,target) %>%
-         arrange(desc(value)) %>%
-         distinct()
+                target = match(target, nodes$label) -1)
 
 # Gruppen für jeden Knoten erstellen
 nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "oal23", 
