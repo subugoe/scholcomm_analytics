@@ -165,9 +165,9 @@ oal_scp_sn <- onRender(
         }
     });
 
-    var zoomLayer = document.querySelector(".zoom-layer");
+    var zoomLayer = el.querySelector(".zoom-layer");
     if(zoomLayer){
-      zoomLayer.setAttribute("transform", "translate(81,67) scale(0.75)");
+      zoomLayer.setAttribute("transform", "translate(84,83) scale(0.75)");
     }
 
     labels.filter(function(d) { return d.isAllCaps; })
@@ -274,9 +274,9 @@ oal_wos_sn <- onRender(
         }
     });
 
-    var zoomLayer = document.querySelector(".zoom-layer");
+    var zoomLayer = el.querySelector(".zoom-layer");
     if(zoomLayer){
-      zoomLayer.setAttribute("transform", "translate(80,63) scale(0.70)");
+      zoomLayer.setAttribute("transform", "translate(79,90) scale(0.75)");
     }
 
     labels.filter(function(d) { return d.isAllCaps; })
