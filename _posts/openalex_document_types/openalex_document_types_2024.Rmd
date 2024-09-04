@@ -17,6 +17,7 @@ author:
 date: "`r Sys.Date()`"
 output: distill::distill_article
 bibliography: literature.bib
+preview: distill-preview.png
 css: vis.css
 ---
 
