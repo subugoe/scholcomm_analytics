@@ -1,0 +1,189 @@
+oal23_type,oal24_type,scp_type,n,noal,n24scp
+ARTICLE,article,Article,20293181,22130865,20294141
+ARTICLE,review,Review,1044640,1509422,1044681
+ARTICLE,article,Review,700232,22130865,700273
+ARTICLE,article,Note,398566,22130865,398584
+ARTICLE,review,Article,393881,1509422,393965
+ARTICLE,letter,Letter,360613,641047,372693
+ARTICLE,article,Editorial,222980,22130865,223281
+ARTICLE,article,Conference Paper,220204,22130865,220224
+ARTICLE,editorial,Editorial,130313,155164,183265
+ARTICLE,article,Letter,117695,22130865,117717
+ARTICLE,letter,Note,108010,641047,108915
+ARTICLE,erratum,Erratum,91422,92925,148024
+ARTICLE,article,Erratum,90018,22130865,90134
+ARTICLE,letter,Editorial,86633,641047,86792
+ARTICLE,article,Short Survey,59412,22130865,59415
+ERRATUM,erratum,Erratum,56518,57547,148024
+ARTICLE,letter,Article,54465,641047,54796
+EDITORIAL,editorial,Editorial,52951,61483,183265
+ARTICLE,review,Note,26362,1509422,26413
+ARTICLE,review,Short Survey,20715,1509422,20715
+ARTICLE,preprint,Article,17088,19965,17096
+ARTICLE,letter,Review,16070,641047,16099
+ARTICLE,article,Tombstone,14830,22130865,14831
+ARTICLE,letter,Short Survey,14404,641047,14412
+ARTICLE,article,Data Paper,12310,22130865,12310
+LETTER,letter,Letter,12070,13357,372693
+ARTICLE,editorial,Review,11342,155164,12878
+ARTICLE,retraction,Erratum,9573,10058,9591
+ARTICLE,review,Conference Paper,8250,1509422,8250
+ARTICLE,review,Letter,7641,1509422,7932
+ARTICLE,editorial,Article,6949,155164,8372
+PARATEXT,paratext,Article,6752,8456,6875
+EDITORIAL,editorial,Note,5349,61483,10461
+ARTICLE,editorial,Note,5112,155164,10461
+ARTICLE,review,Editorial,4214,1509422,4625
+ARTICLE,review,Erratum,3151,1509422,4023
+ARTICLE,preprint,Review,2166,19965,2167
+EDITORIAL,editorial,Review,1536,61483,12878
+EDITORIAL,editorial,Article,1423,61483,8372
+ARTICLE,article,Chapter,1394,22130865,1394
+ARTICLE,erratum,Article,1021,92925,1868
+ERRATUM,review,Erratum,871,887,4023
+ERRATUM,erratum,Article,845,57547,1868
+LETTER,letter,Note,784,13357,108915
+PARATEXT,article,Article,680,721,20294141
+ARTICLE,review,Tombstone,548,1509422,548
+ARTICLE,editorial,Conference Paper,515,155164,608
+PARATEXT,paratext,Note,465,8456,467
+ARTICLE,letter,Erratum,442,641047,455
+ARTICLE,editorial,Short Survey,432,155164,438
+ARTICLE,editorial,Letter,421,155164,510
+PARATEXT,paratext,Editorial,411,8456,423
+EDITORIAL,review,Editorial,409,443,4625
+PARATEXT,paratext,Erratum,382,8456,382
+PARATEXT,paratext,Review,328,8456,343
+LETTER,letter,Article,325,13357,54796
+EDITORIAL,article,Editorial,298,343,223281
+LETTER,review,Letter,287,323,7932
+ARTICLE,letter,Conference Paper,247,641047,249
+OTHER,article,Article,246,275,20294141
+ARTICLE,preprint,Conference Paper,218,19965,218
+ARTICLE,retraction,Tombstone,191,10058,191
+ARTICLE,retraction,Article,188,10058,188
+ARTICLE,erratum,Letter,179,92925,225
+ARTICLE,preprint,Note,174,19965,174
+ARTICLE,letter,Tombstone,159,641047,159
+ARTICLE,preprint,Letter,153,19965,153
+OTHER,other,Article,151,156,172
+LETTER,letter,Editorial,128,13357,86792
+ARTICLE,preprint,Editorial,126,19965,137
+ARTICLE,paratext,Article,123,157,6875
+EDITORIAL,letter,Note,121,155,108915
+ERRATUM,article,Erratum,112,115,90134
+ARTICLE,erratum,Note,103,92925,175
+EDITORIAL,editorial,Conference Paper,93,61483,608
+ARTICLE,erratum,Editorial,88,92925,124
+EDITORIAL,editorial,Letter,84,61483,510
+PARATEXT,paratext,Letter,82,8456,84
+OTHER,erratum,Erratum,79,79,148024
+ARTICLE,editorial,Erratum,75,155164,116
+ERRATUM,erratum,Note,72,57547,175
+ARTICLE,erratum,Review,70,92925,92
+PARATEXT,review,Article,58,91,393965
+ERRATUM,erratum,Letter,45,57547,225
+ARTICLE,article,Other,43,22130865,43
+EDITORIAL,editorial,Erratum,41,61483,116
+ARTICLE,retraction,Letter,39,10058,39
+ERRATUM,erratum,Editorial,36,57547,124
+ARTICLE,retraction,Note,35,10058,35
+PARATEXT,review,Review,33,91,1044681
+ARTICLE,erratum,Tombstone,32,92925,36
+PARATEXT,paratext,Conference Paper,32,8456,35
+LETTER,review,Note,28,323,26413
+EDITORIAL,letter,Editorial,27,155,86792
+LETTER,letter,Review,27,13357,16099
+ARTICLE,preprint,Short Survey,26,19965,26
+EDITORIAL,article,Article,26,343,20294141
+PARATEXT,article,Review,23,721,700273
+ERRATUM,erratum,Review,22,57547,92
+ARTICLE,other,Article,21,31,172
+LETTER,article,Letter,21,26,117717
+EDITORIAL,review,Note,20,443,26413
+ARTICLE,retraction,Editorial,16,10058,16
+OTHER,article,Note,16,275,398584
+ARTICLE,paratext,Review,15,157,343
+ARTICLE,retraction,Review,15,10058,15
+PARATEXT,article,Conference Paper,15,721,220224
+ARTICLE,review,Data Paper,13,1509422,13
+LETTER,letter,Erratum,13,13357,455
+ARTICLE,paratext,Editorial,12,157,423
+OTHER,retraction,Erratum,12,12,9591
+EDITORIAL,article,Review,11,343,700273
+EDITORIAL,preprint,Editorial,11,12,137
+EDITORIAL,review,Article,11,443,393965
+ARTICLE,preprint,Erratum,9,19965,13
+LETTER,letter,Short Survey,8,13357,14412
+OTHER,preprint,Article,8,8,17096
+PARATEXT,letter,Letter,8,15,372693
+ARTICLE,review,Chapter,7,1509422,7
+ERRATUM,review,Article,7,887,393965
+OTHER,article,Review,7,275,700273
+ARTICLE,erratum,Short Survey,6,92925,9
+EDITORIAL,editorial,Short Survey,6,61483,438
+ARTICLE,other,Review,5,31,7
+ARTICLE,editorial,Tombstone,5,155164,5
+LETTER,editorial,Letter,5,5,510
+LETTER,erratum,Erratum,5,6,148024
+LETTER,review,Article,5,323,393965
+ARTICLE,erratum,Conference Paper,4,92925,6
+ARTICLE,letter,Data Paper,4,641047,4
+ARTICLE,preprint,Data Paper,4,19965,4
+EDITORIAL,article,Conference Paper,4,343,220224
+ERRATUM,erratum,Tombstone,4,57547,36
+ERRATUM,preprint,Erratum,4,4,13
+ERRATUM,review,Letter,4,887,7932
+PARATEXT,letter,Editorial,4,15,86792
+PARATEXT,paratext,Short Survey,4,8456,4
+PARATEXT,retraction,Erratum,4,4,9591
+ARTICLE,paratext,Conference Paper,3,157,35
+EDITORIAL,letter,Article,3,155,54796
+ERRATUM,article,Article,3,115,20294141
+ERRATUM,erratum,Short Survey,3,57547,9
+ERRATUM,review,Note,3,887,26413
+LETTER,article,Article,3,26,20294141
+OTHER,review,Article,3,3,393965
+PARATEXT,letter,Article,3,15,54796
+REFERENCE-ENTRY,review,Review,3,3,1044681
+ARTICLE,other,Note,2,31,4
+ARTICLE,paratext,Letter,2,157,84
+ARTICLE,paratext,Note,2,157,467
+ARTICLE,other,Erratum,2,31,3
+EDITORIAL,article,Erratum,2,343,90134
+EDITORIAL,letter,Letter,2,155,372693
+EDITORIAL,letter,Review,2,155,16099
+EDITORIAL,review,Review,2,443,1044681
+ERRATUM,erratum,Conference Paper,2,57547,6
+ERRATUM,retraction,Erratum,2,2,9591
+LETTER,letter,Conference Paper,2,13357,249
+LETTER,review,Review,2,323,1044681
+OTHER,article,Editorial,2,275,223281
+OTHER,article,Erratum,2,275,90134
+OTHER,other,Note,2,156,4
+PARATEXT,erratum,Article,2,2,1868
+REFERENCE-ENTRY,article,Article,2,2,20294141
+ARTICLE,preprint,Tombstone,1,19965,1
+ARTICLE,retraction,Conference Paper,1,10058,1
+ARTICLE,other,Editorial,1,31,2
+EDITORIAL,article,Letter,1,343,117717
+EDITORIAL,article,Note,1,343,398584
+EDITORIAL,preprint,Review,1,12,2167
+EDITORIAL,review,Erratum,1,443,4023
+ERRATUM,review,Editorial,1,887,4625
+ERRATUM,review,Review,1,887,1044681
+ERRATUM,other,Erratum,1,1,3
+LETTER,article,Note,1,26,398584
+LETTER,article,Short Survey,1,26,59415
+LETTER,erratum,Letter,1,6,225
+LETTER,review,Editorial,1,323,4625
+OTHER,article,Conference Paper,1,275,220224
+OTHER,article,Short Survey,1,275,59415
+OTHER,other,Conference Paper,1,156,1
+OTHER,other,Editorial,1,156,2
+OTHER,other,Review,1,156,7
+PARATEXT,article,Editorial,1,721,223281
+PARATEXT,article,Short Survey,1,721,59415
+PARATEXT,article,Tombstone,1,721,14831
+PARATEXT,editorial,Editorial,1,1,183265
+REFERENCE-ENTRY,other,Review,1,1,7

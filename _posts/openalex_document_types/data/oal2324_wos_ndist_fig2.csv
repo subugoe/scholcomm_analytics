@@ -1,0 +1,174 @@
+oal23_type,oal24_type,wos_type,n,noal,n24wos
+ARTICLE,article,Article,16914262,19499822,16914839
+ARTICLE,article,Other,1129943,19499822,1129946
+ARTICLE,review,Review,969682,1360783,969722
+ARTICLE,article,Editorial Material,578384,19499822,578519
+ARTICLE,letter,Letter,344578,589565,355581
+ARTICLE,article,Proceedings Paper,318142,19499822,318205
+ARTICLE,review,Article,316065,1360783,316102
+ARTICLE,article,Review,271589,19499822,271600
+ARTICLE,letter,Editorial Material,219291,589565,219536
+ARTICLE,editorial,Editorial Material,122484,127778,163726
+ARTICLE,article,Letter,77831,19499822,77847
+ARTICLE,erratum,Correction,75299,76620,119583
+ARTICLE,article,Correction,71191,19499822,71272
+ARTICLE,article,News Item,59382,19499822,59382
+ARTICLE,article,Early Access,47156,19499822,47157
+ERRATUM,erratum,Correction,44217,44646,119583
+EDITORIAL,editorial,Editorial Material,41239,41642,163726
+ARTICLE,review,Editorial Material,36611,1360783,37036
+ARTICLE,article,Biographical-Item,28125,19499822,28126
+ARTICLE,letter,Article,19938,589565,20062
+ARTICLE,review,Proceedings Paper,12480,1360783,12484
+LETTER,letter,Letter,10995,11243,355581
+ARTICLE,preprint,Article,10567,11565,10567
+ARTICLE,review,Other,10267,1360783,10267
+ARTICLE,review,Letter,7759,1360783,8059
+ARTICLE,retraction,Retraction,5736,7655,5741
+ARTICLE,article,Retraction,3817,19499822,3817
+ARTICLE,letter,News Item,3486,589565,3486
+ARTICLE,editorial,Article,3308,127778,3505
+ARTICLE,review,Correction,2864,1360783,3563
+ARTICLE,review,Early Access,2550,1360783,2552
+ARTICLE,review,News Item,2286,1360783,2286
+ARTICLE,retraction,Correction,1470,7655,1473
+PARATEXT,paratext,Article,1318,1742,1342
+ARTICLE,editorial,Biographical-Item,899,127778,944
+ERRATUM,review,Correction,698,699,3563
+ARTICLE,letter,Early Access,684,589565,704
+ARTICLE,letter,Review,607,589565,613
+PARATEXT,article,Article,566,640,16914839
+ARTICLE,erratum,Early Access,531,76620,753
+ARTICLE,letter,Other,423,589565,430
+EDITORIAL,review,Editorial Material,423,427,37036
+ARTICLE,editorial,Letter,347,127778,377
+ARTICLE,erratum,Article,338,76620,455
+ARTICLE,preprint,Proceedings Paper,313,11565,313
+LETTER,review,Letter,300,306,8059
+ARTICLE,preprint,Review,268,11565,268
+ARTICLE,editorial,Early Access,256,127778,305
+ARTICLE,letter,Correction,229,589565,236
+ERRATUM,erratum,Early Access,221,44646,753
+PARATEXT,paratext,Editorial Material,221,1742,237
+ARTICLE,retraction,Other,215,7655,215
+EDITORIAL,editorial,Article,197,41642,3505
+ARTICLE,editorial,Review,187,127778,204
+ARTICLE,preprint,Editorial Material,176,11565,186
+ARTICLE,erratum,Editorial Material,174,76620,209
+ARTICLE,letter,Proceedings Paper,173,589565,174
+EDITORIAL,letter,Editorial Material,153,158,219536
+ARTICLE,preprint,Other,150,11565,150
+ARTICLE,letter,Biographical-Item,135,589565,137
+ARTICLE,review,Biographical-Item,130,1360783,130
+ARTICLE,erratum,Letter,129,76620,140
+EDITORIAL,article,Editorial Material,127,130,578519
+ARTICLE,retraction,Article,123,7655,123
+LETTER,letter,Article,119,11243,20062
+ERRATUM,erratum,Article,115,44646,455
+ARTICLE,editorial,Other,111,127778,119
+ARTICLE,review,Retraction,89,1360783,89
+LETTER,letter,Editorial Material,88,11243,219536
+ARTICLE,erratum,Other,87,76620,104
+ARTICLE,editorial,News Item,83,127778,84
+ERRATUM,article,Correction,79,79,71272
+ARTICLE,editorial,Proceedings Paper,71,127778,98
+PARATEXT,article,Proceedings Paper,63,640,318205
+PARATEXT,paratext,Proceedings Paper,63,1742,63
+ARTICLE,retraction,Early Access,62,7655,62
+OTHER,erratum,Correction,62,63,119583
+EDITORIAL,editorial,Early Access,49,41642,305
+EDITORIAL,editorial,Biographical-Item,45,41642,944
+PARATEXT,paratext,Review,44,1742,44
+PARATEXT,paratext,Letter,41,1742,41
+ARTICLE,erratum,Retraction,37,76620,49
+ERRATUM,erratum,Editorial Material,35,44646,209
+PARATEXT,review,Article,34,72,316102
+PARATEXT,review,Review,34,72,969722
+ARTICLE,preprint,Early Access,32,11565,32
+ARTICLE,preprint,Letter,31,11565,31
+EDITORIAL,editorial,Letter,30,41642,377
+EDITORIAL,editorial,Correction,29,41642,57
+ARTICLE,editorial,Correction,28,127778,57
+PARATEXT,paratext,Other,28,1742,29
+EDITORIAL,editorial,Proceedings Paper,27,41642,98
+ARTICLE,retraction,Letter,25,7655,25
+ARTICLE,paratext,Article,24,42,1342
+ARTICLE,letter,Retraction,21,589565,21
+ARTICLE,retraction,Editorial Material,21,7655,21
+ARTICLE,erratum,Review,18,76620,18
+LETTER,letter,Early Access,18,11243,704
+EDITORIAL,editorial,Review,17,41642,204
+ERRATUM,erratum,Other,17,44646,104
+ARTICLE,paratext,Editorial Material,16,42,237
+ERRATUM,erratum,Proceedings Paper,15,44646,18
+LETTER,article,Letter,15,19,77847
+ERRATUM,erratum,Retraction,12,44646,49
+ARTICLE,preprint,Biographical-Item,11,11565,11
+ERRATUM,erratum,Letter,11,44646,140
+PARATEXT,paratext,Correction,11,1742,11
+EDITORIAL,preprint,Editorial Material,10,10,186
+ARTICLE,preprint,News Item,9,11565,9
+PARATEXT,paratext,Early Access,9,1742,10
+ARTICLE,preprint,Correction,8,11565,12
+EDITORIAL,editorial,Other,8,41642,119
+OTHER,article,Editorial Material,8,20,578519
+PARATEXT,article,Review,8,640,271600
+PARATEXT,letter,Letter,8,14,355581
+OTHER,article,Article,7,20,16914839
+LETTER,letter,Other,7,11243,430
+LETTER,letter,Correction,7,11243,236
+LETTER,letter,Review,6,11243,613
+LETTER,erratum,Correction,5,5,119583
+PARATEXT,paratext,Biographical-Item,5,1742,5
+ARTICLE,editorial,Retraction,4,127778,4
+ERRATUM,preprint,Correction,4,4,12
+OTHER,retraction,Retraction,4,5,5741
+PARATEXT,letter,Editorial Material,4,14,219536
+PARATEXT,review,Proceedings Paper,4,72,12484
+ARTICLE,erratum,News Item,3,76620,3
+ARTICLE,erratum,Proceedings Paper,3,76620,18
+ARTICLE,retraction,Review,3,7655,3
+EDITORIAL,letter,Article,3,158,20062
+ERRATUM,erratum,Biographical-Item,3,44646,4
+LETTER,article,Article,3,19,16914839
+REFERENCE-ENTRY,review,Review,3,3,969722
+EDITORIAL,letter,Early Access,2,158,704
+EDITORIAL,review,Article,2,427,316102
+ERRATUM,retraction,Correction,2,2,1473
+LETTER,letter,Biographical-Item,2,11243,137
+LETTER,review,Editorial Material,2,306,37036
+LETTER,review,Review,2,306,969722
+OTHER,article,Correction,2,20,71272
+OTHER,article,Review,2,20,271600
+PARATEXT,article,Other,2,640,1129946
+PARATEXT,erratum,Article,2,2,455
+PARATEXT,letter,Article,2,14,20062
+PARATEXT,paratext,News Item,2,1742,2
+ARTICLE,erratum,Biographical-Item,1,76620,4
+ARTICLE,paratext,Other,1,42,29
+ARTICLE,paratext,Early Access,1,42,10
+ARTICLE,other,Article,1,3,1
+ARTICLE,other,Correction,1,3,2
+ARTICLE,other,Editorial Material,1,3,1
+OTHER,other,News Item,1,1,1
+EDITORIAL,article,Article,1,130,16914839
+EDITORIAL,article,Other,1,130,1129946
+EDITORIAL,article,Early Access,1,130,47157
+EDITORIAL,editorial,News Item,1,41642,84
+EDITORIAL,review,Correction,1,427,3563
+EDITORIAL,review,Review,1,427,969722
+ERRATUM,review,Early Access,1,699,2552
+ERRATUM,other,Correction,1,1,2
+LETTER,article,Review,1,19,271600
+LETTER,editorial,Editorial Material,1,1,163726
+LETTER,letter,Proceedings Paper,1,11243,174
+LETTER,review,Article,1,306,316102
+LETTER,review,Early Access,1,306,2552
+OTHER,article,Biographical-Item,1,20,28126
+OTHER,erratum,Early Access,1,63,753
+OTHER,retraction,Correction,1,5,1473
+PARATEXT,article,Letter,1,640,77847
+PARATEXT,editorial,Editorial Material,1,1,163726
+PARATEXT,retraction,Retraction,1,1,5741
+REFERENCE-ENTRY,editorial,Editorial Material,1,1,163726
+REFERENCE-ENTRY,reference-entry,Article,1,1,1
