@@ -17,7 +17,6 @@ author:
 date: "`r Sys.Date()`"
 output: distill::distill_article
 bibliography: literature.bib
-draft: TRUE
 css: vis.css
 ---
 
@@ -191,7 +190,7 @@ oal_scp_sn
 Figure \@ref(fig:oalwos) illustrates the same for the comparison of OpenAlex with Web of Science. 
 Here, OpenAlex tagged `r sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal23_type == "ARTICLE", ]$noal))` items (`r round(sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_wos_ndist$noal)) * 100, 2)`%) as articles before the introduction of the more nuanced set of document types and `r sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal24_type == "article", ]$noal))` (`r round(sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal24_type == "article", ]$noal)) / sum(unique(oal2324_wos_ndist$noal)) * 100, 2)`%) after.
 In Web of Science `r sum(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),])` items (`r round(sum(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]) / sum(oal2324_wos_ndist$n24wos[!duplicated(oal2324_wos_ndist$n24wos)]) * 100, 2)`%) were tagged as articles. 
-The document type review is assigned to `r sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal24_type == "review", ]$n24wos))` items (`r round(sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal24_type == "review", ]$n24wos)) / sum(unique(oal2324_wos_ndist$n24wos)) * 100, 2)`) by OpenAlex, whereas Web of Science tagged `r sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Review", ]$n24wos))` items (`r round(sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Review", ]$n24wos)) / sum(unique(oal2324_wos_ndist$n24wos)) * 100, 2)`%) as such. 
+The document type review is assigned to `r sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal24_type == "review", ]$n24wos))` items (`r round(sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$oal24_type == "review", ]$n24wos)) / sum(unique(oal2324_wos_ndist$n24wos)) * 100, 2)`%) by OpenAlex, whereas Web of Science tagged `r sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Review", ]$n24wos))` items (`r round(sum(unique(oal2324_wos_ndist[oal2324_wos_ndist$wos_type == "Review", ]$n24wos)) / sum(unique(oal2324_wos_ndist$n24wos)) * 100, 2)`%) as such. 
 
 
 ```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science for publication years 2012-2022"}
