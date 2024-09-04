@@ -294,10 +294,8 @@ The difference between the proportions of items tagged as articles is, however, 
 Scopus tags a higher proportion of items as reviews and both Scopus and Web of Science still tag more items as editorial content than OpenAlex. 
 In sum, `r sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article" & oal2324_scp_t$scp_type %in% c("Editorial", "Letter"), ]$n)` (Scopus) and `r sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article" & oal2324_wos_t$wos_type %in% c("Editorial Material", "Letter"), ]$n)` (Web of Science) items are tagged as editorial/editorial material or letters in Scopus and Web of Science, respectively, while tagged as articles in OpenAlex.
 
-
-When grouping the 
-Here, the document types contained in each database were aggregated in three overarching categories: research discourse, editorial discourse and not assigned. 
-Both tables show that for the editorial discourse category the proportion of publications labelled as editorial content in OpenAlex in 2024 is still about 3% lower than in Scopus and Web of Science. 
+Here, the document types contained in each database were aggregated in two overarching categories: research discourse and editorial discourse. 
+Both tables show that even after the introduction of a more nuanced set of document types in OpenAlex, the proportion of items labelled as editorial discourse is still about 3% lower compared to Scopus and Web of Science. 
 
 <p/>
 <p/>
@@ -630,8 +628,8 @@ wos_oal2324_reactable
 ```
 
 ## Discussion and Outlook
-Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and Web of Science. 
-Compared to data from 2023, the discrepancy in the classification of items has decreased noticeably. 
+Our updated analysis demonstrated a noticable improvement of the classification of document types in OpenAlex when comparing it to Scopus and Web of Science. 
+Compared to data from 2023, the discrepancy in the classification of items has decreased slightly. 
 This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. 
 In addition, the [rule-based string matching](https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py) for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. 
 However, the results also show that the curation of document types has not yet been finalised.
