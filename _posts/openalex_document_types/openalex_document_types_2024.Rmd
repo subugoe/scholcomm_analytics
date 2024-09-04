@@ -294,8 +294,7 @@ The difference between the proportions of items tagged as articles is, however, 
 Scopus tags a higher proportion of items as reviews and both Scopus and Web of Science still tag more items as editorial content than OpenAlex. 
 In sum, `r sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article" & oal2324_scp_t$scp_type %in% c("Editorial", "Letter"), ]$n)` (Scopus) and `r sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article" & oal2324_wos_t$wos_type %in% c("Editorial Material", "Letter"), ]$n)` (Web of Science) items are tagged as editorial/editorial material or letters in Scopus and Web of Science, respectively, while tagged as articles in OpenAlex.
 
-Here, the document types contained in each database were aggregated in two overarching categories: research discourse and editorial discourse. 
-Both tables show that even after the introduction of a more nuanced set of document types in OpenAlex, the proportion of items labelled as editorial discourse is still about 3% lower compared to Scopus and Web of Science. 
+When grouping the document types into the two categories research discourse and editorial discourse, we found that even after the introduction of a more nuanced set of document types in OpenAlex, the proportion of items labelled as editorial discourse is still about 3% lower compared to Scopus and Web of Science, as shown in the tables below.
 
 <p/>
 <p/>
