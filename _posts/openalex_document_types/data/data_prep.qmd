@@ -1,0 +1,505 @@
+---
+title: "data_prep"
+format: html
+---
+
+# Loading R Libraries
+
+```{r}
+options(scipen=999)
+library(here)
+library(tidyverse)
+library(DBI)
+library(patchwork)
+library(networkD3)
+library(htmlwidgets)
+library(reactable)
+library(htmltools)
+```
+
+# Establishing a Connection to the KB
+
+```{r}
+kb_con <- dbConnect(RPostgres::Postgres(),
+                    host = "biblio-p-db03.fiz-karlsruhe.de",
+                    port = 6432,
+                    dbname = "kbprod",
+                    user =  Sys.getenv("kb_user"),
+                    password = Sys.getenv("kb_pwd"),
+                    bigint = "numeric")
+```
+
+# Querying the KB
+
+```{sql, connection=kb_con, output.var="oal2324_scp"}
+select
+    oal23_type as oal23_type,
+    oal_type as oal24_type,
+    unnest(item_type) as scp_type,
+    count(distinct(oal23.doi)) as n
+from unigsdoerner.oal_dois_2023 as oal23
+join unignhaupka.oal_dois_2024 as oal24 on
+lower(oal23.doi) = lower(oal24.doi)
+join scp_b_202404.items as scp on
+lower(oal24.doi) = lower(scp.doi)
+where scp.source_type = 'Journal' and scp.pubyear between 2012 and 2022
+group by oal23_type, oal24_type, scp_type
+```
+
+```{sql, connection=kb_con, output.var="oal2324_scp_ndis"}
+select
+    oal23_type as oal23_type,
+    oal_type as oal24_type,
+    unnest(item_type) as scp_type,
+    count(*) as n
+from unigsdoerner.oal_dois_2023 as oal23
+join unignhaupka.oal_dois_2024 as oal24 on
+lower(oal23.doi) = lower(oal24.doi)
+join scp_b_202404.items as scp on
+lower(oal24.doi) = lower(scp.doi)
+where scp.source_type = 'Journal' and scp.pubyear between 2012 and 2022
+group by oal23_type, oal24_type, scp_type
+```
+
+```{sql, connection=kb_con, output.var="oal2324_wos"}
+select
+    oal23_type as oal23_type,
+    oal_type as oal24_type,
+    unnest(item_type) as wos_type,
+    count(distinct(oal23.doi)) as n
+from unigsdoerner.oal_dois_2023 as oal23
+join unignhaupka.oal_dois_2024 as oal24 on
+lower(oal23.doi) = lower(oal24.doi)
+join wos_b_202404.v_items as wos on
+lower(oal24.doi) = lower(wos.doi)
+where wos.source_type = 'Journal' and wos.pubyear between 2012 and 2022
+group by oal23_type, oal24_type, wos_type
+```
+
+```{sql, connection=kb_con, output.var="oal2324_wos_ndis"}
+select
+    oal23_type as oal23_type,
+    oal_type as oal24_type,
+    unnest(item_type) as wos_type,
+    count(*) as n
+from unigsdoerner.oal_dois_2023 as oal23
+join unignhaupka.oal_dois_2024 as oal24 on
+lower(oal23.doi) = lower(oal24.doi)
+join wos_b_202404.v_items as wos on
+lower(oal24.doi) = lower(wos.doi)
+where wos.source_type = 'Journal' and wos.pubyear between 2012 and 2022
+group by oal23_type, oal24_type, wos_type
+```
+
+# Transforming Data
+
+## Reassign Document Types
+
+```{r}
+oal2324_scp_ndist <- oal2324_scp_ndis %>%
+                     mutate(scp_type = replace(scp_type, scp_type %in% c("Abstract Report", "Business Article","Article in Press", "Book", "Conference Review","Report"), "Other")) %>%
+                     mutate(oal23_type = replace(oal23_type, oal23_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+                     mutate(oal23_type = replace(oal23_type, oal23_type == "journal-article", "article" )) %>%
+                     mutate(oal23_type = replace(oal23_type, oal23_type == "journal-volume", "paratext")) %>%
+                     mutate(oal23_type = toupper(oal23_type)) %>%
+                     mutate(oal24_type = replace(oal24_type, oal24_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+                     group_by(oal23_type,oal24_type,scp_type) %>%
+                     mutate(n = sum(n)) %>%
+                     distinct() %>%
+                     ungroup() %>%
+                     group_by(oal23_type,oal24_type) %>%
+                     mutate(noal = sum(n)) %>%
+                     ungroup() %>%
+                     group_by(oal24_type,scp_type) %>%
+                     mutate(n24scp = sum(n)) %>%
+                     ungroup() %>%
+                     arrange(desc(n))
+
+write_csv(oal2324_scp_ndist, here("oal2324_scp_ndist_fig1.csv"))                  
+```
+
+
+```{r}
+oal2324_scp_t <- oal2324_scp %>%
+  mutate(scp_type = replace(scp_type, scp_type %in% c("Abstract Report", "Business Article","Article in Press", "Book", "Conference Review","Report"), "Other")) %>%
+  mutate(oal23_type = replace(oal23_type, oal23_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+  mutate(oal23_type = replace(oal23_type, oal23_type == "journal-article", "article" )) %>%
+  mutate(oal23_type = replace(oal23_type, oal23_type == "journal-volume", "paratext")) %>%
+  mutate(oal23_type = toupper(oal23_type)) %>%
+  mutate(oal24_type = replace(oal24_type, oal24_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+  group_by(oal23_type, oal24_type, scp_type) %>%
+  mutate(n = sum(n)) %>%
+  distinct() %>%
+  ungroup() %>%
+  group_by(oal23_type, oal24_type) %>%
+  mutate(noal= sum(n)) %>%
+  ungroup() %>%
+  group_by(oal24_type, scp_type) %>%
+  mutate(n24scp = sum(n)) %>%
+  ungroup() %>%
+  arrange(desc(n))
+
+write_csv(oal2324_scp_t, here("oal2324_scp_fig1.csv"))
+```
+
+
+```{r}
+oal2324_wos_t <- oal2324_wos %>%
+           mutate(wos_type = replace(wos_type, wos_type %in% c("Retracted Publication", "Data Paper", "Meeting Abstract", "Book Review", "Reprint", "Expression of Concern", "CC Meeting Heading", "Book Chapter", "Item Withdrawal", "Poetry", "Bibliography", "Software Review", "Hardware Review", "Film Review", "Theater Review", "Database Review", "Art Exhibit Review", "Record Review", "Dance Performance Review", "Meeting", "Fiction, Creative Prose","Music Performance Review","Music Score","Meeting Summary","Chronology","Meeting-Abstract","TV Review, Radio Review", "Music Score Review","Script","Excerpt","Book"), "Other")) %>%
+  mutate(oal23_type = replace(oal23_type, oal23_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+  mutate(oal23_type = replace(oal23_type, oal23_type == "journal-article", "article")) %>%
+  mutate(oal23_type = toupper(oal23_type)) %>%
+  mutate(oal24_type = replace(oal24_type, oal24_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+  group_by(oal23_type,oal24_type,wos_type) %>%
+  mutate(n = sum(n)) %>%
+  distinct() %>%
+  ungroup() %>%
+  group_by(oal23_type, oal24_type) %>%
+  mutate(noal= sum(n)) %>%
+  ungroup() %>%
+  group_by(oal24_type, wos_type) %>%
+  mutate(n24wos = sum(n)) %>%
+  ungroup() %>%
+  arrange(desc(n))
+
+write_csv(oal2324_wos_t, here("oal2324_wos_fig2.csv"))
+```
+
+
+```{r}
+oal2324_wos_ndist <- oal2324_wos_ndis %>%
+                      mutate(wos_type = replace(wos_type, wos_type %in% c("Retracted Publication", "Data Paper", "Meeting Abstract", "Book Review", "Reprint", "Expression of Concern", "CC Meeting Heading", "Book Chapter", "Item Withdrawal", "Poetry", "Bibliography", "Software Review", "Hardware Review", "Film Review", "Theater Review", "Database Review", "Art Exhibit Review", "Record Review", "Dance Performance Review", "Meeting", "Fiction, Creative Prose","Music Performance Review","Music Score","Meeting Summary","Chronology","Meeting-Abstract","TV Review, Radio Review", "Music Score Review","Script","Excerpt","Book"), "Other")) %>%
+                      mutate(oal23_type = replace(oal23_type, oal23_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+                      mutate(oal23_type = replace(oal23_type, oal23_type == "journal-article", "article")) %>%
+                      mutate(oal23_type = toupper(oal23_type)) %>%
+                      mutate(oal24_type = replace(oal24_type, oal24_type %in% c("book", "report", "dataset", "supplementary-materials",  "dissertation", "book-chapter"), "other")) %>%
+                      group_by(oal23_type,oal24_type,wos_type) %>%
+                      mutate(n = sum(n)) %>%
+                      distinct() %>%
+                      ungroup() %>%
+                      group_by(oal23_type,oal24_type) %>%
+                      mutate(noal = sum(n)) %>%
+                      ungroup() %>%
+                      group_by(oal24_type,wos_type) %>%
+                      mutate(n24wos = sum(n)) %>%
+                      ungroup() %>%
+                      arrange(desc(n))
+
+write_csv(oal2324_wos_ndist, here("oal2324_wos_ndist_fig2.csv"))
+```
+
+
+## Group in Categories
+
+```{r}
+oal2324_scp_group <- oal2324_scp_t %>%
+                    mutate(scp_group = replace(scp_type, scp_type %in% c("Review", "Article"), "Research Discourse")) %>%
+                    mutate(scp_group = replace(scp_group, scp_group %in% c("Erratum", "Editorial", "Letter", "Note"),"Editorial Discourse")) %>%
+                    mutate(scp_group = replace(scp_group, !(scp_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal23_group = replace(oal23_type, oal23_type %in% c("ARTICLE", "JOURNAL-ARTICLE","REVIEW","PREPRINT"), "Research Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, oal23_group %in% c("ERRATUM", "EDITORIAL", "LETTER", "PARATEXT"),"Editorial Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, !(oal23_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal24_group = replace(oal24_type, oal24_type %in% c("article", "journal-article","review","preprint"), "Research Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, oal24_group %in% c("erratum", "editorial", "letter", "paratext"),"Editorial Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, !(oal24_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned"))
+
+oal2324_scp_group <- oal2324_scp_group %>%
+    group_by(scp_group) %>% 
+    mutate(scp_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal23_group) %>%
+    mutate(oal23_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal24_group) %>%
+    mutate(oal24_group_total = sum(n)) %>%
+    ungroup()
+```
+
+```{r}
+scp24_group <- oal2324_scp_group %>%
+  select(scp_group,scp_group_total) %>%
+  distinct()
+
+oal23_group <- oal2324_scp_group %>%
+  select(oal23_group,oal23_group_total) %>%
+  distinct()
+
+oal24_group <- oal2324_scp_group %>%
+  select(oal24_group,oal24_group_total) %>%
+  distinct()
+```
+
+```{r}
+scp24_group <- scp24_group %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "scp_group_total","Scopus")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+oal23_group <- oal23_group %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal23_group_total","OpenAlex (before)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+
+oal24_group <- oal24_group %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal24_group_total","OpenAlex (after)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+scp_oal2324 <- bind_rows(scp24_group, oal23_group,oal24_group)
+write_csv(scp_oal2324, here("scp_oal2324_tab1.csv"))
+```
+
+
+```{r}
+oal2324_scp_group_ndist <- oal2324_scp_ndist %>%
+                    mutate(scp_group = replace(scp_type, scp_type %in% c("Review", "Article"), "Research Discourse")) %>%
+                    mutate(scp_group = replace(scp_group, scp_group %in% c("Erratum", "Editorial", "Letter", "Note"),"Editorial Discourse")) %>%
+                    mutate(scp_group = replace(scp_group, !(scp_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal23_group = replace(oal23_type, oal23_type %in% c("ARTICLE", "JOURNAL-ARTICLE","REVIEW","PREPRINT"), "Research Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, oal23_group %in% c("ERRATUM", "EDITORIAL", "LETTER", "PARATEXT"),"Editorial Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, !(oal23_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal24_group = replace(oal24_type, oal24_type %in% c("article", "journal-article","review","preprint"), "Research Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, oal24_group %in% c("erratum", "editorial", "letter", "paratext"),"Editorial Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, !(oal24_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned"))
+
+oal2324_scp_group_ndist <- oal2324_scp_group_ndist %>%
+    group_by(scp_group) %>% 
+    mutate(scp_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal23_group) %>%
+    mutate(oal23_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal24_group) %>%
+    mutate(oal24_group_total = sum(n)) %>%
+    ungroup()
+```
+
+```{r}
+scp24_group_ndist <- oal2324_scp_group_ndist %>%
+  select(scp_group,scp_group_total) %>%
+  distinct()
+
+oal23_group_ndist <- oal2324_scp_group_ndist %>%
+  select(oal23_group,oal23_group_total) %>%
+  distinct()
+
+oal24_group_ndist <- oal2324_scp_group_ndist %>%
+  select(oal24_group,oal24_group_total) %>%
+  distinct()
+```
+
+```{r}
+scp24_group_ndist <- scp24_group_ndist %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "scp_group_total","Scopus")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+oal23_group_ndist <- oal23_group_ndist %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal23_group_total","OpenAlex (before)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+
+oal24_group_ndist <- oal24_group_ndist %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal24_group_total","OpenAlex (after)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+scp_oal2324_ndist <- bind_rows(scp24_group_ndist, oal23_group_ndist, oal24_group_ndist)
+write_csv(scp_oal2324_ndist, here("scp_oal2324_ndist_tab1.csv"))
+```
+
+
+```{r}
+oal2324_wos_group <- oal2324_wos_t %>%
+                    mutate(wos_group = replace(wos_type, wos_type %in% c("Review", "Article"), "Research Discourse")) %>%
+                    mutate(wos_group = replace(wos_group, wos_group %in% c("Correction", "Retraction","Retracted Publication","Item Withdrawal", "Editorial Material", "Letter", "News Item"),"Editorial Discourse")) %>%
+                    mutate(wos_group = replace(wos_group, !(wos_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal23_group = replace(oal23_type, oal23_type %in% c("ARTICLE", "JOURNAL_ARTICLE","REVIEW","PREPRINT"), "Research Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, oal23_group %in% c("ERRATUM", "EDITORIAL", "LETTER", "PARATEXT"),"Editorial Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, !(oal23_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal24_group = replace(oal24_type, oal24_type %in% c("article", "journal-article","review","preprint"), "Research Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, oal24_group %in% c("erratum", "editorial", "letter", "paratext"),"Editorial Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, !(oal24_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned"))
+
+oal2324_wos_group <- oal2324_wos_group %>%
+    group_by(wos_group) %>% 
+    mutate(wos_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal23_group) %>%
+    mutate(oal23_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal24_group) %>%
+    mutate(oal24_group_total = sum(n)) %>%
+    ungroup()
+```
+
+```{r}
+wos_group <- oal2324_wos_group %>%
+  select(wos_group,wos_group_total) %>%
+  distinct() %>%
+  arrange(desc(wos_group_total))
+
+oal23_group <- oal2324_wos_group %>%
+  select(oal23_group,oal23_group_total) %>%
+  distinct()
+
+oal24_group <- oal2324_wos_group %>%
+  select(oal24_group,oal24_group_total) %>%
+  distinct()
+```
+
+```{r}
+wos_group <- wos_group %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "wos_group_total","Web of Science")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+oal23_group <- oal23_group %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal23_group_total","OpenAlex (before)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+oal24_group <- oal24_group %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal24_group_total","OpenAlex (after)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+
+wos_oal2324 <- bind_rows(wos_group, oal23_group, oal24_group)
+write_csv(wos_oal2324, here("wos_oal2324_tab2.csv"))
+```
+
+
+```{r}
+oal2324_wos_group_ndist <- oal2324_wos_ndist %>%
+                    mutate(wos_group = replace(wos_type, wos_type %in% c("Review", "Article"), "Research Discourse")) %>%
+                    mutate(wos_group = replace(wos_group, wos_group %in% c("Correction", "Retraction","Retracted Publication","Item Withdrawal", "Editorial Material", "Letter", "News Item"),"Editorial Discourse")) %>%
+                    mutate(wos_group = replace(wos_group, !(wos_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal23_group = replace(oal23_type, oal23_type %in% c("ARTICLE", "JOURNAL_ARTICLE","REVIEW","PREPRINT"), "Research Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, oal23_group %in% c("ERRATUM", "EDITORIAL", "LETTER", "PARATEXT"),"Editorial Discourse")) %>%
+                    mutate(oal23_group = replace(oal23_group, !(oal23_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned")) %>%
+                    mutate(oal24_group = replace(oal24_type, oal24_type %in% c("article", "journal-article","review","preprint"), "Research Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, oal24_group %in% c("erratum", "editorial", "letter", "paratext"),"Editorial Discourse")) %>%
+                    mutate(oal24_group = replace(oal24_group, !(oal24_group %in% c("Research Discourse", "Editorial Discourse")), "Not Assigned"))
+
+oal2324_wos_group_ndist <- oal2324_wos_group_ndist %>%
+    group_by(wos_group) %>% 
+    mutate(wos_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal23_group) %>%
+    mutate(oal23_group_total = sum(n)) %>%
+    ungroup() %>%
+    group_by(oal24_group) %>%
+    mutate(oal24_group_total = sum(n)) %>%
+    ungroup()
+```
+
+```{r}
+wos_group_ndist <- oal2324_wos_group_ndist %>%
+  select(wos_group,wos_group_total) %>%
+  distinct() %>%
+  arrange(desc(wos_group_total))
+
+oal23_group_ndist <- oal2324_wos_group_ndist %>%
+  select(oal23_group,oal23_group_total) %>%
+  distinct()
+
+oal24_group_ndist <- oal2324_wos_group_ndist %>%
+  select(oal24_group,oal24_group_total) %>%
+  distinct()
+```
+
+```{r}
+wos_group_ndist <- wos_group_ndist %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "wos_group_total","Web of Science")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+oal23_group_ndist <- oal23_group_ndist %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal23_group_total","OpenAlex (before)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+oal24_group_ndist <- oal24_group_ndist %>%
+  pivot_longer(-1) %>%
+  pivot_wider(names_from = 1, values_from = value) %>%
+  mutate(name = str_replace(name, "oal24_group_total","OpenAlex (after)")) %>%
+  rename(rd_total = `Research Discourse`) %>%
+  rename(ed_total = `Editorial Discourse`) %>%
+  rename(na_total = `Not Assigned`) %>%
+  mutate(rd_pct = rd_total/rowSums(.[-1])) %>%
+  mutate(ed_pct = ed_total/rowSums(.[-1])) %>%
+  mutate(na_pct = na_total/rowSums(.[-1]))
+
+
+wos_oal2324_ndist <- bind_rows(wos_group_ndist, oal23_group_ndist, oal24_group_ndist)
+write_csv(wos_oal2324_ndist, here("wos_oal2324_ndist_tab2.csv"))
+```
