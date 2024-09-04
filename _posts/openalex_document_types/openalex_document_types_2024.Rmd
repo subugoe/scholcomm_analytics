@@ -73,12 +73,12 @@ However, the comparison with Web of Science and Scopus reveals that there remain
 
 ## Data and Methods
 
-Following [preprint](https://arxiv.org/abs/2406.15154), we performed a pairwise comparison of journal publications indexed in OpenAlex with the Web of Science and Scopus published 2012 to 2022.
+Following our [preprint](https://arxiv.org/abs/2406.15154), we performed a pairwise comparison of journal publications indexed in OpenAlex with the Web of Science and Scopus published 2012 to 2022.
 To investigate changes made in OpenAlex, we furthermore compared data from the OpenAlex July 2024 and August 2023 snapshots.
 Scopus and Web of Science data were retrieved from the [German Competence Network of Bibliometrics](https://bibliometrie.info), using the April 2024 snapshots.
-Web of Science data retrieval comprised the collections SCI, SSCI, AHCI, ISTP and ISSHP. 
+Web of Science data retrieval comprised the Core Collection. 
 We matched items between the databases by DOI after normalisation to lowercase.
-Overall, `r formatC(sum(oal2324_scp_t$n), big.mark = ",", format = "d")` the intersection of OpenAlex and Scopus was `r formatC(sum(oal2324_scp_t$n), big.mark = ",", format = "d")`  and the intersection of OpenAlex and Web of Science comprised `r formatC(sum(oal2324_wos_t$n), big.mark = ",", format = "d")` records.
+Overall, the intersection of OpenAlex and Scopus covered `r sum(oal2324_scp_t$n)` and the intersection of OpenAlex and Web of Science covered `r sum(oal2324_wos_t$n)` records.
 
 Then, we categorised works based on their document type information into two categories: research discourse and editorial discourse. 
 The research discourse category now also includes publications of type "preprint", which was added to OpenAlex in [May 2024](https://groups.google.com/g/openalex-users/c/YujaIIjY02A).
@@ -86,16 +86,12 @@ The mapping tables used for reclassifying the document types can be found in the
 
 ## Findings
 
-<!-- The following figures compare the OpenAlex classification system with those of Scopus and Web of Science. 
-Notably, the proportion of articles and reviews is relatively equal between the data sources. 
-This is an important improvement compared to 2023, when OpenAlex did not distinguish between research articles and reviews. -->
-
 Figure \@ref(fig:oalscp) illustrates OpenAlex document type changes in comparison with Scopus.
 Before the introduction of the more nuanced set of document types, OpenAlex tagged
- `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2),"%")`) as articles, which reduced to 
-`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2),"%")`). 
-Scopus tagged `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n24scp)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`) as article. 
- OpenAlex assigned the tyoe review to `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`), whereas Scopus to `r formatC(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2),"%")`). 
+ `r sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal))` items (`r round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2)`%) as articles, which reduced to `r sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$noal))` (`r round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_scp_t$noal)) * 100, 2)`%). 
+Scopus tagged `r sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n24scp))` items (`r round(sum(oal2324_scp_t[oal2324_scp_t$scp_type == "Article", ]$n) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2)`%) as article. 
+OpenAlex assigned the type review to `r sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp))` items (`r round(sum(unique(oal2324_scp_t[oal2324_scp_t$oal24_type == "review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2)`%), whereas Scopus to `r sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp))` items (`r round(sum(unique(oal2324_scp_t[oal2324_scp_t$scp_type == "Review", ]$n24scp)) / sum(unique(oal2324_scp_t$n24scp)) * 100, 2)`%). 
+
 
 ```{r oalscp, echo=FALSE,message=FALSE, warning=FALSE, fig.cap="Comparison of OpenAlex and Scopus for publication years 2012-2022"}
 nodes <- oal2324_scp_t %>%
@@ -125,7 +121,7 @@ colours <- 'd3.scaleOrdinal() .domain(["oal23", "oal24","scp"]) .range(["#ffffff
 
 oal_scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
               Target = "target", Value = "value", NodeID = "label", fontSize = 12, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Scopus (2024)"),xScalingFactor = .9, height=700)
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (before)","OpenAlex (after)","Scopus"),xScalingFactor = .9, height=700)
 
 oal_scp_sn <- onRender(
   oal_scp_sn,
@@ -192,14 +188,10 @@ oal_scp_sn <- onRender(
 oal_scp_sn
 ```
 
-When comparing OpenAlex data from 2023 and 2024, respectively, with Web of Science data from 2024 and considering publications indexed in both data sources, Figure \@ref(fig:oalwos) shows that publications classified as articles amount to `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2),"%")`) in OpenAlex for 2023 and `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2),"%")`) in OpenAlex for 2024 while in WoS publications with this document type amount to `r formatC(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]), big.mark = ",", format = "d")` (`r paste0(round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]) / sum(oal2324_wos_t$n24wos[!duplicated(oal2324_wos_t$n24wos)]) * 100, 2),"%")`). 
-In contrast to the comparison of OpenAlex and Scopus, the difference between the proportions of publications classified as articles is much more pronounced here. 
-Regarding publications classified as reviews, Figure \@ref(fig:oalwos) shows, that within OpenAlex this document type is merely assigned to publications within the 2024 data set, these amount to `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos)), big.mark = ",", format = "d")` (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos)) / sum(unique(oal2324_wos_t$n24wos)) * 100, 2),"%")`).
-Within the WoS data set `r formatC(sum(unique(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n24wos)), big.mark = ",", format = "d")` publications (`r paste0(round(sum(unique(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n24wos)) / sum(unique(oal2324_wos_t$n24wos)) * 100, 2),"%")`) have been classified as reviews. 
-The proportion of these document types is thus noticeably higher in OpenAlex.
-
-Additionally, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that the commercial data sources still classify more items as editorial content than OpenAlex. 
-Of the publications classified as articles in OpenAlex for 2024, the figures show that a total amount of `r formatC(sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article" & oal2324_scp_t$scp_type %in% c("Editorial", "Letter"), ]$n), big.mark = ",", format = "d")` (Scopus) and `r formatC(sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article" & oal2324_wos_t$wos_type %in% c("Editorial Material", "Letter"), ]$n), big.mark = ",", format = "d")`  (WoS) publications are labelled as editorials or letters in Scopus and Web of Science, respectively.
+Figure \@ref(fig:oalwos) illustrates the same for the comparison of OpenAlex with Web of Science. 
+Here, OpenAlex tagged `r sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal))` items (`r round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal23_type == "ARTICLE", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2)`%) as articles before the introduction of the more nuanced set of document types and `r sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal))` (`r round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "article", ]$noal)) / sum(unique(oal2324_wos_t$noal)) * 100, 2)`%) after.
+In Web of Science `r sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),])` items (`r round(sum(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", "n24wos"][!duplicated(oal2324_wos_t[oal2324_wos_t$wos_type == "Article", c("oal24_type", "wos_type", "n24wos")]),]) / sum(oal2324_wos_t$n24wos[!duplicated(oal2324_wos_t$n24wos)]) * 100, 2)`%) were tagged as articles. 
+The document type review is assigned to `r sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos))` items (`r round(sum(unique(oal2324_wos_t[oal2324_wos_t$oal24_type == "review", ]$n24wos)) / sum(unique(oal2324_wos_t$n24wos)) * 100, 2)`) by OpenAlex, whereas Web of Science tagged `r sum(unique(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n24wos))` items (`r round(sum(unique(oal2324_wos_t[oal2324_wos_t$wos_type == "Review", ]$n24wos)) / sum(unique(oal2324_wos_t$n24wos)) * 100, 2)`%) as such. 
 
 ```{r oalwos, echo=FALSE,message=FALSE, warning=FALSE,fig.cap="Comparison of OpenAlex and Web of Science for publication years 2012-2022"}
 nodes <- oal2324_wos_t %>%
@@ -229,7 +221,7 @@ colours <- 'd3.scaleOrdinal() .domain(["oal23", "oal24","wos"]) .range(["#ffffff
 
 oal_wos_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
               Target = "target", Value = "value", NodeID = "label", fontSize = 12, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (2023)","OpenAlex (2024)","Web of Science (2024)"),xScalingFactor = .9, height=700)
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("OpenAlex (before)","OpenAlex (after)","Web of Science"),xScalingFactor = .9, height=700)
 
 oal_wos_sn <- onRender(
   oal_wos_sn,
@@ -295,6 +287,13 @@ oal_wos_sn <- onRender(
 )
 oal_wos_sn
 ```
+
+
+Overall, Figures \@ref(fig:oalscp) and \@ref(fig:oalwos) demonstrate that even after the introduction of a more nuanced set of document types, OpenAlex still tags a higher proportion of items as articles than the commercial data sources.
+The difference between the proportions of items tagged as articles is, however, slightly more pronounced in the comparison of OpenAlex with Web of Science.
+Scopus tags a higher proportion of items as reviews and both Scopus and Web of Science still tag more items as editorial content than OpenAlex. 
+In sum, `r sum(oal2324_scp_t[oal2324_scp_t$oal24_type == "article" & oal2324_scp_t$scp_type %in% c("Editorial", "Letter"), ]$n)` (Scopus) and `r sum(oal2324_wos_t[oal2324_wos_t$oal24_type == "article" & oal2324_wos_t$wos_type %in% c("Editorial Material", "Letter"), ]$n)` (Web of Science) items are tagged as editorial/editorial material or letters in Scopus and Web of Science, respectively, while tagged as articles in OpenAlex.
+
 
 When grouping the 
 Here, the document types contained in each database were aggregated in three overarching categories: research discourse, editorial discourse and not assigned. 
@@ -631,9 +630,17 @@ wos_oal2324_reactable
 ```
 
 ## Discussion and Outlook
-Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and WoS. Compared to data from 2023, the discrepancy in the classification of items has decreased noticeably. This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. In addition, the [rule-based string matching](https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py) for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. However, the results also show that the curation of document types has not yet been finalised.
+Our updated analysis demonstrated a considerable improvement of the classification of document types in OpenAlex when comparing it to Scopus and Web of Science. 
+Compared to data from 2023, the discrepancy in the classification of items has decreased noticeably. 
+This indicates a convergence of the classification system in OpenAlex towards those from proprietary databases, with an enhanced coverage of reviews and editorial materials. 
+In addition, the [rule-based string matching](https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py) for recognising paratexts introduced and revised by OpenAlex resulted in more texts being categorised as editorial material than before. 
+However, the results also show that the curation of document types has not yet been finalised.
 
-Conclusively, we would like to point out that there is no correct classification system per se. Rather different classification systems applied by the database operators can bring advantages and disadvantages. In Semantic Scholar and PubMed, for example, publications are labelled as clinical studies and case reports, which in Scopus, WoS and OpenAlex are predominantly assigned to the document type article. A differentiation of these publications has the potential to increase the quality of bibliometric surveys in the analysed databases. Also, the results from this analysis are only partially comparable with the results from our preprint, as in the preprint we worked with a more restrictive set that included publications from Semantic Scholar and PubMed.
+Conclusively, we would like to point out that there is no correct classification system per se. 
+Rather different classification systems applied by the database operators can bring advantages and disadvantages. 
+In Semantic Scholar and PubMed, for example, publications are labelled as clinical studies and case reports, which in Scopus, Web of Science and OpenAlex are predominantly assigned to the document type article. 
+A differentiation of these publications has the potential to increase the quality of bibliometric surveys in the analysed databases. 
+Also, the results from this analysis are only partially comparable with the results from our preprint, as in the preprint we worked with a more restrictive set that included publications from Semantic Scholar and PubMed.
 
 ## Funding {.appendix}
 
