@@ -1,5 +1,24 @@
 [
   {
+    "path": "posts/oal_document_types_classifier/",
+    "title": "Presenting a method for improving the classification of research content in OpenAlex",
+    "description": "Although OpenAlex has revised its document types in the past, there is still room for improvement. In this blog post, I introduce a document type classifier that reduces the number of research content that is incorrectly classified as articles or reviews in OpenAlex.",
+    "author": [
+      {
+        "name": "Nick Haupka",
+        "url": {}
+      }
+    ],
+    "date": "2024-09-18",
+    "categories": [],
+    "contents": "\nThe quality of document type classification in scholarly databases can vary when analysing bibliometric data. It can happen that a publication can be assigned to different document types in different services or that the document type does not correspond to the actual document type at all. This is the case, for example, when a letter to the editor is labelled as a research article in a scientific journal. To shed more light on this problem, we submitted an article in June 2024 that analyses the differences in the classification of document and publication types in the bibliometric databases OpenAlex, Web of Science, Scopus, PubMed and Semantic Scholar.\nBased on the results of this analysis, I developed a classifier that helps to reduce the proportion of incorrectly classified research items in OpenAlex. The classifier uses metadata from OpenAlex, such as the number of references, citations and affiliations, to assess whether an item in a scientific journal is a research contribution or not.\nData and Methods\nThe document type classifier was trained on about 9.5 million journal items from PubMed, for which each document type was reclassified as either research discourse or editorial discourse. Training data was restricted to the publication years 2012 to 2022. Additional metadata was retrieved from CrossRef and OpenAlex and supplemented. These are:\nMetadata\nType\nhas abstract?\nBOOLEAN\ntitle word count\nINT\npage length\nINT\nauthor count\nINT\nhas license?\nBOOLEAN\nnumber of citations\nINT\nnumber of references\nINT\nhas funding information?\nBOOLEAN\nnumber of affiliations\nINT\nhas OA url?\nBOOLEAN\nThe dataset was then split into 75% training data and 25% test data. After experimenting with several machine learning algorithms, I decided to forego with the k-nearest neighbours algorithm. Parameters for the algorithm were optimised using grid search. If you want to have a look at the exact parameters that were used for the algorithm and also the programming code, you can visit my project repo on GitHub.\nTo evaluate the classification model, I will compare the results of my classifier with OpenAlex, the CWTS Open Leiden Ranking and Scopus.\nResults\nFigure 1 compares the results of my classifier with OpenAlex and CWTS, based on items in scientific journals between 2012 and 2021. The grey line shows all articles and reviews in journals in OpenAlex. The green line shows all articles and reviews in OpenAlex for which at least one reference and one citation was found in OpenAlex. The purple line below shows all items from journals in OpenAlex that are included as core publications in the CWTS Open Leiden Ranking. The pink line shows the proportion of items in OpenAlex that are recognised as research items by my classifier.\nAs you can see,\n\n\n\nFigure 1: Comparison CWTS\n\n\n\nFigure 2 compares the proportion of articles and reviews in OpenAlex and Scopus in relation to the intersection of items in OpenAlex and Scopus in journals from 2012 to 2021. The results of my classifier are represented by the pink line. You can see that OpenAlex counts more items than Scopus when restricting to the document types articles and reviews. With the help of the classifier, the number of items classified as articles and reviews in OpenAlex decreases. Nevertheless, the count of articles and reviews in Scopus is still lower when comparing it to my method which may indicate that Scopus has a more sophisticated approach for classifying items.\n\n\n\nFigure 2: Comparison Scopus\n\n\n\nDiscussion and Outlook\n\n\n\n",
+    "preview": "posts/oal_document_types_classifier/distill-preview.png",
+    "last_modified": "2024-09-18T11:18:38+02:00",
+    "input_file": "blogpost.knit.md",
+    "preview_width": 4196,
+    "preview_height": 2213
+  },
+  {
     "path": "posts/openalex_document_types/",
     "title": "Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus",
     "description": "In June 2024, we published a preprint on the classification of document types in OpenAlex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and Web of Science.",
