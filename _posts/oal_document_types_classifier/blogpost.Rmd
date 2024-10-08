@@ -53,6 +53,12 @@ Figure \@ref(fig:scp) compares the proportion of articles and reviews in OpenAle
 knitr::include_graphics('./media/oal_scp_comparison.png', dpi=NA)
 ```
 
+In order to avoid potentially discriminatory behaviour of my classifier, I will analyse the impact of my classifier on topics in OpenAlex (see Figure \@ref(fig:topics)). Again, I will compare the results with the CWTS to investigate differences. The figure shows that my classifier treats publications from different topics in a similar way, while the CWTS method excludes publications from the social sciences more frequently. This could be due to the fact that there is possibly less communication in English in the social sciences (the core items only contain English publications) or that metadata coverage is less pronounced in the social sciences. 
+
+```{r topics, echo=FALSE, layout='l-page', fig.cap='Topics'}
+knitr::include_graphics('./media/figure3.png', dpi=NA)
+```
+
 ## Discussion and Outlook
 The comparison of my classifier with OpenAlex, Scopus and the CWTS has shown that my classifier can certainly help to reduce the proportion of incorrectly classified items in OpenAlex. Nevertheless, a larger sample should be qualitatively analysed and contrasted for further evaluation. Meanwhile, OurResearch has begun to update its classification of document types, which may improve the bibliometric data in OpenAlex. Until then my classifier can be used as an optimisation of the existing document type classification. 
 A major disadvantage of my classifier is that it often recognises clinical studies and case studies as non-research articles, as these often have no references or citations. However, this could be counteracted by adding open data from PubMed that classifies these document types. 
