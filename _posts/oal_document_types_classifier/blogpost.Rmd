@@ -1,6 +1,6 @@
 ---
-title: "Presenting a method for improving the classification of research content in OpenAlex"
-description: Although OpenAlex has revised its document types in the past, there is still room for improvement. In this blog post, I introduce a document type classifier that reduces the number of research content that is incorrectly classified as articles or reviews in OpenAlex. 
+title: "Presenting a method for improving the classification of research items in OpenAlex"
+description: Although OpenAlex has revised its document types in the past, there is still room for improvement. In this blog post, I introduce a document type classifier that reduces the number of research items that is incorrectly classified as articles or reviews in OpenAlex. 
 author:
   - name: Nick Haupka 
     affiliation: State and University Library Göttingen
@@ -12,40 +12,42 @@ bibliography: literature.bib
 preview: distill-preview.png
 draft: true
 ---
-The quality of document type classification in scholarly databases can vary when analysing bibliometric data. It can happen that a publication can be assigned to different document types in different services or that the document type does not correspond to the actual document type at all. This is the case, for example, when a letter to the editor is labelled as a research article in a scientific journal. To shed more light on this problem, we submitted an [article](https://arxiv.org/abs/2406.15154) in June 2024 that analyses the differences in the classification of document and publication types in the bibliometric databases OpenAlex, Web of Science, Scopus, PubMed and Semantic Scholar. 
+The quality of document type classification in scholarly databases can vary when analysing bibliometric data. It can happen that a publication can be assigned to different document types in different services or that the document type does not correspond to the actual document type at all. This is the case, for example, when a letter to the editor is labelled as a research article in a scientific journal. To shed more light on this problem, we submitted an [article](https://arxiv.org/abs/2406.15154) in June 2024 that analyses the differences in the classification of document and publication types in the bibliometric databases OpenAlex, Web of Science, Scopus, PubMed and Semantic Scholar. Here we have found that OpenAlex tends to exaggerate the assignment of the document type article, which leads to a gap with the document type assignments in Scopus And WoS. About 10% of articles in OpenAlex were labelled as editorial material in Scopus and WoS. 
 
 Based on the results of this analysis, I developed a classifier that helps to reduce the proportion of incorrectly classified research items in OpenAlex. The classifier uses metadata from OpenAlex, such as the number of references, citations and affiliations, to assess whether an item in a scientific journal is a research contribution or not. 
 
 ## Data and Methods
-The document type classifier was trained on about 9.5 million journal items from PubMed, for which each document type was reclassified as either research discourse or editorial discourse. Training data was restricted to the publication years 2012 to 2022. Additional metadata was retrieved from CrossRef and OpenAlex and supplemented. These are:
+The document type classifier was trained on about 9.5 million journal items from PubMed, for which each document type was reclassified as either research discourse or editorial discourse. PubMed document types were chosen because our analysis showed that the classification of document types is similar to Scopus and WoS, with the advantage that the data is openly accessible and reusable. Training data was restricted to the publication years 2012 to 2022. Also, items from publishers with less than 5000 publications were excluded from the dataset. Additional metadata was retrieved from CrossRef and OpenAlex and supplemented. These are:
 
-| Metadata                 | Type    |
-| -------------------------| --------|
-| has abstract?            | BOOLEAN |
-| title word count         | INT     |
-| page length              | INT     |
-| author count             | INT     |
-| has license?             | BOOLEAN |
-| number of citations      | INT     |
-| number of references     | INT     |
-| has funding information? | BOOLEAN |
-| number of affiliations   | INT     |
-| has OA url?              | BOOLEAN |
+| Metadata                 | Type    | Retrieved from                   | 
+| -------------------------| --------|----------------------------------|
+| has abstract?            | BOOLEAN | Crossref (October 2023 snapshot) |
+| title word count         | INT     | Crossref (October 2023 snapshot) |
+| page count               | INT     | Crossref (October 2023 snapshot) |
+| author count             | INT     | Crossref (October 2023 snapshot) |
+| has license?             | BOOLEAN | Crossref (October 2023 snapshot) |
+| number of citations      | INT     | Crossref (October 2023 snapshot) |
+| number of references     | INT     | Crossref (October 2023 snapshot) |
+| has funding information? | BOOLEAN | Crossref (October 2023 snapshot) |
+| number of affiliations   | INT     | OpenAlex (April 2024 snapshot)   |
+| has OA url?              | BOOLEAN | OpenAlex (April 2024 snapshot)   |
 
-The dataset was then split into 75% training data and 25% test data. After experimenting with several machine learning algorithms, I decided to forego with the [k-nearest neighbours algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm). Parameters for the algorithm were optimised using [grid search](https://en.wikipedia.org/wiki/Hyperparameter_optimization). If you want to have a look at the exact parameters that were used for the algorithm and also the programming code, you can visit my [project repo on GitHub](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier).
+The dataset was then split into 75% training data and 25% test data. After experimenting with several machine learning algorithms, I decided to forego with the [k-nearest neighbours algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm). Parameters for the algorithm were optimised using [grid search](https://en.wikipedia.org/wiki/Hyperparameter_optimization). If you want to have a look at the exact parameters that were used for the algorithm and also the programming code, you can visit my [project repo on GitHub](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier). The classifier is build on top of OpenAlex rule-based paratext recognition, which uses [title heuristics](https://github.com/ourresearch/openalex-guts/blob/main/detective/work_type_detective.py). This means that my classifier cannot classify pre-labelled editorial material from OpenAlex as research items. 
 
-To evaluate the classification model, I will compare the results of my classifier with OpenAlex, the [CWTS Open Leiden Ranking](https://open.leidenranking.com) and Scopus. 
+To evaluate the classification model, I will compare the results of my classifier with OpenAlex, the [CWTS Open Leiden Ranking](https://open.leidenranking.com) and Scopus. For the comparison I used the July and August 2024 snapshot from OpenAlex, the April 2024 snapshot from Scopus and the 2023 snapshot from the CWTS.
 
 ## Results
-Figure \@ref(fig:cwts) compares the results of my classifier with OpenAlex and CWTS, based on items in scientific journals between 2012 and 2021. The grey line shows all articles and reviews in journals in OpenAlex. The green line shows all articles and reviews in OpenAlex for which at least one reference and one citation was found in OpenAlex. The purple line below shows all items from journals in OpenAlex that are included as core publications in the CWTS Open Leiden Ranking. The pink line shows the proportion of items in OpenAlex that are recognised as research items by my classifier. 
+Overall, my classifier identifies 11.7% of the journal items classified as articles and reviews in OpenAlex as non-research items. For the publication years 2012 to 2021, this figure drops to 9.9%. This reduction may be attributed to a high number of digitised items that contain hardly any metadata, while more recent publications can contain more detailed metadata. However, this was not analysed in depth.
 
-As you can see, 
+Figure \@ref(fig:cwts) compares the results of my classifier with OpenAlex and the CWTS, based on items in scientific journals between 2012 and 2021. The grey line shows all articles and reviews in journals in OpenAlex. The green line shows all articles and reviews in OpenAlex for which at least one reference and one citation was found in OpenAlex. The purple line below shows all items from journals in OpenAlex that are included as core publications in the CWTS Open Leiden Ranking. The pink line shows the proportion of items in OpenAlex that are recognised as research items by my classifier. 
+
+As you can see, 46% of all articles and reviews in OpenAlex from 2012 to 2021 were categorised as core publications by the CWTS. This is probably due to missing authors, affiliations and references (see also [here](https://zenodo.org/records/13879947)). In contrast, my classifier identifies abut 10% of articles and reviews as non-research items which may demonstrate that the classifier is less sensitive to missing metadata. This observation can be also made when comparing the green and pink lines. However, it should be noted that the CWTS classification and my classifier have a different application purpose.
 
 ```{r cwts, echo=FALSE, layout='l-body-outset', fig.cap='Comparison CWTS'}
 knitr::include_graphics('./media/oal_cwts_comparison.png', dpi=NA)
 ```
 
-Figure \@ref(fig:scp) compares the proportion of articles and reviews in OpenAlex and Scopus in relation to the intersection of items in OpenAlex and Scopus in journals from 2012 to 2021. The results of my classifier are represented by the pink line. You can see that OpenAlex counts more items than Scopus when restricting to the document types articles and reviews. With the help of the classifier, the number of items classified as articles and reviews in OpenAlex decreases. Nevertheless, the count of articles and reviews in Scopus is still lower when comparing it to my method which may indicate that Scopus has a more sophisticated approach for classifying items. 
+Figure \@ref(fig:scp) compares the proportion of articles and reviews in OpenAlex and Scopus in relation to the intersection of items in OpenAlex and Scopus in journals from 2012 to 2021. The results of my classifier are represented by the pink line. You can see that OpenAlex counts more items than Scopus when restricting to the document types articles and reviews (OpenAlex: 92.1% and Scopus: 89.2%). With the help of the classifier, the number of items classified as articles and reviews in OpenAlex decreases (Classifier: 90.8%). Nevertheless, the count of articles and reviews in Scopus is still lower when comparing it to my method which may indicate that Scopus has a more sophisticated approach for classifying items. 
 
 ```{r scp, echo=FALSE, layout='l-body-outset', fig.cap='Comparison Scopus'}
 knitr::include_graphics('./media/oal_scp_comparison.png', dpi=NA)
@@ -54,3 +56,5 @@ knitr::include_graphics('./media/oal_scp_comparison.png', dpi=NA)
 ## Discussion and Outlook
 The comparison of my classifier with OpenAlex, Scopus and the CWTS has shown that my classifier can certainly help to reduce the proportion of incorrectly classified items in OpenAlex. Nevertheless, a larger sample should be qualitatively analysed and contrasted for further evaluation. Meanwhile, OurResearch has begun to update its classification of document types, which may improve the bibliometric data in OpenAlex. Until then my classifier can be used as an optimisation of the existing document type classification. 
 A major disadvantage of my classifier is that it often recognises clinical studies and case studies as non-research articles, as these often have no references or citations. However, this could be counteracted by adding open data from PubMed that classifies these document types. 
+
+If you want to check out the classifier you can visit our [Google BigQuery instance]() where I uploaded my results. Here, you can also compare it with OpenAlex, Crossref and Semantic Scholar. I would be delighted to receive feedback on your experiences with the classifier! 
