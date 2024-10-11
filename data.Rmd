@@ -25,7 +25,7 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 | Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
 |-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
-|  2024/08        | all.json.tar.gz | [cr_instant.snapshot](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  11.09.2024  | 2013-2024 | 49.874.183 |
+|  2024/09        | all.json.tar.gz | [cr_instant.snapshot](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  10.10.2024  | 2013-2024 | 50.397.426 |
 
 :::
 
@@ -77,12 +77,12 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 | Snapshot   | Directory     | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|---------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
-| 2024-08-29 | authors/      | [openalex.authors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  04.09.2024  | All | 95.724.450 |
-| 2024-08-30 | funders/      | [openalex.funders](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  04.09.2024  | All | 32.437 |
-| 2024-08-30 | institutions/ | [openalex.institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex) | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  04.09.2024  | All | 109.259 |
-| 2024-08-30 | publishers/   | [openalex.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  04.09.2024  | All | 10.250 |
-| 2024-08-30 | sources/      | [openalex.sources](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  04.09.2024  | All | 254.515 |
-| 2024-08-26 | topics/       | [openalex.topics](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)       | schema_openalex_topics.json       | [Repo](https://github.com/naustica/openalex) |  04.09.2024  | All | 4.516 |
-| 2024-08-29 | works/        | [openalex.works](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  04.09.2024  | All | 258.602.038 |
+| 2024-09-27 | authors/      | [openalex.authors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 96.105.161 |
+| 2024-09-28 | funders/      | [openalex.funders](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 32.437 |
+| 2024-09-28 | institutions/ | [openalex.institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex) | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 109.495 |
+| 2024-09-28 | publishers/   | [openalex.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 10.250 |
+| 2024-09-28 | sources/      | [openalex.sources](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 254.533 |
+| 2024-09-23 | topics/       | [openalex.topics](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)       | schema_openalex_topics.json       | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 4.516 |
+| 2024-09-27 | works/        | [openalex.works](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 259.375.778 |
 
 :::
