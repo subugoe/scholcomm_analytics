@@ -60,25 +60,26 @@ This means that my classifier cannot classify pre-labelled editorial material fr
 
 To evaluate my model, I compared the results with OpenAlex, Scopus and the [CWTS Leiden Ranking Open Edition](https://open.leidenranking.com). 
 The CWTS Leiden Ranking Open Edition is a university ranking based on a pre-computed subset of so called core publications indexed in OpenAlex to compare universities. 
-A publication is considered a core publication if it has one or more authors, has at least one reference, is published in English and is also published in a core journal. [ref]
+A publication is considered a core publication if it has one or more authors, has at least one reference, is published in English and is also published in a core journal [@van_eck_2024_13879947]. 
 A journal is considered a core journal if it has an international scope and also contains a high number of references. The CWTS approach is therefore more selective than my approach, because I did not exclude journals and non-English contributions.
 
-For the comparison I used the August and September 2024 snapshot from OpenAlex [häh, warum zwei verschiedene Versionen], the July 2024 snapshot from Scopus and the data underlying the Leiden Ranking Open Edition 2024, which is available through Google BigQuery. Matching were carried out by DOI. 
+For the comparison I used the September 2024 snapshot from OpenAlex, the July 2024 snapshot from Scopus and the data underlying the Leiden Ranking Open Edition 2024, which is available through [Google BigQuery](https://open.leidenranking.com/resources). Matching were carried out by DOI. 
  
 ## Results
 
-[hier bitte mit absoluten zahlen beginnen]
-Overall, my classifier identifies 11.6% of journal items classified as articles and reviews in OpenAlex as non-research items.
-When restricting to the period 2012 to 2021, this figure drops to 9.9%, which can be explained by a lack of metadata for journal articles published before 2012.
+ Overall, the classifier categorised  12.647.946 out of 108.744.219 journal items, which were classified as articles and reviews in OpenAlex, as non-research items, representing a share of  11.6%. When restricted to the period 2012–2021, this figure drops to 3.778.393 out of 38.265.399 journal items  (9.9%), presumably due to improved metadata coverage used to determine document types.  Figure \@ref(fig:cwts) compares the results of the classifier with OpenAlex and the CWTS approach, based on items in journals between 2012 and 2021. The left side of the figure displays all journals in OpenAlex, whereas the data from the figure on the right side is restricted to CWTS core journals. The grey line represents all articles and reviews in journals in OpenAlex. The green line indicates all articles and reviews in OpenAlex for which at least one reference and one citation were identified. The purple line below shows all items from journals in OpenAlex included as core publications in the CWTS Leiden Ranking Open Edition. The yellow line illustrates the proportion of items in OpenAlex that are recognised as research items by the classifier   About 48.3% of all journal items in OpenAlex from 2012 to 2021 were categorised as core publications by the CWTS when not restricting to core journals, demonstrating the effect of also using journal characteristics to define eligble publications. Overall, 27.72 of 203.545 journals (13.6%) in OpenAlex were considered as core journals by the CWTS in its latest Open Leiden Ranking. But also missing authors, affiliations and references had an impact on the CWTS classification. In contrast, my classifier determined about 84,5% of journal items as research items when not restricting to core journal. When restricted to core journals,  it shows that the classifier is less sensitive to missing metadata or a low number of citations. In contrast, the proportion of CWTS core publications and the proportion of publications with at least one reference and one citation in OpenAlex are similar and achieve both about 71% on average. 
+ 
 
-Figure \@ref(fig:cwts) compares the results of my classifier with OpenAlex and the CWTS, based on items in scientific journals between 2012 and 2021. The grey line shows all articles and reviews in journals in OpenAlex. The green line shows all articles and reviews in OpenAlex for which at least one reference and one citation was found in OpenAlex. The purple line below shows all items from journals in OpenAlex that are included as core publications in the CWTS Leiden Ranking Open Edition. The yellow line shows the proportion of items in OpenAlex that are recognised as research items by my classifier. 
-
-About 48.3% of all journal items in OpenAlex from 2012 to 2021 were categorised as core publications by the CWTS. This number is probably due to missing authors, affiliations and references (see also [here](https://zenodo.org/records/13879947))[Bitte BibTex verwenden, und viel früher zitieren; Der Hauptgrund liegt an der Exklusion von Journalen, es wäre gut, dass auch zu quantifizieren]. In contrast, my classifier identifies about 84,5% of journal items as research items which may demonstrate that the classifier is less sensitive to missing metadata [Hast du die gleiche Journalmenge genutzt, wenn ja, dann musst du das schreiben]. This observation can be also made when comparing the green and yellow lines. However, it should be noted that the CWTS classification and my classifier have a different application purpose. [Inwiefern?]
-
-```{r cwts, echo=FALSE, layout='l-body-outset', fig.cap='Comparison of my classifier with OpenAlex and the CWTS core classification.'}
-knitr::include_graphics('./media/oal_cwts_comparison.png', dpi=NA)
+```{r cwts, echo=FALSE, layout='l-page', fig.cap='Comparison of my classifier with OpenAlex and the CWTS core classification.'}
+knitr::include_graphics('./media/figure1.png', dpi=NA)
 ```
 
+To check for potentially discriminatory behaviour of my classifier, I compared my approach with the CWTS approach by journal subject (see Figure \@ref(fig:topics)). Again, a common corpus based on DOI matching is used. Figure \@ref(fig:topics)a) and \@ref(fig:topics)b) displays all journals in OpenAlex whereas the data in Figure \@ref(fig:topics)c) and Figure \@ref(fig:topics)d) is limited to CWTS core journals.
+Figure \@ref(fig:topics)a) and \@ref(fig:topics)b) shows that my classifier treats publications from different disciplines in a more balanced way, while the CWTS method excludes publications from the social sciences and humanities more often. Again, this could be due the exclusion of non-core journals. Here, [the CWTS](https://www.leidenranking.com/information/indicators) points out that many social science journals were not considered as core journals due to the lack of a suitable number of references. A comparison of Figure \@ref(fig:topics)c) and Figure \@ref(fig:topics)d) shows that this behaviour is changing. Here, my classifier and the CWTS classification show a similar pattern, with publications from the health sciences being excluded more frequently. These publications may be case reports, which usually contain no references.
+
+```{r topics, echo=FALSE, layout='l-body-outset', fig.cap='Comparison of the coverage of my classifier with the CWTS core classification using topics from OpenAlex.'}
+knitr::include_graphics('./media/figure2.png', dpi=NA)
+```
 
 Figure \@ref(fig:scp) compares the proportion of articles and reviews in OpenAlex and Scopus in relation to the intersection of items in OpenAlex and Scopus in journals from 2012 to 2021 using a shared corpus based on DOI matching. The results of my classifier are represented by the yellow line. 
 OpenAlex counts more items than Scopus when restricting to the document types articles and reviews (OpenAlex: 95.9% and Scopus: 87.6%). 
@@ -86,14 +87,6 @@ With the help of the classifier, the retrieval of articles and reviews in OpenAl
 Nevertheless, Scopus counts were lower when comparing it to my method.
 
 ```{r scp, echo=FALSE, layout='l-body-outset', fig.cap='Comparison of my classifier with OpenAlex and Scopus.'}
-knitr::include_graphics('./media/oal_scp_comparison.png', dpi=NA)
-```
-
-To check for potentially discriminatory behaviour of my classifier, I compared my approach with the CWTS approach by journal subject (see Figure \@ref(fig:topics)). Again, a common corpus based on DOI matching is used.
-The figure shows that my classifier treats publications from different disciplines in a more balanced way, while the CWTS method excludes publications from the social sciences and humanities more often. 
-This could be due to its language restriction to English to identify suitable publications. Moreover, [the CWTS] (https://www.leidenranking.com/information/indicators) points out that many social science journals were not considered as core journals due to the lack of a suitable number of references.
-
-```{r topics, echo=FALSE, layout='l-page', fig.cap='Comparison of the coverage of my classifier with the CWTS core classification using topics from OpenAlex.'}
 knitr::include_graphics('./media/figure3.png', dpi=NA)
 ```
 
@@ -103,7 +96,7 @@ The comparison of my classifier with OpenAlex, Scopus and the CWTS has shown tha
 
 A major limitation of my classifier is that it often identifies clinical trials and case studies as non-research articles, as these often have no references or citations. However, this could be improved by adding open data from PubMed that classifies these document types. 
 
-The classified data is available via the publicly available [Google BigQuery instance provided by the SUB Göttingen](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources). Here you can also compare it with OpenAlex, Crossref and Semantic Scholar. To query it, you can use
+The classified data is available via the publicly available [Google BigQuery instance provided by the SUB Göttingen](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources). Here you can also compare it with [OpenAlex](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex), [Crossref](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) and [Semantic Scholar](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar). To query it, you can use
 
 ```{sql query, eval=FALSE}
 SELECT COUNT(DISTINCT(oal.doi)) AS n, type, label
