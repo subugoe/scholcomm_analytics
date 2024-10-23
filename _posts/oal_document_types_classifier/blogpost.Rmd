@@ -15,10 +15,10 @@ draft: true
 
 Journals publish different types of articles. 
 Original research articles and reviews are the most common and are most often used in bibliometric analyses. 
-But there are also other types, such as letters to the editor or book reviews, which are often excluded.
+But there are also other types, such as letters to the editor or book reviews, which are often not considered.
 
-Both the vocabulary used to describe journal article types and the methods used to assign these categories vary between bibliometric databases. 
-For example, when [analysing the classification of journal article types in OpenAlex, Web of Science (WoS), Scopus, PubMed and Semantic Scholar](https://arxiv.org/abs/2406.15154), I found that OpenAlex tends to overestimate the assignment of the document type 'article'. OpenAlex tagged 10% of items as articles, which were labelled as editorial material in Scopus and the Web of Science.
+Both the vocabulary used to describe journal article types and the methods used to assign them vary between bibliometric databases. 
+For example, when [analysing the classification in OpenAlex, Web of Science (WoS), Scopus, PubMed and Semantic Scholar](https://arxiv.org/abs/2406.15154), I found that OpenAlex tends to overestimate the assignment of the document type 'article'. OpenAlex tagged 10% of items as articles, which were labelled as editorial material in Scopus and the Web of Science.
 
 In this blog post, I will present a classifier designed to improve the identification of journal article types in open scholarly databases like OpenAlex. 
 The classifier uses metadata from Crossref and OpenAlex, including the number of references, citations and affiliations, to assess whether an item in a journal is a research contribution or not. 
@@ -31,7 +31,7 @@ Both the source code of the classifier and the classified records are publicly a
 The journal article type classifier was trained on approximately 9.5 million journal articles from PubMed, representing either research discourse or editorial discourse.
 PubMed was used because its classification of document types is similar to that of Scopus and Web of Science, with the advantage that PubMed data is openly accessible and reusable. 
 The training data was limited to the publication years 2012 to 2022. 
-In addition, articles from publishers with fewer than 5,000 publications [journal articles?] were excluded from the dataset. 
+In addition, articles from publishers with fewer than 5,000 publications were excluded from the training. 
 Similar to the CWTS approach to identify core publications, the classifier also takes into account metadata retrieved from Crossref and OpenAlex.
 These metadata fields are:
 
