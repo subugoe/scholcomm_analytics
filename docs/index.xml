@@ -11,7 +11,16 @@ to publish case-studies rapidely showing how to support data-driven workflows an
 decision-making around scholarly communication in libraries using R.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 04 Sep 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 23 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Identifying journal article types in OpenAlex</title>
+      <dc:creator>Nick Haupka</dc:creator>
+      <link>https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier</link>
+      <description>Identifying suitable types of journal articles for bibliometric analyses is important. In this blog post, I present a document type classifier that helps to identify research contributions like original research articles using Crossref and OpenAlex. The classifier and classified OpenAlex records are openly available.</description>
+      <guid>https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier</guid>
+      <pubDate>Wed, 23 Oct 2024 00:00:00 +0000</pubDate>
+      <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier/distill-preview.png" medium="image" type="image/png" width="3896" height="2213"/>
+    </item>
     <item>
       <title>Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus</title>
       <dc:creator>Nick Haupka</dc:creator>
