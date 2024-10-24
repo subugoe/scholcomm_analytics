@@ -30,13 +30,7 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 We also publish in scholarly journals about our work.
 
-Haupka, N., Culbert, J., Schniedermann, A, Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
-
 Haupka, N. (2024). Analyse der Abdeckung wissenschaftlicher Publikationen auf Semantic Scholar im Kontext von Open Access. *Bibliothek Forschung und Praxis*, 48(2), 362–-373. <https://doi.org/10.1515/bfp-2023-0057>
-
-Jahn, N. (2024). How open are hybrid journals included in transformative agreements? <https://arxiv.org/abs/2402.18255>
-
-Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2024). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <https://arxiv.org/abs/2401.16359>
 
 Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2024). Understanding differences of the OA uptake within the German University landscape (2010–2020): Part 2—repository-provided OA. Scientometrics. <https://doi.org/10.1007/s11192-024-05003-5>
 
@@ -79,6 +73,14 @@ Datendiensts Unpaywall. *Bibliothek Forschung und Praxis*, 45(2),
 Matthias, L., Jahn, N., & Laakso, M. (2019). The Two-Way Street of Open
 Access Journal Publishing: Flip It and Reverse It. *Publications*, 7(2),
 23. <https://doi.org/10.3390/publications7020023>
+
+## Preprints
+
+Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
+
+Jahn, N. (2024). How open are hybrid journals included in transformative agreements? <https://arxiv.org/abs/2402.18255>
+
+Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2024). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <https://arxiv.org/abs/2401.16359>
 
 ## Theses
 
