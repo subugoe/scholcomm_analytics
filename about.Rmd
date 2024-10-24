@@ -98,7 +98,7 @@ Jahn, N (2022). *roadoi: Find Free Versions of Scholarly Publications via Unpayw
 
 Python-Packages (selection):
 
-Haupka, N., Paul Morrison. *unpywall - Interfacing the Unpaywall API with Python*.
+Haupka, N., Morrison, P. *unpywall - Interfacing the Unpaywall API with Python*.
 <https://pypi.org/project/unpywall> | <https://unpywall.readthedocs.io/>
 
 Dashboards (selection):
