@@ -2,50 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/about.html</loc>
-    <lastmod>2024-10-24T14:12:59+02:00</lastmod>
+    <lastmod>2024-11-08T12:21:32+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/data.html</loc>
-    <lastmod>2024-10-24T13:46:45+02:00</lastmod>
+    <lastmod>2024-11-08T12:22:39+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-11-01T09:08:02+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier/</loc>
-    <lastmod>2024-10-24T09:45:22+02:00</lastmod>
+    <lastmod>2024-11-08T12:21:28+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/openalex_document_types/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2024-09-04T15:29:30+02:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/oalex_oa_status/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-12-04T11:25:47+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/oam_hybrid/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-11-01T09:08:02+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/oaire_graph_2020/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-11-01T09:08:02+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/unpaywall_python/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-11-01T09:08:02+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/elsevier_invoice/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-11-01T09:08:02+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/datacite_graph/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-11-01T09:08:02+01:00</lastmod>
   </url>
   <url>
     <loc>https://subugoe.github.io/scholcomm_analytics/posts/unpaywall_evidence/</loc>
-    <lastmod>2024-09-23T11:52:14+02:00</lastmod>
+    <lastmod>2023-11-01T09:08:02+01:00</lastmod>
   </url>
 </urlset>
