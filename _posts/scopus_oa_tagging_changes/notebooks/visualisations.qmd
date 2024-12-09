@@ -1,0 +1,247 @@
+---
+title: "visualisations"
+format: html
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE
+)
+options(scipen = 999, digits = 4)
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.numeric(x)) {
+      return(prettyNum(x, big.mark = ","))
+    } else{
+      return(x)
+    }
+  }
+)
+```
+
+```{r, echo=FALSE,message = FALSE, warning = FALSE}
+library(here)
+library(DBI)
+library(RPostgres)
+library(tidyverse)
+library(networkD3)
+library(htmlwidgets)
+library(htmltools)
+library(sankeyD3) # Not on CRAN, but here <https://github.com/fbreitwieser/sankeyD3>
+library(scales)
+library(ggsci)
+library(cowplot)
+library(roadoi)
+library(rcrossref)
+library(ggiraph)
+```
+
+# Verbindung zum KB
+
+```{r}
+kb_con <- dbConnect(RPostgres::Postgres(),
+                    host = "biblio-p-db03.fiz-karlsruhe.de",
+                    port = 6432,
+                    dbname = "kbprod",
+                    user =  Sys.getenv("kb_user"),
+                    password = Sys.getenv("kb_pwd"),
+                    bigint = "numeric")
+```
+
+# Erstellen des OA-Share Barplot
+
+```{r}
+scp_oa_share %>%
+ mutate(name = ifelse(snapshot == "scp01_is_oa", "January",
+                       ifelse(snapshot == "scp04_is_oa", "April","July"))) %>%
+ mutate(name = factor(name, levels = c("January", "April", "July"))) %>%
+ ggplot(aes(x = name, y = share, fill = is_oa)) +
+ geom_bar(stat = "identity", position = "stack") +
+ scale_y_continuous(labels = scales::percent) +
+ scale_fill_manual(values = c("#9498a0","#6cc5b0")) +
+ labs(x = "Snapshot", y = "Share of OA and non-OA Items", fill = "Is OA") +
+ theme_minimal() +
+ geom_text(aes(label = paste0(round(share * 100, 2), "%")),
+ position = position_stack(vjust = 0.5))
+```
+
+# Erstellen des Barplot
+
+```{r}
+scp_barplot <- scp_oa_tagging_long_prep %>%
+  group_by(snapshot, oa_status) %>%
+  summarise(n = n_distinct(scp07_item_id)) %>%
+  ggplot(aes(y=reorder(oa_status,+n), x=n, fill = snapshot)) +
+  geom_bar(stat="identity", position = "dodge") +
+  scale_x_continuous(labels = label_comma(),limits=c(0, 6000000)) +
+  scale_fill_manual(name = "Scopus\nSnapshot", labels = c("January", "April", "July"),
+ values = c("scp01_oa_status" = "#446ace", "scp04_oa_status" = "#e9b121", "scp07_oa_status" = "#fd725d")) +
+  guides(fill = guide_legend(reverse=TRUE)) +
+  theme_minimal() +
+  geom_text(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 3, hjust = -.2, vjust = 0.5) +
+  xlab("Number of Items") +
+  ylab("Open Access Tag") +
+  theme(axis.text.y = element_text(size=12),
+        axis.text.x = element_text(size=12),
+        axis.title.y = element_text(size=14,vjust = +1),
+        axis.title.x = element_text(size=14,vjust = -.5),
+        legend.text =element_text(size=12),
+        legend.title = element_text(size=12,face = "bold"))
+
+png("scp_barplot.png", width = 980, height = 760)
+print(scp_barplot)
+dev.off()
+```
+
+# Erstellen des interactive Barplot
+
+```{r}
+interactive_barplot <- scp_oa_tagging_long_prep %>%
+  group_by(snapshot, oa_status) %>%
+  summarise(n = n_distinct(scp07_item_id)) %>%
+  mutate(name = ifelse(snapshot == "scp01_oa_status", "January",
+                       ifelse(snapshot == "scp04_oa_status", "April","July"))) %>%
+  ggplot(aes(y=reorder(oa_status,+n), x=n, fill = snapshot, tooltip = paste0("Number of Items: ", formatC(n, big.mark = ","), "\n", "Snapshot: ",name),
+  data_id = snapshot)) +
+  geom_bar_interactive(stat="identity", position = "dodge") +
+    scale_fill_manual_interactive(name = "Scopus\nSnapshot", labels = c("January", "April", "July"),
+ values = c("scp01_oa_status" = "#446ace", "scp04_oa_status" = "#e9b121", "scp07_oa_status" = "#fd725d")) +
+  scale_x_continuous(labels = label_comma(),limits=c(0, 6000000)) +
+  guides(fill = guide_legend(reverse=TRUE)) +
+  theme_minimal() +
+  geom_text_interactive(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 3, hjust = -.2, vjust = 0.5) +
+  xlab("Number of Items") +
+  ylab("Open Access Tag") +
+  theme(axis.text.y = element_text(size=12),
+        axis.text.x = element_text(size=12),
+        axis.title.y = element_text(size=14,vjust = +1),
+        axis.title.x = element_text(size=14,vjust = -.5),
+        legend.text =element_text(size=12),
+        legend.title = element_text(size=12,face = "bold"))
+
+scp_barplot_interactive <- girafe(ggobj = interactive_barplot)
+scp_barplot_interactive <- girafe_options(scp_barplot_interactive,
+  opts_zoom(min = .5, max = 5),
+  opts_hover(css = "fill:#9498a0;stroke:#9498a0;r:5pt;"))
+scp_barplot_interactive
+```
+
+# Zahlen im Barplot anhand von SQL Abfragen im KB verifizieren
+
+```{sql, connection=kb_con}
+select count(*) as count
+from unigsdoerner.scp_oa_tagging_temp sott 
+WHERE sott.scp04_oa_status ~ 'repositoryvor'
+```
+
+```{sql, connection=kb_con}
+select count(*) as count
+from unigsdoerner.scp_oa_tagging_temp sott 
+WHERE sott.scp04_oa_status ~ 'repositoryam'
+```
+
+```{sql, connection=kb_con}
+select count(*) as count
+from unigsdoerner.scp_oa_tagging_temp sott 
+WHERE sott.scp07_oa_status ~ 'repositoryvor'
+```
+
+```{sql, connection=kb_con}
+select count(*) as count
+from unigsdoerner.scp_oa_tagging_temp sott 
+WHERE sott.scp07_oa_status ~ 'repositoryam'
+```
+
+
+# Erstellen des Sankey
+
+```{r scpsankey}
+#nodes
+#links
+# Gruppen für jeden Knoten erstellen
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "scp01", 
+                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14), "scp04", "scp07")))
+
+links$group <- as.factor(ifelse(links$source == 2 & links$target == 11 | links$source == 2 & links$target == 13 | links$source == 3 & links$target == 11 | links$source == 3 & links$target == 13 | links$source == 9 & links$target == 18 | links$source == 10 & links$target == 18 | links$source == 9 & links$target == 20 | links$source == 10 & links$target == 20, "highlight", ifelse(links$source == 7 & links$target == 19, "highlight_2","plain")))
+
+# Farben für die source und target Knoten definieren
+colours <- 'd3.scaleOrdinal() .domain(["scp01", "scp04","scp07", "highlight","highlight_2","plain"]) .range(["#446ace","#e9b121", "#fd725d", "#40a954","#97bbf5ff","#e5e5e5"])'
+
+#Sankey erstellen
+scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
+              Target = "target", Value = "n", NodeID = "label", fontSize = 12, nodePadding = 20, 
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", LinkGroup = "group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("Scopus (January)","Scopus (April)","Scopus (July)"),xScalingFactor = .8, height = 700, width = 700)
+
+# Rendering function to make it prettier
+scp_sn <- onRender(
+  scp_sn,
+  '
+  function(el,x){
+    var lowerCase = /^[a-z]/;
+    var upperCase = /^[A-Z]/;
+    var allCaps = /^[A-Z-]+(?: \\(.*\\))?$/;
+
+    var labels = d3.select(el).selectAll(".node text");
+
+    labels.each(function(d) {
+      d.isAllCaps = allCaps.test(d.name);
+      d.isLowerCase = lowerCase.test(d.name);
+      d.isUpperCase = upperCase.test(d.name);
+
+      let text = d.name.toLowerCase();
+      let capitalized = text.replace(/(\\b|-)\\w/g, function(char) {
+        return char.toUpperCase();
+      });
+
+      d3.select(this).text(capitalized + " (" + d3.format(",d")(d.value) + ")");
+    });
+
+    labels.attr("transform", function(d) {
+        var box = this.getBBox();
+        var adjust = box.width 
+        if (d.isAllCaps) {
+          return "translate(" + (-adjust - 40) + ",0)";
+        }
+        else if (d.isUpperCase) {
+          return "translate(5,0)";
+        }
+        else {
+          return "translate(5,0)";
+        }
+    });
+
+    var zoomLayer = el.querySelector(".zoom-layer");
+    if(zoomLayer){
+      zoomLayer.setAttribute("transform", "translate(136,80) scale(0.75)");
+    }
+
+    labels.filter(function(d) { return d.isAllCaps; })
+      .attr("x",x.options.nodeWidth - 10)
+      .attr("text-anchor", "end")
+
+    labels.filter(function(d) { return d.isLowerCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
+    
+    labels.filter(function(d) { return d.isUpperCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
+    
+    d3.select(el)
+    .style("margin-left", "auto")
+    .style("margin-right", "auto")
+    .style("display", "block");
+    
+    d3.select(el).select("svg")
+    .attr("width", 1000)
+    .attr("height", 2000)
+    
+  }
+  '
+)
+scp_sn
+```

@@ -8,3 +8,7 @@ rsconnect
 *_cache
 issues
 dev
+_posts/scopus_oa_tagging_changes/data/scp_oa_tagging_temp.csv
+_posts/scopus_oa_tagging_changes/data/scp_oa_tagging_long_prep.csv
+_posts/scopus_oa_tagging_changes/data/green_none_0104.csv
+_posts/scopus_oa_tagging_changes/data/green_none_0407.csv
