@@ -51,103 +51,124 @@ kb_con <- dbConnect(RPostgres::Postgres(),
                     bigint = "numeric")
 ```
 
-# SQL Queries zur Tabellenerstellung im KB
+# SQL Query zur Tabellenerstellung im KB
 
 ``` sql 
-create table unigsdoerner.scp_oa_tagging_temp as(
+create table unigsdoerner.scp_shared_corpus as(
 select 
-scp07.item_id as scp07_item_id,
-scp07.doi as scp07_doi,
-scp07.pubyear as scp07_pubyear,
-scp01.item_id as scp01_item_id,
-scp01.doi as scp01_doi,
-scp01.pubyear as scp01_pubyear,
 scp04.item_id as scp04_item_id,
 scp04.doi as scp04_doi,
-scp04.pubyear as scp04_pubyear,
-unnest(scp01.oa_status) as scp01_oa_status,
-unnest(scp04.oa_status) as scp04_oa_status,
-unnest(scp07.oa_status) as scp07_oa_status,
-scp01.oa_url as scp01_oa_url,
-scp04.oa_url as scp04_oa_url,
-scp07.oa_url as scp07_oa_url,
-scp01.scopus_oa_licence as scp01_oa_licence,
-scp04.scopus_oa_licence as scp04_oa_licence,
-scp07.scopus_oa_licence as scp07_oa_licence
-from scp_b_202407.items scp07
-inner join scp_b_202404.items scp04 on
-scp07.item_id = scp04.item_id 
-inner join scp_b_202401.items scp01 on
-scp07.item_id = scp01.item_id 
-where scp07.pubyear between 2019 and 2023
+scp04.oa_status as scp04_oa_status,
+scp07.oa_status as scp07_oa_status,
+scp10.oa_status as scp10_oa_status
+from scp_b_202404.items scp04
+left join scp_b_202407.items scp07 on
+scp04.item_id = scp07.item_id 
+left join scp_b_202410.items scp10 on
+scp04.item_id = scp10.item_id 
+where scp04.pubyear between 2019 and 2023
 );
 ```
 
-# Laden der Daten aus der temp Tabelle im KB
+# Laden der Daten aus der shared corpus Tabelle im KB
 
-```{sql, connection=kb_con, output.var="scp_oa_tagging_temp"}
-select * from unigsdoerner.scp_oa_tagging_temp
+```{sql, connection=kb_con, output.var="scp_shared_corpus"}
+select * from unigsdoerner.scp_shared_corpus
 ```
 
 ```{r}
-write_csv(scp_oa_tagging_temp, here("scp_oa_tagging_temp.csv"))
+write_csv(scp_shared_corpus, here("_posts/scopus_oa_tagging_changes/data","scp_shared_corpus.csv"))
 ```
 
-```{r}
-scp_oa_tagging_temp <- read_csv(here("scp_oa_tagging_temp.csv"))
-```
+# Datenmanipulation der shared corpus Tabelle
 
-# Datenmanipulation der temp Tabelle
-
-- Ausschluss eines Eintrags (unterschiedliche dois, aber selbe item_id und unterschiedliche oa tags)
 - Ersetzen von NA Werten mit none
+- Entfernen geschweifter Klammern und Anführungszeichen
+- Entfernen der Zeilen, die nur enthalten
 - Entfernen von "all" und "repository" in allen Zellen
-- Entfernen der Zeilen, die nur "all" oder "repository" enthalten 
-- Leerzeichen durch Semikolon ersetzen
-- oa tags umbenennen
-- Spalten am Semikolon in mehrere Spalten aufteilen
+- Entfernen der Zeilen, die nur "all" oder "repository" enthalten
+
 
 ```{r}
-temp_prep <- scp_oa_tagging_temp %>%
-  select(scp07_item_id,scp07_doi, scp01_oa_status, scp04_oa_status,scp07_oa_status) %>%
-  filter(scp07_item_id != "2-s2.0-85181869646") %>%
-  mutate(scp01_oa_status = replace(scp01_oa_status, is.na(scp01_oa_status), "none")) %>%
+scp_sc_prep <- scp_shared_corpus %>%
   mutate(scp04_oa_status = replace(scp04_oa_status, is.na(scp04_oa_status), "none")) %>%
   mutate(scp07_oa_status = replace(scp07_oa_status, is.na(scp07_oa_status), "none")) %>%
-  mutate(scp01_oa_status = str_replace(scp01_oa_status, "^all ", "")) %>%
+  mutate(scp10_oa_status = replace(scp10_oa_status, is.na(scp10_oa_status), "none")) %>%
+  mutate(scp04_oa_status = gsub("\\{\"|\"\\}", "",scp04_oa_status)) %>%
+  mutate(scp07_oa_status = gsub("\\{\"|\"\\}", "",scp07_oa_status)) %>%
+  mutate(scp10_oa_status = gsub("\\{\"|\"\\}", "",scp10_oa_status)) %>%
+  filter(!grepl("^\\{all\\}$",scp04_oa_status)) %>%
+  filter(!grepl("^\\{all\\}$",scp07_oa_status)) %>%
+  filter(!grepl("^\\{all\\}$",scp10_oa_status)) %>%
+  filter(!grepl("^(all repository)$", scp04_oa_status)) %>%
+  filter(!grepl("^(all repository)$", scp07_oa_status)) %>%
+  filter(!grepl("^(all repository)$", scp10_oa_status)) %>%
   mutate(scp04_oa_status = str_replace(scp04_oa_status, "^all ", "")) %>%
   mutate(scp07_oa_status = str_replace(scp07_oa_status, "^all ", "")) %>%
-  mutate(scp01_oa_status = str_replace(scp01_oa_status, "repository ", "")) %>%
+  mutate(scp10_oa_status = str_replace(scp10_oa_status, "^all ", "")) %>%
   mutate(scp04_oa_status = str_replace(scp04_oa_status, "repository ", "")) %>%
   mutate(scp07_oa_status = str_replace(scp07_oa_status, "repository ", "")) %>%
-  filter(!grepl("^(all|repository)$", scp01_oa_status)) %>%
-  filter(!grepl("^(all|repository)$", scp04_oa_status)) %>%
-  filter(!grepl("^(all|repository)$", scp07_oa_status)) %>%
-  mutate(scp01_oa_status = str_replace_all(scp01_oa_status, " ", ";")) %>%
-  mutate(scp04_oa_status = str_replace_all(scp04_oa_status, " ", ";")) %>%
-  mutate(scp07_oa_status = str_replace_all(scp07_oa_status, " ", ";")) %>%
-  mutate(scp01_oa_status = str_replace_all(scp01_oa_status, c("publisherfullgold" = "gold", "publisherhybridgold" = "hybrid", "publisherfree2read" = "bronze", "repositoryvor" = "green (vor)", "repositoryam" = "green (am)"))) %>%
-  mutate(scp04_oa_status = str_replace_all(scp04_oa_status, c("publisherfullgold" = "gold", "publisherhybridgold" = "hybrid", "publisherfree2read" = "bronze", "repositoryvor" = "green (vor)", "repositoryam" = "green (am)"))) %>%
-  mutate(scp07_oa_status = str_replace_all(scp07_oa_status, c("publisherfullgold" = "gold", "publisherhybridgold" = "hybrid", "publisherfree2read" = "bronze", "repositoryvor" = "green (vor)", "repositoryam" = "green (am)"))) %>%
-  separate_wider_delim(scp01_oa_status, delim = ";", names_sep = "_", too_few = "align_start") %>%
-  separate_wider_delim(scp04_oa_status, delim = ";", names_sep = "_", too_few = "align_start") %>%
-  separate_wider_delim(scp07_oa_status, delim = ";", names_sep = "_", too_few = "align_start")
+  mutate(scp10_oa_status = str_replace(scp10_oa_status, "repository ", "")) %>%
+  mutate(scp04_oa_status = str_replace(scp04_oa_status, " repository$", "")) %>%
+  mutate(scp07_oa_status = str_replace(scp07_oa_status, " repository$", "")) %>%
+  mutate(scp10_oa_status = str_replace(scp10_oa_status, " repository$", ""))
 ```
 
 ```{r}
-write_csv(temp_prep, here("temp_prep.csv"))
+write_csv(scp_sc_prep, here("_posts/scopus_oa_tagging_changes/data","scp_sc_prep.csv"))
+```
+
+
+## shared corpus tabelle in wide format dataframe umwandeln
+
+- Leerzeichen durch Semikolon ersetzen
+- oa tags umbenennen
+- oa Spalten am Semikolon in mehrere Spalten aufteilen
+
+```{r}
+scp_sc_wide <- scp_sc_prep %>%
+  mutate(scp04_oa_status = str_replace_all(scp04_oa_status, " ", ";")) %>%
+  mutate(scp07_oa_status = str_replace_all(scp07_oa_status, " ", ";")) %>%
+  mutate(scp10_oa_status = str_replace_all(scp10_oa_status, " ", ";")) %>%
+  mutate(scp04_oa_status = str_replace_all(scp04_oa_status, c("publisherfullgold" = "gold", "publisherhybridgold" = "hybrid", "publisherfree2read" = "bronze", "repositoryvor" = "green (vor)", "repositoryam" = "green (am)"))) %>%
+  mutate(scp07_oa_status = str_replace_all(scp07_oa_status, c("publisherfullgold" = "gold", "publisherhybridgold" = "hybrid", "publisherfree2read" = "bronze", "repositoryvor" = "green (vor)", "repositoryam" = "green (am)"))) %>%
+  mutate(scp10_oa_status = str_replace_all(scp10_oa_status, c("publisherfullgold" = "gold", "publisherhybridgold" = "hybrid", "publisherfree2read" = "bronze", "repositoryvor" = "green (vor)", "repositoryam" = "green (am)"))) %>%
+  separate_wider_delim(scp04_oa_status, delim = ";", names_sep = "_", too_few = "align_start") %>%
+  separate_wider_delim(scp07_oa_status, delim = ";", names_sep = "_", too_few = "align_start") %>%
+  separate_wider_delim(scp10_oa_status, delim = ";", names_sep = "_", too_few = "align_start")
+```
+
+```{r}
+write_csv(scp_sc_wide, here("_posts/scopus_oa_tagging_changes/data","scp_sc_wide.csv"))
+```
+
+
+## shared corpus wide dataframe in long format dataframe umwandeln
+
+```{r}
+scp_sc_long <- scp_sc_wide %>%
+  pivot_longer(
+    cols = contains("oa_status"),
+    names_to = "snapshot",
+    values_to = "oa_status",
+    values_drop_na = TRUE     
+  ) %>%
+  mutate(snapshot = str_replace(snapshot, "_\\d$",""))
+```
+
+```{r}
+write_csv(scp_sc_long, here("_posts/scopus_oa_tagging_changes/data","scp_sc_long.csv"))
 ```
 
 
 # Daten für den OA Share vorbereiten
 
 ```{r}
-scp_oa_share <- scp_oa_tagging_temp %>%
-  select(scp07_item_id, scp01_oa_status,scp04_oa_status, scp07_oa_status) %>%
-  mutate(scp01_is_oa = ifelse(is.na(scp01_oa_status), "no","yes")) %>%
-  mutate(scp04_is_oa = ifelse(is.na(scp04_oa_status), "no","yes")) %>%
-  mutate(scp07_is_oa = ifelse(is.na(scp07_oa_status), "no","yes")) %>%
-  select(scp07_item_id, scp01_is_oa,scp04_is_oa,scp07_is_oa) %>%
+scp_oa_share <- scp_sc_prep %>%
+  mutate(scp04_is_oa = ifelse(scp04_oa_status == "none", "no","yes")) %>%
+  mutate(scp07_is_oa = ifelse(scp07_oa_status == "none", "no","yes")) %>%
+  mutate(scp10_is_oa = ifelse(scp10_oa_status == "none", "no","yes")) %>%
+  select(scp04_item_id, scp04_is_oa,scp07_is_oa,scp10_is_oa) %>%
   pivot_longer(
     cols = contains("is_oa"),
     names_to = "snapshot",
@@ -156,49 +177,37 @@ scp_oa_share <- scp_oa_tagging_temp %>%
   ) %>%
   group_by(snapshot, is_oa) %>%
  summarise(
- n = n_distinct(scp07_item_id)
+ n = n_distinct(scp04_item_id)
  ) %>%
  group_by(snapshot) %>%
  mutate(
  total = sum(n),
- share = n / total
- )
+ share = format(n / total * 100, nsmall = 2, decimal.mark = ".")
+ ) %>%
+ select(snapshot, is_oa, n, share) %>%
+ mutate(snapshot = ifelse(snapshot =="scp04_is_oa", "April",
+                          ifelse(snapshot == "scp07_is_oa", "July",
+                                 ifelse(snapshot == "scp10_is_oa","October",snapshot))))
+scp_oa_share
 ```
 
 ```{r}
-write_csv(scp_oa_share, here("scp_oa_share.csv"))
-```
-
-
-# temp_prep dataframe in long format umwandeln
-
-```{r}
-scp_oa_tagging_long_prep <- temp_prep %>%
-  pivot_longer(
-    cols = contains("oa_status"),
-    names_to = "snapshot",
-    values_to = "oa_status",
-    values_drop_na = TRUE     
-  ) %>%
-  mutate(snapshot = str_replace(snapshot, "_\\d$",""))
-```
-
-```{r}
-write_csv(scp_oa_tagging_long_prep, here("scp_oa_tagging_long_prep.csv"))
+write_csv(scp_oa_share, here("_posts/scopus_oa_tagging_changes/data","scp_oa_share.csv"))
 ```
 
 
 # Daten für das Sankey vorbereiten
 
 ```{r}
-scp_oa_tagging_sn_long <- temp_prep %>%
-   mutate(scp01_oa_status_2 = ifelse(is.na(scp01_oa_status_2) & !is.na(scp04_oa_status_2), "missing", scp01_oa_status_2)) %>%
-   mutate(scp01_oa_status_3 = ifelse(is.na(scp01_oa_status_3) & !is.na(scp04_oa_status_3), "missing", scp01_oa_status_3)) %>%
-   mutate(scp04_oa_status_2 = ifelse(is.na(scp04_oa_status_2) & !is.na(scp01_oa_status_2), "missing", scp04_oa_status_2)) %>%
-  mutate(scp04_oa_status_3 = ifelse(is.na(scp04_oa_status_3) & !is.na(scp01_oa_status_3), "missing", scp04_oa_status_3)) %>%
-  mutate(scp04_oa_status_2 = ifelse(is.na(scp04_oa_status_2) & !is.na(scp07_oa_status_2), "missing", scp04_oa_status_2)) %>%
-  mutate(scp07_oa_status_2 = ifelse(is.na(scp07_oa_status_2) & !is.na(scp04_oa_status_2), "missing", scp07_oa_status_2)) %>%
-  mutate(scp07_oa_status_3 = ifelse(is.na(scp07_oa_status_3) & !is.na(scp04_oa_status_3), "missing", scp07_oa_status_3)) %>%
+scp_sn_long <- scp_sc_wide %>%
+   mutate(scp04_oa_status_2 = ifelse(is.na(scp04_oa_status_2) & !is.na(scp07_oa_status_2), "missing", scp04_oa_status_2)) %>%
+   mutate(scp04_oa_status_3 = ifelse(is.na(scp04_oa_status_3) & !is.na(scp07_oa_status_3), "missing", scp04_oa_status_3)) %>%
+   mutate(scp07_oa_status_2 = ifelse(is.na(scp07_oa_status_2) & !is.na(scp04_oa_status_2), "missing", scp07_oa_status_2)) %>%
+   mutate(scp07_oa_status_3 = ifelse(is.na(scp07_oa_status_3) & !is.na(scp04_oa_status_3), "missing", scp07_oa_status_3)) %>%
+   mutate(scp07_oa_status_2 = ifelse(is.na(scp07_oa_status_2) & !is.na(scp10_oa_status_2), "missing", scp07_oa_status_2)) %>%
+   mutate(scp07_oa_status_3 = ifelse(is.na(scp07_oa_status_3) & !is.na(scp10_oa_status_3), "missing", scp07_oa_status_3)) %>%
+  mutate(scp10_oa_status_2 = ifelse(is.na(scp10_oa_status_2) & !is.na(scp07_oa_status_2), "missing", scp10_oa_status_2)) %>%
+  mutate(scp10_oa_status_3 = ifelse(is.na(scp10_oa_status_3) & !is.na(scp07_oa_status_3), "missing", scp10_oa_status_3)) %>%
   pivot_longer(
     cols = contains("oa_status"),
     names_to = "snapshot",
@@ -208,42 +217,49 @@ scp_oa_tagging_sn_long <- temp_prep %>%
   mutate(snapshot = str_replace(snapshot, "_\\d$",""))
 ```
 
+```{r}
+write_csv(scp_sn_long, here("_posts/scopus_oa_tagging_changes/data","scp_sn_long.csv"))
+```
+
+
 # Datenmanipulation für das Sankey
 
 ## Nodes
 
 ```{r}
-scp_0104_sn <- scp_oa_tagging_sn_long %>%
-  select(scp07_item_id,snapshot, oa_status) %>%
-  filter(snapshot != "scp07_oa_status") %>%
+scp_0407_sn <- scp_sn_long %>%
+  select(scp04_item_id,snapshot, oa_status) %>%
+  filter(snapshot != "scp10_oa_status") %>%
   group_by(snapshot, oa_status) %>%
-  mutate(n0104 = n_distinct(scp07_item_id))
+  mutate(n0407 = n_distinct(scp04_item_id))
 
-scp_0407_sn <- scp_oa_tagging_sn_long %>%
-  select(scp07_item_id,snapshot, oa_status) %>%
-  filter(snapshot != "scp01_oa_status") %>%
+scp_0710_sn <- scp_sn_long %>%
+  select(scp04_item_id,snapshot, oa_status) %>%
+  filter(snapshot != "scp04_oa_status") %>%
   group_by(snapshot, oa_status) %>%
-  mutate(n0407 = n_distinct(scp07_item_id))
+  mutate(n0710 = n_distinct(scp04_item_id))
 
-scp_0104_nodes_prep <- scp_0104_sn %>%
-  select(-scp07_item_id) %>%
-  distinct() %>%
-  mutate(oa_status = ifelse(snapshot == "scp01_oa_status", toupper(oa_status), 
-          ifelse(snapshot == "scp04_oa_status", str_to_title(oa_status), oa_status)))
+scp_0710_sn
 
 scp_0407_nodes_prep <- scp_0407_sn %>%
-  select(-scp07_item_id) %>%
+  select(-scp04_item_id) %>%
   distinct() %>%
-  mutate(oa_status = ifelse(snapshot == "scp04_oa_status", str_to_title(oa_status), oa_status))
+  mutate(oa_status = ifelse(snapshot == "scp04_oa_status", toupper(oa_status), 
+          ifelse(snapshot == "scp07_oa_status", str_to_title(oa_status), oa_status)))
 
-scp_147 <- bind_rows(scp_0104_nodes_prep,scp_0407_nodes_prep)
-scp_147 <- scp_147 %>%
+scp_0710_nodes_prep <- scp_0710_sn %>%
+  select(-scp04_item_id) %>%
+  distinct() %>%
+  mutate(oa_status = ifelse(snapshot == "scp07_oa_status", str_to_title(oa_status), oa_status))
+
+scp_4710 <- bind_rows(scp_0407_nodes_prep,scp_0710_nodes_prep)
+scp_4710 <- scp_4710 %>%
   select(snapshot, oa_status) %>%
   arrange(snapshot) %>%
   distinct() %>%
   ungroup()
 
-nodes <- scp_147 %>%
+nodes <- scp_4710 %>%
  mutate(snapshot = row_number()) %>%
  rename(name = snapshot) %>%
  mutate(name = as.character(name)) %>%
@@ -251,123 +267,126 @@ nodes <- scp_147 %>%
 ```
 
 ```{r}
-write_csv(nodes, here("nodes.csv"))
+write_csv(nodes, here("_posts/scopus_oa_tagging_changes/data","nodes.csv"))
 ```
 
 
 ## Links
 
 ```{r}
-temp_prep_sn <- temp_prep %>%
-   mutate(scp01_oa_status_2 = ifelse(is.na(scp01_oa_status_2) & !is.na(scp04_oa_status_2), "missing", scp01_oa_status_2)) %>%
-   mutate(scp01_oa_status_3 = ifelse(is.na(scp01_oa_status_3) & !is.na(scp04_oa_status_3), "missing", scp01_oa_status_3)) %>%
-   mutate(scp04_oa_status_2 = ifelse(is.na(scp04_oa_status_2) & !is.na(scp01_oa_status_2), "missing", scp04_oa_status_2)) %>%
-  mutate(scp04_oa_status_3 = ifelse(is.na(scp04_oa_status_3) & !is.na(scp01_oa_status_3), "missing", scp04_oa_status_3)) %>%
-  mutate(scp04_oa_status_2 = ifelse(is.na(scp04_oa_status_2) & !is.na(scp07_oa_status_2), "missing", scp04_oa_status_2)) %>%
-  mutate(scp07_oa_status_2 = ifelse(is.na(scp07_oa_status_2) & !is.na(scp04_oa_status_2), "missing", scp07_oa_status_2)) %>%
-  mutate(scp07_oa_status_3 = ifelse(is.na(scp07_oa_status_3) & !is.na(scp04_oa_status_3), "missing", scp07_oa_status_3))
+scp_sn_links_prep <- scp_sc_wide %>%
+   mutate(scp04_oa_status_2 = ifelse(is.na(scp04_oa_status_2) & !is.na(scp07_oa_status_2), "missing", scp04_oa_status_2)) %>%
+   mutate(scp04_oa_status_3 = ifelse(is.na(scp04_oa_status_3) & !is.na(scp07_oa_status_3), "missing", scp04_oa_status_3)) %>%
+   mutate(scp07_oa_status_2 = ifelse(is.na(scp07_oa_status_2) & !is.na(scp04_oa_status_2), "missing", scp07_oa_status_2)) %>%
+   mutate(scp07_oa_status_3 = ifelse(is.na(scp07_oa_status_3) & !is.na(scp04_oa_status_3), "missing", scp07_oa_status_3)) %>%
+   mutate(scp07_oa_status_2 = ifelse(is.na(scp07_oa_status_2) & !is.na(scp10_oa_status_2), "missing", scp07_oa_status_2)) %>%
+   mutate(scp07_oa_status_3 = ifelse(is.na(scp07_oa_status_3) & !is.na(scp10_oa_status_3), "missing", scp07_oa_status_3)) %>%
+  mutate(scp10_oa_status_2 = ifelse(is.na(scp10_oa_status_2) & !is.na(scp07_oa_status_2), "missing", scp10_oa_status_2)) %>%
+  mutate(scp10_oa_status_3 = ifelse(is.na(scp10_oa_status_3) & !is.na(scp07_oa_status_3), "missing", scp10_oa_status_3))
 ```
 
 
 ```{r}
-st1 <- temp_prep_sn %>%
-  select(scp07_item_id, scp01_oa_status_1, scp04_oa_status_1) %>%
-  mutate(source = toupper(scp01_oa_status_1)) %>%
-  mutate(target = str_to_title(scp04_oa_status_1)) %>%
-  select(scp07_item_id, source, target)
+st1 <- scp_sn_links_prep %>%
+  select(scp04_item_id, scp04_oa_status_1, scp07_oa_status_1) %>%
+  mutate(source = toupper(scp04_oa_status_1)) %>%
+  mutate(target = str_to_title(scp07_oa_status_1)) %>%
+  select(scp04_item_id, source, target)
 
-st2 <- temp_prep_sn %>%
-  select(scp07_item_id, scp01_oa_status_2, scp04_oa_status_2) %>%
-  filter(!(is.na(scp01_oa_status_2) & is.na(scp04_oa_status_2))) %>%
-  mutate(source = toupper(scp01_oa_status_2)) %>%
-  mutate(target = str_to_title(scp04_oa_status_2)) %>%
-  select(scp07_item_id, source, target)
-
-st3 <- temp_prep_sn %>%
-  select(scp07_item_id, scp01_oa_status_3, scp04_oa_status_3) %>%
-  filter(!(is.na(scp01_oa_status_3) & is.na(scp04_oa_status_3))) %>%
-  mutate(source = toupper(scp01_oa_status_3)) %>%
-  mutate(target = str_to_title(scp04_oa_status_3)) %>%
-  select(scp07_item_id, source, target)
-
-scp0104_links_prep <- bind_rows(st1,st2,st3)
-stn <- scp0104_links_prep %>%
-  group_by(source, target) %>%
-  summarise(n = n_distinct(scp07_item_id))
-
-st4 <- temp_prep_sn %>%
-  select(scp07_item_id, scp04_oa_status_1, scp07_oa_status_1) %>%
-  mutate(source = str_to_title(scp04_oa_status_1)) %>%
-  mutate(target = scp07_oa_status_1) %>%
-  select(scp07_item_id, source, target)
-
-st5 <- temp_prep_sn %>%
-  select(scp07_item_id, scp04_oa_status_2, scp07_oa_status_2) %>%
+st2 <- scp_sn_links_prep %>%
+  select(scp04_item_id, scp04_oa_status_2, scp07_oa_status_2) %>%
   filter(!(is.na(scp04_oa_status_2) & is.na(scp07_oa_status_2))) %>%
-  mutate(source = str_to_title(scp04_oa_status_2)) %>%
-  mutate(target = scp07_oa_status_2) %>%
-  select(scp07_item_id, source, target)
+  mutate(scp04_oa_status_2 = ifelse(scp07_oa_status_2 == "missing" & is.na(scp04_oa_status_2),"missing",scp04_oa_status_2)) %>%
+  mutate(source = toupper(scp04_oa_status_2)) %>%
+  mutate(target = str_to_title(scp07_oa_status_2)) %>%
+  select(scp04_item_id, source, target)
 
-st6 <- temp_prep_sn %>%
-  select(scp07_item_id, scp04_oa_status_3, scp07_oa_status_3) %>%
+st3 <- scp_sn_links_prep %>%
+  select(scp04_item_id, scp04_oa_status_3, scp07_oa_status_3) %>%
   filter(!(is.na(scp04_oa_status_3) & is.na(scp07_oa_status_3))) %>%
-  mutate(source = str_to_title(scp04_oa_status_3)) %>%
-  mutate(target = scp07_oa_status_3) %>%
-  select(scp07_item_id, source, target)
+  mutate(scp04_oa_status_3 = ifelse(scp07_oa_status_3 == "missing" & is.na(scp04_oa_status_3),"missing",scp04_oa_status_3)) %>%
+  mutate(source = toupper(scp04_oa_status_3)) %>%
+  mutate(target = str_to_title(scp07_oa_status_3)) %>%
+  select(scp04_item_id, source, target)
 
-scp0407_links_prep <- bind_rows(st4,st5,st6)
-stn2 <- scp0407_links_prep %>%
+scp0407_links_prep <- bind_rows(st1,st2,st3)
+stn <- scp0407_links_prep %>%
   group_by(source, target) %>%
-  summarise(n = n_distinct(scp07_item_id))
+  summarise(n = n_distinct(scp04_item_id))
+
+
+st4 <- scp_sn_links_prep %>%
+  select(scp04_item_id, scp07_oa_status_1, scp10_oa_status_1) %>%
+  mutate(source = str_to_title(scp07_oa_status_1)) %>%
+  mutate(target = scp10_oa_status_1) %>%
+  select(scp04_item_id, source, target)
+
+st5 <- scp_sn_links_prep %>%
+  select(scp04_item_id, scp07_oa_status_2, scp10_oa_status_2) %>%
+  filter(!(is.na(scp07_oa_status_2) & is.na(scp10_oa_status_2))) %>%
+  mutate(source = str_to_title(scp07_oa_status_2)) %>%
+  mutate(target = scp10_oa_status_2) %>%
+  select(scp04_item_id, source, target)
+
+st6 <- scp_sn_links_prep %>%
+  select(scp04_item_id, scp07_oa_status_3, scp10_oa_status_3) %>%
+  filter(!(is.na(scp07_oa_status_3) & is.na(scp10_oa_status_3))) %>%
+  mutate(source = str_to_title(scp07_oa_status_3)) %>%
+  mutate(target = scp10_oa_status_3) %>%
+  select(scp04_item_id, source, target)
+
+scp0710_links_prep <- bind_rows(st4,st5,st6)
+stn2 <- scp0710_links_prep %>%
+  group_by(source, target) %>%
+  summarise(n = n_distinct(scp04_item_id))
 
 links <- bind_rows(stn,stn2) %>%
          mutate(source = match(source, nodes$label) -1,
                 target = match(target, nodes$label) -1)
-
-#links
-links <- links %>%
-  filter(!is.na(source))
 ```
 
 ```{r}
-write_csv(links, here("links.csv"))
+write_csv(links, here("_posts/scopus_oa_tagging_changes/data","links.csv"))
 ```
-
 
 
 # Sample DOIs for Unpaywall check
 
 ```{r}
-doi_sample_0407 <- scp_oa_tagging_temp %>%
-  select(scp07_doi, scp04_oa_status,scp07_oa_status) %>%
+doi_sample_0407 <- scp_sc_prep %>%
+  select(scp04_doi, scp04_oa_status,scp07_oa_status) %>%
   filter(grepl("repositoryvor|repositoryam", scp04_oa_status) & !grepl("repositoryvor|repositoryam", scp07_oa_status)) %>%
- filter(!is.na(scp07_doi)) %>%
- filter(!duplicated(scp07_doi)) %>%
- sample_n(10000) %>%
- pull(scp07_doi)
+  filter(!is.na(scp04_doi)) %>%
+  filter(!duplicated(scp04_doi)) %>%
+  sample_n(10000) %>%
+  pull(scp04_doi)
 ```
 
 ```{r}
-doi_sample_0104 <- scp_oa_tagging_temp %>%
-  select(scp07_doi, scp01_oa_status,scp04_oa_status) %>%
-  filter(grepl("repositoryvor|repositoryam", scp01_oa_status) & !grepl("repositoryvor|repositoryam", scp04_oa_status)) %>%
- filter(!is.na(scp07_doi)) %>%
- filter(!duplicated(scp07_doi)) %>%
- sample_n(10000) %>%
- pull(scp07_doi)
+save(doi_sample_0407, file = "doi_sample_0407.RData")
+```
+
+```{r}
+doi_sample_0710 <- scp_sc_prep %>%
+  select(scp04_doi, scp07_oa_status,scp10_oa_status) %>%
+  filter(grepl("repositoryvor|repositoryam", scp07_oa_status) & !grepl("repositoryvor|repositoryam", scp10_oa_status)) %>%
+  filter(!is.na(scp04_doi)) %>%
+  filter(!duplicated(scp04_doi)) %>%
+  sample_n(10000) %>%
+  pull(scp04_doi)
+```
+
+```{r}
+save(doi_sample_0710, file = "doi_sample_0710.RData")
 ```
 
 
 # Sample DOIs für KB check
 
 ```{r}
-kb_check_0104 <- green_none_0104 %>%
-  filter(host_type  == "repository") %>%
-  distinct(doi) %>%
-  sample_n(10) %>%
-  pull(doi)
+green_none_0407 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","green_none_0407.csv"))
+green_none_0710 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","green_none_0710.csv"))
 ```
-
 
 ```{r}
 kb_check_0407 <- green_none_0407 %>%
@@ -379,13 +398,20 @@ kb_check_0407 <- green_none_0407 %>%
 
 
 ```{r}
-kb_0104 <- as.tibble(kb_check_0104)
-kb_0407 <- as.tibble(kb_check_0407)
+kb_check_0710 <- green_none_0710 %>%
+  filter(host_type  == "repository") %>%
+  distinct(doi) %>%
+  sample_n(10) %>%
+  pull(doi)
+```
 
-kb_check <- bind_rows(kb_0104,kb_0407)
 
-#write_csv(kb_check, here("kb_check.csv"))
+```{r}
+kb_0407 <- as_tibble(kb_check_0407)
+kb_0710 <- as_tibble(kb_check_0710)
 
-write.table(kb_check, file = "kb_check.txt", row.names = FALSE,col.names = FALSE)
+kb_check <- bind_rows(kb_0407,kb_0710)
+
+write.table(kb_check, file =here("_posts/scopus_oa_tagging_changes/data","kb_check.txt"), row.names = FALSE,col.names = FALSE)
 ```
 

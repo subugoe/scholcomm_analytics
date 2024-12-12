@@ -56,86 +56,49 @@ kb_con <- dbConnect(RPostgres::Postgres(),
 ```{sql, connection=kb_con}
 select sum(count) as total_count
 from (
-    select scp07_item_id, scp04_oa_status, scp07_oa_status, count(*) as count
-    from unigsdoerner.scp_oa_tagging_temp sott
-    where sott.scp04_oa_status ~ 'repositoryvor|repositoryam' and sott.scp07_oa_status !~ 'repositoryvor|repositoryam'
-    group by scp07_item_id, scp04_oa_status, scp07_oa_status
+    select scp04_item_id, scp04_oa_status, scp07_oa_status, count(*) as count
+    from unigsdoerner.scp_shared_corpus ssc
+    where ssc.scp04_oa_status ~ 'repositoryvor|repositoryam' and ssc.scp07_oa_status !~ 'repositoryvor|repositoryam'
+    group by scp04_item_id, scp04_oa_status, scp07_oa_status
 ) as subquery;
 ```
 
 # fetch Unpaywall Info
 
+```{r}
+green_none_0407_raw <- oadoi_fetch(dois = doi_sample_0407, email = Sys.getenv("roadoi_email"), .progress = "text")
+```
+
 
 ```{r}
-green_none_0104_raw <- oadoi_fetch(dois = doi_sample_0104, email = Sys.getenv("roadoi_email"), .progress = "text")
-
-green_none_0104 <- green_none_0104_raw %>%
-  select(doi, oa_status, has_repository_copy,oa_locations) %>%
-  unnest(oa_locations, keep_empty = TRUE) %>%
-  select(doi, oa_status, has_repository_copy, is_best, host_type)
-
-write_csv(green_none_0104, "green_none_0104.csv")
+load(here("_posts/scopus_oa_tagging_changes/data","green_none_0407_raw.RData"))
+load(here("_posts/scopus_oa_tagging_changes/data","green_none_0710_raw.RData"))
 ```
 
 ```{r}
-green_none_0407_raw <- oadoi_fetch(dois = doi_sample_0407, email = Sys.getenv("roadoi_email"), .progress = "text")
-
 green_none_0407 <- green_none_0407_raw %>%
   select(doi, oa_status, has_repository_copy,oa_locations) %>%
   unnest(oa_locations, keep_empty = TRUE) %>%
   select(doi, oa_status, has_repository_copy, is_best, host_type)
 
-write_csv(green_none_0407, "green_none_0407.csv")
+write_csv(green_none_0407, here("_posts/scopus_oa_tagging_changes/data","green_none_0407.csv"))
 ```
 
 ```{r}
-green_none_0104 <- read_csv(here("green_none_0104.csv"))
-green_none_0407 <- read_csv(here("green_none_0407.csv"))
+green_none_0710_raw <- oadoi_fetch(dois = doi_sample_0710, email = Sys.getenv("roadoi_email"), .progress = "text")
+
+green_none_0710 <- green_none_0710_raw %>%
+  select(doi, oa_status, has_repository_copy,oa_locations) %>%
+  unnest(oa_locations, keep_empty = TRUE) %>%
+  select(doi, oa_status, has_repository_copy, is_best, host_type)
+
+write_csv(green_none_0710, here("_posts/scopus_oa_tagging_changes/data","green_none_0710.csv"))
 ```
 
 # Unpaywall Info analysieren
 
 
 ```{r}
-green_none_0104 %>%
-  summarise(n=n_distinct(doi))
-
-green_none_0104 %>%
-  group_by(has_repository_copy) %>%
-  summarise(n = n_distinct(doi))
-
-green_none_0104 %>%
-  filter(host_type == "repository") %>%
-  group_by(oa_status, has_repository_copy, host_type) %>%
-  summarise(n= n_distinct(doi)) %>%
-  arrange(desc(n))
-```
-
-```{r}
-upw_0104_recopy <- green_none_0104 %>%
-  group_by(has_repository_copy) %>%
-  summarise(count= n_distinct(doi)) %>%
-  mutate(pct = round(count/sum(count) *100,2)) %>%
-  arrange(desc(count))
-```
-
-```{r}
-upw_0104_host <- green_none_0104 %>%
-  group_by(oa_status,has_repository_copy,host_type) %>%
-  summarise(count= n_distinct(doi)) %>%
-  filter(host_type == "repository") %>%
-  ungroup() %>%
-  mutate(pct = round(count/sum(count) *100,2)) %>%
-  arrange(desc(count))
-```
-
-```{r}
-write_csv(upw_0104_recopy, here("upw_0104_recopy.csv"))
-write_csv(upw_0104_host, here("upw_0104_host.csv"))
-```
-
-
-```{r}
 green_none_0407 %>%
   summarise(n=n_distinct(doi))
 
@@ -149,13 +112,12 @@ green_none_0407 %>%
   summarise(n= n_distinct(doi)) %>%
   arrange(desc(n))
 ```
-
 
 ```{r}
 upw_0407_recopy <- green_none_0407 %>%
   group_by(has_repository_copy) %>%
   summarise(count= n_distinct(doi)) %>%
-  mutate(pct = round(count/sum(count) *100,2)) %>%
+  mutate(pct = format(round(count/sum(count) *100,2), nsmall = 2)) %>%
   arrange(desc(count))
 ```
 
@@ -165,20 +127,60 @@ upw_0407_host <- green_none_0407 %>%
   summarise(count= n_distinct(doi)) %>%
   filter(host_type == "repository") %>%
   ungroup() %>%
-  mutate(pct = round(count/sum(count) *100,2)) %>%
+  mutate(pct = format(round(count/sum(count) *100,2), nsmall = 2)) %>%
+  arrange(desc(count))
+```
+
+```{r}
+write_csv(upw_0407_recopy, here("_posts/scopus_oa_tagging_changes/data","upw_0407_recopy.csv"))
+write_csv(upw_0407_host, here("_posts/scopus_oa_tagging_changes/data","upw_0407_host.csv"))
+```
+
+
+```{r}
+green_none_0710 %>%
+  summarise(n=n_distinct(doi))
+
+green_none_0710 %>%
+  group_by(has_repository_copy) %>%
+  summarise(n = n_distinct(doi))
+
+green_none_0710 %>%
+  filter(host_type == "repository") %>%
+  group_by(oa_status, has_repository_copy, host_type) %>%
+  summarise(n= n_distinct(doi)) %>%
+  arrange(desc(n))
+```
+
+
+```{r}
+upw_0710_recopy <- green_none_0710 %>%
+  group_by(has_repository_copy) %>%
+  summarise(count= n_distinct(doi)) %>%
+  mutate(pct = format(round(count/sum(count) *100,2), nsmall = 2)) %>%
+  arrange(desc(count))
+```
+
+```{r}
+upw_0710_host <- green_none_0710 %>%
+  group_by(oa_status,has_repository_copy,host_type) %>%
+  summarise(count= n_distinct(doi)) %>%
+  filter(host_type == "repository") %>%
+  ungroup() %>%
+  mutate(pct = format(round(count/sum(count) *100,2), nsmall = 2)) %>%
   arrange(desc(count))
 ```
 
 
 ```{r}
-write_csv(upw_0407_recopy, here("upw_0407_recopy.csv"))
-write_csv(upw_0407_host, here("upw_0407_host.csv"))
+write_csv(upw_0710_recopy, here("_posts/scopus_oa_tagging_changes/data","upw_0710_recopy.csv"))
+write_csv(upw_0710_host, here("_posts/scopus_oa_tagging_changes/data","upw_0710_host.csv"))
 ```
 
 
 # SQl Abfragen für den check der 10 dois gegen scp_rep
 
-```{sql, connection=kb_con, output.var="kb_check_0104_bdb_raw"}
+```{sql, connection=kb_con, output.var="kb_check_0407_bdb_raw"}
 select i.item_id, i.doi, unnest(i.oa_status) as bdb_oa_status, rawdata.oa_status as rawdata_oa_status
 from scp_b_202407.items i 
 left join (select
@@ -193,59 +195,14 @@ from (
 	where item_id in (
 		select item_id  
 		from scp_b_202407.items 
-		where doi in ('10.1073/pnas.2208540119','10.1186/s13046-022-02282-9','10.4014/jmb.1912.12053',
-		'10.3390/genes13061023','10.1038/s41467-020-20130-2','10.1103/physrevb.99.161118',
-		'10.1016/j.trb.2022.07.008','10.15171/ijhpm.2019.84','10.18502/cmm.5.2.1160','10.1016/s2214-109x(19)30409-7')
+		where doi in ('10.1007/s11255-022-03188-3','10.1186/s12916-023-03072-6','10.15446/achsc.v47n2.86161','10.1038/s41598-023-40469-y','10.1109/tkde.2021.3112749','10.1111/jeu.12926','10.1016/j.jpedsurg.2022.03.034','10.1186/s12920-021-01105-8','10.1038/s41467-023-39992-3','10.1177/01925121231200124')
 		)
 ) x) as rawdata 
 on i.item_id = rawdata.item_id 
 where i.item_id in (
 		select item_id  
 		from scp_b_202407.items 
-		where doi in ('10.1073/pnas.2208540119','10.1186/s13046-022-02282-9','10.4014/jmb.1912.12053',
-		'10.3390/genes13061023','10.1038/s41467-020-20130-2','10.1103/physrevb.99.161118',
-		'10.1016/j.trb.2022.07.008','10.15171/ijhpm.2019.84','10.18502/cmm.5.2.1160','10.1016/s2214-109x(19)30409-7')
-		)
-;
-```
-
-```{r}
-kb_check_0104_oa_bdb_raw <- kb_check_0104_bdb_raw %>%
-  select(bdb_oa_status,rawdata_oa_status)
-```
-
-```{r}
-write_csv(kb_check_0104_oa_bdb_raw, here("kb_check_0104_oa_bdb_raw.csv"))
-```
-
-
-```{sql, connection=kb_con, output.var="kb_check_0407_bdb_raw"}
-select i.item_id, i.doi, unnest(i.oa_status) as bdb_oa_status, rawdata.oa_status as rawdata_oa_status
-from scp_b_202404.items i 
-left join (select
-	item_id,
-	unnest(xpath('//xocs:oa-article-status/@free-to-read-status', xml_element, array[array['xocs', 'http://www.elsevier.com/xml/xocs/dtd']]))::text as "oa_status"
-from (
-	select item_id,
-		unnest(xpath('/xocs:doc/xocs:meta/xocs:open-access/xocs:oa-article-status', 
-		r.xml, 
-		array[array['xocs', 'http://www.elsevier.com/xml/xocs/dtd']])) as xml_element
-	from scp_rep_202404.repository r 
-	where item_id in (
-		select item_id  
-		from scp_b_202404.items 
-		where doi in ('10.5770/cgj.24.488','10.3390/toxins13020091','10.3390/ijerph192315871',
-		'10.1111/jrh.12444','10.3390/jcm10153310','10.1016/j.jmaa.2019.02.041',
-		'10.1590/1981-6723.21119','10.1093/sleepadvances/zpad032','10.1063/1.5117130','10.1088/1742-6596/2156/1/012227')
-		)
-) x) as rawdata 
-on i.item_id = rawdata.item_id 
-where i.item_id in (
-		select item_id  
-		from scp_b_202404.items 
-		where doi in ('10.5770/cgj.24.488','10.3390/toxins13020091','10.3390/ijerph192315871',
-		'10.1111/jrh.12444','10.3390/jcm10153310','10.1016/j.jmaa.2019.02.041',
-		'10.1590/1981-6723.21119','10.1093/sleepadvances/zpad032','10.1063/1.5117130','10.1088/1742-6596/2156/1/012227')
+		where doi in ('10.1007/s11255-022-03188-3','10.1186/s12916-023-03072-6','10.15446/achsc.v47n2.86161','10.1038/s41598-023-40469-y','10.1109/tkde.2021.3112749','10.1111/jeu.12926','10.1016/j.jpedsurg.2022.03.034','10.1186/s12920-021-01105-8','10.1038/s41467-023-39992-3','10.1177/01925121231200124')
 		)
 ;
 ```
@@ -256,28 +213,65 @@ kb_check_0407_oa_bdb_raw <- kb_check_0407_bdb_raw %>%
 ```
 
 ```{r}
-write_csv(kb_check_0407_oa_bdb_raw, here("kb_check_0407_oa_bdb_raw.csv"))
+write_csv(kb_check_0407_oa_bdb_raw, here("_posts/scopus_oa_tagging_changes/data","kb_check_0407_oa_bdb_raw.csv"))
+```
+
+
+```{sql, connection=kb_con, output.var="kb_check_0710_bdb_raw"}
+select i.item_id, i.doi, unnest(i.oa_status) as bdb_oa_status, rawdata.oa_status as rawdata_oa_status
+from scp_b_202410.items i 
+left join (select
+	item_id,
+	unnest(xpath('//xocs:oa-article-status/@free-to-read-status', xml_element, array[array['xocs', 'http://www.elsevier.com/xml/xocs/dtd']]))::text as "oa_status"
+from (
+	select item_id,
+		unnest(xpath('/xocs:doc/xocs:meta/xocs:open-access/xocs:oa-article-status', 
+		r.xml, 
+		array[array['xocs', 'http://www.elsevier.com/xml/xocs/dtd']])) as xml_element
+	from scp_rep_202410.repository r 
+	where item_id in (
+		select item_id  
+		from scp_b_202410.items 
+		where doi in ('10.1186/s12885-023-11645-0','10.18042/cepc/rdce.62.04','10.1021/acsomega.3c03246','10.4995/head22.2022.14555','10.5334/joc.226','10.1038/s41467-021-21580-y','10.1111/cdoe.12544','10.1016/j.jimed.2021.02.009','10.1155/2019/7639754','10.3390/dj7040104')
+		)
+) x) as rawdata 
+on i.item_id = rawdata.item_id 
+where i.item_id in (
+		select item_id  
+		from scp_b_202410.items 
+		where doi in ('10.1186/s12885-023-11645-0','10.18042/cepc/rdce.62.04','10.1021/acsomega.3c03246','10.4995/head22.2022.14555','10.5334/joc.226','10.1038/s41467-021-21580-y','10.1111/cdoe.12544','10.1016/j.jimed.2021.02.009','10.1155/2019/7639754','10.3390/dj7040104')
+		)
+;
+```
+
+```{r}
+kb_check_0710_oa_bdb_raw <- kb_check_0710_bdb_raw %>%
+  select(bdb_oa_status,rawdata_oa_status)
+```
+
+```{r}
+write_csv(kb_check_0710_oa_bdb_raw, here("_posts/scopus_oa_tagging_changes/data","kb_check_0710_oa_bdb_raw.csv"))
 ```
 
 # Scopus Interface Check
 
 ```{r}
-scp_interface <- read_csv(here("scp_interface_check.csv"))
-```
-
-```{r}
-scp_interface_0104 <- scp_interface %>%
-  filter(DOI %in% c("10.5770/cgj.24.488","10.3390/TOXINS13020091","10.3390/ijerph192315871","10.1111/jrh.12444","10.3390/jcm10153310","10.1016/j.jmaa.2019.02.041","10.1590/1981-6723.21119","10.1093/sleepadvances/zpad032","10.1063/1.5117130","10.1088/1742-6596/2156/1/012227")) %>%
-  select(`Open Access`)
+scp_interface <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_interface_check.csv"))
 ```
 
 ```{r}
 scp_interface_0407 <- scp_interface %>%
-  filter(DOI %in% c("10.1073/pnas.2208540119","10.1186/s13046-022-02282-9","10.4014/jmb.1912.12053","10.3390/genes13061023","10.1038/s41467-020-20130-2","10.1103/PhysRevB.99.161118","10.1016/j.trb.2022.07.008","10.15171/ijhpm.2019.84","10.18502/cmm.5.2.1160","10.1016/S2214-109X(19)30409-7")) %>%
+  filter(DOI %in% c('10.1007/s11255-022-03188-3','10.1186/s12916-023-03072-6','10.15446/achsc.v47n2.86161','10.1038/s41598-023-40469-y','10.1109/TKDE.2021.3112749','10.1111/jeu.12926','10.1016/j.jpedsurg.2022.03.034','10.1186/s12920-021-01105-8','10.1038/s41467-023-39992-3','10.1177/01925121231200124' )) %>%
   select(`Open Access`)
 ```
 
 ```{r}
-write_csv(scp_interface_0104, here("scp_interface_0104.csv"))
-write_csv(scp_interface_0407, here("scp_interface_0407.csv"))
+scp_interface_0710 <- scp_interface %>%
+  filter(DOI %in% c('10.1186/s12885-023-11645-0','10.18042/cepc/rdce.62.04','10.1021/acsomega.3c03246','10.4995/HEAd22.2022.14555','10.5334/joc.226','10.1038/s41467-021-21580-y','10.1111/cdoe.12544','10.1016/j.jimed.2021.02.009','10.1155/2019/7639754','10.3390/dj7040104')) %>%
+  select(`Open Access`)
+```
+
+```{r}
+write_csv(scp_interface_0407, here("_posts/scopus_oa_tagging_changes/data","scp_interface_0407.csv"))
+write_csv(scp_interface_0710, here("_posts/scopus_oa_tagging_changes/data","scp_interface_0710.csv"))
 ```

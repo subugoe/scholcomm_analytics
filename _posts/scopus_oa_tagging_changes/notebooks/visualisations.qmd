@@ -52,37 +52,25 @@ kb_con <- dbConnect(RPostgres::Postgres(),
                     bigint = "numeric")
 ```
 
-# Erstellen des OA-Share Barplot
-
-```{r}
-scp_oa_share %>%
- mutate(name = ifelse(snapshot == "scp01_is_oa", "January",
-                       ifelse(snapshot == "scp04_is_oa", "April","July"))) %>%
- mutate(name = factor(name, levels = c("January", "April", "July"))) %>%
- ggplot(aes(x = name, y = share, fill = is_oa)) +
- geom_bar(stat = "identity", position = "stack") +
- scale_y_continuous(labels = scales::percent) +
- scale_fill_manual(values = c("#9498a0","#6cc5b0")) +
- labs(x = "Snapshot", y = "Share of OA and non-OA Items", fill = "Is OA") +
- theme_minimal() +
- geom_text(aes(label = paste0(round(share * 100, 2), "%")),
- position = position_stack(vjust = 0.5))
-```
-
 # Erstellen des Barplot
 
 ```{r}
-scp_barplot <- scp_oa_tagging_long_prep %>%
+scp_sc_long <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_sc_long.csv"))
+```
+
+
+```{r}
+scp_barplot <- scp_sc_long %>%
   group_by(snapshot, oa_status) %>%
-  summarise(n = n_distinct(scp07_item_id)) %>%
+  summarise(n = n_distinct(scp04_item_id)) %>%
   ggplot(aes(y=reorder(oa_status,+n), x=n, fill = snapshot)) +
   geom_bar(stat="identity", position = "dodge") +
-  scale_x_continuous(labels = label_comma(),limits=c(0, 6000000)) +
-  scale_fill_manual(name = "Scopus\nSnapshot", labels = c("January", "April", "July"),
- values = c("scp01_oa_status" = "#446ace", "scp04_oa_status" = "#e9b121", "scp07_oa_status" = "#fd725d")) +
+  scale_x_continuous(labels = label_comma(),limits=c(0, 12000000)) +
+  scale_fill_manual(name = "Scopus\nSnapshot", labels = c("April", "July", "October"),
+  values = c("scp04_oa_status" = "#446ace", "scp07_oa_status" = "#e9b121", "scp10_oa_status" = "#fd725d")) +
   guides(fill = guide_legend(reverse=TRUE)) +
   theme_minimal() +
-  geom_text(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 3, hjust = -.2, vjust = 0.5) +
+  geom_text(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 5, hjust = -.2, vjust = 0.5) +
   xlab("Number of Items") +
   ylab("Open Access Tag") +
   theme(axis.text.y = element_text(size=12),
@@ -100,17 +88,17 @@ dev.off()
 # Erstellen des interactive Barplot
 
 ```{r}
-interactive_barplot <- scp_oa_tagging_long_prep %>%
+interactive_barplot <- scp_sc_long %>%
   group_by(snapshot, oa_status) %>%
-  summarise(n = n_distinct(scp07_item_id)) %>%
-  mutate(name = ifelse(snapshot == "scp01_oa_status", "January",
-                       ifelse(snapshot == "scp04_oa_status", "April","July"))) %>%
+  summarise(n = n_distinct(scp04_item_id)) %>%
+  mutate(name = ifelse(snapshot == "scp04_oa_status", "April",
+                       ifelse(snapshot == "scp07_oa_status", "July","October"))) %>%
   ggplot(aes(y=reorder(oa_status,+n), x=n, fill = snapshot, tooltip = paste0("Number of Items: ", formatC(n, big.mark = ","), "\n", "Snapshot: ",name),
   data_id = snapshot)) +
   geom_bar_interactive(stat="identity", position = "dodge") +
-    scale_fill_manual_interactive(name = "Scopus\nSnapshot", labels = c("January", "April", "July"),
- values = c("scp01_oa_status" = "#446ace", "scp04_oa_status" = "#e9b121", "scp07_oa_status" = "#fd725d")) +
-  scale_x_continuous(labels = label_comma(),limits=c(0, 6000000)) +
+  scale_fill_manual_interactive(name = "Scopus\nSnapshot", labels = c("April", "July", "October"),
+  values = c("scp04_oa_status" = "#446ace", "scp07_oa_status" = "#e9b121", "scp10_oa_status" = "#fd725d")) +
+  scale_x_continuous(labels = label_comma(),limits=c(0, 12000000)) +
   guides(fill = guide_legend(reverse=TRUE)) +
   theme_minimal() +
   geom_text_interactive(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 3, hjust = -.2, vjust = 0.5) +
@@ -134,26 +122,26 @@ scp_barplot_interactive
 
 ```{sql, connection=kb_con}
 select count(*) as count
-from unigsdoerner.scp_oa_tagging_temp sott 
-WHERE sott.scp04_oa_status ~ 'repositoryvor'
+from unigsdoerner.scp_shared_corpus ssc 
+WHERE ssc.scp04_oa_status ~ 'repositoryvor'
 ```
 
 ```{sql, connection=kb_con}
 select count(*) as count
-from unigsdoerner.scp_oa_tagging_temp sott 
-WHERE sott.scp04_oa_status ~ 'repositoryam'
+from unigsdoerner.scp_shared_corpus ssc
+WHERE ssc.scp04_oa_status ~ 'repositoryam'
 ```
 
 ```{sql, connection=kb_con}
 select count(*) as count
-from unigsdoerner.scp_oa_tagging_temp sott 
-WHERE sott.scp07_oa_status ~ 'repositoryvor'
+from unigsdoerner.scp_shared_corpus ssc
+WHERE ssc.scp07_oa_status ~ 'repositoryvor'
 ```
 
 ```{sql, connection=kb_con}
 select count(*) as count
-from unigsdoerner.scp_oa_tagging_temp sott 
-WHERE sott.scp07_oa_status ~ 'repositoryam'
+from unigsdoerner.scp_shared_corpus ssc
+WHERE ssc.scp07_oa_status ~ 'repositoryam'
 ```
 
 
@@ -163,18 +151,18 @@ WHERE sott.scp07_oa_status ~ 'repositoryam'
 #nodes
 #links
 # Gruppen für jeden Knoten erstellen
-nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "scp01", 
-                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14), "scp04", "scp07")))
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "scp04", 
+                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14), "scp07", "scp10")))
 
-links$group <- as.factor(ifelse(links$source == 2 & links$target == 11 | links$source == 2 & links$target == 13 | links$source == 3 & links$target == 11 | links$source == 3 & links$target == 13 | links$source == 9 & links$target == 18 | links$source == 10 & links$target == 18 | links$source == 9 & links$target == 20 | links$source == 10 & links$target == 20, "highlight", ifelse(links$source == 7 & links$target == 19, "highlight_2","plain")))
+links$group <- as.factor(ifelse(links$source == 2 & links$target == 11 | links$source == 2 & links$target == 7 | links$source == 5 & links$target == 11 | links$source == 5 & links$target == 7 | links$source == 9 & links$target == 18 | links$source == 10 & links$target == 18 | links$source == 9 & links$target == 20 | links$source == 10 & links$target == 20, "highlight", ifelse(links$source == 4 & links$target == 10, "highlight_2","plain")))
 
 # Farben für die source und target Knoten definieren
-colours <- 'd3.scaleOrdinal() .domain(["scp01", "scp04","scp07", "highlight","highlight_2","plain"]) .range(["#446ace","#e9b121", "#fd725d", "#40a954","#97bbf5ff","#e5e5e5"])'
+colours <- 'd3.scaleOrdinal() .domain(["scp04", "scp07","scp10", "highlight","highlight_2","plain"]) .range(["#446ace","#e9b121", "#fd725d", "#40a954","#97bbf5ff","#e5e5e5"])'
 
 #Sankey erstellen
 scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
               Target = "target", Value = "n", NodeID = "label", fontSize = 12, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", LinkGroup = "group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("Scopus (January)","Scopus (April)","Scopus (July)"),xScalingFactor = .8, height = 700, width = 700)
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", LinkGroup = "group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("Scopus (April)","Scopus (July)","Scopus (October)"),xScalingFactor = .8, height = 700, width = 700)
 
 # Rendering function to make it prettier
 scp_sn <- onRender(

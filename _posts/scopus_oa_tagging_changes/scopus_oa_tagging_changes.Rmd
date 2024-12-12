@@ -1,6 +1,6 @@
 ---
 title: "Open Access Tagging Changes in Scopus"
-description: In March 2024, Elsevier announced changes to the open access tagging policy for its bibliographic database Scopus. In this blogpost, I want to investigate the effects of the policy changes by comparing Scopus open access data before, during and after the time of implementation in April 2024. 
+description: In March 2024, Elsevier announced changes to the open access tagging policy for its bibliographic database Scopus. In this blogpost, I investigate the effects of the policy changes by comparing Scopus open access data before, during and after the start of implementation in April 2024. 
 author:
   - name: Sophia Dörner
     affiliation: Göttingen State and University Library
@@ -45,7 +45,7 @@ library(scales)
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-scp_oa_tagging_temp <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_oa_tagging_temp.csv"))
+scp_sc_prep <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_sc_prep.csv"))
 ```
 
 On 23 March 2024 [Scopus announced](https://blog.scopus.com/posts/changes-to-scopus-open-access-oa-document-tagging) changes to its open access (OA) tagging policy to fully align with the definitions of Unpaywall, the OA evidence source that Scopus uses for its bibliometric database.
@@ -53,22 +53,22 @@ According to the announcement, these changes affected approximately 2 million it
 Despite these changes to the OA status tags, Scopus claims that no items previously tagged as OA lost any OA status tags, or that articles published in closed access wrongly received an OA tag.
 
 In this blogpost, I investigate the extent of the OA tagging policy update using three different Scopus snaphots provided by the [German Competence Network of Bibliometrics](https://bibliometrie.info). 
-Using a shared corpus of more than 9 million items, I contrasted the situations before the policy changes, during the time of policy changes and after policy changes came into effect. 
+Using a shared corpus of more than 19 million items, I contrasted the situations before the policy changeswere implemented with two points in time after the policy changes came into effect.
 Results demonstrate shifts between tags relative to publisher-provided OA.
-However, a total of `r nrow(filter(scp_oa_tagging_temp, (grepl("repositoryvor|repositoryam", scp01_oa_status) & !grepl("repositoryvor|repositoryam", scp04_oa_status)) | (grepl("repositoryvor|repositoryam", scp04_oa_status) & !grepl("repositoryvor|repositoryam", scp07_oa_status))))` green open access tags were dropped.
+Additionally, a total of `r nrow(filter(scp_sc_prep, (grepl("repositoryvor|repositoryam", scp04_oa_status) & !grepl("repositoryvor|repositoryam", scp07_oa_status)) | (grepl("repositoryvor|repositoryam", scp07_oa_status) & !grepl("repositoryvor|repositoryam", scp10_oa_status))))` green open access tags were dropped.
 Checking a sample against the Unpaywall API suggests that these changes were only made on the Scopus side.
 
 ## Data and Method
 
-To analyse the effects of open access tagging policy changes in Scopus on a larger scale, I took a sample of `r n_distinct(scp_oa_tagging_temp$scp07_item_id)` items indexed in Scopus that were published between 2019 and 2023. 
-Data were retrieved from the [German Competence Network of Bibliometrics](https://bibliometrie.info) considering the Scopus January 2024, April 2024 and July 2024 snapshots.
+To analyse the effects of open access tagging policy changes in Scopus on a larger scale, I took a set of `r n_distinct(scp_sc_prep$scp04_item_id)` items indexed in Scopus that were published between 2019 and 2023. 
+Data were retrieved from the [German Competence Network of Bibliometrics](https://bibliometrie.info) considering the Scopus April 2024, July 2024 and October 2024 snapshots.
 The three snapshots were matched by Scopus item ID to build a shared corpus.
 
 Data preparation also involved renaming the [Scopus provided open access tags](https://blog.scopus.com/posts/scopus-filters-for-open-access-type-and-green-oa-full-text-access-option) to their more commonly known terms, as displayed in the following table. 
 
 <p/>
 
-| Scopus provided open access tag | Renamed Value  |
+| Scopus provided open access tag | renamed value  |
 |:--------------------------------------------------------|:---------------|
 | publisherfullgold                                       | gold           |
 | publisherhybridgold                                     | hybrid         |
@@ -79,85 +79,72 @@ Data preparation also involved renaming the [Scopus provided open access tags](h
 
 
 In some cases items did not have any open access tag assigned in one or several of the snapshots. 
-The respective entries had `NULL` values in the open access column. 
+The respective entries had `NULL` values in the open access status column. 
 Those were renamed to *none* in order to keep the values during data transformation and analysis.
 The differentiation between the two available green open access tags indicates the manuscript version published, where **vor** stands for version of record and **am** stands for accepted manuscript.
 
 ## Results
 
-Figure \@ref(fig:oasharebarplot) first shows the share of OA and non-OA items per snapshot.
-Overall the share does not differ much between the snapshots.
-However, you can see that for the April snapshot the share of items that were considered open access is slightly higher than for the January and July snapshots.
+The following table first shows the share of OA and non-OA items per snapshot.
+Overall, the table shows that OA items account for about 46% in all three snapshots.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 scp_oa_share <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_oa_share.csv"))
 ```
 
-
-```{r oasharebarplot, echo=FALSE, fig.cap='Open Access Share per Snapshot'}
-scp_oa_share %>%
- mutate(name = ifelse(snapshot == "scp01_is_oa", "January",
-                       ifelse(snapshot == "scp04_is_oa", "April","July"))) %>%
- mutate(name = factor(name, levels = c("January", "April", "July"))) %>%
- ggplot(aes(x = name, y = share, fill = is_oa)) +
- geom_bar(stat = "identity", position = "stack") +
- scale_y_continuous(labels = scales::percent) +
- scale_fill_manual(values = c("#9498a0","#6cc5b0")) +
- labs(x = "Snapshot", y = "Share of OA and non-OA Items", fill = "Is OA") +
- theme_minimal() +
- geom_text(aes(label = paste0(round(share * 100, 2), "%")),
- position = position_stack(vjust = 0.5))
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+knitr::kable(scp_oa_share, col.names = c("snapshot", "is oa", "count", "share in %"))
 ```
 
 Figure \@ref(fig:scpbarplot) illustrates the distribution of open access tags for each of the three snapshots. 
-Items with a bronze open access tag declined between the January and the July snapshots, while the number of items with a gold open access tag increased. 
+Item numbers with a bronze open access tag declined between the April and the July snapshots, while the number of items with a gold open access tag increased. 
 These changes are in accordance with the Scopus announcement. 
-However, the number of items tagged as green open access dropped between the January and July snapshots without this being offset by any other OA type.
+However, the number of items tagged as green open access dropped between the April and July snapshots without this being offset by any other OA type.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-scp_oa_tagging_long_prep <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_oa_tagging_long_prep.csv"))
+scp_sc_long <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_sc_long.csv"))
 ```
 
 ```{r scpbarplot, echo=FALSE, fig.cap='Open Access Tag Distribution'}
-interactive_barplot <- scp_oa_tagging_long_prep %>%
+interactive_barplot <- scp_sc_long %>%
   group_by(snapshot, oa_status) %>%
-  summarise(n = n_distinct(scp07_item_id)) %>%
-  mutate(name = ifelse(snapshot == "scp01_oa_status", "January",
-                       ifelse(snapshot == "scp04_oa_status", "April","July"))) %>%
+  summarise(n = n_distinct(scp04_item_id)) %>%
+  mutate(name = ifelse(snapshot == "scp04_oa_status", "April",
+                       ifelse(snapshot == "scp07_oa_status", "July","October"))) %>%
   ggplot(aes(y=reorder(oa_status,+n), x=n, fill = snapshot, tooltip = paste0("Number of Items: ", formatC(n, big.mark = ","), "\n", "Snapshot: ",name),
   data_id = snapshot)) +
   geom_bar_interactive(stat="identity", position = "dodge") +
-    scale_fill_manual_interactive(name = "Scopus\nSnapshot", labels = c("January", "April", "July"),
- values = c("scp01_oa_status" = "#446ace", "scp04_oa_status" = "#e9b121", "scp07_oa_status" = "#fd725d")) +
-  scale_x_continuous(labels = label_comma(),limits=c(0, 6000000)) +
+  scale_fill_manual_interactive(name = "Scopus\nSnapshot", labels = c("April", "July", "October"),
+  values = c("scp04_oa_status" = "#446ace", "scp07_oa_status" = "#e9b121", "scp10_oa_status" = "#fd725d")) +
+  scale_x_continuous(labels = label_comma(),limits=c(0, 13000000)) +
   guides(fill = guide_legend(reverse=TRUE)) +
   theme_minimal() +
-  geom_text_interactive(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 3.5, hjust = -.2, vjust = 0.5) +
+  geom_text_interactive(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 3, hjust = -.2, vjust = 0.5) +
   xlab("Number of Items") +
   ylab("Open Access Tag") +
-  theme(axis.text.y = element_text(size=12),
-        axis.text.x = element_text(size=12),
-        axis.title.y = element_text(size=14,vjust = +1),
-        axis.title.x = element_text(size=14,vjust = -.5),
-        legend.text =element_text(size=12),
-        legend.title = element_text(size=12,face = "bold"))
+  theme(axis.text.y = element_text(size=10),
+        axis.text.x = element_text(size=10),
+        axis.title.y = element_text(size=12,vjust = +1),
+        axis.title.x = element_text(size=12,vjust = -.5),
+        legend.text =element_text(size=10),
+        legend.title = element_text(size=10,face = "bold"))
 
 scp_barplot_interactive <- girafe(ggobj = interactive_barplot)
 scp_barplot_interactive <- girafe_options(scp_barplot_interactive,
-  opts_zoom(min = .5, max = 5),
+  opts_zoom(min = .3, max = 5),
   opts_hover(css = "fill:#9498a0;stroke:#9498a0;r:5pt;"))
 scp_barplot_interactive
 ```
 
 Figure \@ref(fig:scpsankey) shows the flows between the snapshots.
-Like Unpaywall, Scopus assigns multiple open access tags a single item in case more than one OA location could be found.
-For the `r n_distinct(scp_oa_tagging_temp$scp07_item_id)` items analysed here, the number of open access tags per item varied between none and three.
+Like Unpaywall, Scopus assigns multiple open access tags to a single item in case more than one OA location could be found.
+For the `r n_distinct(scp_sc_prep$scp04_item_id)` items analysed here, the number of open access tags per item varied between none and three.
 
-There was a remarkable change relative to publisher-provided OA: `r nrow(filter(scp_oa_tagging_temp, grepl("publisherfree2read", scp04_oa_status) & grepl("publisherfullgold", scp07_oa_status)))` items with a bronze open access tag in the April snapshot were tagged with a gold open access tag in the July snapshot, which accounts for most of the bronze status changes. 
+There was a notable change relative to publisher-provided OA: `r nrow(filter(scp_sc_prep, grepl("publisherfree2read", scp04_oa_status) & grepl("publisherfullgold", scp07_oa_status)))` items with a bronze open access tag in the April snapshot were tagged with a gold open access tag in the July snapshot, which accounts for most of the bronze status changes. 
 This suggests an improved identification of full OA journals.
 
-But also substantial changes regarding repository-provided OA can be observed: Comparing the January and April snapshots (see green highlighted flows on the left in Figure \@ref(fig:scpsankey)), a total of `r nrow(filter(scp_oa_tagging_temp, grepl("repositoryvor|repositoryam", scp01_oa_status) & !grepl("repositoryvor|repositoryam", scp04_oa_status)))` items with one of the green open access tags in the January snapshot lost this status in the April snapshot. 
-This number increases considerably to `r nrow(filter(scp_oa_tagging_temp, grepl("repositoryvor|repositoryam", scp04_oa_status) & !grepl("repositoryvor|repositoryam", scp07_oa_status)))` when comparing the April and July snapshots (see green highlighted flows on the right in Figure \@ref(fig:scpsankey)).
+But also substantial changes regarding repository-provided OA can be observed: Comparing the April and July snapshots (see green highlighted flows on the left in Figure \@ref(fig:scpsankey)), a total of `r nrow(filter(scp_sc_prep, grepl("repositoryvor|repositoryam", scp04_oa_status) & !grepl("repositoryvor|repositoryam", scp07_oa_status)))` items with one of the green open access tags in the April snapshot lost this status in the July snapshot. 
+This number decreases to `r nrow(filter(scp_sc_prep, grepl("repositoryvor|repositoryam", scp07_oa_status) & !grepl("repositoryvor|repositoryam", scp10_oa_status)))` when comparing the July and October snapshots (see green highlighted flows on the right in Figure \@ref(fig:scpsankey)).
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -166,21 +153,18 @@ links <- read_csv(here("_posts/scopus_oa_tagging_changes/data","links.csv"))
 ```
 
 
-```{r scpsankey, echo=FALSE, fig.cap='Open Access Tag Comparison of Scopus January, April and July snapshots'}
-nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "scp01", 
-                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14), "scp04", "scp07")))
+```{r scpsankey, echo=FALSE, fig.cap='Open Access Tag Comparison of Scopus April, July and October snapshots'}
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "scp04", 
+                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14), "scp07", "scp10")))
 
-links$group <- as.factor(ifelse(links$source == 2 & links$target == 11 | links$source == 2 & links$target == 13 | links$source == 3 & links$target == 11 | links$source == 3 & links$target == 13 | links$source == 9 & links$target == 18 | links$source == 10 & links$target == 18 | links$source == 9 & links$target == 20 | links$source == 10 & links$target == 20, "highlight", ifelse(links$source == 7 & links$target == 19, "highlight_2","plain")))
+links$group <- as.factor(ifelse(links$source == 2 & links$target == 11 | links$source == 2 & links$target == 7 | links$source == 5 & links$target == 11 | links$source == 5 & links$target == 7 | links$source == 9 & links$target == 18 | links$source == 13 & links$target == 18 | links$source == 9 & links$target == 14 | links$source == 13 & links$target == 14, "highlight", ifelse(links$source == 4 & links$target == 10, "highlight_2","plain")))
 
-# Farben für die source und target Knoten definieren
-colours <- 'd3.scaleOrdinal() .domain(["scp01", "scp04","scp07", "highlight","highlight_2","plain"]) .range(["#446ace","#e9b121", "#fd725d", "#40a954","#97bbf5ff","#e5e5e5"])'
+colours <- 'd3.scaleOrdinal() .domain(["scp04", "scp07","scp10", "highlight","highlight_2","plain"]) .range(["#446ace","#e9b121", "#fd725d", "#40a954","#97bbf5ff","#e5e5e5"])'
 
-#Sankey erstellen
 scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
               Target = "target", Value = "n", NodeID = "label", fontSize = 12, nodePadding = 20, 
-                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", LinkGroup = "group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("Scopus (January)","Scopus (April)","Scopus (July)"),xScalingFactor = .8, height = 700, width = 700)
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", LinkGroup = "group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("Scopus (April)","Scopus (July)","Scopus (October)"),xScalingFactor = .8, height = 700, width = 700)
 
-# Rendering function to make it prettier
 scp_sn <- onRender(
   scp_sn,
   '
@@ -251,29 +235,16 @@ scp_sn
 ```
 
 Although Scopus claimed that no items lost their open access status through the changes of the tagging policy, my analysis found a decrease of green OA evidence.
-To better understand this difference, I took a sample of 10,000 DOIs representing items with green open access status between the January and April or April and July snapshots and queried the Unpaywall API to retrieve open access status information for these DOIs.
+To better understand this difference, I took two samples of 10,000 DOIs representing items loosing green open access status between the April and July or July and October snapshots and queried the Unpaywall API to retrieve open access status information for these DOIs.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-green_none_0104 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","green_none_0104.csv"))
 green_none_0407 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","green_none_0407.csv"))
+green_none_0710 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","green_none_0710.csv"))
 ```
 
-The following tables show the results of the Unpaywall check for the comparison of the January and April snapshots sample. 
-They show that for the sample of `r n_distinct(green_none_0104$doi)` items that lost their green status between the January and April snapshots, Unpaywall found a repository copy, i.e. a green open access version, for `r nrow(filter(green_none_0104, has_repository_copy == TRUE) %>% distinct(doi))` (`r nrow(filter(green_none_0104, has_repository_copy == TRUE) %>% distinct(doi)) / nrow(distinct(green_none_0104, doi)) * 100`%) of them. 
-Furthermore, Unpaywall assigned green as primary open access status to `r nrow(filter(green_none_0104, host_type == "repository" & oa_status == "green") %>% distinct(doi))` (`r nrow(filter(green_none_0104, oa_status == "green" & host_type == "repository") %>% distinct(doi)) / nrow(filter(green_none_0104, has_repository_copy == TRUE) %>% distinct(doi)) * 100`%) of the items with a repository copy. 
-
-```{r, echo = FALSE, message=FALSE, warning=FALSE}
-upw_0104_recopy <- read_csv(here("_posts/scopus_oa_tagging_changes/data","upw_0104_recopy.csv"))
-upw_0104_host <- read_csv(here("_posts/scopus_oa_tagging_changes/data","upw_0104_host.csv"))
-```
-
-```{r, echo = FALSE, message=FALSE, warning=FALSE}
-knitr::kable(upw_0104_recopy, col.names = c("has repository copy", "count", "share in %"))
-knitr::kable(upw_0104_host, col.names = c("oa status","has repository copy","host type", "count", "share in %"))
-```
-
-Comparing the April and July snapshots samples shows a similar result: For the sample of `r n_distinct(green_none_0104$doi)` items that lost their green status between the April and July snapshots, Unpaywall found a repository copy for `r nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi))` (`r nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi)) / nrow(distinct(green_none_0407, doi)) * 100`%) of them. 
-Here, Unpaywall assigned green as primary open access status to `r nrow(filter(green_none_0407, host_type == "repository" & oa_status == "green") %>% distinct(doi))` (`r nrow(filter(green_none_0407, oa_status == "green" & host_type == "repository") %>% distinct(doi)) / nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi)) * 100`%) of the items with a repository copy. 
+The following tables show the results of the Unpaywall check for the comparison of the April and July snapshots sample. 
+They show that for the sample of `r n_distinct(green_none_0407$doi)` items that lost their green status between the April and July snapshots, Unpaywall found a repository copy, i.e. a green open access version, for `r nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi))` (`r nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi)) / nrow(distinct(green_none_0407, doi)) * 100`%) of them. 
+Furthermore, Unpaywall assigned green as primary open access status to `r nrow(filter(green_none_0407, host_type == "repository" & oa_status == "green") %>% distinct(doi))` (`r nrow(filter(green_none_0407, oa_status == "green" & host_type == "repository") %>% distinct(doi)) / nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi)) * 100`%) of the items with a repository copy. 
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
 upw_0407_recopy <- read_csv(here("_posts/scopus_oa_tagging_changes/data","upw_0407_recopy.csv"))
@@ -285,45 +256,57 @@ knitr::kable(upw_0407_recopy, col.names = c("has repository copy", "count", "sha
 knitr::kable(upw_0407_host, col.names = c("oa status","has repository copy","host type", "count", "share in %"))
 ```
 
-Although the number of items for which Unpaywall identified a repository copy declines between the two comparisons, both shares are still high. Interestingly, the trend for Unpaywall seems to be somewhat inverse to that of Scopus. Yet, the analysis indicates that the underlying reason for absent green open access tags in the April and July snapshots of Scopus cannot be explained by changes in Unpaywall data.
+Comparing the July and October snapshots samples shows a similar result: For the sample of `r n_distinct(green_none_0710$doi)` items that lost their green status between the July and October snapshots, Unpaywall found a repository copy for `r nrow(filter(green_none_0710, has_repository_copy == TRUE) %>% distinct(doi))` (`r nrow(filter(green_none_0710, has_repository_copy == TRUE) %>% distinct(doi)) / nrow(distinct(green_none_0710, doi)) * 100`%) of them. 
+Here, Unpaywall assigned green as primary open access status to `r nrow(filter(green_none_0710, host_type == "repository" & oa_status == "green") %>% distinct(doi))` (`r nrow(filter(green_none_0710, oa_status == "green" & host_type == "repository") %>% distinct(doi)) / nrow(filter(green_none_0710, has_repository_copy == TRUE) %>% distinct(doi)) * 100`%) of the items with a repository copy. 
 
-Because the data for this analysis was retrieved from the bibliometrics database of the [German Competence Network of Bibliometrics](https://bibliometrie.info), I further checked the open access status of 10 DOIs each from both samples of the Unpaywall check in the raw data repository snapshots for April and July 2024 of the German Competence Network of Bibliometrics and in the Scopus interface. 
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+upw_0710_recopy <- read_csv(here("_posts/scopus_oa_tagging_changes/data","upw_0710_recopy.csv"))
+upw_0710_host <- read_csv(here("_posts/scopus_oa_tagging_changes/data","upw_0710_host.csv"))
+```
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+knitr::kable(upw_0710_recopy, col.names = c("has repository copy", "count", "share in %"))
+knitr::kable(upw_0710_host, col.names = c("oa status","has repository copy","host type", "count", "share in %"))
+```
+
+Although the number of items for which Unpaywall identified a repository copy declines slightly between the two comparisons, both shares are high in any case. The analysis indicates that the underlying reason for absent green open access tags in the April and July snapshots of Scopus cannot be explained by changes in Unpaywall data.
+
+Because the data for this analysis was retrieved from the bibliometrics database of the [German Competence Network of Bibliometrics](https://bibliometrie.info), I further checked the open access status of 10 DOIs each from both samples of the Unpaywall check in the raw data repository snapshots for July and October 2024 of the German Competence Network of Bibliometrics and in the Scopus interface. 
 These checks were carried out to account for potential data processing issues by the the German Competence Network of Bibliometrics.
 
 The following tables show the open access tags retrieved from the bibliometrics database and the raw data repository as is for both of the smaller 10 DOI samples.
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
-kb_check_0104_oa_bdb_raw <- read_csv(here("_posts/scopus_oa_tagging_changes/data","kb_check_0104_oa_bdb_raw.csv"))
 kb_check_0407_oa_bdb_raw <- read_csv(here("_posts/scopus_oa_tagging_changes/data","kb_check_0407_oa_bdb_raw.csv"))
+kb_check_0710_oa_bdb_raw <- read_csv(here("_posts/scopus_oa_tagging_changes/data","kb_check_0710_oa_bdb_raw.csv"))
 ```
 
-```{r, echo = FALSE, message=FALSE, warning=FALSE}
-knitr::kable(kb_check_0104_oa_bdb_raw, col.names = c("oa status (bibliometrics database, April 24)", "oa status (raw data repository, April 24)"))
+```{r,echo = FALSE, message=FALSE, warning=FALSE}
 knitr::kable(kb_check_0407_oa_bdb_raw, col.names = c("oa status (bibliometrics database, July 24)", "oa status (raw data repository, July 24)"))
+knitr::kable(kb_check_0407_oa_bdb_raw, col.names = c("oa status (bibliometrics database, October 24)", "oa status (raw data repository, October 24)"))
 ```
 
 In both cases there is no difference between open access tags in the bibliometrics database and the raw data repository. 
 This indicates that the open access status data in the bibliometrics database of the German Competence Network of Bibliometrics aligns with the Scopus raw data delivery.
 
-The following to tables display the results of the Scopus interface check that was carried out on 4th of December 2024.
+The following to tables display the results of the Scopus interface check that was carried out on 12th of December 2024.
 
-```{r}
-scp_interface_0104 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_interface_0104.csv"))
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
 scp_interface_0407 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_interface_0407.csv"))
+scp_interface_0710 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_interface_0710.csv"))
 ```
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
 knitr::kables(
   list(
-knitr::kable(scp_interface_0104, col.names = "Open Access Status (April 24 Sample)"),
-knitr::kable(scp_interface_0407, col.names = "Open Access Status (July 24 Sample)")
+knitr::kable(scp_interface_0407, col.names = "open access status (July 24 sample)"),
+knitr::kable(scp_interface_0710, col.names = "open access status (October 24 sample)")
   )
 )
 ```
 
-The tables show that most items have no green open access tag assigned when querying the open access status via the Scopus interface.
-Interestingly, one item has a green open access tag assigned that was not present in either of the April 24 and July 24 raw data.
-This might indicate even more changes since the creation of the July 24 data snapshot. 
+The tables show that none of the items have a green open access tag assigned when querying the open access status via the Scopus interface.
+The analysis indicates no difference the Scopus raw data delivery and the data in Scopus' own database.
 
 ## Discussion and Outlook
 

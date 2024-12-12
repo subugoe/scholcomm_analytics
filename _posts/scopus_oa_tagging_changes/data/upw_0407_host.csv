@@ -1,5 +1,5 @@
 oa_status,has_repository_copy,host_type,count,pct
-gold,TRUE,repository,5655,66.6
-hybrid,TRUE,repository,1494,17.6
-bronze,TRUE,repository,901,10.61
-green,TRUE,repository,441,5.19
+gold,TRUE,repository,5740,67.60
+hybrid,TRUE,repository,1490,17.55
+bronze,TRUE,repository,972,11.45
+green,TRUE,repository,289, 3.40

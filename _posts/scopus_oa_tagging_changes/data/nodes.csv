@@ -1,22 +1,22 @@
 name,label
-1,BRONZE
+1,NONE
 2,HYBRID
 3,GREEN (VOR)
-4,GREEN (AM)
-5,NONE
-6,GOLD
+4,GOLD
+5,BRONZE
+6,GREEN (AM)
 7,MISSING
-8,Bronze
+8,None
 9,Hybrid
 10,Green (Vor)
-11,Green (Am)
-12,None
-13,Gold
-14,Missing
-15,bronze
+11,Gold
+12,Missing
+13,Bronze
+14,Green (Am)
+15,none
 16,hybrid
 17,green (vor)
-18,green (am)
+18,gold
 19,missing
-20,gold
-21,none
+20,bronze
+21,green (am)
