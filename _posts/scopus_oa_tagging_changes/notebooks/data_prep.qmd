@@ -118,6 +118,13 @@ scp_sc_prep <- scp_shared_corpus %>%
 write_csv(scp_sc_prep, here("_posts/scopus_oa_tagging_changes/data","scp_sc_prep.csv"))
 ```
 
+```{r}
+save(scp_sc_prep, file = here("_posts/scopus_oa_tagging_changes/data","scp_sc_prep.RData"))
+```
+
+```{r}
+load(file=here("_posts/scopus_oa_tagging_changes/data","scp_sc_prep.RData"))
+```
 
 ## shared corpus tabelle in wide format dataframe umwandeln
 
@@ -182,17 +189,23 @@ scp_oa_share <- scp_sc_prep %>%
  group_by(snapshot) %>%
  mutate(
  total = sum(n),
- share = format(n / total * 100, nsmall = 2, decimal.mark = ".")
+ share = n / total * 100
  ) %>%
  select(snapshot, is_oa, n, share) %>%
- mutate(snapshot = ifelse(snapshot =="scp04_is_oa", "April",
-                          ifelse(snapshot == "scp07_is_oa", "July",
-                                 ifelse(snapshot == "scp10_is_oa","October",snapshot))))
+ mutate(snapshot = ifelse(snapshot =="scp04_is_oa", "April 24",
+                          ifelse(snapshot == "scp07_is_oa", "July 24",
+                                 ifelse(snapshot == "scp10_is_oa","October 24",snapshot))),
+        n = formatC(n, format = "d", big.mark = ",", decimal.mark = "."),
+        share = formatC(share, format = "f", digits = 2, decimal.mark = "."))
 scp_oa_share
 ```
 
 ```{r}
 write_csv(scp_oa_share, here("_posts/scopus_oa_tagging_changes/data","scp_oa_share.csv"))
+```
+
+```{r}
+save(scp_oa_share, file = here("_posts/scopus_oa_tagging_changes/data","scp_oa_share.RData"))
 ```
 
 
