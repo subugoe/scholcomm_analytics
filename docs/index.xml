@@ -11,14 +11,23 @@ to publish case-studies rapidely showing how to support data-driven workflows an
 decision-making around scholarly communication in libraries using R.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Wed, 23 Oct 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Changes in evidence for green open access in Scopus</title>
+      <dc:creator>Sophia Dörner</dc:creator>
+      <link>https://subugoe.github.io/scholcomm_analytics/posts/scopus_oa_tagging_changes</link>
+      <description>In March 2024, Scopus announced changes to its open access tagging policy to better align with the Unpaywall definitions. In this blog post, I examine the impact of the policy change by comparing three Scopus snapshots, comprising around 20 million records. Although the overall share of open access did not change, the analysis found a decrease in the number of copies in repositories, affecting about 2 million items, that cannot be explained by the Unpaywall changes.</description>
+      <guid>https://subugoe.github.io/scholcomm_analytics/posts/scopus_oa_tagging_changes</guid>
+      <pubDate>Sun, 15 Dec 2024 00:00:00 +0000</pubDate>
+      <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/scopus_oa_tagging_changes/distill-preview.png" medium="image" type="image/png" width="980" height="760"/>
+    </item>
     <item>
       <title>Identifying journal article types in OpenAlex</title>
       <dc:creator>Nick Haupka</dc:creator>
       <link>https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier</link>
       <description>Identifying suitable types of journal articles for bibliometric analyses is important. In this blog post, I present a document type classifier that helps to identify research contributions like original research articles using Crossref and OpenAlex. The classifier and classified OpenAlex records are openly available.</description>
       <guid>https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier</guid>
-      <pubDate>Wed, 23 Oct 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 24 Oct 2024 00:00:00 +0000</pubDate>
       <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/oal_document_types_classifier/distill-preview.png" medium="image" type="image/png" width="3896" height="2213"/>
     </item>
     <item>
