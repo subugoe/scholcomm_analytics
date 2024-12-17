@@ -105,4 +105,8 @@ GROUP BY type, label
 ORDER BY n DESC
 ```
 
-The results will be constantly updated in line with the monthly release of OpenAlex and Crossref. I would be happy to get feedback about your experiences with the classifier! 
+The results will be constantly updated in line with the monthly release of OpenAlex and Crossref. I would be happy to get feedback about your experiences with the classifier!
+
+## Funding {.appendix}
+
+This work is funded by the Bundesministerium für Bildung und Forschung (BMBF) project  KBOPENBIB (16WIK2301E). We acknowledge the support of the [German Competence Center for Bibliometrics](https://bibliometrie.info/).
