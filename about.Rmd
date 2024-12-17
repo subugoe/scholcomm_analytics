@@ -13,18 +13,26 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## About this Blog!
 
-Welcome to our Blog! Here, you'll find insights from our work as Data Analysts in the domain of scholarly communication. With this blog, we want to engage with the broader community about how to support data-driven workflows and decision-making around scholarly communication with R.
+Welcome to our Blog! Here, you'll find insights from our work as Data Analysts in the domain of scholarly communication. With this blog, we want to engage with the broader community about how to support data-driven workflows and decision-making around scholarly communication.
 
-We are based at the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/en/news/), one of the largest academic libraries in Germany. We are using R-based tools in our everyday work and contribute to R package developments and training activities. In this blog, you'll find news and case-studies around:
+We are based at the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/en/news/), one of the largest academic libraries in Germany. We are using various data analytics tools in our everyday work and contribute to R and Python package developments and training activities. In this blog, you'll find news and case-studies around:
 
 - Open Access and Open Science Analytics
-- R Packages making use of open databases and helping us in our work
-- R Tools for interactive visualizations and dashboard developments
-- R-related training and outreach activities 
+- Packages making use of open databases and helping us in our work
+- Tools for interactive visualizations and dashboard developments
+- Training and outreach activities 
 
 We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to start a blog about our work. As a technical framework for the blog, we are using [Distill for R Markdown](https://rstudio.github.io/distill/), a new web publishing format optimized for scientific and technical writing. 
 
 *Dr. Anne Hobert*, *Nick Haupka*, *Sophia Dörner*, *Najko Jahn*
+
+## Preprints
+
+Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
+
+Jahn, N. (2024). How open are hybrid journals included in transformative agreements? <https://arxiv.org/abs/2402.18255>
+
+Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2024). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <https://arxiv.org/abs/2401.16359>
 
 ## Journal publications
 
@@ -61,8 +69,10 @@ landscape. *Scientometrics*, 126(12), 9751--9777.
 Laakso, M., Matthias, L., & Jahn, N. (2021). Open is not forever: A
 study of vanished open access journals. *Journal of the Association for
 Information Science and Technology*, 72(9), 1099--1112.
-<https://doi.org/10.1002/asi.24460> ([JASIST Best Paper Award 2022](https://www.asist.org/2022/06/15/2022-best-jasist-paper-award/). Featured in [Nature](https://www.nature.com/articles/d41586-020-02610-z),
+<https://doi.org/10.1002/asi.24460> ([JASIST Best Paper Award 2022](https://www.asist.org/2022/06/15/2022-best-jasist-paper-award/). Featured in
+[Nature](https://www.nature.com/articles/d41586-020-02610-z),
 [Nature](https://www.nature.com/articles/d41586-024-00616-5),
+[Nature](https://doi.org/10.1038/d41586-024-03842-z),
 [Science](https://doi.org/10.1126/science.abe6998), [CNN](https://edition.cnn.com/2020/09/15/us/vanished-open-access-journals-trnd-scn/index.html),
 [DLF](https://www.deutschlandfunknova.de/nachrichten/wissenschaft-millionen-arbeiten-sind-nicht-richtig-archiviert))
 
@@ -74,13 +84,6 @@ Matthias, L., Jahn, N., & Laakso, M. (2019). The Two-Way Street of Open
 Access Journal Publishing: Flip It and Reverse It. *Publications*, 7(2),
 23. <https://doi.org/10.3390/publications7020023>
 
-## Preprints
-
-Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
-
-Jahn, N. (2024). How open are hybrid journals included in transformative agreements? <https://arxiv.org/abs/2402.18255>
-
-Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2024). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <https://arxiv.org/abs/2401.16359>
 
 ## Theses
 

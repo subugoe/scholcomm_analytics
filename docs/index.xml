@@ -6,9 +6,9 @@
     <atom:link href="https://subugoe.github.io/scholcomm_analytics/index.xml" rel="self" type="application/rss+xml"/>
     <description>Based at the Göttingen State and University Library, 
 we are analysing data around scholarly communication using open data and tools.
-Here, you'll find insights, and examples of our work using R. Particularly, we like
+Here, you'll find insights, and examples of our work. Particularly, we like
 to publish case-studies rapidely showing how to support data-driven workflows and 
-decision-making around scholarly communication in libraries using R.
+decision-making around scholarly communication in libraries.
 </description>
     <generator>Distill</generator>
     <lastBuildDate>Mon, 16 Dec 2024 00:00:00 +0000</lastBuildDate>

@@ -16,10 +16,10 @@
     },
     {
       "path": "index.html",
-      "title": "Blog | Scholarly Communication Analytics with R",
+      "title": "Blog | Scholarly Communication Analytics",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2024-12-17T08:47:49+01:00"
+      "last_modified": "2024-12-17T18:04:07+01:00"
     }
   ],
   "collections": ["posts/posts.json"]

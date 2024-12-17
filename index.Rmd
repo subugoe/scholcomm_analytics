@@ -1,5 +1,5 @@
 ---
-title: "Blog | Scholarly Communication Analytics with R"
+title: "Blog | Scholarly Communication Analytics"
 site: distill::distill_website
 listing: posts
 ---
