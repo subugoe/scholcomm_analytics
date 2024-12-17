@@ -25,7 +25,7 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 | Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
 |-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
-|  2024/09        | all.json.tar.gz | [cr_instant.snapshot](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  10.10.2024  | 2013-2024 | 50.397.426 |
+|  2024/11        | all.json.tar.gz | [cr_instant.snapshot](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  09.12.2024  | 2013-2024 | 51.488.082 |
 
 :::
 
@@ -71,18 +71,39 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 :::
 
+## Status Semantic Scholar 
+
+::: l-body-outset
+
+| Snapshot   | Directory    | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2024-05-28 | papers/      | [semantic_scholar.papers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | / | [Repo](https://github.com/naustica/MA/blob/main/download_papers.py) |  10.06.2024 | All | 218.668.220 |
+| 2024-05-28 | venues/      | [semantic_scholar.venues](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | / | [Repo](https://github.com/naustica/MA/blob/main/download_venues.py) |  10.06.2024 | All | 194.578 |
+
+:::
+
 ## Status Openalex
 
 ::: l-body-outset
 
 | Snapshot   | Directory     | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|---------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
-| 2024-09-27 | authors/      | [openalex.authors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 96.105.161 |
-| 2024-09-28 | funders/      | [openalex.funders](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 32.437 |
-| 2024-09-28 | institutions/ | [openalex.institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex) | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 109.495 |
-| 2024-09-28 | publishers/   | [openalex.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 10.250 |
-| 2024-09-28 | sources/      | [openalex.sources](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 254.533 |
-| 2024-09-23 | topics/       | [openalex.topics](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)       | schema_openalex_topics.json       | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 4.516 |
-| 2024-09-27 | works/        | [openalex.works](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  09.10.2024  | All | 259.375.778 |
+| 2024-11-25 | authors/      | [openalex.authors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  04.12.2024  | All | 101.310.502 |
+| 2024-11-25 | funders/      | [openalex.funders](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  04.12.2024  | All | 32.437 |
+| 2024-11-25 | institutions/ | [openalex.institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex) | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  04.12.2024  | All | 110.138 |
+| 2024-11-25 | publishers/   | [openalex.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  04.12.2024  | All | 10.376 |
+| 2024-11-25 | sources/      | [openalex.sources](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  04.12.2024  | All | 258.125 |
+| 2024-11-25 | topics/       | [openalex.topics](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)       | schema_openalex_topics.json       | [Repo](https://github.com/naustica/openalex) |  04.12.2024  | All | 4.516 |
+| 2024-11-25 | works/        | [openalex.works](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  04.12.2024  | All | 261.381.162 |
+
+:::
+
+## Status OpenAlex Document Type classification by SUB Göttingen
+
+::: l-body-outset
+
+| Snapshot   | Directory    | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2024-11-25 | works/       | [resources.classification_article_reviews_november_2024](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) |  04.12.2024 | All | 152.162.123 |
 
 :::
