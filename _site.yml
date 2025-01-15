@@ -24,4 +24,6 @@ navbar:
 output: 
   distill::distill_article:
     css: styles.css
+rss:
+  full_content: true
 exclude: ["*.gz", "*.zip"]
