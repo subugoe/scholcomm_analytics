@@ -1,0 +1,278 @@
+---
+title: "Changes in evidence for green open access in Scopus"
+description: In March 2024, Scopus announced changes to its open access tagging policy to better align with the Unpaywall definitions. In this blog post, I examine the impact of the policy change by comparing three Scopus snapshots, comprising around 20 million records. Although the overall share of open access did not change, the analysis found a decrease in the number of copies in repositories, affecting about 2 million items, that cannot be explained by Unpaywall changes.
+author:
+  - name: Sophia Dörner
+    affiliation: Göttingen State and University Library
+    affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0000-0001-8747-3422
+date: "2024-12-16"
+output: distill::distill_article
+#bibliography: literature.bib
+preview: distill-preview.png
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE
+)
+options(scipen = 999, digits = 2)
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.numeric(x)) {
+      return(prettyNum(x, big.mark = ","))
+    } else{
+      return(x)
+    }
+  }
+)
+```
+
+```{r, echo=FALSE,message = FALSE, warning = FALSE}
+library(here)
+library(tidyverse)
+library(networkD3)
+library(htmlwidgets)
+library(htmltools)
+library(sankeyD3) # Not on CRAN, but here <https://github.com/fbreitwieser/sankeyD3>
+library(ggiraph)
+library(scales)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+load(file=here("_posts/scopus_oa_tagging_changes/data","scp_sc_prep.RData"))
+```
+
+On 23 March 2024 [Scopus announced](https://blog.scopus.com/posts/changes-to-scopus-open-access-oa-document-tagging) changes to its open access (OA) tagging policy to better align with the definitions of Unpaywall, the OA evidence source that Scopus uses for its bibliometric database.
+According to the announcement, these changes affected approximately 2 million items relative to publisher-provide OA where the OA status has changed from bronze to hybrid or gold, or from hybrid to gold.
+Despite this, Scopus claims that no items previously tagged as OA lost any OA status tags, or that articles published in closed access wrongly received an OA tag.
+
+In this blogpost, I investigate the extent of the OA tagging policy update using three different Scopus snapshots provided by the [German Competence Network of Bibliometrics](https://bibliometrie.info). 
+Using a shared corpus of more than 19 million items, I contrasted the situations before and after the policy changes came into effect.
+Results confirm shifts between tags relative to publisher-provided OA.
+However, a total of `r nrow(filter(scp_sc_prep, (grepl("repositoryvor|repositoryam", scp04_oa_status) & !grepl("repositoryvor|repositoryam", scp07_oa_status)) | (grepl("repositoryvor|repositoryam", scp07_oa_status) & !grepl("repositoryvor|repositoryam", scp10_oa_status))))` items lost evidence about green open access tags.
+Checking a sample against the Unpaywall API suggests that these changes were only made on the Scopus side.
+
+## Data and Method
+
+To analyse the effects of open access tagging policy changes in Scopus, I retrieved `r n_distinct(scp_sc_prep$scp04_item_id)` items indexed in Scopus that were published between 2019 and 2023. 
+Data were obtained from the [German Competence Network of Bibliometrics](https://bibliometrie.info) using the Scopus April 2024, July 2024 and October 2024 snapshots.
+The three snapshots were matched by Scopus item ID to build a shared corpus.
+
+Data preparation also involved labelling the [Scopus provided open access tags](https://blog.scopus.com/posts/scopus-filters-for-open-access-type-and-green-oa-full-text-access-option) to allow for comparision across the snapshots.
+
+<p/>
+
+| Scopus provided open access tag | renamed value  |
+|:--------------------------------------------------------|:---------------|
+| publisherfullgold                                       | gold           |
+| publisherhybridgold                                     | hybrid         |
+| publisherfree2read                                      | bronze         |
+| repositoryvor                                           | green (vor)    |
+| repositoryam                                            | green (am)     |
+| NULL                                                    | none           |
+
+
+In some cases items did not have any open access tag assigned in one or several of the investigated snapshots. 
+The respective entries had `NULL` values in the open access status column. 
+Those were renamed to *none* in order to keep the values during data transformation and analysis.
+The differentiation between the two available green open access tags indicates the manuscript version published, where **vor** stands for version of record and **am** stands for accepted manuscript.
+
+## Results
+
+Overall, Scopus recorded open access tags for approximately 46% of the publications it indexed between 2019 and 2023. The following table shows that the number and proportion of open access is consistent across the three snapshots.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+load(file=here("_posts/scopus_oa_tagging_changes/data","scp_oa_share.RData"))
+```
+
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+scp_oa_share |> 
+  filter(is_oa == "yes") |> 
+  select(-is_oa) |>
+  knitr::kable(col.names = c("Snapshot", "Records with OA tag", "Share (in %)"), 
+               format.args = list(decimal.mark = ".", big.mark = ","),
+               caption = "Scopus records representing journal articles published between 2019 and 2023 with open access evidence across three different database snapshots.")
+```
+
+Figure \@ref(fig:scpbarplot) illustrates the distribution of open access tags for each of the three snapshots. 
+Item numbers with a bronze open access tag declined between the April and the July snapshots, while the number of items with a gold open access tag increased. 
+These changes are in accordance with the Scopus announcement. 
+However, the number of items tagged as green open access dropped between the April and July snapshots without this being offset by any other OA type.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+scp_sc_long <- read_csv(here("_posts/scopus_oa_tagging_changes/data","scp_sc_long.csv"))
+```
+
+```{r scpbarplot, echo=FALSE, fig.cap='Open access tag distribution in descending order.'}
+interactive_barplot <- scp_sc_long %>%
+  group_by(snapshot, oa_status) %>%
+  summarise(n = n_distinct(scp04_item_id)) %>%
+  mutate(name = ifelse(snapshot == "scp04_oa_status", "April 24",
+                       ifelse(snapshot == "scp07_oa_status", "July 24","October 24"))) %>%
+  ggplot(aes(y=reorder(oa_status,+n), x=n, fill = snapshot, tooltip = paste0("Number of Items: ", formatC(n, big.mark = ","), "\n", "Snapshot: ",name),
+  data_id = snapshot)) +
+  geom_bar_interactive(stat="identity", position = "dodge") +
+  scale_fill_manual_interactive(name = "Scopus\nSnapshot", labels = c("April 24", "July 24", "October 24"),
+  values = c("scp04_oa_status" = "#446ace", "scp07_oa_status" = "#e9b121", "scp10_oa_status" = "#fd725d")) +
+  scale_x_continuous(labels = label_comma(),limits=c(0, 13000000)) +
+  guides(fill = guide_legend(reverse=TRUE)) +
+  theme_minimal() +
+  geom_text_interactive(aes(label = scales::comma(n)),position = position_dodge(0.95), size = 3, hjust = -.2, vjust = 0.5) +
+  xlab("Number of Items") +
+  ylab("Open Access Tag") +
+  theme(axis.text.y = element_text(size=10),
+        axis.text.x = element_text(size=10),
+        axis.title.y = element_text(size=10,vjust = +1),
+        axis.title.x = element_text(size=10,vjust = -.5),
+        legend.text =element_text(size=10),
+        legend.title = element_text(size=10,face = "bold"))
+
+scp_barplot_interactive <- girafe(ggobj = interactive_barplot,
+                                  options = list(
+                                  opts_hover_inv(css = "opacity:0.1;"),
+                                  opts_hover(css = "stroke-width:2;"),
+                                  opts_zoom(min = .3, max = 5)
+                                  ))
+scp_barplot_interactive
+saveWidget(scp_barplot_interactive, file = "scp_barplot_interactive.html")
+```
+
+To explore possible shifts between OA categories, Figure \@ref(fig:scpsankey) shows the flows between snapshots, i.e. the number of tags assigned between snapshots.
+Like Unpaywall, Scopus assigns multiple open access tags to a single item in case more than one open access location could be found.
+For the `r n_distinct(scp_sc_prep$scp04_item_id)` items analysed here, the number of open access tags per item varied between none and three; nodes titled *Missing* indicate items where this number of tags varied between snapshots for the same item.
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+nodes <- read_csv(here("_posts/scopus_oa_tagging_changes/data","nodes.csv"))
+links <- read_csv(here("_posts/scopus_oa_tagging_changes/data","links.csv"))
+```
+
+
+```{r scpsankey, echo=FALSE, fig.cap='Open Access Tag Comparison of Scopus April 24, July 24 and October 24 snapshots'}
+nodes$group <- as.factor(ifelse(nodes$name %in% c(1,2,3,4,5,6,7), "scp04", 
+                                ifelse(nodes$name %in% c(8,9,10,11,12,13,14), "scp07", "scp10")))
+
+links$group <- as.factor(ifelse(links$source == 2 & links$target == 11 | links$source == 2 & links$target == 7 | links$source == 5 & links$target == 11 | links$source == 5 & links$target == 7 | links$source == 9 & links$target == 18 | links$source == 13 & links$target == 18 | links$source == 9 & links$target == 14 | links$source == 13 & links$target == 14, "highlight", ifelse(links$source == 4 & links$target == 10, "highlight_2","plain")))
+
+colours <- 'd3.scaleOrdinal() .domain(["scp04", "scp07","scp10", "highlight","highlight_2","plain"]) .range(["#446ace","#e9b121", "#fd725d", "#40a954","#97bbf5ff","#e5e5e5"])'
+
+scp_sn <- sankeyNetwork(Links = links, Nodes = nodes, Source = "source",
+              Target = "target", Value = "n", NodeID = "label", fontSize = 12, nodePadding = 20, 
+                    zoom = TRUE, showNodeValues = FALSE, numberFormat = ",d", fontFamily = "sans-serif", iterations=0,NodeGroup="group", LinkGroup = "group", colourScale = colours,dragX = TRUE,dragY = TRUE, xAxisDomain = c("Scopus (April)","Scopus (July)","Scopus (October)"),xScalingFactor = .8, height = 700, width = 700)
+
+scp_sn <- onRender(
+  scp_sn,
+  '
+  function(el,x){
+    var lowerCase = /^[a-z]/;
+    var upperCase = /^[A-Z]/;
+    var allCaps = /^[A-Z-]+(?: \\(.*\\))?$/;
+
+    var labels = d3.select(el).selectAll(".node text");
+
+    labels.each(function(d) {
+      d.isAllCaps = allCaps.test(d.name);
+      d.isLowerCase = lowerCase.test(d.name);
+      d.isUpperCase = upperCase.test(d.name);
+
+      let text = d.name.toLowerCase();
+      let capitalized = text.replace(/(\\b|-)\\w/g, function(char) {
+        return char.toUpperCase();
+      });
+
+      d3.select(this).text(capitalized + " (" + d3.format(",d")(d.value) + ")");
+    });
+
+    labels.attr("transform", function(d) {
+        var box = this.getBBox();
+        var adjust = box.width 
+        if (d.isAllCaps) {
+          return "translate(" + (-adjust - 40) + ",0)";
+        }
+        else if (d.isUpperCase) {
+          return "translate(5,0)";
+        }
+        else {
+          return "translate(5,0)";
+        }
+    });
+
+    var zoomLayer = el.querySelector(".zoom-layer");
+    if(zoomLayer){
+      zoomLayer.setAttribute("transform", "translate(119,21) scale(0.75)");
+    }
+
+    labels.filter(function(d) { return d.isAllCaps; })
+      .attr("x",x.options.nodeWidth - 10)
+      .attr("text-anchor", "end")
+
+    labels.filter(function(d) { return d.isLowerCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
+    
+    labels.filter(function(d) { return d.isUpperCase; })
+      .attr("x", x.options.nodeWidth + 10)
+      .attr("text-anchor", "start")
+    
+    d3.select(el)
+    .style("margin-left", "auto")
+    .style("margin-right", "auto")
+    .style("display", "block");
+    
+    d3.select(el).select("svg")
+    .attr("width", 1000)
+    .attr("height", 2000)
+    
+  }
+  '
+)
+scp_sn
+saveWidget(scp_sn, file = "scp_sn.html")
+```
+
+There was a notable change relative to publisher-provided OA: `r nrow(filter(scp_sc_prep, grepl("publisherfree2read", scp04_oa_status) & grepl("publisherfullgold", scp07_oa_status)))` items with a bronze open access tag in the April snapshot were tagged with a gold open access tag in the July snapshot, which accounts for most of the bronze status changes. 
+This suggests an improved identification of full OA journals.
+
+But also substantial changes regarding repository-provided OA can be observed: Comparing the April and July snapshots (see green highlighted flows on the left in Figure \@ref(fig:scpsankey)), a total of `r nrow(filter(scp_sc_prep, grepl("repositoryvor|repositoryam", scp04_oa_status) & !grepl("repositoryvor|repositoryam", scp07_oa_status)))` items with one of the green open access tags in the April snapshot lost this status in the July snapshot. 
+This number decreases to `r nrow(filter(scp_sc_prep, grepl("repositoryvor|repositoryam", scp07_oa_status) & !grepl("repositoryvor|repositoryam", scp10_oa_status)))` when comparing the July and October snapshots (see green highlighted flows on the right in Figure \@ref(fig:scpsankey)).
+
+Although items did not lost their open access status through the changes of the tagging policy, my analysis found a decrease of evidence for copies in repositories as indicate by the tags `green (am)` and `green (vor)`.
+
+To better understand this difference, I took two samples of 10,000 DOIs representing items loosing green open access status between the April and July or July and October snapshots and queried the Unpaywall API to retrieve open access status information for these DOIs. 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+green_none_0407 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","green_none_0407.csv"))
+green_none_0710 <- read_csv(here("_posts/scopus_oa_tagging_changes/data","green_none_0710.csv"))
+```
+
+Between the April and July snapshots, Unpaywall recorded a green open access version for `r round(nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi)) / nrow(distinct(green_none_0407, doi)) * 100, 2)`%. 
+Furthermore, Unpaywall assigned green as primary open access status to `r round(nrow(filter(green_none_0407, oa_status == "green" & host_type == "repository") %>% distinct(doi)) / nrow(filter(green_none_0407, has_repository_copy == TRUE) %>% distinct(doi)) * 100,2)`%. Comparing the July and October snapshots samples shows a similar result: Unpaywall found a repository copy for `r nrow(filter(green_none_0710, has_repository_copy == TRUE) %>% distinct(doi)) / nrow(distinct(green_none_0710, doi)) * 100`%.
+Here, Unpaywall assigned green as primary open access status to `r nrow(filter(green_none_0710, oa_status == "green" & host_type == "repository") %>% distinct(doi)) / nrow(filter(green_none_0710, has_repository_copy == TRUE) %>% distinct(doi)) * 100`% of the investigated items. 
+
+Although the number of articles for which Unpaywall identified a repository copy decreased slightly between the two comparisons, in most cases Unpaywall tracked a copy in a repository. 
+The analysis suggests that the underlying reason for the absence of green OA tags in Scopus cannot be explained by changes in the Unpaywall data.
+
+Furthermore, after manually checking the raw data used to populate the bibliometrics database of the [German Competence Network of Bibliometrics](https://bibliometrie.info) and the Scopus online database, I was unable to detect any errors that could explain the decline in green open access evidence in Scopus.
+
+
+## Discussion
+
+Recent changes to the Scopus open access tagging policy are not fully consistent with Scopus documentation.
+Examining a shared corpus of around 20 million records representing journal articles between 2019 and 2023, the results suggest that green open access evidence was removed from Scopus after the policy changes were introduced, affecting around 2 million records.
+This decline cannot be explained by changes to Unpaywall, the source of open access evidence used by Scopus.
+Although the overall share of open access remained constant over the three snapshots examined, analyses of open access that include green open access need to take these changes into account.
+
+### Code availability
+
+The code used for data preparation, analysis and visualisation is available on [GitHub](https://github.com/doerners/scp_green_oa).
+
+
+## Update January 2025 {.appendix}
+
+Our enquiry with Elsevier has confirmed that there was a problem with the Unpaywall Data Matcher in Scopus. This has been resolved so that the number of green OA tags increased to the correct value in December 2024.
