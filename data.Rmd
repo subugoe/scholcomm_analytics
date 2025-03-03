@@ -104,6 +104,6 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 | Snapshot   | Directory    | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
-| 2024-12-31 | works/       | [resources.classification_article_reviews_december24](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) |  10.01.2025 | 2014-2024 | 58.240.262 |
+| 2025-01-29 | works/       | [resources.classification_article_reviews_2014_2025_january25](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) |  03.03.2025 | 2014-2025 | 58.746.753 |
 
 :::
