@@ -21,6 +21,8 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 ### Current Snapshot (cr_instant)
 
+Info: Only includes publications with type 'journal-article'
+
 ::: l-body-outset
 
 | Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
@@ -30,6 +32,8 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 :::
 
 ### Historical Snapshots (cr_history)
+
+Info: Only includes publications with type 'journal-article'
 
 ::: l-body-outset
 
@@ -79,6 +83,7 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 |------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
 | 2025-02-25 | papers/      | [semantic_scholar.papers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | s2_papers_schema.json | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 224.566.486 |
 | 2025-02-25 | venues/      | [semantic_scholar.venues](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | s2_venues_schema.json | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 194.578 |
+| 2025-02-25 | abstracts/      | [semantic_scholar.abstracts](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | s2_abstracts_schema.json | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 108.246.108 |
 
 :::
 
@@ -88,22 +93,24 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 | Snapshot   | Directory     | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|---------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
-| 2025-01-29 | authors/      | [openalex.authors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  27.02.2025  | All | 102.027.046 |
-| 2025-01-30 | funders/      | [openalex.funders](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  27.02.2025  | All | 32.437 |
-| 2025-01-30 | institutions/ | [openalex.institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex) | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  27.02.2025  | All | 111.863 |
-| 2025-01-30 | publishers/   | [openalex.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  27.02.2025  | All | 10.741 |
-| 2025-01-30 | sources/      | [openalex.sources](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  27.02.2025  | All | 260.808 |
-| 2025-01-27 | topics/       | [openalex.topics](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)       | schema_openalex_topics.json       | [Repo](https://github.com/naustica/openalex) |  27.02.2025  | All | 4.516 |
-| 2025-01-29 | works/        | [openalex.works](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  27.02.2025  | All | 263.611.637 |
+| 2025-02-27 | authors/      | [openalex.authors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  13.03.2025  | All | 102.382.226 |
+| 2025-02-28 | funders/      | [openalex.funders](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  13.03.2025  | All | 32.437 |
+| 2025-02-28 | institutions/ | [openalex.institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex) | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  13.03.2025  | All | 112.271 |
+| 2025-02-28 | publishers/   | [openalex.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  13.03.2025  | All | 10.741 |
+| 2025-02-28 | sources/      | [openalex.sources](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  13.03.2025  | All | 260.812 |
+| 2025-02-24 | topics/       | [openalex.topics](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)       | schema_openalex_topics.json       | [Repo](https://github.com/naustica/openalex) |  13.03.2025  | All | 4.516 |
+| 2025-02-27 | works/        | [openalex.works](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  13.03.2025  | All | 264.675.127 |
 
 :::
 
 ## Status OpenAlex Document Type classification by SUB Göttingen
 
+Info: Only includes publications with type 'article' or 'review' and primary source type 'journal'
+
 ::: l-body-outset
 
 | Snapshot   | Directory    | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
-| 2025-01-29 | works/       | [resources.classification_article_reviews_2014_2025_january25](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) |  03.03.2025 | 2014-2025 | 58.746.753 |
+| 2025-02-27 | works/       | [resources.classification_article_reviews_2014_2025_february25](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) |  13.03.2025 | 2014-2025 | 59.219.719 |
 
 :::
