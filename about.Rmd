@@ -30,15 +30,16 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
 
-Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2024). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <https://arxiv.org/abs/2401.16359>
-
 ## Journal publications
+
+Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2025). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. *Scientometrics*. 
+<https://doi.org/10.1007/s11192-025-05293-3>
 
 Jahn, N. (2025). How open are hybrid journals included in transformative agreements? *Quantitative Science Studies*. <https://doi.org/10.1162/qss_a_00348>
 
 Haupka, N. (2024). Analyse der Abdeckung wissenschaftlicher Publikationen auf Semantic Scholar im Kontext von Open Access. *Bibliothek Forschung und Praxis*, 48(2), 362–373. <https://doi.org/10.1515/bfp-2023-0057>
 
-Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2024). Understanding differences of the OA uptake within the German University landscape (2010–2020): Part 2—repository-provided OA. Scientometrics. <https://doi.org/10.1007/s11192-024-05003-5>
+Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2024). Understanding differences of the OA uptake within the German University landscape (2010–2020): Part 2—repository-provided OA. *Scientometrics*. <https://doi.org/10.1007/s11192-024-05003-5>
 
 Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2023). Understanding differences of the OA uptake within the German university landscape (2010–2020): Part 1—journal-based OA. *Scientometrics*, 128(6), 3601–3625. <https://doi.org/10.1007/s11192-023-04716-3>
 

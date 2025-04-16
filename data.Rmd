@@ -111,6 +111,6 @@ Info: Only includes publications with type 'article' or 'review' and primary sou
 
 | Snapshot   | Directory    | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
-| 2025-02-27 | works/       | [resources.classification_article_reviews_2014_2025_february25](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) |  13.03.2025 | 2014-2025 | 59.219.719 |
+| 2025-03-31 | works/       | [resources.document_classification_march25](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) | 16.04.2025 | 2014-2025 | 59.721.813 |
 
 :::
