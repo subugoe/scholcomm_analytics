@@ -28,6 +28,8 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 ## Recent preprints
 
+Jahn, N. (2025). Estimating transformative agreement impact on hybrid open access: A comparative large-scale study using Scopus, Web of Science and open metadata. <https://arxiv.org/abs/2504.15038>
+
 Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
 
 ## Journal publications
@@ -45,7 +47,6 @@ Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2023). Understandin
 
 Fraser, N., Hobert, A., Jahn, N., Mayr, P., & Peters, I. (2023). No deal: German researchers’ publishing and citing behaviors after Big Deal negotiations with Elsevier.
 *Quantitative Science Studies*, 4(2), 325--352. <https://doi.org/10.1162/qss_a_00255>
-
 
 Haupka, N., Jahn, N., & Hobert, N. (2022). Praxisbericht Big Scholarly Data an der SUB Göttingen. *LIBREAS. Library Ideas*, 41 (2022). <https://libreas.eu/ausgabe41/haupka/>
 
