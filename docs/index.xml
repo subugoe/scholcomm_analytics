@@ -11,7 +11,15 @@ to publish case-studies rapidely showing how to support data-driven workflows an
 decision-making around scholarly communication in libraries.
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Mon, 16 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 09 May 2025 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Introducing Open Metadata about Transformative Agreements</title>
+      <dc:creator>Najko Jahn</dc:creator>
+      <link>https://subugoe.github.io/scholcomm_analytics/posts/openbib_ta_release</link>
+      <description>This post presents a new dataset that combines open metadata from the cOAlition S Journal Checker Tool and OpenAlex to analyse transformative agreements. Data on these much-discussed agreements are scattered across different sources and are only partially available. To address this, we preserved and combined open metadata from the cOAlition S Journal Checker Tool and OpenAlex, resulting in a unified dataset for large-scale bibliometric studies.</description>
+      <guid>https://subugoe.github.io/scholcomm_analytics/posts/openbib_ta_release</guid>
+      <pubDate>Fri, 09 May 2025 00:00:00 +0000</pubDate>
+    </item>
     <item>
       <title>Changes in evidence for green open access in Scopus</title>
       <dc:creator>Sophia Dörner</dc:creator>

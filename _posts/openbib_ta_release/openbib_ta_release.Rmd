@@ -1,0 +1,271 @@
+---
+title: "Introducing Open Metadata about Transformative Agreements"
+description: "This post presents a new dataset that combines open metadata from the cOAlition S Journal Checker Tool and OpenAlex to analyse transformative agreements. Data on these much-discussed agreements are scattered across different sources and are only partially available. To address this, we preserved and combined open metadata from the cOAlition S Journal Checker Tool and OpenAlex, resulting in a unified dataset for large-scale bibliometric studies."
+author:
+  - name: Najko Jahn
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+date: "`r Sys.Date()`"
+output: distill::distill_article
+bibliography: references.bib
+---
+
+```{r setup, echo=FALSE}
+
+suppressPackageStartupMessages(library(tidyverse))
+
+library(bigrquery)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE, 
+  dpi = 600
+)
+options(scipen = 999, digits = 2)
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.numeric(x)) {
+      return(prettyNum(x, big.mark = ","))
+    } else{
+      return(x)
+    }
+  }
+)
+```
+
+```{r connection}
+#| echo: false
+#' BigQuery 
+bq_con <- dbConnect(
+  bigrquery::bigquery(),
+  project = "subugoe-collaborative",
+  billing = "subugoe-collaborative"
+)
+
+jct_esac <- tbl(bq_con, "openbib.jct_esac")
+jct_journals <- tbl(bq_con, "openbib.jct_journals")
+jct_institutions <- tbl(bq_con, "openbib.jct_institutions")
+jct_articles <- tbl(bq_con, "openbib.jct_articles")
+```
+
+Since their initial proposal [@Schimmer_2015], [transformative agreements](https://esac-initiative.org/about/transformative-agreements/) have become a predominant model to finance open access in scholarly journals [@D_r_2025]. 
+Measuring their impact, however, remains challenging as data about these agreements are scattered across different sources [@Kramer_2024].
+
+The [cOAlition S Public Transformative Agreement Data dump](https://journalcheckertool.org/transformative-agreements/), which powers the [Journal Checker Tool](https://journalcheckertool.org/), is an important step towards transparency. 
+This resource is based on transformative agreements recorded in the [ESAC Registry](https://esac-initiative.org/about/transformative-agreements/agreement-registry/). 
+However, the Journal Checker Tool only presents current agreements and removes data on expired agreements. 
+Another shortcoming in the analysis of transformative agreements is that bibliometric databases have not integrated data on transformative agreements such as those provided by ESAC or the COAlition S, making it difficult to identify articles published under these agreements [@Bakker_2024]. 
+Open access monitoring services also lack comprehensive coverage of this data point.
+
+To close this gap, this blog post introduces an open data release about transformative agreements developed as part of the initial [OPENBIB data release of the German Competence Network for Bibliometrics](https://www.open-bibliometrics.de/posts/20250507-OpenDataRelease/)[@openbib] at the SUB Göttingen. 
+This dataset, licensed under CC0, combines cOAlition S data with [OpenAlex](https://openalex.org/) to improve transparency and enable estimates of articles published under these agreements.
+
+The dataset comprises:
+
+- 1,043 transformative agreements covering 17,199 eligible journals and 5,355 participating institutions
+- 1,362,221 eligible articles published by first authors affiliated with participating institutions
+
+Preliminary versions of this dataset were used in the SUB Göttingen's [Hybrid Open Access Dashboard](https://subugoe.github.io/hoaddash/), a comprehensive monitoring effort based on 13,000 hybrid journals in transformative agreements [@Achterberg_2023], and studies on the impact of transformation agreements on open access in hybrid journals [@Jahn_2025]. The data were also used to compare findings when applied to open metadata and proprietary bibliometric databases Scopus and Web of Science [@jahn2025estimatingtransformativeagreementimpact]. 
+Using Dutch Research Council NWO funded papers, @de_Jonge_2025 validated an open method based on transformative agreement data and OpenAlex and were able to accuratly identify the majority of articles under these agreements.
+
+This blog post will present methods used to compile the dataset and will present a use case based on Google BigQuery to help with the first steps using this new open data source.
+
+## Methods
+
+### Data retrieval and curation
+
+A dedicated bot has preserved weekly snapshots of the cOAlition S Public Transformative Agreement Data dump since December 2022. 
+These snapshots, available on [GitHub](https://github.com/njahn82/jct_data?tab=readme-ov-file#snapshots), were merged using a custom [script](https://github.com/njahn82/jct_data/blob/main/combine.R) that retains only the most recent data for each agreement.
+
+The original data links agreements to journals through names and ISSNs. 
+After mapping to linking ISSN (ISSN-L), journals were associated with publishers using the ESAC Registry. 
+To improve institutional coverage, the data were enriched with ROR-IDs from OpenAlex's institution data.
+
+Because OpenAlex does not fully support [corresponding authors](https://docs.openalex.org/api-entities/works/work-object/authorship-object#is_corresponding), articles enabled by transformative agreements were estimated by matching first author affiliations with participating institutions, considering agreement durations from the ESAC Registry, as described in @Jahn_2025.
+
+Processing was performed on Google BigQuery, with dataset compilation for the initial version completed in April 2025. 
+Data files are available from [Zenodo](https://zenodo.org/records/15308680) and programmatically via the [Open Scholarly Data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html) (dataset openbib).
+
+### Data files
+
+The dataset comprises four main files:
+
+**Historic cOAlition S Transformative Agreement Data** 
+
+- `jct_journals` links journals to transformative agreements
+- `jct_institutions` links participating institutions to agreements
+
+**ESAC snapshot**
+
+- `jct_esac` - Metadata about agreements including publisher name and duration
+
+**Articles under Transformative Agreements**
+
+- `jct_articles` links OpenAlex articles to agreements through journals, institutions, and duration
+
+Full documentation of data files is available in the [data documentation](https://github.com/kbopenbib/kbopenbib_data/blob/ta/docs/data_overview.md#-transformative-agreements).
+
+## Use case
+
+In the following, a use case based on Google BigQuery is presented. 
+Anyone can view and query this data with a Google Cloud Computing account, with standard usage fees applying for querying the data.
+The dataset is also available on [Zenodo](https://zenodo.org/records/15308680).
+
+### How many articles were enabled by transformative agreements?
+
+This query retrieves annual counts for articles enabled by transformative agreements, focusing on articles and reviews as classified by OpenAlex:
+
+```{sql}
+#| connection: bq_con
+#| output.var: bq_df
+SELECT
+  publication_year,
+  esac.publisher,
+  COUNT(DISTINCT(jct.id)) AS n,
+FROM
+  `subugoe-collaborative.openbib.jct_articles` AS jct
+INNER JOIN
+  `subugoe-collaborative.openalex.works` AS oalex
+ON
+  oalex.doi = jct.doi
+INNER JOIN
+  `subugoe-collaborative.openbib.jct_esac` AS esac
+ON
+  esac.id = jct.esac_id
+WHERE oalex.type IN ('article', 'review') AND is_paratext = FALSE
+GROUP BY
+  publication_year,
+  publisher
+ORDER BY
+  publication_year DESC,
+  n DESC
+```
+
+```{r}
+bq_df
+```
+
+```{r, echo =FALSE, preview=TRUE}
+#| label: fig-all
+#| fig-cap: "Growth of articles enabled by transformative agreements between 2020 and 2024, showing the dominance of the five largest commercial publishers in the scholarly publishing market."
+pub_by_year_df <- bq_df |>
+  mutate(publisher_normalised = if_else(
+    publisher %in% c("Elsevier", "Springer Nature", "Wiley", "Taylor & Francis", "Sage"), publisher, "Other"
+  )) |>
+  group_by(publisher_normalised, publication_year) |>
+  summarise(n = sum(n)) |>
+  filter(between(publication_year, 2020, 2024)) |>
+  mutate(publisher_normalised = factor(publisher_normalised, levels = c("Elsevier", "Springer Nature", "Wiley", "Taylor & Francis", "Sage", "Other"))) 
+
+pub_by_year_df |>
+  ggplot(aes(publication_year, n, fill = fct_rev(publisher_normalised))) +
+  geom_bar(stat = "identity", color = "white", linewidth = .25) +
+  scale_fill_manual("", values = c('#cccccca0', '#f0f9e8','#bae4bc','#7bccc4','#43a2ca','#0868ac')) +
+  scale_y_continuous(labels =  scales::number_format(big.mark = ",")) +
+  labs(x = "Publication year", y = "First-author articles", title = "Growth of Transformative Agreements",
+       subtitle = "Annual first-author articles from participating institutions",
+       caption = "KBOPENBIB | April 2025 | CC0") +
+ theme_minimal() +
+  theme(plot.margin = margin(30, 30, 30, 30)) +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.x = element_blank()) +
+  theme(panel.border = element_blank()) +
+  theme(plot.title.position = "plot") +
+  theme(plot.caption.position = "plot")
+```
+
+Figure 1 shows the growth of articles enabled by transformative agreements between 2020 and 2024, highlighting the dominance of five major commercial publishers, with Elsevier, Springer Nature and Wiley leading.
+
+### How many articles were made open access by transformative agreements?
+
+Transformative agreements vary in structure and implementation. 
+Journal bundles may include open access journals, hybrid journals, and subscription journals, with varying document types allowed and potential limitations on open access article numbers. 
+The following query examines the open access status of articles enabled by transformative agreements:
+
+```{sql}
+#| connection: bq_con
+#| output.var: bq_oa_df
+
+SELECT
+  publication_year,
+  esac.publisher,
+  oalex.open_access.oa_status,
+  COUNT(DISTINCT(jct.id)) AS n,
+FROM
+  `subugoe-collaborative.openbib.jct_articles` AS jct
+INNER JOIN
+  `subugoe-collaborative.openalex.works` AS oalex
+ON
+  oalex.doi = jct.doi
+INNER JOIN
+  `subugoe-collaborative.openbib.jct_esac` AS esac
+ON
+  esac.id = jct.esac_id
+WHERE oalex.type IN ('article', 'review') AND is_paratext = FALSE
+GROUP BY
+  publication_year,
+  publisher, 
+  oalex.open_access.oa_status
+ORDER BY
+  publication_year DESC,
+  n DESC
+```
+
+```{r}
+bq_oa_df
+```
+
+```{r}
+#| label: fig-oa
+#| echo: false
+#| fig-cap: "Articles covered by transformative agreements by open access status"
+oa_df <- bq_oa_df |>
+  filter(oa_status %in% c("gold", "hybrid", "closed")) |>
+  mutate(publisher_normalised = if_else(
+    publisher %in% c("Elsevier", "Springer Nature", "Wiley", "Taylor & Francis", "Sage"), publisher, "Other"
+  )) |>
+  group_by(publisher_normalised, publication_year, oa_status) |>
+  summarise(n = sum(n)) |>
+  filter(between(publication_year, 2020, 2024)) |>
+  mutate(publication_year = as.character(as.numeric(publication_year))) |>
+  mutate(oa_status = factor(oa_status, levels = c("gold", "hybrid", "closed"))) |>
+  mutate(publisher_normalised = factor(publisher_normalised, levels = c("Elsevier", "Springer Nature", "Wiley", "Taylor & Francis", "Sage", "Other")))
+  
+oa_df |>
+  ggplot(aes(gsub("^20", "'", publication_year), n, fill = fct_rev(publisher_normalised))) +
+  geom_bar(stat = "identity", color = "white", linewidth = .25) +
+  scale_fill_manual("", values = c('#cccccca0', '#f0f9e8','#bae4bc','#7bccc4','#43a2ca','#0868ac')) +
+  scale_y_continuous(labels =  scales::number_format(big.mark = ",")) +
+  facet_grid(~ oa_status) +
+  labs(x = "Publication year", y = "First-author articles", title = "Growth of Transformative Agreements",
+       subtitle = "Annual first-author articles from participating institutions, by open access status",
+       caption = "KBOPENBIB | April 2025 | CC0") +
+ theme_minimal() +
+  theme(plot.margin = margin(30, 30, 30, 30)) +
+  theme(panel.grid.minor = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(panel.grid.major.x = element_blank()) +
+  theme(panel.border = element_blank()) +
+  theme(plot.title.position = "plot") +
+  theme(plot.caption.position = "plot")
+```
+
+Figure 2 shows open access by business model. 
+The majority of articles were made available in hybrid journals. 
+The notable number of closed articles may reflect matching limitations or complexities of transformative agreements regarding journal inclusion, article caps, and document type restrictions.
+It may also signal issues with [OpenAlex open access tagging](https://subugoe.github.io/scholcomm_analytics/posts/oalex_oa_status/).
+
+## Responsible use
+
+While the data presented allow analysis of transformative agreements using bibliometric databases, some shortcomings must be acknowledged.
+The [public Transformative Agreement Data Dumps](https://journalcheckertool.org/transformative-agreements/) from the Journal Checker Tool and the ESAC Registry are voluntary, crowd-sourced efforts. The information is subject to change.
+
+Due to limited publicly available invoice data, the article dataset only represents estimates based on first author affiliations according to OpenAlex. 
+Although transformative agreement guidelines typically refer to corresponding authors (data not fully available in OpenAlex), research has shown a [strong correlation between first and corresponding authorship](https://arxiv.org/abs/2504.15038v1) at the level of publishers and countries.
+
+## Funding information {.appendix}
+
+This work was supported by the Federal Ministry of Education and Research of Germany (BMBF) under grants 16WIK2301E / 16WIK2101F.
