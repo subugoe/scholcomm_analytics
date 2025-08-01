@@ -28,11 +28,11 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 ## Recent preprints
 
-Jahn, N. (2025). Estimating transformative agreement impact on hybrid open access: A comparative large-scale study using Scopus, Web of Science and open metadata. <https://arxiv.org/abs/2504.15038>
-
 Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
 
 ## Journal publications
+
+Jahn, N. (2025). Estimating transformative agreement impact on hybrid open access: A comparative large-scale study using Scopus, Web of Science and open metadata. *Scientometrics*. <https://doi.org/10.1007/s11192-025-05390-3>
 
 Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2025). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. *Scientometrics*. 
 <https://doi.org/10.1007/s11192-025-05293-3>
