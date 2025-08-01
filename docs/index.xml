@@ -19,6 +19,7 @@ decision-making around scholarly communication in libraries.
       <description>This post presents a new dataset that combines open metadata from the cOAlition S Journal Checker Tool and OpenAlex to analyse transformative agreements. Data on these much-discussed agreements are scattered across different sources and are only partially available. To address this, we preserved and combined open metadata from the cOAlition S Journal Checker Tool and OpenAlex, resulting in a unified dataset for large-scale bibliometric studies.</description>
       <guid>https://subugoe.github.io/scholcomm_analytics/posts/openbib_ta_release</guid>
       <pubDate>Fri, 09 May 2025 00:00:00 +0000</pubDate>
+      <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/openbib_ta_release/distill-preview.png" medium="image" type="image/png" width="7800" height="4800"/>
     </item>
     <item>
       <title>Changes in evidence for green open access in Scopus</title>
