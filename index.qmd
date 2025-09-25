@@ -1,0 +1,209 @@
+---
+title: "Blog | Scholarly Communication Analytics"
+---
+
+Scholarly communication is changing. Being part of the [Knowledge Commons](https://www.sub.uni-goettingen.de/kontakt/abteilungen-a-z/abteilungs-und-gruppendetails/abteilunggruppe/wissen-als-gemeingut/) group, we support the [State and University Library of Göttingen](https://www.sub.uni-goettingen.de/sub-aktuell/) and the [University of Göttingen](https://www.uni-goettingen.de/) by providing data-driven insights into current trends in scholarly communication.
+
+We use various bibliometric databases and maintain a publicly accessible data warehouse for open scholarly data, which is based on Google Cloud BigQuery. We also provide software clients to programmatically access open metadata sources using R and Python.
+
+On our blog, we publish initial data case studies. Sometimes these result into journal articles. Others present ideas for data analytics dashboards.
+
+## Latest Content
+
+```{=html}
+<div class="posts-list">
+<a href="posts/openbib_ta_release/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">May 9, 2025</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/openbib_ta_release/distill-preview.png">
+</div>
+<div class="description">
+<h2>Introducing Open Metadata about Transformative Agreements</h2>
+<div class="dt-tags"></div>
+<p>This post presents a new dataset that combines open metadata from the cOAlition S Journal Checker Tool and OpenAlex to analyse transformative agreements. Data on these much-discussed agreements are scattered across different sources and are only partially available. To address this, we preserved and combined open metadata from the cOAlition S Journal Checker Tool and OpenAlex, resulting in a unified dataset for large-scale bibliometric studies.</p>
+</div>
+</a>
+<a href="posts/scopus_oa_tagging_changes/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Dec. 16, 2024</div>
+<div class="dt-authors">
+<div class="dt-author">Sophia Dörner</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/scopus_oa_tagging_changes/distill-preview.png">
+</div>
+<div class="description">
+<h2>Changes in evidence for green open access in Scopus</h2>
+<div class="dt-tags"></div>
+<p>In March 2024, Scopus announced changes to its open access tagging policy to better align with the Unpaywall definitions. In this blog post, I examine the impact of the policy change by comparing three Scopus snapshots, comprising around 20 million records. Although the overall share of open access did not change, the analysis found a decrease in the number of copies in repositories, affecting about 2 million items, that cannot be explained by Unpaywall changes.</p>
+</div>
+</a>
+<a href="posts/oal_document_types_classifier/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Oct. 24, 2024</div>
+<div class="dt-authors">
+<div class="dt-author">Nick Haupka</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/oal_document_types_classifier/distill-preview.png">
+</div>
+<div class="description">
+<h2>Identifying journal article types in OpenAlex</h2>
+<div class="dt-tags"></div>
+<p>Identifying suitable types of journal articles for bibliometric analyses is important. In this blog post, I present a document type classifier that helps to identify research contributions like original research articles using Crossref and OpenAlex. The classifier and classified OpenAlex records are openly available.</p>
+</div>
+</a>
+<a href="posts/openalex_document_types/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Sept. 4, 2024</div>
+<div class="dt-authors">
+<div class="dt-author">Nick Haupka</div>
+<div class="dt-author">Sophia Dörner</div>
+<div class="dt-author">Najko Jahn</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/openalex_document_types/distill-preview.png">
+</div>
+<div class="description">
+<h2>Recent Changes in Document type classification in OpenAlex compared to Web of Science and Scopus</h2>
+<div class="dt-tags"></div>
+<p>In June 2024, we published a preprint on the classification of document types in OpenAlex and compared it with the scholarly databases Web of Science, Scopus, PubMed and Semantic Scholar. In this follow-up study, we want to investigate further developments in OpenAlex and compare the results with the proprietary databases Scopus and Web of Science.</p>
+</div>
+</a>
+<a href="posts/oalex_oa_status/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Nov. 7, 2023</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+<div class="dt-author">Nick Haupka</div>
+<div class="dt-author">Anne Hobert</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/oalex_oa_status/distill-preview.png">
+</div>
+<div class="description">
+<h2>Analysing and reclassifying open access information in OpenAlex</h2>
+<div class="dt-tags"></div>
+<p>We investigated OpenAlex and found over four million records with incompatible metadata about open access works. To illustrate this issue, we applied Unpaywall's methodology to OpenAlex data. The comparative analysis revealed a shift, with over one million journal articles published in 2023 that were previously labelled as "closed" in OpenAlex, being reclassified as "gold", "hybrid", "green", or "bronze".</p>
+</div>
+</a>
+<a href="posts/oam_hybrid/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">June 7, 2022</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+<div class="dt-author">Nick Haupka</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/oam_hybrid/distill-preview.png">
+</div>
+<div class="description">
+<h2>How open are hybrid journals included in nationwide transformative agreements in Germany?</h2>
+<div class="dt-tags"></div>
+<p>We present hoaddata, an experimental R package that combines open scholarly data from the German Open Access Monitor, Crossref and OpenAlex. Using this package, we illustrate the progress made in publishing open access content in hybrid journals included in nationwide transformative agreements in Germany across journal portfolios and countries.</p>
+</div>
+</a>
+<a href="posts/oaire_graph_2020/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">April 7, 2020</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/oaire_graph_2020/distill-preview.png">
+</div>
+<div class="description">
+<h2>Accessing and analysing the OpenAIRE Research Graph data dumps</h2>
+<div class="dt-tags"></div>
+<p>The OpenAIRE Research Graph provides a wide range of metadata about grant-supported research publications. This blog post presents an experimental R package with helpers for splitting, de-compressing and parsing the underlying data dumps. I will demonstrate how to use them by examining the compliance of funded projects with the open access mandate in Horizon 2020.</p>
+</div>
+</a>
+<a href="posts/unpaywall_python/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">March 30, 2020</div>
+<div class="dt-authors">
+<div class="dt-author">Nick Haupka</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/unpaywall_python/distill-preview.png">
+</div>
+<div class="description">
+<h2>Exploring the Open Access Evidence Base in Unpaywall with Python</h2>
+<div class="dt-tags"></div>
+<p>Open Access evidence sources constantly change. In this blog post, I present a Python based approach for analysing the most recent snapshots from the open access discovery service Unpaywall. Results shows a growth in open access content, partly because of newly introduced evidence sources like Semantic Scholar.</p>
+</div>
+</a>
+<a href="posts/elsevier_invoice/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Nov. 25, 2019</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/elsevier_invoice/distill-preview.png">
+</div>
+<div class="description">
+<h2>Mining and analysing invoice data from Elsevier relative to hybrid open access</h2>
+<div class="dt-tags"></div>
+<p>Publishers rarely make publication fee spending for hybrid journals transparent. Elsevier is a remarkable exception, as the publisher provides open and machine-readable data relative to its central invoicing with funding bodies and fee waivers at the article level. This blogpost illustrates how to mine Elsevier full-texts for these data with the data science tool R and presents new insights by analysing the resulting dataset: of 70,657 articles published open access in 1,753 hybrid journals from 2015 to date, around one third of the publication fees were paid through central agreements. Nevertheless, the majority of funding sources for hybrid open access remains unclear.</p>
+</div>
+</a>
+<a href="posts/datacite_graph/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">Oct. 24, 2019</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/datacite_graph/distill-preview.png">
+</div>
+<div class="description">
+<h2>Interfacing the PID Graph with R</h2>
+<div class="dt-tags"></div>
+<p>The PID Graph from DataCite interlinks persistent identifiers (PID) in research. In this blog post, I will present how to interface this graph using the DataCite GraphQL API with R. To illustrate it, I will visualise the research information network of a  person.</p>
+</div>
+</a>
+<a href="posts/unpaywall_evidence/" class="post-preview post-preview-last">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">May 7, 2019</div>
+<div class="dt-authors">
+<div class="dt-author">Najko Jahn</div>
+<div class="dt-author">Anne Hobert</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/unpaywall_evidence/distill-preview.png">
+</div>
+<div class="description">
+<h2>Open Access Evidence in Unpaywall</h2>
+<div class="dt-tags"></div>
+<p>We investigated more than 31 million scholarly journal articles published between 2008 and 2018 that are indexed in Unpaywall, a widely used open access discovery tool. Using Google BigQuery and R, we determined over 11.6 million journal articles with open access full-text links in Unpaywall, corresponding to an open access share of 37 %. Our data analysis revealed various open access location and evidence types, as well as large overlaps between them, raising important questions about how to responsibly re-use Unpaywall data in bibliometric research and open access monitoring.</p>
+</div>
+</a>
+</div>
+```

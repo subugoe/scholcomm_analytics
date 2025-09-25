@@ -1,0 +1,104 @@
+.reactable {
+  .my-tbl {
+      margin: 0 auto;
+      width: 575px;
+    }
+    .tbl-header {
+      margin: 18px 0;
+      font-size: 1.25em;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 4px;
+      margin-bottom: 24px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .filter-input {
+      margin-top: 4px;
+      margin-left: 32px;
+      flex: 1;
+      max-width: 250px;
+    }
+    .filter-input label {
+      color: hsl(0, 0%, 45%);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .group-header {
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .filter-input select,
+    .filter-input input[type="search"] {
+      padding: 0 6px;
+      height: 32px;
+    }
+    .filter-input input[type="search"] {
+      /* Reset Bootstrap 3 styles */
+      -webkit-appearance: searchfield;
+    }
+    .filter-input input[type="search"]::-webkit-search-cancel-button {
+      /* Reset Bootstrap 3 styles */
+      -webkit-appearance: searchfield-cancel-button;
+    }
+    .followers-tbl a {
+      color: inherit;
+    }
+    .header {
+      border-bottom: 2px solid #555;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .header:hover {
+      background-color: #eee;
+    }
+    /* Highlight headers when sorting */
+    .header:hover,
+    .header[aria-sort="ascending"],
+    .header[aria-sort="descending"] {
+      background-color: rgba(236, 236, 237, 1);
+    }
+    .agreement-footer {
+      margin: 18px 0;
+      font-size: 10px;
+      }
+      
+    .agreement-tbl {
+      margin: 18px 0;
+      font-size: 14px;
+    }
+    .bar-cell {
+      display: flex;
+      align-items: center;
+    }
+    .number {
+      font-family: monospace;
+      font-size: 14px;
+      white-space: pre;
+    }
+    .label {
+      font-size: 14px;
+      white-space: pre;
+    }
+    .bar-chart {
+      flex-grow: 1;
+      margin-left: 6px;
+      height: 14px;
+    }
+    .bar {
+      height: 100%;
+    }
+    .border-left {
+      border-left: 2px solid #b5b5b5;
+    }
+    .name {
+      font-weight: 900;
+    }
+}

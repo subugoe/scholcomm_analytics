@@ -1,0 +1,49 @@
+project:
+  type: website
+
+website:
+  title: "Scholarly Communication Analytics"
+  navbar:
+    logo: logo.svg
+    right:
+      - text: About
+        href: about.qmd
+      - text: Data
+        href: data.qmd
+  twitter-card: true
+  open-graph: true
+  page-footer:
+    left: 
+      - text: '<img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/CC_BY_icon.svg" alt="CC BY 4.0" style="height: 20px; margin-top: -2px;">'
+        href: "https://creativecommons.org/licenses/by/4.0/"
+    center:
+      - text: "Contact"
+        href: "mailto:najko.jahn@sub.uni-goettingen.de"
+      - text: "Imprint"
+        href: https://www.sub.uni-goettingen.de/impressum/
+    right:
+      - icon: github
+        href: https://github.com/subugoe/scholcomm_analytics/
+        aria-label: Project GitHub
+resources:
+  - posts/unpaywall_evidence/*
+  - posts/unpaywall_python/*
+  - posts/scopus_oa_tagging_changes/*
+  - posts/openbib_ta_release/*
+  - posts/openalex_document_types/*
+  - posts/oam_hybrid/*
+  - posts/oalex_oa_status/*
+  - posts/oal_document_types_classifier/*
+  - posts/oaire_graph_2020/*
+  - posts/elsevier_invoice/*
+  - posts/datacite_graph/*
+  - distill_listing.html
+  - logo.svg 
+format:
+  html:
+    theme: 
+      - default
+      - styles.scss
+
+
+

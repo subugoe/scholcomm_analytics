@@ -1,0 +1,124 @@
+---
+toc: true
+---
+# About us!
+
+Welcome to our Blog 👋! Here, you'll find insights from our work as Data Analysts in the domain of scholarly communication. With this blog, we want to engage with the broader community about how to support data-driven workflows and decision-making around scholarly communication.
+
+We are based at the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/en/news/), one of the largest academic libraries in Germany. We are using various data analytics tools in our everyday work and contribute to R and Python package developments and training activities. In this blog, you'll find news and case-studies around:
+
+- Open Access and Open Science Analytics
+- Packages making use of open databases and helping us in our work
+- Tools for interactive visualizations and dashboard developments
+- Training and outreach activities 
+
+We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to start a blog about our work. As a technical framework for the blog, we are using <del>[Distill for R Markdown](https://rstudio.github.io/distill/)</del> [Quarto](https://quarto.org/), a new web publishing format optimized for scientific and technical writing. 
+
+*Dr. Anne Hobert*, *Nick Haupka*, *Sophia Dörner*, *Najko Jahn*
+
+## Recent preprints
+
+Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
+
+## Journal publications
+
+Jahn, N. (2025). Estimating transformative agreement impact on hybrid open access: A comparative large-scale study using Scopus, Web of Science and open metadata. *Scientometrics*. <https://doi.org/10.1007/s11192-025-05390-3>
+
+Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2025). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. *Scientometrics*. 
+<https://doi.org/10.1007/s11192-025-05293-3>
+
+Jahn, N. (2025). How open are hybrid journals included in transformative agreements? *Quantitative Science Studies*. <https://doi.org/10.1162/qss_a_00348>
+
+Haupka, N. (2024). Analyse der Abdeckung wissenschaftlicher Publikationen auf Semantic Scholar im Kontext von Open Access. *Bibliothek Forschung und Praxis*, 48(2), 362–373. <https://doi.org/10.1515/bfp-2023-0057>
+
+Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2024). Understanding differences of the OA uptake within the German University landscape (2010–2020): Part 2—repository-provided OA. *Scientometrics*. <https://doi.org/10.1007/s11192-024-05003-5>
+
+Taubert, N., Hobert, A., Jahn, N., Bruns, A., & Iravani, E. (2023). Understanding differences of the OA uptake within the German university landscape (2010–2020): Part 1—journal-based OA. *Scientometrics*, 128(6), 3601–3625. <https://doi.org/10.1007/s11192-023-04716-3>
+
+Fraser, N., Hobert, A., Jahn, N., Mayr, P., & Peters, I. (2023). No deal: German researchers’ publishing and citing behaviors after Big Deal negotiations with Elsevier.
+*Quantitative Science Studies*, 4(2), 325--352. <https://doi.org/10.1162/qss_a_00255>
+
+Haupka, N., Jahn, N., & Hobert, N. (2022). Praxisbericht Big Scholarly Data an der SUB Göttingen. *LIBREAS. Library Ideas*, 41 (2022). <https://libreas.eu/ausgabe41/haupka/>
+
+Jahn, N., Matthias, L., & Laakso, M. (2022). Toward transparency of
+hybrid open access through publisher‐provided metadata: An article‐level
+study of Elsevier. *Journal of the Association for Information Science
+and Technology*, 73(1), 104--118. <https://doi.org/10.1002/asi.24549>
+
+Jahn, N., Held, M., Walter, H., Haupka, N., & Hillenkötter, K. (2022).
+HOAD: Data Analytics für mehr Transparenz bei
+Open-Access-Transformationsverträgen. *ABI Technik*, 42(1), 64--69.
+<https://doi.org/10.1515/abitech-2022-0007>
+
+Stisser, A., Jahn, N., & Schmidt, B. (2022). Stand und Perspektiven bibliometriegestützter Open-Access-Services an Universitäten in Deutschland. *Bibliothek Forschung und Praxis*, 46(2), 275–283. <https://doi.org/10.1515/bfp-2021-0098>
+
+Hobert, A., Jahn, N., Mayr, P., Schmidt, B., & Taubert, N. (2021). Open
+access uptake in Germany 2010--2018: adoption in a diverse research
+landscape. *Scientometrics*, 126(12), 9751--9777.
+<https://doi.org/10.1007/s11192-021-04002-0>
+
+Laakso, M., Matthias, L., & Jahn, N. (2021). Open is not forever: A
+study of vanished open access journals. *Journal of the Association for
+Information Science and Technology*, 72(9), 1099--1112.
+<https://doi.org/10.1002/asi.24460> ([JASIST Best Paper Award 2022](https://www.asist.org/2022/06/15/2022-best-jasist-paper-award/). Featured in
+[Nature](https://www.nature.com/articles/d41586-020-02610-z),
+[Nature](https://www.nature.com/articles/d41586-024-00616-5),
+[Nature](https://doi.org/10.1038/d41586-024-03842-z),
+[Science](https://doi.org/10.1126/science.abe6998), [CNN](https://edition.cnn.com/2020/09/15/us/vanished-open-access-journals-trnd-scn/index.html),
+[DLF](https://www.deutschlandfunknova.de/nachrichten/wissenschaft-millionen-arbeiten-sind-nicht-richtig-archiviert))
+
+Jahn, N., Hobert, A., & Haupka, N. (2021). Entwicklung und Typologie des
+Datendiensts Unpaywall. *Bibliothek Forschung und Praxis*, 45(2),
+293--303. <https://doi.org/10.1515/bfp-2020-0115>
+
+Matthias, L., Jahn, N., & Laakso, M. (2019). The Two-Way Street of Open
+Access Journal Publishing: Flip It and Reverse It. *Publications*, 7(2),
+23. <https://doi.org/10.3390/publications7020023>
+
+
+## Theses
+
+Haupka, N. (2021). Analyse der Entwicklung des Open Access-Discovery-Services Unpaywall seit 2018 [Bachelor Thesis, Hochschule Hannover]. <https://doi.org/10.25968/opus-1899>
+
+## Software
+
+R-Packages (selection):
+
+Jahn, N. *europepmc: R Interface to the Europe PubMed Central RESTful Web Service*. <https://CRAN.R-project.org/package=europepmc> | <https://docs.ropensci.org/europepmc/>
+  
+Chamberlain, S., Zhu, H., Jahn, N., Boettiger, C., Ram, K. *rcrossref: Client for Various 'CrossRef' 'APIs'*. <https://CRAN.R-project.org/package=rcrossref> <https://docs.ropensci.org/rcrossref/>
+  
+Jahn, N (2022). *roadoi: Find Free Versions of Scholarly Publications via Unpaywall*. <https://CRAN.R-project.org/package=roadoi> | <https://docs.ropensci.org/roadoi/>.
+
+Python-Packages (selection):
+
+Haupka, N., Morrison, P. *unpywall - Interfacing the Unpaywall API with Python*.
+<https://pypi.org/project/unpywall> | <https://unpywall.readthedocs.io/>
+
+Dashboards (selection):
+
+[Hybrid Open Access Dashboard (HOAD)](https://subugoe.github.io/hoaddash/). See our blog post: <https://www.coalition-s.org/blog/introducing-the-hybrid-open-access-dashboard-hoad/>
+
+[metacheck: Open Access Metadata Compliance Checker](https://subugoe.github.io/metacheck/)
+
+[Open Access uptake in Germany 2010-2018: Interactive Supplement](https://subugoe.shinyapps.io/oauni_10_18/)
+
+## Third-party funded projects
+
+### BMBF 
+
+- Kompetenznetzwerk Bibliometrie: Komparative Analyse und Kuratierung Deutscher Metadaten in Offenen Bibliometriedaten, Teilprojekt: Bereitstellung und Analyse Dokumenttypen
+- Kompetenznetzwerk Bibliometrie, Teilprojekt: Datenergänzung: Open-Access-Nachweise
+- [indi:oa - Verantwortungsbewusste Bewertung und Qualitätssicherung von Open-Access Publikationen mittels bibliometrischer Indikatoren](https://open-access.network/vernetzen/open-access-projekte/indioa) (concluded)
+- [OAUNI - Entwicklung und Einflussfaktoren des Open-Access-Publizierens an Universitäten in Deutschland](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/oauni/) (concluded)
+
+### DFG
+
+
+- [OA-Datenpraxis: Datenpraxis zur Gestaltung der Open-Access-Transformation - Analyse, Empfehlung, Training & Vernetzung](https://oa-datenpraxis.de/)
+- [Hybrid OA Dashboards: Mehrwertorientierte Analytics-Anwendungen zur Förderung der Kostentransparenz bei Transformationsverträgen](https://www.sub.uni-goettingen.de/projekte-forschung/projektdetails/projekt/hybrid-oa-dashboards/) (concluded)
+
+### European Commission
+
+- [On-Merrit](https://on-merrit.eu/) (concluded)
+- [OpenAIRE Nexus](https://www.openaire.eu/openaire-nexus-project) (concluded)

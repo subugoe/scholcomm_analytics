@@ -1,0 +1,21 @@
+:root {
+--quarto-scss-export-body-bg: #{$body-bg};
+--quarto-scss-export-body-color: #{$body-color};
+--quarto-scss-export-text-muted: #{$text-muted};
+--quarto-scss-export-border-color: #{$border-color};
+--quarto-scss-export-table-border-color: #{$table-border-color};
+--quarto-scss-export-btn-code-copy-color: #{$btn-code-copy-color};
+--quarto-scss-export-btn-code-copy-color-active: #{$btn-code-copy-color-active};
+--quarto-scss-export-primary: #{$primary};
+--quarto-scss-export-secondary: #{$secondary};
+--quarto-scss-export-mermaid-bg-color: #{$mermaid-bg-color};
+--quarto-scss-export-mermaid-edge-color: #{$mermaid-edge-color};
+--quarto-scss-export-mermaid-node-fg-color: #{$mermaid-node-fg-color};
+--quarto-scss-export-mermaid-fg-color: #{$mermaid-fg-color};
+--quarto-scss-export-mermaid-fg-color--lighter: #{$mermaid-fg-color--lighter};
+--quarto-scss-export-mermaid-fg-color--lightest: #{$mermaid-fg-color--lightest};
+--quarto-scss-export-mermaid-label-bg-color: #{$mermaid-label-bg-color};
+--quarto-scss-export-mermaid-label-fg-color: #{$mermaid-label-fg-color};
+--quarto-scss-export-mermaid-node-bg-color: #{$mermaid-node-bg-color};
+--quarto-scss-export-tabset-border-color: #{$tabset-border-color};
+}

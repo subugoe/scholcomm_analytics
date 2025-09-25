@@ -1,0 +1,115 @@
+---
+title: "Open Scholarly Data @ SUB Göttingen - Overview"
+format: 
+  html:
+    toc: true
+    toc-location: left
+    toc-title: Data
+---
+
+We use Google Big Query to work with large open scholarly data. Our main data sources are [Unpaywall](https://unpaywall.org), [Crossref](https://www.crossref.org) and [OpenAlex](https://openalex.org).
+
+An overview of our data warehouse including procedures to load the data into BigQuery can be found below.
+
+Anyone can view and query our publicly available [Open Scholarly Data  warehouse](https://console.cloud.google.com/bigquery?hl=en&project=subugoe-collaborative) on BigQuery with a [Google Cloud Computing account](https://cloud.google.com/). Note that Google will charge you for the number of bytes processed by each query (currently $ 6.25 per 1 TB). 
+
+## Status Crossref
+
+### Current Snapshot (cr_instant)
+
+
+| Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
+|  2025/08        | all.json.tar.gz | [cr_instant.snapshot](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  11.09.2025  | All             | 173.151.922     |
+
+
+### Historical Snapshots (cr_history)
+
+Info: Only includes publications with type 'journal-article'
+
+
+| Snapshot        | File            | Table               | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|-----------------|-----------------|---------------------|----------------------|-----------|--------------|-----------|--------------------|
+|  2018/04        | all.json.tar.gz | [cr_history.cr_apr18](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_history) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  20.02.2022  | 2013-2018 | 16.766.035 |
+|  2019/04        | all.json.tar.gz | [cr_history.cr_apr19](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_history) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  29.10.2021  | 2013-2019 | 20.715.644 |
+|  2020/04        | all.json.tar.gz | [cr_history.cr_apr20](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_history) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  29.10.2021  | 2013-2020 | 25.334.525 |
+|  2021/04        | all.json.tar.gz | [cr_history.cr_apr21](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_history) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  29.10.2021  | 2013-2021 | 30.579.119 |
+|  2022/04        | all.json.tar.gz | [cr_history.cr_apr22](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_history) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  14.05.2022  | 2013-2022 | 35.939.195 |
+|  2023/04        | all.json.tar.gz | [cr_history.cr_apr23](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_history) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  07.05.2023  | 2013-2023 | 41.767.461 |
+|  2024/04        | all.json.tar.gz | [cr_history.cr_apr24](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_history) | schema_crossref.json | [Repo](https://github.com/naustica/crossref_bq) |  07.05.2024  | 2013-2024 | 47.709.184 |
+
+
+## Status Unpaywall
+
+### Current Snapshot (upw_instant)
+
+
+| Snapshot| File                                          | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|---------|-----------------------------------------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2024/11 | unpaywall_snapshot_2024-11-27T031702.jsonl.gz | [upw_instant.snapshot](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2supw_instant) | bq_schema_nov24.json | [Repo](https://github.com/naustica/unpaywall_bq) | 23.06.2025 | 2008-2025 | 94.924.816 |
+
+
+### Historical Snapshots (upw_history)
+
+
+| Snapshot| File                                          | Table                       | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|---------|-----------------------------------------------|-----------------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2018/03 | unpaywall_snapshot_2018-03-29T113154.jsonl.gz | [upw_history.upw_Mar18_08_20](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2supw_history) | bq_schema_mar18.json | [Repo](https://github.com/naustica/unpaywall_bq) |  29.10.2021  | 2008-2018 | 36.557.043 |
+| 2019/02 | unpaywall_snapshot_2019-02-21T031509.jsonl.gz | [upw_history.upw_Feb19_08_19](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2supw_history) | bq_schema_feb19.json | [Repo](https://github.com/naustica/unpaywall_bq) |  10.11.2021  | 2008-2019 | 42.143.979 |
+| 2020/02 | unpaywall_snapshot_2020-02-25T115244.jsonl.gz | [upw_history.upw_Feb20_08_20](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2supw_history) | bq_schema_feb20.json | [Repo](https://github.com/naustica/unpaywall_bq) |  30.10.2021  | 2008-2020 | 49.717.710 |
+| 2021/02 | unpaywall_snapshot_2021-02-18T160139.jsonl.gz | [upw_history.upw_Feb21_08_21](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2supw_history) | bq_schema_feb21.json | [Repo](https://github.com/naustica/unpaywall_bq) |  29.10.2021  | 2008-2021 | 58.437.927 |
+| 2022/03 | unpaywall_snapshot_2022-03-09T083001.jsonl.gz | [upw_history.upw_Mar22_08_22](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2supw_history) | bq_schema_mar22.json | [Repo](https://github.com/naustica/unpaywall_bq) |  14.03.2022 | 2008-2022 | 67.424.819 |
+
+
+## Status Semantic Scholar 
+
+
+| Snapshot   | Directory    | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2025-02-25 | papers/      | [semantic_scholar.papers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | s2_papers_schema.json | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 224.566.486 |
+| 2025-02-25 | venues/      | [semantic_scholar.venues](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | s2_venues_schema.json | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 194.578 |
+| 2025-02-25 | abstracts/      | [semantic_scholar.abstracts](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | s2_abstracts_schema.json | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 108.246.108 |
+
+
+## Status OpenAlex
+
+
+| Snapshot   | Directory     | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
+|------------|---------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
+| 2025-08-21 | authors/      | [openalex.authors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_author.json       | [Repo](https://github.com/naustica/openalex) |  29.08.2025  | All | 104.532.760 |
+| 2025-08-22 | funders/      | [openalex.funders](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_funders.json      | [Repo](https://github.com/naustica/openalex) |  29.08.2025  | All | 32.437 |
+| 2025-08-22 | institutions/ | [openalex.institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex) | schema_openalex_institutions.json | [Repo](https://github.com/naustica/openalex) |  29.08.2025  | All | 117.061 |
+| 2025-08-22 | publishers/   | [openalex.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)   | schema_openalex_publishers.json   | [Repo](https://github.com/naustica/openalex) |  29.08.2025  | All | 10.741 |
+| 2025-08-22 | sources/      | [openalex.sources](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)      | schema_openalex_sources.json      | [Repo](https://github.com/naustica/openalex) |  29.08.2025  | All | 260.789 |
+| 2025-08-18 | topics/       | [openalex.topics](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)       | schema_openalex_topics.json       | [Repo](https://github.com/naustica/openalex) |  29.08.2025  | All | 4.516 |
+| 2025-08-21 | works/        | [openalex.works](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex)        | schema_openalex_work.json         | [Repo](https://github.com/naustica/openalex) |  29.08.2025  | All | 270.051.911 |
+
+
+## Status OPENBIB
+
+
+| Snapshot   | Table                 | Schema                            | Procedure | Last Changed | Coverage  | Number of rows |
+|------------|-----------------------|-----------------------------------|-----------|--------------|-----------|----------------------|
+| 2025-05-01 | [openbib.publishers](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_publishers.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 11.04.2025 | 2014-2024 | 373 |
+| 2025-05-01 | [openbib.publishers_relation](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_publishers_relation.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 11.04.2025 | 2014-2024 | 212 |
+| 2025-05-01 | [openbib.funding_information](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_funding_information.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2020-2024 | 9.255 |
+| 2025-05-01 | [openbib.document_types](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_document_types.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 28.03.2025 | 2014-2024 | 56.063.628 |
+| 2025-05-01 | [openbib.kb_a_addr_inst](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_kb_a_addr_inst.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | All | 9.903.725 |
+| 2025-05-01 | [openbib.kb_s_addr_inst](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_kb_s_addr_inst.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | All | 9.900.278 |
+| 2025-05-01 | [openbib.kb_inst](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_kb_inst.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | All | 2.759 |
+| 2025-05-01 | [openbib.kb_inst_trans](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_kb_inst_trans.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 28.03.2025 | All | 91 |
+| 2025-05-01 | [openbib.kb_sectors](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_kb_sectors.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 28.03.2025 | All | 22 |
+| 2025-05-01 | [openbib.jct_articles](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_jct_articles.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 1.996.190 |
+| 2025-05-01 | [openbib.jct_esac](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_jct_esac.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 1.285 |
+| 2025-05-01 | [openbib.jct_institutions](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_jct_institutions.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 28.007 |
+| 2025-05-01 | [openbib.jct_journals](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | schema_openbib_jct_journals.json | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 491.218 |
+
+
+## Status OpenAlex Document Type classification by SUB Göttingen
+
+Info: Only includes publications with type 'article' or 'review' and primary source type 'journal'
+
+
+| Snapshot   | Directory    | Table                | Schema               | Procedure | Last Changed | Coverage  | Number of rows |
+|------------|--------------|----------------------|----------------------|-----------|--------------|-----------|-----------------|
+| 2025-08-21 | works/       | [resources.document_classification_august25](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sresources) | schema_document_types.json | [Repo](https://github.com/naustica/openalex_doctypes/tree/classifier/classifier) | 05.09.2025 | 2014-2025 | 62.204.042 |

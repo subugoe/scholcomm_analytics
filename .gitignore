@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+scratch
+rsconnect
+.DS_Store
+*_cache
+issues
+dev
+_posts/scopus_oa_tagging_changes/data/*
+docs/posts/scopus_oa_tagging_changes/data/*
