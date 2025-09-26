@@ -128,7 +128,7 @@ Finally, I will compare the reference and source reference count in Semantic Sch
 | 145,744,398	| 16.035306	| 132,044,159	| 14.527958	| Social Sciences |
 | 2,008,830	| 1.398958	| 1,040,406	| 0.724543 | None |
 
-## Discussion
+## Conclusion
 
 This analysis demonstrates interesting differences between the reference counts in OpenAlex and Semantic Scholar. In particular, discrepancies were found between publishers, with Semantic Scholar counting more references than OpenAlex for publishers like Taylor & Francis and BMJ. The proportion of source references is higher in OpenAlex than in Semantic Scholar, although about 9 million journal articles were identified for which the source reference count was greater than in OpenAlex. This finding is quite relevant for bibliometric research, as it may enable more accurate citation analysis in OpenAlex, which can be achieved through the inclusion of open metadata. 
 
