@@ -102,7 +102,7 @@ Finally, I will compare the reference and source reference count in Semantic Sch
 
 <p></p>
 <p></p>
-<b>Table 3: References contained in OpenAlex and Semantic Scholar per OpenAlex domain.</b>
+<b>Table 3: References contained in OpenAlex and precalculated by Semantic Scholar per OpenAlex domain.</b>
 <p></p>
 <p></p>
 
