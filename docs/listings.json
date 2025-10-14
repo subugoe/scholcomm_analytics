@@ -2,9 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/s2_reference_analysis/s2_reference_analysis.html",
-      "/posts/post-with-code/index.html",
-      "/posts/welcome/index.html"
+      "/posts/s2_reference_analysis/s2_reference_analysis.html"
     ]
   }
 ]
