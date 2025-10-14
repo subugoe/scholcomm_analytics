@@ -12,6 +12,23 @@ On our blog, we publish initial data case studies. Sometimes these result into j
 
 ```{=html}
 <div class="posts-list">
+<a href="posts/s2_reference_analysis/" class="post-preview">
+<script class="post-metadata" type="text/json">{"categories":[]}</script>
+<div class="metadata">
+<div class="publishedDate">October 14, 2025</div>
+<div class="dt-authors">
+<div class="dt-author">Nick Haupka</div>
+</div>
+</div>
+<div class="thumbnail">
+<img src="posts/s2_reference_analysis/distill-preview.png">
+</div>
+<div class="description">
+<h2>Is Semantic Scholar suitable for enriching references in OpenAlex? Part I</h2>
+<div class="dt-tags"></div>
+<p>This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.</p>
+</div>
+</a>
 <a href="posts/openbib_ta_release/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":[]}</script>
 <div class="metadata">

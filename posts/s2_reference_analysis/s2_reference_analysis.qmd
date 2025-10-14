@@ -1,0 +1,144 @@
+---
+title: "Is Semantic Scholar suitable for enriching references in OpenAlex? Part I"
+author:
+  - name: Nick Haupka 
+    affiliation: State and University Library Göttingen
+    affiliation_url: https://www.sub.uni-goettingen.de/
+    orcid_id: 0009-0002-6478-6789
+date: 10/14/2025
+abstract: "This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex."
+image: distill-preview.png
+bibliography: references.bib
+---
+
+## Introduction
+
+References are an essential part of bibliometric research. For example, references are required to calculate bibliometric indicators such as the journal impact factor and the h-index. University rankings also rely on a proper recording of references, as the number of citations a institution receives is usually used as a criterion. The coverage of references within a bibliometric database therefore plays a significant role. 
+
+As @culbert_reference_2025 has demonstrated, OpenAlex has comparable source reference numbers to Scopus and Web of Science. However, that does not mean that the coverage of references is perfect. In this blog post, I will use the service Semantic Scholar to identify further references for journal articles that can be used to enhance references in OpenAlex.
+
+Semantic Scholar, developed by the Allen Institute for Artificial Intelligence, is a promising data source for enriching bibliometric data, as it makes a large portion of its metadata available under a free license (ODC-BY). However, the quality of metadata has been little studied to date compared to data sources like Crossref and OpenAlex. 
+
+The following research questions shall be answered in this blog post series. 
+
+- <b>RQ1: How does the number of (source) references in OpenAlex and Semantic Scholar differ?</b>
+- <b>RQ2: How can data from Semantic Scholar be used to enrich references in OpenAlex?</b>
+
+This blog post will address RQ1, while RQ2 will be discussed in Part II of this blog post series.  
+
+## Data and Method
+
+The following analysis is based on data from OpenAlex (Snapshot 08/2025) and Semantic Scholar (Snapshot 02/2025). Data was accessed via the [data warehouse of the SUB Göttingen](https://subugoe.github.io/scholcomm_analytics/data.html) which is powered by Google BigQuery. 
+
+The present study focuses on articles and reviews in journals. For convenience, journal items were only filtered by the document and publication type from OpenAlex. In addition, the publication year from OpenAlex was used. Journal items were matched via the Digital Object Identifier (DOI). The analysis covers journal items from 2015 to 2023. To obtain the number of references from the respective data sources, the precomputed field was used (for example in Semantic Scholar: ‘referencecount’). However, sometimes the precalculated number may differ from the actual number of references contained in a database. For example, a journal article has a reference count of 18, but all references are missing in the database because the publisher decided to omit this information. In this case, I have to calculate the so-called source reference count. 
+
+The source reference count in Semantic Scholar was retrieved by counting items in the field ‘references’ that refer to other items within Semantic Scholar. Unlike the reference count, the actual references from Semantic Scholar are not contained in the data warehouse of the SUB Göttingen, but in an external dataset (available through the [Semantic Scholar Datasets API](https://api.semanticscholar.org/api-docs/datasets)). Because the Semantic Scholar reference dataset is quite large (about 1 TB), I made use of the [High Performance Cluster of the GWDG Göttingen](https://gwdg.de/en/hpc/) to calculate the number of source references. For this purpose, I wrote a [Python script](https://github.com/naustica/oal_s2_ref/count_s2_source_refs.py) that performs this task. The aggregated data was then loaded into BigQuery. Retrieving the source reference count in OpenAlex is far simpler, as OpenAlex only considers the source reference count (field: ‘referenced_works_count’). 
+
+## Results
+
+Figure 1a displays a comparison of reference counts in Semantic Scholar and OpenAlex for the publication years 2015 to 2023, based on a shared corpus of approximately 37,5 million journal articles. Reference counts precalculated by Semantic Scholar are shown with a dashed line. It can be seen that the precalculated reference count in Semantic Scholar exceeds the number counted in OpenAlex for the publication years 2015 to 2019, but drops slightly afterwards. The number of source references in Semantic Scholar is lower across all publication years than in OpenAlex. In total, 982,585,826 references were counted in OpenAlex and 994,263,247 references were precalculated in Semantic Scholar. The number of source references in Semantic Scholar totals 896,752,043. Note that, although OpenAlex appears to have a greater number of source references than Semantic Scholar, I found about 9 million journal articles with more source references in Semantic Scholar than in OpenAlex (for the chosen time period).
+
+In contrast to Figure 1a, Figure 1b shows a comparison of average reference counts in Semantic Scholar and OpenAlex. Again, reference counts precalculated by Semantic Scholar are shown with a dashed line. While the figure shows the same trends as in Figure 1a, a slight decline in the average reference figures can be observed from 2021 onwards. On average, OpenAlex counts 25.52 references per journal item, while Semantic Scholar counts 25.83 references and 23.29 source references per article. 
+
+::: cell
+::: cell-output-display
+![Comparison of references in OpenAlex and Semantic Scholar based on a shared corpus.](media/figure1.png){#fig-publisher}
+:::
+:::
+
+In order to examine the differences between Semantic Scholar and OpenAlex in more detail, I will assign the precalculated reference and source reference count to publishers (see Figure 3a and 3b). 
+
+::: cell
+::: cell-output-display
+![Comparison of references per publisher in Semantic Scholar and OpenAlex.](media/figure2.png){#fig-publisher}
+:::
+:::
+
+I also compiled a list of the most common publishers for which OpenAlex or Semantic Scholar has a larger source reference count (see Table 1 and 2). Here, it can be seen that OpenAlex deposits more source references for the publishers Elsevier (about 12.600.000 references), Springer (about 916.000 references) and Wiley (about 746.000 references) than Semantic Scholar. On the contrary, Semantic Scholar has more source references for the publishers Frontiers Media (about 800.000 references), SAGE (about 512.000 references) and Taylor & Francis (about 269.000 references).
+
+<p></p>
+<p></p>
+<b>Table 1: The 10 most frequently appearing publishers for which OpenAlex has a higher source reference count than Semantic Scholar</b>
+<p></p>
+<p></p>
+
+| oal_source_ref_sum | s2_source_ref_sum	| publisher_id	| publisher_name |	diff |
+|--------------------|--------------------|---------------|----------------|--------|
+| 221,098,550 |	208,460,916 |	https://openalex.org/P4310320990 |	Elsevier BV |	12,637,634 |
+| 58,524,445 | 46,853,039 |	None |	None |	11,671,406 |
+| 91,912,174 |	82,755,155 |	https://openalex.org/P4310319900 |	Springer Science+Business Media |	9,157,019 |
+| 75,121,716 |	67,664,721 |	https://openalex.org/P4310320595 |	Wiley	| 7,456,995 |
+| 25,816,934 |	21,628,791 |	https://openalex.org/P4310320006 |	American Chemical Society	| 4,188,143 |
+| 18,203,600 |	14,255,451 |	https://openalex.org/P4310320556 |	Royal Society of Chemistry |	3,948,149 |
+| 19,562,074 |	15,847,098 |	https://openalex.org/P4310311648 |	Oxford University Press	| 3,714,976 |
+| 9,996,522 |	6,651,643 |	https://openalex.org/P4310320261 |	American Physical Society |	3,344,879 |
+| 17,313,110 |	15,205,127 |	https://openalex.org/P4310320256 |	BioMed Central |	2,107,983 |
+| 15,143,213 |	13,396,255 |	https://openalex.org/P4310319965 |	Springer Nature |	1,746,958 |
+
+<p></p>
+<p></p>
+<b>Table 2: The 10 most frequently appearing publishers for which Semantic Scholar has a higher source reference count than OpenAlex (surplus represented by a minus)</b>
+<p></p>
+<p></p>
+
+
+| oal_source_ref_sum | s2_source_ref_sum	| publisher_id	| publisher_name |	diff |
+|--------------------|--------------------|---------------|----------------|--------|
+| 27,245,366 |	28,043,664 |	https://openalex.org/P4310320527 |	Frontiers Media |	-798,298 |
+| 6,050,726	| 6,629,422	| https://openalex.org/P4310319811 |	Emerald Publishing Limited |	-578,696 |
+| 19,780,360 |	20,292,611 |	https://openalex.org/P4310320017 |	SAGE Publishing |	-512,251 |
+| 707,064 |	1,069,281 |	https://openalex.org/P4310320466 |	OMICS Publishing Group |	-362,217 |
+| 38,428,778 | 38,697,631 |	https://openalex.org/P4310320547 |	Taylor & Francis |	-268,853 |
+| 349,881 |	612,388 |	https://openalex.org/P4310320855 |	Sciencedomain  International |	-262,507 |
+| 6,447,765 |	6,696,983 |	https://openalex.org/P4310319869 |	Hindawi Publishing  Corporation |	-249,218 |
+| 1,507,041 |	1,719,281 |	https://openalex.org/P4310319798 |	Association for Computing Machinery |	-212,240 |
+| 1,493,723 |	1,655,240 |	https://openalex.org/P4310317820 |	Karger Publishers |	-161,517 |
+| 2,069,755 |	2,221,403 |	https://openalex.org/P4310320000 |	Thieme Medical  Publishers (Germany) |	-151,648 |
+
+<p></p>
+<p></p>
+
+Finally, I will compare the reference and source reference count in Semantic Scholar and OpenAlex by using topics from OpenAlex (see Table 3 and Table 4). I choose the primary topic domain for this purpose (which comprises the domains Health Sciences, Social Sciences, Life Sciences and Physical Sciences). For health sciences, Semantic Scholar counts on average 22,4 source references per article, while OpenAlex counts 23,9 source references. This differs slightly from the precomputed references count, where Semantic Scholar exceeds the reference count of OpenAlex by 24,1 to 23,9 references. The same applies to the social sciences, where the number of references precalculated by Semantic Scholar is greater than in the case of OpenAlex. However, when looking at the average number of source references, OpenAlex surpasses Semantic Scholar (16,0 to 14,5 source references on average).
+
+<p></p>
+<p></p>
+<b>Table 3: References contained in OpenAlex and precalculated by Semantic Scholar per OpenAlex domain.</b>
+<p></p>
+<p></p>
+
+| oal_ref_sum	| oal_ref_avg	| s2_ref_sum |	s2_ref_avg |	primary_topic |
+|-------------|-------------|------------|-------------|----------------|
+| 191,680,092	| 36.625827 |	190,953,855 |	36.487059 |	Life Sciences |
+| 235,953,838	| 23.902660	| 237,839,461	| 24.093678	| Health Sciences |
+| 407,198,668	| 31.643654	| 400,246,309	| 31.103382	| Physical Sciences |
+| 145,744,398	| 16.035306	| 163,572,762	| 17.996845	| Social Sciences |
+| 2,008,830	  | 1.398958	| 1,650,860	  | 1.149666	| None  |
+
+<p></p>
+<p></p>
+<b>Table 4: Source references contained in OpenAlex and Semantic Scholar per OpenAlex domain.</b>
+<p></p>
+<p></p>
+
+| oal_source_ref_sum | oal_source_ref_avg |	s2_source_ref_sum	| s2_source_ref_avg |	primary_topic |
+|--------------------|--------------------|-------------------|----------------------------------|---------------|
+| 191,680,092	| 36.625827	| 177,680,421	| 33.950799	| Life Sciences |
+| 235,953,838	| 23.902660	| 221,164,605	| 22.404477	| Health Sciences |
+| 407,198,668	| 31.643654	| 364,822,452	| 28.350572	| Physical Sciences |
+| 145,744,398	| 16.035306	| 132,044,159	| 14.527958	| Social Sciences |
+| 2,008,830	| 1.398958	| 1,040,406	| 0.724543 | None |
+
+## Conclusion
+
+This analysis demonstrates interesting differences between the reference counts in OpenAlex and Semantic Scholar. In particular, discrepancies were found between publishers, with Semantic Scholar counting more references than OpenAlex for publishers like Taylor & Francis and BMJ. The proportion of source references is higher in OpenAlex than in Semantic Scholar, although about 9 million journal articles were identified for which the source reference count was greater than in OpenAlex. This finding is quite relevant for bibliometric research, as it may enable more accurate citation analysis in OpenAlex, which can be achieved through the inclusion of open metadata. 
+
+During my analysis, I also discovered some inconsistencies between the Semantic Scholar website and its API. For example, references for some journal articles are missing in the API but are shown on the website. In other cases, references are missing in the API with the note: "Notice: The following paper fields have been elided by the publisher: {'references'}". However, this observation was not analysed further.
+
+In part II of this blog post series, I will explore how references from OpenAlex can be linked, deduplicated and enriched with references from Semantic Scholar. This post will be published soon!
+
+
+## Data and Code Availability
+
+The source code for the underlying analysis can be found on GitHub: https://github.com/naustica/oal_s2_ref/. 
+
+Data is available in the Data Warehouse of the SUB Göttingen: https://subugoe.github.io/scholcomm_analytics/data.html.
