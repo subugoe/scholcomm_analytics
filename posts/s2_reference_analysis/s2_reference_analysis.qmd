@@ -5,7 +5,7 @@ author:
     affiliation: State and University Library Göttingen
     affiliation_url: https://www.sub.uni-goettingen.de/
     orcid_id: 0009-0002-6478-6789
-date: 09/26/2025
+date: 10/14/2025
 abstract: "This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex."
 image: distill-preview.png
 bibliography: references.bib
