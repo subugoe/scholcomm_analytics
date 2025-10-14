@@ -6,6 +6,7 @@ listing:
   sort: "date desc"
   image-align: left
   feed: true
+  template: gallery.ejs
 ---
 
 Scholarly communication is changing. Being part of the [Knowledge Commons](https://www.sub.uni-goettingen.de/kontakt/abteilungen-a-z/abteilungs-und-gruppendetails/abteilunggruppe/wissen-als-gemeingut/) group, we support the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/sub-aktuell/) and the [University of Göttingen](https://www.uni-goettingen.de/) by providing data-driven insights into current trends in scholarly communication.

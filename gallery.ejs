@@ -1,0 +1,23 @@
+```{=html}
+<div class="posts-list">
+  <% for (const item of items) { %>
+    <a href="<%- item.outputHref %>" class="post-preview">
+    <script class="post-metadata" type="text/json">{"categories":[]}</script>
+    <div class="metadata">
+      <div class="publishedDate"><%- item.date %></div>
+      <div class="dt-authors">
+        <div class="dt-author"><%- item.author %></div>
+      </div>
+    </div>
+    <div class="thumbnail">
+      <img src="<%- item.image %>">
+    </div>
+    <div class="description">
+      <h2><%- item.title %></h2>
+      <div class="dt-tags"></div>
+      <p><%- item.abstract %></p>
+    </div>
+    </a>
+  <% } %>
+</div>
+```

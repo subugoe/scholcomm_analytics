@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-cdf46d72fbb294b9ba8a9213c6ad6a6b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-cb83e92e0b5f4fd21a3689c7f16b9e66.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -80,9 +80,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-project','listing-website','listing-resources','listing-format','listing-language','listing-freeze','listing-title-block-banner','listing-title','listing-author','listing-date','listing-abstract','listing-image','listing-bibliography','listing-path','listing-outputHref','listing-date-modified','listing-description','listing-filename','listing-file-modified','listing-reading-time','listing-word-count',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-date-modified-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] },{ data: ['listing-word-count-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+      searchColumns: ["listing-project","listing-website","listing-resources","listing-format","listing-language","listing-freeze","listing-title-block-banner","listing-title","listing-author","listing-date","listing-abstract","listing-image","listing-bibliography","listing-path","listing-outputHref","listing-date-modified","listing-description","listing-filename","listing-file-modified","listing-reading-time","listing-word-count"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -212,33 +212,27 @@ window.Quarto = {
 <p>On our blog, we publish initial data case studies. Sometimes these result into journal articles. Others present ideas for data analytics dashboards.</p>
 <section id="latest-content" class="level2">
 <h2 class="anchored" data-anchor-id="latest-content">Latest Content</h2>
-<div id="listing-quarto-listings" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-left" data-index="0" data-listing-date-sort="1760392800000" data-listing-file-modified-sort="1760440003202" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1577">
-<div class="thumbnail"><a href="./posts/s2_reference_analysis/s2_reference_analysis.html" class="no-external">
-
-<img loading="lazy" src="./posts/s2_reference_analysis/distill-preview.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/s2_reference_analysis/s2_reference_analysis.html" class="no-external">Is Semantic Scholar suitable for enriching references in OpenAlex? Part I</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/s2_reference_analysis/s2_reference_analysis.html" class="no-external">
-<p>This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/s2_reference_analysis/s2_reference_analysis.html" class="no-external">
-<div class="listing-date">
-Oct 14, 2025
-</div>
-<div class="listing-author">
-Nick Haupka
-</div>
-</a>
-</div>
-</div>
+<div id="listing-quarto-listings" class="quarto-listing quarto-listing-container-custom">
+<div class="posts-list">
+  
+    <a href="posts/s2_reference_analysis/s2_reference_analysis.html" class="post-preview">
+    <script class="post-metadata" type="text/json">{"categories":[]}</script>
+    <div class="metadata">
+      <div class="publishedDate">Oct 14, 2025</div>
+      <div class="dt-authors">
+        <div class="dt-author">Nick Haupka</div>
+      </div>
+    </div>
+    <div class="thumbnail">
+      <img src="./posts/s2_reference_analysis/distill-preview.png">
+    </div>
+    <div class="description">
+      <h2 class="anchored">Is Semantic Scholar suitable for enriching references in OpenAlex? Part I</h2>
+      <div class="dt-tags"></div>
+      <p>This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.</p>
+    </div>
+    </a>
+  
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
 </div>
