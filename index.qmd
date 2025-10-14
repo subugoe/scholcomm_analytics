@@ -1,8 +1,14 @@
 ---
 title: "Blog | Scholarly Communication Analytics"
+listing: 
+  id: quarto-listings
+  contents: posts
+  sort: "date desc"
+  image-align: left
+  feed: true
 ---
 
-Scholarly communication is changing. Being part of the [Knowledge Commons](https://www.sub.uni-goettingen.de/kontakt/abteilungen-a-z/abteilungs-und-gruppendetails/abteilunggruppe/wissen-als-gemeingut/) group, we support the [State and University Library of Göttingen](https://www.sub.uni-goettingen.de/sub-aktuell/) and the [University of Göttingen](https://www.uni-goettingen.de/) by providing data-driven insights into current trends in scholarly communication.
+Scholarly communication is changing. Being part of the [Knowledge Commons](https://www.sub.uni-goettingen.de/kontakt/abteilungen-a-z/abteilungs-und-gruppendetails/abteilunggruppe/wissen-als-gemeingut/) group, we support the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/sub-aktuell/) and the [University of Göttingen](https://www.uni-goettingen.de/) by providing data-driven insights into current trends in scholarly communication.
 
 We use various bibliometric databases and maintain a publicly accessible data warehouse for open scholarly data, which is based on Google Cloud BigQuery. We also provide software clients to programmatically access open metadata sources using R and Python.
 
@@ -10,25 +16,11 @@ On our blog, we publish initial data case studies. Sometimes these result into j
 
 ## Latest Content
 
+:::{#quarto-listings}
+:::
+
 ```{=html}
 <div class="posts-list">
-<a href="posts/s2_reference_analysis/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">October 14, 2025</div>
-<div class="dt-authors">
-<div class="dt-author">Nick Haupka</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/s2_reference_analysis/distill-preview.png">
-</div>
-<div class="description">
-<h2>Is Semantic Scholar suitable for enriching references in OpenAlex? Part I</h2>
-<div class="dt-tags"></div>
-<p>This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.</p>
-</div>
-</a>
 <a href="posts/openbib_ta_release/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":[]}</script>
 <div class="metadata">
