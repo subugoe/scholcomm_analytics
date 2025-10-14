@@ -1,8 +1,11 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "Scholarly Communication Analytics"
+  site-url: https://subugoe.github.io/scholcomm_analytics/
+  description: "A blog where you’ll find insights from our work as Data Analysts in the domain of scholarly communication at Göttingen State and University Library."
   navbar:
     logo: logo.svg
     right:
