@@ -12,7 +12,7 @@ On our blog, we publish initial data case studies. Sometimes these result into j
 
 ```{=html}
 <div class="posts-list">
-<a href="posts/openbib_ta_release/" class="post-preview">
+<a href="posts/s2_reference_analysis/" class="post-preview">
 <script class="post-metadata" type="text/json">{"categories":[]}</script>
 <div class="metadata">
 <div class="publishedDate">October 14, 2025</div>
