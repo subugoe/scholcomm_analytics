@@ -1,12 +1,12 @@
 ---
-title: "Is Semantic Scholar suitable for enriching references in OpenAlex? Part I"
+title: "Is Semantic Scholar suitable for enriching references in OpenAlex?"
 author:
   - name: Nick Haupka 
-    affiliation: State and University Library Göttingen
-    affiliation_url: https://www.sub.uni-goettingen.de/
-    orcid_id: 0009-0002-6478-6789
-date: 10/14/2025
-abstract: "This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex."
+    affiliation: Göttingen State and University Library
+    affiliation-url: https://www.sub.uni-goettingen.de/
+    orcid: 0009-0002-6478-6789
+date: 10/27/2025
+abstract: "This blog post explores the question whether metadata from Semantic Scholar can be used to enrich references in OpenAlex. To do this, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex."
 image: distill-preview.png
 bibliography: references.bib
 ---
@@ -19,12 +19,9 @@ As @culbert_reference_2025 has demonstrated, OpenAlex has comparable source refe
 
 Semantic Scholar, developed by the Allen Institute for Artificial Intelligence, is a promising data source for enriching bibliometric data, as it makes a large portion of its metadata available under a free license (ODC-BY). However, the quality of metadata has been little studied to date compared to data sources like Crossref and OpenAlex. 
 
-The following research questions shall be answered in this blog post series. 
+The following research question shall be answered in this blog post. 
 
-- <b>RQ1: How does the number of (source) references in OpenAlex and Semantic Scholar differ?</b>
-- <b>RQ2: How can data from Semantic Scholar be used to enrich references in OpenAlex?</b>
-
-This blog post will address RQ1, while RQ2 will be discussed in Part II of this blog post series.  
+- <b>RQ: How does the number of (source) references in OpenAlex and Semantic Scholar differ?</b>
 
 ## Data and Method
 
@@ -134,11 +131,8 @@ This analysis demonstrates interesting differences between the reference counts 
 
 During my analysis, I also discovered some inconsistencies between the Semantic Scholar website and its API. For example, references for some journal articles are missing in the API but are shown on the website. In other cases, references are missing in the API with the note: "Notice: The following paper fields have been elided by the publisher: {'references'}". However, this observation was not analysed further.
 
-In part II of this blog post series, I will explore how references from OpenAlex can be linked, deduplicated and enriched with references from Semantic Scholar. This post will be published soon!
-
-
 ## Data and Code Availability
 
-The source code for the underlying analysis can be found on GitHub: https://github.com/naustica/oal_s2_ref/. 
+The source code for the underlying analysis can be found on GitHub: <https://github.com/naustica/oal_s2_ref/>. 
 
-Data is available in the Data Warehouse of the SUB Göttingen: https://subugoe.github.io/scholcomm_analytics/data.html.
+Data is available in the Data Warehouse of the SUB Göttingen: <https://subugoe.github.io/scholcomm_analytics/data.html>.

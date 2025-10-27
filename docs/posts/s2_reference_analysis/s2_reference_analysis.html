@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nick Haupka">
-<meta name="dcterms.date" content="2025-10-14">
+<meta name="dcterms.date" content="2025-10-27">
 
-<title>Is Semantic Scholar suitable for enriching references in OpenAlex? Part I – Scholarly Communication Analytics</title>
+<title>Is Semantic Scholar suitable for enriching references in OpenAlex? – Scholarly Communication Analytics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -92,14 +92,14 @@ div.csl-indent {
 }</script>
 
 
-<meta property="og:title" content="Is Semantic Scholar suitable for enriching references in OpenAlex? Part I – Scholarly Communication Analytics">
-<meta property="og:description" content="This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.">
+<meta property="og:title" content="Is Semantic Scholar suitable for enriching references in OpenAlex? – Scholarly Communication Analytics">
+<meta property="og:description" content="This blog post explores the question whether metadata from Semantic Scholar can be used to enrich references in OpenAlex. To do this, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.">
 <meta property="og:image" content="https://subugoe.github.io/scholcomm_analytics/posts/s2_reference_analysis/distill-preview.png">
 <meta property="og:site_name" content="Scholarly Communication Analytics">
 <meta property="og:image:height" content="1542">
 <meta property="og:image:width" content="3199">
-<meta name="twitter:title" content="Is Semantic Scholar suitable for enriching references in OpenAlex? Part I – Scholarly Communication Analytics">
-<meta name="twitter:description" content="This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.">
+<meta name="twitter:title" content="Is Semantic Scholar suitable for enriching references in OpenAlex? – Scholarly Communication Analytics">
+<meta name="twitter:description" content="This blog post explores the question whether metadata from Semantic Scholar can be used to enrich references in OpenAlex. To do this, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.">
 <meta name="twitter:image" content="https://subugoe.github.io/scholcomm_analytics/posts/s2_reference_analysis/distill-preview.png">
 <meta name="twitter:image-height" content="1542">
 <meta name="twitter:image-width" content="3199">
@@ -146,7 +146,7 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Is Semantic Scholar suitable for enriching references in OpenAlex? Part I</h1>
+      <h1 class="title">Is Semantic Scholar suitable for enriching references in OpenAlex?</h1>
                       </div>
   </div>
     
@@ -155,11 +155,13 @@ div.csl-indent {
     <div class="quarto-title-meta-heading">Affiliation</div>
     
       <div class="quarto-title-meta-contents">
-      <p class="author">Nick Haupka </p>
+      <p class="author">Nick Haupka <a href="https://orcid.org/0009-0002-6478-6789" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
     </div>
     <div class="quarto-title-meta-contents">
           <p class="affiliation">
-              State and University Library Göttingen
+              <a href="https://www.sub.uni-goettingen.de/">
+              Göttingen State and University Library
+              </a>
             </p>
         </div>
     </div>
@@ -170,7 +172,7 @@ div.csl-indent {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 14, 2025</p>
+        <p class="date">October 27, 2025</p>
       </div>
     </div>
     
@@ -180,7 +182,7 @@ div.csl-indent {
   <div>
     <div class="abstract">
       <div class="block-title">Abstract</div>
-      This blog post series explores the question whether and how metadata from Semantic Scholar can be used to enrich references in OpenAlex. In the first of two blog posts, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.
+      This blog post explores the question whether metadata from Semantic Scholar can be used to enrich references in OpenAlex. To do this, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex.
     </div>
   </div>
   
@@ -200,12 +202,10 @@ div.csl-indent {
 <p>References are an essential part of bibliometric research. For example, references are required to calculate bibliometric indicators such as the journal impact factor and the h-index. University rankings also rely on a proper recording of references, as the number of citations a institution receives is usually used as a criterion. The coverage of references within a bibliometric database therefore plays a significant role.</p>
 <p>As <span class="citation" data-cites="culbert_reference_2025">Culbert et al. (<a href="#ref-culbert_reference_2025" role="doc-biblioref">2025</a>)</span> has demonstrated, OpenAlex has comparable source reference numbers to Scopus and Web of Science. However, that does not mean that the coverage of references is perfect. In this blog post, I will use the service Semantic Scholar to identify further references for journal articles that can be used to enhance references in OpenAlex.</p>
 <p>Semantic Scholar, developed by the Allen Institute for Artificial Intelligence, is a promising data source for enriching bibliometric data, as it makes a large portion of its metadata available under a free license (ODC-BY). However, the quality of metadata has been little studied to date compared to data sources like Crossref and OpenAlex.</p>
-<p>The following research questions shall be answered in this blog post series.</p>
+<p>The following research question shall be answered in this blog post.</p>
 <ul>
-<li><b>RQ1: How does the number of (source) references in OpenAlex and Semantic Scholar differ?</b></li>
-<li><b>RQ2: How can data from Semantic Scholar be used to enrich references in OpenAlex?</b></li>
+<li><b>RQ: How does the number of (source) references in OpenAlex and Semantic Scholar differ?</b></li>
 </ul>
-<p>This blog post will address RQ1, while RQ2 will be discussed in Part II of this blog post series.</p>
 </section>
 <section id="data-and-method" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-method">Data and Method</h2>
@@ -583,12 +583,11 @@ Figure&nbsp;2: Comparison of references per publisher in Semantic Scholar and Op
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>This analysis demonstrates interesting differences between the reference counts in OpenAlex and Semantic Scholar. In particular, discrepancies were found between publishers, with Semantic Scholar counting more references than OpenAlex for publishers like Taylor &amp; Francis and BMJ. The proportion of source references is higher in OpenAlex than in Semantic Scholar, although about 9 million journal articles were identified for which the source reference count was greater than in OpenAlex. This finding is quite relevant for bibliometric research, as it may enable more accurate citation analysis in OpenAlex, which can be achieved through the inclusion of open metadata.</p>
 <p>During my analysis, I also discovered some inconsistencies between the Semantic Scholar website and its API. For example, references for some journal articles are missing in the API but are shown on the website. In other cases, references are missing in the API with the note: “Notice: The following paper fields have been elided by the publisher: {‘references’}”. However, this observation was not analysed further.</p>
-<p>In part II of this blog post series, I will explore how references from OpenAlex can be linked, deduplicated and enriched with references from Semantic Scholar. This post will be published soon!</p>
 </section>
 <section id="data-and-code-availability" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-code-availability">Data and Code Availability</h2>
-<p>The source code for the underlying analysis can be found on GitHub: https://github.com/naustica/oal_s2_ref/.</p>
-<p>Data is available in the Data Warehouse of the SUB Göttingen: https://subugoe.github.io/scholcomm_analytics/data.html.</p>
+<p>The source code for the underlying analysis can be found on GitHub: <a href="https://github.com/naustica/oal_s2_ref/" class="uri">https://github.com/naustica/oal_s2_ref/</a>.</p>
+<p>Data is available in the Data Warehouse of the SUB Göttingen: <a href="https://subugoe.github.io/scholcomm_analytics/data.html" class="uri">https://subugoe.github.io/scholcomm_analytics/data.html</a>.</p>
 
 
 
