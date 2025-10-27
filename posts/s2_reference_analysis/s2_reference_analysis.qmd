@@ -9,6 +9,7 @@ date: 10/27/2025
 abstract: "This blog post explores the question whether metadata from Semantic Scholar can be used to enrich references in OpenAlex. To do this, I will compare the reference numbers in Semantic Scholar with those in OpenAlex. Analysing over 37 million journal articles between 2015 and 2023, I found strong evidence of potential benefits from integrating reference data from Semantic Scholar into OpenAlex."
 image: distill-preview.png
 bibliography: references.bib
+title-block-banner: false
 ---
 
 ## Introduction

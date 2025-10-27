@@ -71,9 +71,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid #e0e0e0;
-  transition: all 0.3s ease;
+  /*transition: all 0.3s ease;*/
   
-  &:hover {
+  /*&:hover {
     text-decoration: none;
     color: inherit;
     transform: translateY(-2px);
@@ -82,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 1rem;
     margin: -1rem;
     margin-bottom: 2rem;
-  }
+  }*/
   
   &.post-preview-last {
     border-bottom: none;
@@ -136,9 +136,9 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.post-preview:hover .thumbnail img {
+/*.post-preview:hover .thumbnail img {
   transform: scale(1.05);
-}
+}*/
 
 .description {
   overflow: hidden;
