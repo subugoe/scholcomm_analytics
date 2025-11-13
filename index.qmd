@@ -9,11 +9,11 @@ listing:
   template: gallery.ejs
 ---
 
-::: {.lead}
+
 We provide data-driven insights into scholarly communication and are based at the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/sub-aktuell/). Find out more [about us](about.qmd) and our publicly available [Open Scholarly Data Warehouse](data.qmd).
 
 On our blog, we share case studies using open metadata and tools.
-:::
+
 
 ## Latest Posts
 
