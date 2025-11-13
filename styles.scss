@@ -22,22 +22,27 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar {
   background-color: $navbar-bg !important;
+  font-size: 15px;
+  font-weight: 300;
 }
 
-.navbar-brand {
-  color: $navbar-brand-color !important;
+.navbar-brand, .navbar-title {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 300;
 }
 
-.navbar-brand:hover {
-  color: #e8f0ff !important;
+.navbar-brand:hover, .navbar-title:hover {
+  color: #ffffff !important;
 }
 
 .navbar-nav .nav-link {
-  color: $navbar-nav-link-color !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 300;
+  text-decoration: none;
 }
 
 .navbar-nav .nav-link:hover {
-  color: #e8f0ff !important;
+  color: #ffffff !important;
 }
 
 .navbar-toggler {
