@@ -9,7 +9,7 @@
 <link>https://subugoe.github.io/scholcomm_analytics/</link>
 <atom:link href="https://subugoe.github.io/scholcomm_analytics/index.xml" rel="self" type="application/rss+xml"/>
 <description>A blog where you’ll find insights from our work as Data Analysts in the domain of scholarly communication at Göttingen State and University Library.</description>
-<generator>quarto-1.8.25</generator>
+<generator>quarto-1.8.21</generator>
 <lastBuildDate>Sun, 26 Oct 2025 23:00:00 GMT</lastBuildDate>
 <item>
   <title>Is Semantic Scholar suitable for enriching references in OpenAlex?</title>
