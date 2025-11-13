@@ -9,11 +9,9 @@ listing:
   template: gallery.ejs
 ---
 
-Scholarly communication is changing. Being part of the [Knowledge Commons](https://www.sub.uni-goettingen.de/kontakt/abteilungen-a-z/abteilungs-und-gruppendetails/abteilunggruppe/wissen-als-gemeingut/) group, we support the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/sub-aktuell/) and the [University of Göttingen](https://www.uni-goettingen.de/) by providing data-driven insights into current trends in scholarly communication.
+We support the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/sub-aktuell/) and the [University of Göttingen](https://www.uni-goettingen.de/) by providing data-driven insights into current trends in scholarly communication.
 
-We use various bibliometric databases and maintain a publicly accessible data warehouse for open scholarly data, which is based on Google Cloud BigQuery. We also provide software clients to programmatically access open metadata sources using R and Python.
-
-On our blog, we publish initial data case studies. Sometimes these result into journal articles. Others present ideas for data analytics dashboards.
+On our blog, we share initial data case studies based on open metadata. For more info about us, see [here](about.qmd).
 
 ## Latest Content
 
