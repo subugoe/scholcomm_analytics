@@ -9,11 +9,13 @@ listing:
   template: gallery.ejs
 ---
 
-We support the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/sub-aktuell/) and the [University of Göttingen](https://www.uni-goettingen.de/) by providing data-driven insights into current trends in scholarly communication.
+::: {.lead}
+We provide data-driven insights into scholarly communication and are based at the [Göttingen State and University Library](https://www.sub.uni-goettingen.de/sub-aktuell/). Find more about our [publications and projects](about.qmd), and publicly available [Open Scholarly Data Warehouse](data.qmd).
 
-On our blog, we share initial data case studies based on open metadata. For more info about us, see [here](about.qmd).
+On our blog, we share case studies using open metadata and tools.
+:::
 
-## Latest Content
+## Latest Posts
 
 :::{#quarto-listings}
 :::

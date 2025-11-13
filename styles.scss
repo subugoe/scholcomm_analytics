@@ -61,6 +61,14 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: auto;
 }
 
+// Lead paragraph styling - matching scholcomm_analytics
+.lead {
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.55;
+  margin-bottom: 2.5rem;
+}
+
 // Reduce gap before blog post listing
 #quarto-content h2 {
   margin-bottom: 1rem;
