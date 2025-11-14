@@ -420,7 +420,28 @@ Figure&nbsp;2: Comparison of references per publisher in Semantic Scholar and Op
 <div id="ref-culbert_reference_2025" class="csl-entry">
 Culbert, Jack H., Anne Hobert, Najko Jahn, Nick Haupka, Marion Schmidt, Paul Donner, and Philipp Mayr. 2025. <span>“Reference Coverage Analysis of <span>OpenAlex</span> Compared to <span>Web</span> of <span>Science</span> and <span>Scopus</span>.”</span> <em>Scientometrics</em> 130 (4): 2475–92. <a href="https://doi.org/10.1007/s11192-025-05293-3">https://doi.org/10.1007/s11192-025-05293-3</a>.
 </div>
-</div></section></div> ]]></description>
+</div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@article{haupka2025,
+  author = {Haupka, Nick},
+  title = {Is {Semantic} {Scholar} Suitable for Enriching References in
+    {OpenAlex?}},
+  journal = {Scholarly Communication Analytics},
+  date = {2025-10-27},
+  url = {https://subugoe.github.io/scholcomm_analytics/posts/s2_reference_analysis/s2_reference_analysis.html},
+  doi = {10.59350/8t2s7-vtw86},
+  langid = {en},
+  abstract = {This blog post explores the question whether metadata from
+    Semantic Scholar can be used to enrich references in OpenAlex. To do
+    this, I will compare the reference numbers in Semantic Scholar with
+    those in OpenAlex. Analysing over 37 million journal articles
+    between 2015 and 2023, I found strong evidence of potential benefits
+    from integrating reference data from Semantic Scholar into
+    OpenAlex.}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-haupka2025" class="csl-entry quarto-appendix-citeas">
+Haupka, Nick. 2025. <span>“Is Semantic Scholar Suitable for Enriching
+References in OpenAlex?”</span> <em>Scholarly Communication
+Analytics</em>, October. <a href="https://doi.org/10.59350/8t2s7-vtw86">https://doi.org/10.59350/8t2s7-vtw86</a>.
+</div></div></section></div> ]]></description>
   <guid>https://subugoe.github.io/scholcomm_analytics/posts/s2_reference_analysis/s2_reference_analysis.html</guid>
   <pubDate>Sun, 26 Oct 2025 23:00:00 GMT</pubDate>
   <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/s2_reference_analysis/distill-preview.png" medium="image" type="image/png" height="69" width="144"/>

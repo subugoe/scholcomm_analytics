@@ -10,6 +10,12 @@ abstract: "This blog post explores the question whether metadata from Semantic S
 image: distill-preview.png
 bibliography: references.bib
 title-block-banner: false
+doi: "10.59350/8t2s7-vtw86"
+citation:
+  doi: "10.59350/8t2s7-vtw86"
+  container-title: "Scholarly Communication Analytics"
+  type: article-journal
+google-scholar: true
 ---
 
 ## Introduction
