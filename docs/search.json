@@ -35,6 +35,13 @@
     "text": "Status OpenAlex\n\nopenalex\n\n\n\n\n\n\n\n\n\n\n\nSnapshot\nDirectory\nTable\nProcedure\nLast Changed\nCoverage\nNumber of rows\n\n\n\n\n2025-09-30\nauthors/\nopenalex.authors\nRepo\n16.10.2025\nAll\n104.942.999\n\n\n2025-10-01\nfunders/\nopenalex.funders\nRepo\n16.10.2025\nAll\n32.437\n\n\n2025-10-01\ninstitutions/\nopenalex.institutions\nRepo\n16.10.2025\nAll\n117.731\n\n\n2025-10-01\npublishers/\nopenalex.publishers\nRepo\n16.10.2025\nAll\n10.741\n\n\n2025-10-01\nsources/\nopenalex.sources\nRepo\n16.10.2025\nAll\n260.787\n\n\n2025-09-29\ntopics/\nopenalex.topics\nRepo\n16.10.2025\nAll\n4.516\n\n\n2025-09-30\nworks/\nopenalex.works\nRepo\n16.10.2025\nAll\n271.335.309"
   },
   {
+    "objectID": "data.html#status-openalex-walden",
+    "href": "data.html#status-openalex-walden",
+    "title": "Open Scholarly Data @ SUB Göttingen - Overview",
+    "section": "Status OpenAlex-Walden",
+    "text": "Status OpenAlex-Walden\n\nopenalex_walden\n\n\n\n\n\n\n\n\n\n\n\nSnapshot\nDirectory\nTable\nProcedure\nLast Changed\nCoverage\nNumber of rows\n\n\n\n\n2025-11-05\nauthors/\nopenalex.authors\nRepo\n03.12.2025\nAll\n115.794.829\n\n\n2023-02-13\nfunders/\nopenalex.funders\nRepo\n03.12.2025\nAll\n32.437\n\n\n2025-11-11\ninstitutions/\nopenalex.institutions\nRepo\n03.12.2025\nAll\n102.539\n\n\n2025-07-02\npublishers/\nopenalex.publishers\nRepo\n03.12.2025\nAll\n16\n\n\n2025-11-02\nsources/\nopenalex.sources\nRepo\n03.12.2025\nAll\n255.250\n\n\n2024-12-04\ntopics/\nopenalex.topics\nRepo\n03.12.2025\nAll\n4.516\n\n\n2025-11-11\nworks/\nopenalex.works\nRepo\n03.12.2025\nAll\n463.042.077"
+  },
+  {
     "objectID": "data.html#status-openbib",
     "href": "data.html#status-openbib",
     "title": "Open Scholarly Data @ SUB Göttingen - Overview",
