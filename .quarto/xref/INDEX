@@ -19,5 +19,14 @@
   },
   "posts/s2_reference_analysis/s2_reference_analysis.qmd": {
     "s2_reference_analysis.html": "b71f45f0"
+  },
+  "posts/openalex_affiliation_md/au_md_check.qmd": {
+    "au_md_check.html": "92c44d16"
+  },
+  "posts/openalex_affiliation_md/index.qmd": {
+    "index.html": "18db14bd"
+  },
+  "posts/openalex_affiliation_md/index.rmarkdown": {
+    "index.html": "c713ff31"
   }
 }

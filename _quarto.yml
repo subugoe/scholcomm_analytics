@@ -1,7 +1,9 @@
 project:
   type: website
   output-dir: docs
-
+execute:
+  freeze: auto
+  
 website:
   title: "Scholarly Communication Analytics"
   site-url: https://subugoe.github.io/scholcomm_analytics/

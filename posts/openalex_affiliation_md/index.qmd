@@ -1,0 +1,604 @@
+---
+title: "Decreasing affiliation metadata coverage in OpenAlex"
+format: 
+    html:
+      echo: false
+      message: false
+      warning: false
+author:
+  - name: Najko Jahn
+    affiliation: Göttingen State and University Library
+    affiliation-url: https://www.sub.uni-goettingen.de/
+    orcid: 0000-0001-5105-1463
+date: 12/15/2025
+license: CC BY
+abstract: "This blog post examines the decrease in affiliation metadata coverage in OpenAlex. An analysis of over 13 million articles published by major commercial publishers between 2018 and 2025 suggests that this is probably because publishers have not provided Crossref with sufficient affiliation metadata. However, technical issues also seem to have occurred during the transition to Walden, the new version of OpenAlex. Elsevier, the largest publisher, stands out in particular."
+image: distill-preview.png
+bibliography: bibliography.bib
+title-block-banner: false
+citation:
+  container-title: "Scholarly Communication Analytics"
+  type: article-journal
+google-scholar: true
+---
+
+```{r}
+#| label: setup
+#| message: false
+library(tidyverse)
+library(bigrquery)
+library(DBI)
+library(ggiraph)
+library(patchwork)
+
+# Connect to GCBQ from SUB Göttingen
+bq_con <- dbConnect(
+  bigrquery::bigquery(),
+  project = "subugoe-collaborative",
+  dataset = "oa2020",
+  billing = "subugoe-collaborative"
+)
+
+options(scipen = 999, digits = 2)
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.numeric(x)) {
+      return(prettyNum(x, big.mark = ","))
+    } else {
+      return(x)
+    }
+  }
+)
+```
+
+
+## Introduction
+
+Following the release of a [new version of OpenAlex called 'Walden' in November 2025](https://blog.openalex.org/openalex-rewrite-walden-launch/), the community reported a [decrease in affiliation metadata coverage](https://groups.google.com/g/openalex-community/c/pBrxved1ppE). 
+While investigating country affiliations for articles published in journals included in transformative agreements to compile data for the [OA2020 WG Financial flows and cost modelling for the open access transition](https://oa2020.org/working-groups/), I also observed records with missing affiliation metadata, even though OpenAlex provided author information. 
+
+This observation is particularly concerning given SUB Göttingen's work with the [Hybrid Open Access Dashboard](https://subugoe.github.io/hoaddash/), where I found that OpenAlex affiliation metadata is comparable with Scopus and Web of Science for monitoring open access uptake in hybrid journals [@Jahn_2025].
+Related studies [@Alperin_2024; @van_Eck_2024] have similarly shown that country affiliation coverage in OpenAlex is on par with that in proprietary bibliometric databases, while an increasing number of [bibliometric rankings](https://open.leidenranking.com/), [institutions](https://www.cnrs.fr/en/update/cnrs-breaking-free-web-science) and transformative agreement monitoring activities [@de_Jonge_2025] make use of OpenAlex. 
+A decrease in country affiliations would therefore not only make figures about who is publishing in hybrid journals less reliable, but affect all studies using affiliation metadata from OpenAlex including institutional monitoring exercises.
+
+This blog post quantifies this data issue of lacking affiliation metadata in OpenAlex using a set of journals from major commercial publishers that are part of current transformative agreements of the Swedish [BIBSAM consortium](https://www.kb.se/for-bibliotekssektorn/eng/bibsam-consortium/bibsam-consortium.html). 
+Overall, investigating more than 13 million records representing articles published between 2018 and 2025 in these journals confirms this decrease, which is partly attributable to some publishers not sharing affiliation metadata via Crossref, including Elsevier and Springer Nature, as well as potential technical issues encountered by OpenAlex.
+
+## Data and methods
+
+To better understand reports about declining affiliation metadata coverage in OpenAlex, and relating  this to journal portfolios from major commercial publishers, the current journal portfolio of the Swedish [BIBSAM consortium](https://www.kb.se/for-bibliotekssektorn/eng/bibsam-consortium/bibsam-consortium.html) was examined based on journal data retrieved from the [cOAlition S Journal Checker Tool](https://github.com/njahn82/jct_data/tree/df78ce621651b9aa26ca29bbb4a4100d94fd4248/data) as of 8 December 2025. 
+
+Affiliation coverage was compared across two OpenAlex sets: September 2025 snapshot and the most recent snapshot, to investigate whether the decrease is due to issues associated with the recent Walden release.
+
+Both snapshots are publicly accessible via the SUB Göttingen [Open Scholarly Data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html) based on Google BigQuery. 
+The following SQL query shows how the data was retrieved. 
+
+<details>
+  <summary>SQL code</summary>
+```sql
+CREATE OR REPLACE TABLE `subugoe-collaborative.resources.au_data_check`
+AS (
+  SELECT DISTINCT
+    oalex.doi,
+    oalex.publication_year,
+    oalex.primary_location.source.issn_l AS issn_l,
+    jct_jn.esac_id AS esac_id,
+    esac.publisher AS esac_publisher,
+    oalex.primary_location.source.host_organization_name AS oalex_publisher,
+    oalex.primary_location.source.is_in_doaj AS is_in_doaj,
+    oalex.open_access.oa_status AS oa_status,
+    au.author_position,
+    CASE
+      WHEN au.author IS NULL THEN 'Empty'
+      ELSE 'Filled'
+      END AS author_status,
+    CASE
+      WHEN ARRAY_LENGTH(au.institutions) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS institutions_status,
+    CASE
+      WHEN ARRAY_LENGTH(au.countries) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS countries_status,
+    CASE
+      WHEN au.is_corresponding IS NULL THEN 'Empty'
+      ELSE 'Filled'
+      END AS is_corresponding_status,
+    CASE
+      WHEN au.raw_author_name IS NULL THEN 'Empty'
+      ELSE 'Filled'
+      END AS raw_author_name_status,
+    CASE
+      WHEN ARRAY_LENGTH(au.raw_affiliation_strings) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS raw_affiliation_strings_status,
+    CASE
+      WHEN ARRAY_LENGTH(au.affiliations) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS affiliations_status,
+    walden_au.author_position AS walden_author_position,
+    CASE
+      WHEN walden_au.author IS NULL THEN 'Empty'
+      ELSE 'Filled'
+      END AS walden_author_status,
+    CASE
+      WHEN ARRAY_LENGTH(walden_au.institutions) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS walden_institutions_status,
+    CASE
+      WHEN ARRAY_LENGTH(walden_au.countries) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS walden_countries_status,
+    CASE
+      WHEN walden_au.is_corresponding IS NULL THEN 'Empty'
+      ELSE 'Filled'
+      END AS walden_is_corresponding_status,
+    CASE
+      WHEN walden_au.raw_author_name IS NULL THEN 'Empty'
+      ELSE 'Filled'
+      END AS walden_raw_author_name_status,
+    CASE
+      WHEN ARRAY_LENGTH(walden_au.raw_affiliation_strings) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS walden_raw_affiliation_strings_status,
+    CASE
+      WHEN ARRAY_LENGTH(walden_au.affiliations) = 0 THEN 'Empty'
+      ELSE 'Filled'
+      END AS walden_affiliations_status
+  FROM `subugoe-collaborative.openalex.works` AS oalex
+  LEFT JOIN UNNEST(oalex.authorships) AS au
+  LEFT JOIN UNNEST(au.countries) AS country
+  INNER JOIN `subugoe-collaborative.openalex_walden.works` AS walden
+    ON oalex.doi = walden.doi
+  LEFT JOIN UNNEST(walden.authorships) AS walden_au
+  INNER JOIN `subugoe-collaborative.oa2020.jct_jn` AS jct_jn
+    ON oalex.primary_location.source.issn_l = jct_jn.issn_l
+  INNER JOIN `subugoe-collaborative.oa2020.esac` AS esac
+    ON jct_jn.esac_id = esac.id
+  INNER JOIN
+    `subugoe-collaborative.resources.document_classification_september25`
+      AS doctype_classifier
+    ON oalex.doi = doctype_classifier.doi
+  WHERE
+    (
+      esac.organization = "Bibsam Consortium"
+      AND end_date > '2024-12-31 00:00:00 UTC')
+    AND oalex.is_paratext = FALSE
+    AND is_research = TRUE
+    AND (
+      NOT REGEXP_CONTAINS(oalex.biblio.issue, '^[a-zA-Z]')
+      OR oalex.biblio.issue IS NULL)
+    AND (NOT (REGEXP_CONTAINS(oalex.title, '[0-9]{3} pp.')))
+    AND oalex.publication_year BETWEEN 2018 AND 2025
+)
+```
+</details>
+
+To focus on original articles and reviews, paratext were excluded and results from the document type classifier provided by the [German Competence Network for Bibliometrics ](https://open-bibliometrics.de/) [@Haupka_2025] was used to refine the results.
+In order to check for potential data loading issues in Google BigQuery, a random sample of records was compared with the raw data dump files.
+
+The resulting dataset can be found on [Google BigQuery](https://console.cloud.google.com/bigquery?ws=!1m5!1m4!4m3!1ssubugoe-collaborative!2sresources!3sau_data_check).
+After compiling the article-level data, absolute and relative coverage of author and affiliation metadata was calculated. 
+Any data point that was not empty was counted as available. 
+
+<details>
+  <summary>SQL code</summary>
+
+```{sql}
+#| connection: bq_con
+#| output.var: au_md_absolute_all
+#| echo: true
+SELECT 
+  publication_year,
+  COUNT(DISTINCT doi) AS total_dois,
+  
+  COUNT(DISTINCT CASE WHEN author_status = 'Filled' THEN doi END) AS with_author,
+  COUNT(DISTINCT CASE WHEN institutions_status = 'Filled' THEN doi END) AS with_institutions,
+  COUNT(DISTINCT CASE WHEN countries_status = 'Filled' THEN doi END) AS with_countries,
+  COUNT(DISTINCT CASE WHEN is_corresponding_status = 'Filled' THEN doi END) AS with_is_corresponding,
+  COUNT(DISTINCT CASE WHEN raw_author_name_status = 'Filled' THEN doi END) AS with_raw_author_name,
+  COUNT(DISTINCT CASE WHEN raw_affiliation_strings_status = 'Filled' THEN doi END) AS with_raw_affiliation_strings,
+  COUNT(DISTINCT CASE WHEN affiliations_status = 'Filled' THEN doi END) AS with_affiliations,
+  
+  COUNT(DISTINCT CASE WHEN walden_author_status = 'Filled' THEN doi END) AS with_walden_author,
+  COUNT(DISTINCT CASE WHEN walden_institutions_status = 'Filled' THEN doi END) AS with_walden_institutions,
+  COUNT(DISTINCT CASE WHEN walden_countries_status = 'Filled' THEN doi END) AS with_walden_countries,
+  COUNT(DISTINCT CASE WHEN walden_is_corresponding_status = 'Filled' THEN doi END) AS with_walden_is_corresponding,
+  COUNT(DISTINCT CASE WHEN walden_raw_author_name_status = 'Filled' THEN doi END) AS with_walden_raw_author_name,
+  COUNT(DISTINCT CASE WHEN walden_raw_affiliation_strings_status = 'Filled' THEN doi END) AS with_walden_raw_affiliation_strings,
+  COUNT(DISTINCT CASE WHEN walden_affiliations_status = 'Filled' THEN doi END) AS with_walden_affiliations
+
+FROM `subugoe-collaborative.resources.au_data_check`
+GROUP BY publication_year
+ORDER BY publication_year
+```
+
+```{sql}
+#| connection: bq_con
+#| output.var: au_md_rel_all
+#| echo: true
+
+
+WITH doi_level_data AS (
+  SELECT 
+    doi,
+    publication_year,
+    MAX(CASE WHEN author_position IS NOT NULL THEN 1 ELSE 0 END) AS has_author_position,
+    MAX(CASE WHEN author_status = 'Filled' THEN 1 ELSE 0 END) AS has_author,
+    MAX(CASE WHEN institutions_status = 'Filled' THEN 1 ELSE 0 END) AS has_institutions,
+    MAX(CASE WHEN countries_status = 'Filled' THEN 1 ELSE 0 END) AS has_countries,
+    MAX(CASE WHEN is_corresponding_status = 'Filled' THEN 1 ELSE 0 END) AS has_is_corresponding,
+    MAX(CASE WHEN raw_author_name_status = 'Filled' THEN 1 ELSE 0 END) AS has_raw_author_name,
+    MAX(CASE WHEN raw_affiliation_strings_status = 'Filled' THEN 1 ELSE 0 END) AS has_raw_affiliation_strings,
+    MAX(CASE WHEN affiliations_status = 'Filled' THEN 1 ELSE 0 END) AS has_affiliations,
+    MAX(CASE WHEN walden_author_position IS NOT NULL THEN 1 ELSE 0 END) AS has_walden_author_position,
+    MAX(CASE WHEN walden_author_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_author,
+    MAX(CASE WHEN walden_institutions_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_institutions,
+    MAX(CASE WHEN walden_countries_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_countries,
+    MAX(CASE WHEN walden_is_corresponding_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_is_corresponding,
+    MAX(CASE WHEN walden_raw_author_name_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_raw_author_name,
+    MAX(CASE WHEN walden_raw_affiliation_strings_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_raw_affiliation_strings,
+    MAX(CASE WHEN walden_affiliations_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_affiliations
+  FROM `subugoe-collaborative.resources.au_data_check`
+  GROUP BY doi, publication_year
+)
+
+SELECT 
+  publication_year,
+  COUNT(DISTINCT doi) AS total_dois,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_author_position = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS author_position_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_author = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS author_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_institutions = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS institutions_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_countries = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS countries_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_is_corresponding = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS is_corresponding_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_raw_author_name = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS raw_author_name_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_raw_affiliation_strings = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS raw_affiliation_strings_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_affiliations = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS affiliations_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_author_position = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_author_position_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_author = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_author_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_institutions = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_institutions_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_countries = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_countries_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_is_corresponding = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_is_corresponding_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_raw_author_name = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_raw_author_name_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_raw_affiliation_strings = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_raw_affiliation_strings_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_affiliations = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_affiliations_pct
+FROM doi_level_data
+GROUP BY publication_year
+ORDER BY publication_year
+```
+```{sql}
+#| connection: bq_con
+#| output.var: au_md_absolute
+#| echo: true
+
+
+SELECT 
+  publication_year,
+  esac_publisher,
+  COUNT(DISTINCT doi) AS total_dois,
+  
+  COUNT(DISTINCT CASE WHEN author_status = 'Filled' THEN doi END) AS with_author,
+  COUNT(DISTINCT CASE WHEN institutions_status = 'Filled' THEN doi END) AS with_institutions,
+  COUNT(DISTINCT CASE WHEN countries_status = 'Filled' THEN doi END) AS with_countries,
+  COUNT(DISTINCT CASE WHEN is_corresponding_status = 'Filled' THEN doi END) AS with_is_corresponding,
+  COUNT(DISTINCT CASE WHEN raw_author_name_status = 'Filled' THEN doi END) AS with_raw_author_name,
+  COUNT(DISTINCT CASE WHEN raw_affiliation_strings_status = 'Filled' THEN doi END) AS with_raw_affiliation_strings,
+  COUNT(DISTINCT CASE WHEN affiliations_status = 'Filled' THEN doi END) AS with_affiliations,
+  
+  COUNT(DISTINCT CASE WHEN walden_author_status = 'Filled' THEN doi END) AS with_walden_author,
+  COUNT(DISTINCT CASE WHEN walden_institutions_status = 'Filled' THEN doi END) AS with_walden_institutions,
+  COUNT(DISTINCT CASE WHEN walden_countries_status = 'Filled' THEN doi END) AS with_walden_countries,
+  COUNT(DISTINCT CASE WHEN walden_is_corresponding_status = 'Filled' THEN doi END) AS with_walden_is_corresponding,
+  COUNT(DISTINCT CASE WHEN walden_raw_author_name_status = 'Filled' THEN doi END) AS with_walden_raw_author_name,
+  COUNT(DISTINCT CASE WHEN walden_raw_affiliation_strings_status = 'Filled' THEN doi END) AS with_walden_raw_affiliation_strings,
+  COUNT(DISTINCT CASE WHEN walden_affiliations_status = 'Filled' THEN doi END) AS with_walden_affiliations
+
+FROM `subugoe-collaborative.resources.au_data_check`
+GROUP BY publication_year, esac_publisher
+ORDER BY publication_year, esac_publisher
+```
+
+
+```{sql}
+#| connection: bq_con
+#| output.var: au_md_rel
+#| echo: true
+WITH doi_level_data AS (
+  SELECT 
+    doi,
+    publication_year,
+    esac_publisher,
+    MAX(CASE WHEN author_position IS NOT NULL THEN 1 ELSE 0 END) AS has_author_position,
+    MAX(CASE WHEN author_status = 'Filled' THEN 1 ELSE 0 END) AS has_author,
+    MAX(CASE WHEN institutions_status = 'Filled' THEN 1 ELSE 0 END) AS has_institutions,
+    MAX(CASE WHEN countries_status = 'Filled' THEN 1 ELSE 0 END) AS has_countries,
+    MAX(CASE WHEN is_corresponding_status = 'Filled' THEN 1 ELSE 0 END) AS has_is_corresponding,
+    MAX(CASE WHEN raw_author_name_status = 'Filled' THEN 1 ELSE 0 END) AS has_raw_author_name,
+    MAX(CASE WHEN raw_affiliation_strings_status = 'Filled' THEN 1 ELSE 0 END) AS has_raw_affiliation_strings,
+    MAX(CASE WHEN affiliations_status = 'Filled' THEN 1 ELSE 0 END) AS has_affiliations,
+    MAX(CASE WHEN walden_author_position IS NOT NULL THEN 1 ELSE 0 END) AS has_walden_author_position,
+    MAX(CASE WHEN walden_author_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_author,
+    MAX(CASE WHEN walden_institutions_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_institutions,
+    MAX(CASE WHEN walden_countries_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_countries,
+    MAX(CASE WHEN walden_is_corresponding_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_is_corresponding,
+    MAX(CASE WHEN walden_raw_author_name_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_raw_author_name,
+    MAX(CASE WHEN walden_raw_affiliation_strings_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_raw_affiliation_strings,
+    MAX(CASE WHEN walden_affiliations_status = 'Filled' THEN 1 ELSE 0 END) AS has_walden_affiliations
+  FROM `subugoe-collaborative.resources.au_data_check`
+  GROUP BY doi, publication_year, esac_publisher
+)
+
+SELECT 
+  publication_year,
+  esac_publisher,
+  COUNT(DISTINCT doi) AS total_dois,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_author_position = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS author_position_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_author = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS author_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_institutions = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS institutions_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_countries = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS countries_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_is_corresponding = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS is_corresponding_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_raw_author_name = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS raw_author_name_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_raw_affiliation_strings = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS raw_affiliation_strings_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_affiliations = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS affiliations_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_author_position = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_author_position_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_author = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_author_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_institutions = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_institutions_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_countries = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_countries_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_is_corresponding = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_is_corresponding_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_raw_author_name = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_raw_author_name_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_raw_affiliation_strings = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_raw_affiliation_strings_pct,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN has_walden_affiliations = 1 THEN doi END) / COUNT(DISTINCT doi), 2) AS walden_affiliations_pct
+FROM doi_level_data
+GROUP BY esac_publisher, publication_year
+ORDER BY esac_publisher, publication_year
+```
+
+</details>
+
+
+```{r}
+write_csv(au_md_rel, "au_md_by_publisher_rel.csv")
+
+write_csv(au_md_absolute, "au_md_by_publisher_absolute.csv")
+
+write_csv(au_md_absolute_all, "au_md_all_absolute.csv")
+
+write_csv(au_md_rel_all, "au_md_all_rel.csv")
+```
+
+Summary tables were created for the entire dataset and by publisher journal portfolio for subsequent analyses.
+The resulting summary tables can be downloaded here:
+
+All:
+
+- [`au_md_all_absolute.csv`](au_md_all_absolute.csv)
+- [`au_md_all_rel.csv`](au_md_all_rel.csv)
+
+By publisher
+
+- [`au_md_by_publisher_absolute.csv`](au_md_by_publisher_absolute.csv)
+- [`au_md_by_publisher_rel.csv`](au_md_by_publisher_rel.csv)
+
+## Results
+
+Overall, this investigation covers `r sum(au_md_absolute_all$total_dois)` journal articles published between 2018 and 2025 in journals covered by transformative agreements the BIBSAM consortium  negotiated with `r length(unique(au_md_rel$esac_publisher))` publishers, including the largest commercial publishers Elsevier, Springer Nature, and Wiley.
+
+
+```{r}
+#| fig-cap: "Figure 1 -- Availability of institution entity in OpenAlex works by snapshot. Note that only  journals included in current transformative agreements negotiated by the Swedish BIBSAM consortium were investigated."
+au_md_all_plot_df <- au_md_rel_all |> pivot_longer(-c(1:2)) |> 
+  mutate(in_walden = ifelse(!grepl("walden", name), "Sep 25", "Walden (Nov 25)")) |>
+  mutate(cat = str_remove(name, "walden_")) |>
+  mutate(publication_year = gsub("^20", "'", as.character(publication_year)))
+
+plot_au_md_inst <- au_md_all_plot_df |>
+  filter(cat == "institutions_pct") |>
+  ggplot(aes(publication_year, value / 100 , fill = in_walden, tooltip = paste(
+      value,
+      "% of articles in",
+      publication_year
+    ))) + 
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+  scale_fill_manual("OpenAlex Snapshot", values = c(`Sep 25` = "#fc5185", `Walden (Nov 25)` = "#4d4d4d")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(y = "institutions", x = NULL)
+
+plot_au_md_raw_aff <- au_md_all_plot_df |>
+  filter(cat == "raw_affiliation_strings_pct") |>
+  ggplot(aes(publication_year, value / 100 , fill = in_walden, tooltip = paste(
+      value,
+      "% of articles in",
+      publication_year
+    ))) + 
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+  scale_fill_manual("OpenAlex Snapshot", values = c(`Sep 25` = "#fc5185", `Walden (Nov 25)` = "#4d4d4d")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(y = "raw_affiliation_strings", x = NULL)
+
+
+plot_au_md_au <- au_md_all_plot_df |>
+  filter(cat == "author_pct") |>
+  ggplot(aes(publication_year, value / 100 , fill = in_walden, tooltip = paste(
+      value,
+      "% of articles in",
+      publication_year
+    ))) + 
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+  scale_fill_manual("OpenAlex Snapshot", values = c(`Sep 25` = "#fc5185", `Walden (Nov 25)` = "#4d4d4d")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(y = "author", x = NULL)
+
+library(patchwork)
+overall_plot <- (guide_area() / (plot_au_md_inst | plot_au_md_raw_aff / plot_au_md_au)) + plot_layout(guides = "collect", heights = c(0.1, 1)) &
+  theme_minimal() +
+  theme(legend.position = "top") 
+
+ggiraph::girafe(ggobj = overall_plot,
+                options = list(opts_tooltip(use_fill = TRUE),
+                               opts_toolbar(saveaspng = FALSE)))
+
+```
+
+Figure 1 shows the affiliation metadata availability in OpenAlex by year and snapshot. 
+Figure 1A highlights a massive decrease from 2024 onwards. While in 2023, `r au_md_rel_all |> filter(publication_year == "2023") |> pull(institutions_pct)`% of records (n = `r au_md_absolute_all |> filter(publication_year == "2023") |> pull(with_institutions)`) contained specific [institution](https://docs.openalex.org/api-entities/works/work-object/authorship-object#institutions) metadata, it decreased to `r au_md_rel_all |> filter(publication_year == "2025") |> pull(institutions_pct)`% (n = `r au_md_absolute_all |> filter(publication_year == "2025") |> pull(with_institutions)`), according to the September 2025 snapshot.
+
+In Walden the decrease is even more pronounced: from `r au_md_rel_all |> filter(publication_year == "2023") |> pull(walden_institutions_pct)`% of records in 2023 (n = `r au_md_absolute_all |> filter(publication_year == "2023") |> pull(with_walden_institutions)`) containing specific institution metadata, it decreased to `r au_md_rel_all |> filter(publication_year == "2025") |> pull(walden_institutions_pct)`% (n = `r au_md_absolute_all |> filter(publication_year == "2025") |> pull(with_walden_institutions)`) in 2025.
+Overall, the Walden release contained `r (au_md_absolute_all |> pull(with_institutions) |> sum()) - (au_md_absolute_all |> pull(with_walden_institutions) |> sum())` fewer articles with affiliation metadata than the previous snapshot analysing the same set of articles published between 2018 and 2025.
+
+Comparing the availability of [raw affiliation strings](https://docs.openalex.org/api-entities/works/work-object/authorship-object#affiliations) (Panel B) and [author](https://docs.openalex.org/api-entities/works/work-object/authorship-object#author) metadata (Panel C) shows that the decrease relates to availability of affiliation metadata, but does not extend to data about authors.
+
+
+### By publisher
+
+A closer look into the distribution by publishers highlights that in particular Elsevier was affected. 
+Figure 2 shows the absolute number of OpenAlex records by publisher and snapshot, with the three largest publishers distinguished by color from others. 
+The figure shows that while the number of articles published in Wiley journals with institution metadata remains stable across snapshots, the affiliation metadata decreased for Elsevier across all years.
+For Springer Nature the situation was mixed, with an decrease in 2024, followed by an increase for articles published in 2025 after the introduction of Walden.
+
+```{r}
+#| fig-cap: "Figure 2 -- Availability of institution entity in OpenAlex works by publisher and snapshot. Note that only journals included in current transformative agreements negotiated by the Swedish BIBSAM consortium were investigated."
+publisher_df <- au_md_absolute |>
+  distinct(esac_publisher, publication_year, with_institutions, with_walden_institutions) |>
+  pivot_longer(contains("institution")) |>
+  mutate(in_walden = ifelse(grepl("walden", name),"Walden (Nov 25)", "Sep 25")) |>
+  mutate(cat = str_remove(name, "walden_")) |>
+  mutate(publication_year = gsub("^20", "'", as.character(publication_year))) |>
+  mutate(
+    publisher = case_when(
+      esac_publisher == "Elsevier" ~ "Elsevier",
+      esac_publisher == "Springer Nature" ~ "Springer Nature",
+      esac_publisher == "Wiley" ~ "Wiley",
+      is.character(esac_publisher) ~ "Other"
+    )
+  ) |>   mutate(
+    publisher =
+      forcats::fct_relevel(
+        publisher,
+        c("Elsevier", "Springer Nature", "Wiley", "Other")
+      )
+  )
+
+publisher_plot <- publisher_df |> 
+  ggplot(aes(x = publication_year, tooltip = esac_publisher)) +
+  geom_line_interactive(aes(y = value, group = interaction(esac_publisher, in_walden), linetype = in_walden, color = publisher), linewidth = 0.8) +
+  geom_point(aes(y = value, color = publisher), shape = 21) +
+  scale_color_manual(
+            "",
+            values = c(
+              "Elsevier" = "#e9711c",
+              "Springer Nature" = "#486a7e",
+              "Wiley" = "#068853",
+              "Other" = "#b3b3b3"
+            )
+          ) +
+    scale_linetype_manual(NULL,
+    values = c(
+      `Sep 25` = "longdash",
+      `Walden (Nov 25)` = "dotted"
+    )) +
+    scale_y_continuous(
+    labels = function(x) format(x, big.mark = ",", scientific = FALSE),
+    limits = c(0, NA),
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+    theme_minimal() +
+  labs(x = NULL, y = "Articles with institution metadata")
+
+ggiraph::girafe(ggobj = publisher_plot,
+                options = list(opts_tooltip(use_fill = TRUE),
+                               opts_toolbar(saveaspng = FALSE)))
+```
+
+A potential explanation is that Elsevier and Springer Nature do not share affiliation metadata via Crossref while Wiley does, according to the Crossref participation report (see [Elsevier](https://www.crossref.org/members/prep/78), [Springer Nature](https://www.crossref.org/members/prep/297),  [Wiley](https://www.crossref.org/members/prep/311)).
+However, the decrease in articles for Elsevier journals was even greater following the release of Walden for the same set of articles, spanning all years.
+A noticeable decrease can also be observed in the September 2025 version beginning with the publication year 2024.
+This suggests that OpenAlex is having issues with providing affiliation metadata for Elsevier articles, in particular after the Walden release.
+
+### A closer look into Elsevier
+
+Figure 3 shows the relative decrease in coverage over the years for Elsevier.
+In the most recent Walden snapshot, OpenAlex recorded institution metadata for just  `r au_md_rel |> filter(publication_year == 2025, esac_publisher == "Elsevier")|> pull(walden_institutions_pct)`% of articles published in 2025 by Elsevier journals, contributing the most to the decrease, although other publishers are affected. 
+The September 2025 version also shows a marked decline from 2024 onwards.
+Before the September 2025 OpenAlex snapshot recorded affiliation metadata for `r au_md_rel |> filter(publication_year == 2023, esac_publisher == "Elsevier")|> pull(institutions_pct)`% of Elsevier articles published in 2023 and even `r au_md_rel |> filter(publication_year == 2020, esac_publisher == "Elsevier")|> pull(institutions_pct)`% for the publication year 2020. 
+This trend aligns with the availability of raw affiliation strings in OpenAlex.
+
+```{r}
+els_abs <- au_md_rel |> pivot_longer(-c(1:3)) |> 
+  mutate(in_walden = ifelse(grepl("walden", name),"Walden (Nov 25)", "Sep 25")) |>
+  mutate(cat = str_remove(name, "walden_")) |>
+  filter(esac_publisher == "Elsevier") 
+```
+
+
+```{r}
+#| fig-cap: "Figure 3 -- Elsevier: Availability of institution entity in OpenAlex works by snapshot. Note that only  journals included in the current transformative agreement negotiated by the Swedish BIBSAM consortium were investigated."
+library(ggiraph)
+els_abs <- els_abs |>
+  mutate(publication_year = gsub("^20", "'", as.character(publication_year))) 
+els_plot_au_md_inst <- els_abs |>
+  filter(cat == "institutions_pct") |>
+  ggplot(aes(publication_year, value / 100,
+    fill = in_walden,
+    tooltip = paste(
+      value,
+      "% of articles in",
+      publication_year
+    )
+  )) +
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual("OpenAlex Snapshot", values = c(`Sep 25` = "#fc5185", `Walden (Nov 25)` = "#4d4d4d")) +
+  labs(y = "institutions", x = NULL)
+
+els_plot_au_md_raw_aff <- els_abs |>
+  filter(cat == "raw_affiliation_strings_pct") |>
+  ggplot(aes(publication_year, value / 100, fill = in_walden, tooltip = paste(
+      value,
+      "% of articles in",
+      publication_year
+    ))) +
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+    scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual("OpenAlex Snapshot", values = c(`Sep 25` = "#fc5185", `Walden (Nov 25)` = "#4d4d4d")) +
+  labs(y = "raw_affiliation_strings", x = NULL)
+
+
+els_plot_au_md_au <- els_abs |>
+  filter(cat == "author_pct") |>
+  ggplot(aes(publication_year, value / 100, fill = in_walden, tooltip = paste(
+      value,
+      "% of articles in",
+      publication_year
+    ))) +
+  geom_bar_interactive(stat = "identity", position = position_dodge2(preserve = "single")) +
+    scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual("OpenAlex Snapshot", values = c(`Sep 25` = "#fc5185", `Walden (Nov 25)` = "#4d4d4d")) +
+  labs(y = "author", x = NULL)
+
+library(patchwork)
+my_plot_els <- (guide_area() / (els_plot_au_md_inst | els_plot_au_md_raw_aff / els_plot_au_md_au)) + plot_layout(guides = "collect", heights = c(0.1, 1)) &
+  theme_minimal() +
+    theme(legend.position = "top")
+
+ggiraph::girafe(ggobj = my_plot_els,
+                options = list(opts_tooltip(use_fill = TRUE),
+                               opts_toolbar(saveaspng = FALSE)))
+```
+
+## Looking ahead
+
+To account for possible changes since the Walden snapshot release, 500 Elsevier articles published in 2025 without affiliation metadata were queried using the OpenAlex API on 15 December. 
+The results show that around one-fourth of the articles now have affiliation metadata recorded in OpenAlex, so the situation is likely to change with the next release.
+However, this percentage is close to that reported for the September 2025 snapshot, which is still much lower than for previous years and only comprises a third of articles from this major publisher published in 2025.
+
+## Discussion and conclusion
+
+Analysing the coverage of affiliation metadata in OpenAlex revealed a substantial decrease, presumably due to some publishers not providing affiliation metadata to Crossref, as well as potential technical issues within OpenAlex itself, which can partly be attributed to the transition to Walden.
+In particular, articles published in 2025 lacked affilation metadata in Crossref.
+Elsevier, the largest publisher in our sample, stands out in particular.
+
+The observed decrease is critical for numerous institutional and country-specific research and monitoring activities making use of OpenAlex. 
+In the case of the Hybrid Open Access Dashboard, I must alert users against relying on this data from 2024 onwards. 
+I will carefully observe developments and hope that this issue can be resolved. 
+Therefore, I have written this long-form issue description.
+Everyone is free to replicate these findings as the two latest OpenAlex snapshots used for this analysis are publicly available on [Google BigQuery](https://subugoe.github.io/scholcomm_analytics/data.html), as provided by the SUB Göttingen.
