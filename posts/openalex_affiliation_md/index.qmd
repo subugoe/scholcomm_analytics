@@ -16,9 +16,11 @@ abstract: "This blog post examines the decrease in affiliation metadata coverage
 image: distill-preview.png
 bibliography: bibliography.bib
 title-block-banner: false
+doi: "10.59350/z3c5x-bfk63"
 citation:
   container-title: "Scholarly Communication Analytics"
   type: article-journal
+  doi: "10.59350/z3c5x-bfk63"
 google-scholar: true
 ---
 
