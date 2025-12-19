@@ -113,19 +113,18 @@ Info: Only includes publications with type 'journal-article'
 
 | Snapshot   | Table                 | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|-----------------------|-----------|--------------|-----------|-----------------|
-| 2025-05-01 | [<nobr>openbib.publishers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 11.04.2025 | 2014-2024 | 373 |
-| 2025-05-01 | [<nobr>openbib.publishers_relation</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 11.04.2025 | 2014-2024 | 212 |
-| 2025-05-01 | [<nobr>openbib.funding_information</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2020-2024 | 9.255 |
-| 2025-05-01 | [<nobr>openbib.document_types</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 28.03.2025 | 2014-2024 | 56.063.628 |
-| 2025-05-01 | [<nobr>openbib.kb_a_addr_inst</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | All | 9.903.725 |
-| 2025-05-01 | [<nobr>openbib.kb_s_addr_inst</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | All | 9.900.278 |
-| 2025-05-01 | [<nobr>openbib.kb_inst</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | All | 2.759 |
-| 2025-05-01 | [<nobr>openbib.kb_inst_trans</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 28.03.2025 | All | 91 |
-| 2025-05-01 | [<nobr>openbib.kb_sectors</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 28.03.2025 | All | 22 |
-| 2025-05-01 | [<nobr>openbib.jct_articles</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 1.996.190 |
-| 2025-05-01 | [<nobr>openbib.jct_esac</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 1.285 |
-| 2025-05-01 | [<nobr>openbib.jct_institutions</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 28.007 |
-| 2025-05-01 | [<nobr>openbib.jct_journals</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 14.04.2025 | 2018-2025 | 491.218 |
+| 2025-07-11 | [<nobr>openbib.publishers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 19.12.2025 | 2014-2025 | 379 |
+| 2025-07-11 | [<nobr>openbib.publishers_relation</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 19.12.2025 | 2014-2025 | 212 |
+| 2025-07-11 | [<nobr>openbib.funding_information</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2020-2025 | 16.902 |
+| 2025-07-11 | [<nobr>openbib.document_types</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2014-2025 | 61.495.813 |
+| 2025-07-11 | [<nobr>openbib.kb_a_addr_inst</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | All | 10.225.955 |
+| 2025-07-11 | [<nobr>openbib.kb_s_addr_inst</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | All | 10.227.010 |
+| 2025-07-11 | [<nobr>openbib.kb_inst_lookup</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | All | 2.363 |
+| 2025-07-11 | [<nobr>openbib.kb_sector_lookup</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | All | 22 |
+| 2025-07-11 | [<nobr>openbib.jct_articles</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2018-2025 | 2.898.386 |
+| 2025-07-11 | [<nobr>openbib.jct_esac</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2018-2025 | 1.445 |
+| 2025-07-11 | [<nobr>openbib.jct_institutions</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2018-2025 | 36.561 |
+| 2025-07-11 | [<nobr>openbib.jct_journals</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2018-2025 | 562.156 |
 
 : openbib {tbl-colwidths="[12,35,23,12,8,10]" .striped}
 
