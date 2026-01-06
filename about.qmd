@@ -16,11 +16,9 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 *Dr. Anne Hobert*, *Nick Haupka*, *Sophia Dörner*, *Najko Jahn*
 
-## Recent preprints
-
-Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2024). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <https://arxiv.org/abs/2406.15154>
-
 ## Journal publications
+
+Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2025). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. *Quantitative Science Studies*. <https://doi.org/10.1162/QSS.a.406>
 
 Jahn, N. (2025). Estimating transformative agreement impact on hybrid open access: A comparative large-scale study using Scopus, Web of Science and open metadata. *Scientometrics*. <https://doi.org/10.1007/s11192-025-05390-3>
 
