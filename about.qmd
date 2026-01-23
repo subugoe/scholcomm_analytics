@@ -18,6 +18,8 @@ We want to thank [Maëlle Salmon](https://masalmon.eu/) for encouraging us to st
 
 ## Journal publications
 
+Haupka, N. (2026). Presenting a classifier to improve the identification of research journal publications in OpenAlex. *Scientometrics*. <https://doi.org/10.1007/s11192-025-05524-7>
+
 Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2025). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. *Quantitative Science Studies*. <https://doi.org/10.1162/QSS.a.406>
 
 Jahn, N. (2025). Estimating transformative agreement impact on hybrid open access: A comparative large-scale study using Scopus, Web of Science and open metadata. *Scientometrics*. <https://doi.org/10.1007/s11192-025-05390-3>

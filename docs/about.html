@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.21">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -37,7 +37,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-fe57cbc73d430e4cafc8210402a1aeaa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -163,6 +163,7 @@ ul.task-list li input[type="checkbox"] {
 <p><em>Dr.&nbsp;Anne Hobert</em>, <em>Nick Haupka</em>, <em>Sophia Dörner</em>, <em>Najko Jahn</em></p>
 <section id="journal-publications" class="level2">
 <h2 class="anchored" data-anchor-id="journal-publications">Journal publications</h2>
+<p>Haupka, N. (2026). Presenting a classifier to improve the identification of research journal publications in OpenAlex. <em>Scientometrics</em>. <a href="https://doi.org/10.1007/s11192-025-05524-7" class="uri">https://doi.org/10.1007/s11192-025-05524-7</a></p>
 <p>Haupka, N., Culbert, J., Schniedermann, A., Jahn, N., Mayr, P. (2025). Analysis of the Publication and Document Types in OpenAlex, Web of Science, Scopus, Pubmed and Semantic Scholar. <em>Quantitative Science Studies</em>. <a href="https://doi.org/10.1162/QSS.a.406" class="uri">https://doi.org/10.1162/QSS.a.406</a></p>
 <p>Jahn, N. (2025). Estimating transformative agreement impact on hybrid open access: A comparative large-scale study using Scopus, Web of Science and open metadata. <em>Scientometrics</em>. <a href="https://doi.org/10.1007/s11192-025-05390-3" class="uri">https://doi.org/10.1007/s11192-025-05390-3</a></p>
 <p>Culbert, J., Hobert, A., Jahn, N., Haupka, N., Schmidt, M., Donner, P., Mayr, P. (2025). Reference Coverage Analysis of OpenAlex compared to Web of Science and Scopus. <em>Scientometrics</em>. <a href="https://doi.org/10.1007/s11192-025-05293-3" class="uri">https://doi.org/10.1007/s11192-025-05293-3</a></p>
@@ -279,13 +280,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
