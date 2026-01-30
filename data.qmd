@@ -101,7 +101,7 @@ Info: Only includes publications with type 'journal-article'
 | 2026-01-14 | authors/      | [<nobr>openalex.authors</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  23.01.2026  | All | 106.100.192 |
 | 2023-02-13 | funders/      | [<nobr>openalex.funders</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  23.01.2026  | All | 32.437 |
 | 2026-01-14 | institutions/ | [<nobr>openalex.institutions</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden) | [Repo](https://github.com/naustica/openalex) |  23.01.2026  | All | 102.709 |
-| 2025-07-02 | publishers/   | [<nobr>openalex.publishers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)   | [Repo](https://github.com/naustica/openalex) |  23.01.2026  | All | 16 |
+| 2024-11-25 | publishers/   | [<nobr>openalex.publishers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)   | [Repo](https://github.com/naustica/openalex) |  30.01.2026  | All | 10.703 |
 | 2025-11-02 | sources/      | [<nobr>openalex.sources</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  23.01.2026  | All | 255.250 |
 | 2024-12-04 | topics/       | [<nobr>openalex.topics</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)       | [Repo](https://github.com/naustica/openalex) |  23.01.2026  | All | 4.516 |
 | 2026-01-14 | works/        | [<nobr>openalex.works</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)        | [Repo](https://github.com/naustica/openalex) |  23.01.2026  | All | 476.951.866 |
@@ -125,6 +125,8 @@ Info: Only includes publications with type 'journal-article'
 | 2025-07-11 | [<nobr>openbib.jct_esac</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2018-2025 | 1.445 |
 | 2025-07-11 | [<nobr>openbib.jct_institutions</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2018-2025 | 36.561 |
 | 2025-07-11 | [<nobr>openbib.jct_journals</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 18.12.2025 | 2018-2025 | 562.156 |
+| 2025-07-11 | [<nobr>openbib.author_disambiguation_author_level</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 26.01.2026 | 2000-2024 | 9.165.443 |
+| 2025-07-11 | [<nobr>openbib.author_disambiguation_work_level</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenbib) | [Repo](https://github.com/kbopenbib/kbopenbib_data/) | 26.01.2026 | 2000-2024 | 2.786.294 |
 
 : openbib {tbl-colwidths="[12,35,23,12,8,10]" .striped}
 
