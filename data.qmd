@@ -72,9 +72,10 @@ Info: Only includes publications with type 'journal-article'
 
 | Snapshot   | Directory    | Table                | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|--------------|----------------------|-----------|--------------|-----------|-----------------|
-| 2025-02-25 | papers/      | [<nobr>semantic_scholar.papers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 224.566.486 |
-| 2025-02-25 | venues/      | [<nobr>semantic_scholar.venues</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 194.578 |
-| 2025-02-25 | abstracts/      | [<nobr>semantic_scholar.abstracts</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | [Repo](https://github.com/naustica/semantic_scholar_bq) |  04.03.2025 | All | 108.246.108 |
+| 2025-12-09 | papers/      | [<nobr>semantic_scholar.papers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | [Repo](https://github.com/naustica/semantic_scholar_bq) | 03.02.2026 | All | 231.081.324 |
+| 2025-12-09 | venues/      | [<nobr>semantic_scholar.venues</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | [Repo](https://github.com/naustica/semantic_scholar_bq) | 03.02.2026 | All | 194.578 |
+| 2025-12-09 | abstracts/      | [<nobr>semantic_scholar.abstracts</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | [Repo](https://github.com/naustica/semantic_scholar_bq) | 03.02.2026 | All | 36.867.403 |
+| 2025-12-09 | citations/      | [<nobr>semantic_scholar.citations</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2ssemantic_scholar) | [Repo](https://github.com/naustica/semantic_scholar_bq) | 03.02.2026 | All | 2.918.533.428 |
 
 : semantic_scholar {tbl-colwidths="[12,10,25,20,12,8,13]" .striped}
 
