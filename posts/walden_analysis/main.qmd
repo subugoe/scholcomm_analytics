@@ -20,9 +20,11 @@ In this blog post, I will take a closer look at the changes made in the Walden r
 
 ## Data and Methods
 
-The publicly accessible [scholarly data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html), powered by Google BigQuery and operated by the State and University Library Göttingen, provides access to both an OpenAlex snapshot from September 2025 and the most recent Walden snapshot from February 2026. Access requires a free Google account (Payment information is required, but Google offers the first 1 TB of queries free of charge).
+The publicly accessible [scholarly data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html), powered by Google BigQuery and operated by the Göttingen State and University Library, provides access to both an OpenAlex snapshot from September 2025 and the most recent Walden snapshot from February 2026. Access requires a free Google account (Payment information is required, but Google offers the first 1 TB of queries free of charge).
 
-The analysis was carried out by  querying both OpenAlex versions separately and then comparing the results (i.e. no inner join, no shared dataset). This approach is intended to ensure that the new records added to Walden can also be included in the analysis. This is particularly the case for records labelled as [expansion packs](https://docs.openalex.org/how-to-use-the-api/xpac) (which have an is_xpac=True in the data). The following analysis indicates whether or not the expansion pack is included in a query. 
+The analysis was carried out by  querying both OpenAlex versions separately and then comparing the results (i.e. no inner join, no shared dataset). This approach is intended to ensure that the new records added to Walden can also be included in the analysis. This is particularly the case for records labelled as [expansion packs](https://docs.openalex.org/how-to-use-the-api/xpac) (which have an is_xpac=True in the data). The following analysis does not exclude retractions ([is_retracted](https://docs.openalex.org/api-entities/works/work-object#is_retracted)), paratexts ([is_paratext](https://docs.openalex.org/api-entities/works/work-object#is_paratext)) and the expansion pack ([is_xpac](https://docs.openalex.org/api-entities/works/work-object#is_xpac)).
+
+The analysis was conducted in Python. If you are interested in reproducing a figure, you may click on one of the grey arrows below to view my Python code, which was used to run the data analysis and generate the figures.
 
 <details>
   <summary>Python code for setup</summary>
@@ -71,7 +73,7 @@ def calculate_changes(df1_openalex, df2_walden, on):
 ### Publication volume
 Let's start by comparing the number of journal articles between OpenAlex (shown in grey) and Walden (shown in pink) for the publication years 2018 to 2024 (see @fig-publication-volume). A record is considered a journal article if it is assigned to the source type *journal* and the item type *article* or *review*. 
 
-In total, OpenAlex counts 34,884,266 records, while the Walden snapshot counts 34,893,901 records. When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the Septmeber 2025 snapshot for the publication years 2018 to 2021 (around -1% per year). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +0,6% (for 2022 and 2023) and +2% (for 2024).
+In total, OpenAlex counts 34,884,266 articles, while the Walden snapshot counts 34,893,901 journal articles (which correspond to an overall increase of 0.03%). When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the September 2025 snapshot for the publication years 2018 to 2021 (around -1% per year). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +0,6% (for 2022 and 2023) and +2% (for 2024).
 
 ::: cell
 ![Comparison of the publication volume before and after the introduction of Walden.](media/figure1.png){#fig-publication-volume width=80%}
@@ -176,21 +178,24 @@ fig.savefig('media/blog_post_pubyear.png', format='png', bbox_inches='tight', dp
 
 To better understand the changes in the Walden snapshot, it makes sense to take a step back and look at the distribution of publication types in both snapshots. 
 
+:::{.column-page}
 
-| source_type    |   n_openalex |   n_walden |   change |   pct_change |   openalex_share |   walden_share |
+| Publication type    |   Number of records <br> in OpenAlex |   Number of records <br> in Walden |   Change |   Change in % |   Share in OpenAlex | Share in Walden |
 |:---------------|-------------:|-----------:|---------:|-------------:|-----------------:|---------------:|
-| journal        |     37,162,915 |   37,265,545 |   102,630 |     0.28% |     61.44%      |   34.85%       |
-| repository     |      7,095,230 |   43,716,031 | 36,620,801 |   516.13%    |     11.73%      |   40.88%      |
-| None           |      6,908,023 |   13,455,640 |  6,547,617 |    94.78%   |     11.42%      |   12.58%       |
+| journal        |     37,162,915 |   37,265,545 |  +102,630 |    +0.28% |     61.44%      |   34.85%       |
+| repository     |      7,095,230 |   43,716,031 | +36,620,801 |  +516.13%    |     11.73%      |   40.88%      |
+| None           |      6,908,023 |   13,455,640 | +6,547,617 |   +94.78%   |     11.42%      |   12.58%       |
 | ebook platform |      6,502,127 |    3,930,549 | -2,571,578 |   -39.55%   |     10.75%      |    3.68%    |
 | book series    |      1,488,834 |    1,478,195 |   -10,639 |    -0.71% |      2.46%    |    1.38%     |
 | conference     |      1,331,331 |     768,789 |  -562,542 |   -42.25%   |      2.2%     |    0.72%    |
-| other          |           97 |        187 |       90 |    92.78%   |      0% |    0% |
-| igsnCatalog    |            0 |    6,328,178 |  6,328,178 |   inf        |      0%           |    5.92%    |
-| metadata       |            0 |        270 |      270 |   inf        |      0%          |    0%  |
-| raidRegistry   |            0 |          4 |        4 |   inf        |      0%           |    0%  |
+| other          |           97 |        187 |      +90 |   +92.78%   |      0% |    0% |
+| igsnCatalog    |            0 |    6,328,178 | +6,328,178 |   inf        |      0%           |    5.92%    |
+| metadata       |            0 |        270 |     +270 |   inf        |      0%          |    0%  |
+| raidRegistry   |            0 |          4 |       +4 |   inf        |      0%           |    0%  |
 
 : Changes in publication types {.striped .hover}
+
+:::
 
 <p></p>
 
@@ -217,6 +222,37 @@ ORDER BY n DESC
   
 </details>
 
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_source_types = client.query(f"""
+                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type
+                                    FROM {openalex_snapshot}
+                                    WHERE publication_year BETWEEN 2018 AND 2024
+                                    GROUP BY source_type
+                                    ORDER BY n DESC
+                                    """).to_dataframe()
+                                    
+walden_by_source_types = client.query(f"""
+                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type
+                                    FROM {walden_snapshot}
+                                    WHERE publication_year BETWEEN 2018 AND 2024
+                                    GROUP BY source_type
+                                    ORDER BY n DESC
+                                    """).to_dataframe()       
+                                    
+source_type_plot = calculate_changes(oal_by_source_types, walden_by_source_types, on='source_type')
+
+source_type_plot['n_openalex_total'] = source_type_plot['n_openalex'].sum()
+source_type_plot['openalex_share'] = source_type_plot['n_openalex'] / source_type_plot['n_openalex_total'] * 100
+
+source_type_plot['n_walden_total'] = source_type_plot['n_walden'].sum()
+source_type_plot['walden_share'] = source_type_plot['n_walden'] / source_type_plot['n_walden_total'] * 100
+```
+  
+</details>
+
 ### Document types
 
 Next, we look at the distribution of document types in both snapshots (see @fig-document-types). Note, that records have been restricted to the source type *journal* again.
@@ -225,7 +261,7 @@ We can see that the number of records with the document types *article*, *parate
 
 ::: cell
 
-![Changes in the document type classification after the Walden release in OpenAlex.](media/figure2.png){#fig-document-types width=80%}
+![Changes in the document type classification after the Walden release in OpenAlex. Document types marked with an asterisk are capped at 150% (see data tab for the actual percentage.)](media/figure2.png){#fig-document-types width=80%}
 :::
 
 <details>
@@ -342,6 +378,34 @@ plt.show()
 fig.savefig('media/blog_post_figure1.png', format='png', bbox_inches='tight', dpi=500)
 ```
   
+</details>
+
+<details>
+  <summary>Data</summary>
+  
+| type                    |   n_openalex |   n_walden |   change |   pct_change |   openalex_share |   walden_share |
+|:------------------------|-------------:|-----------:|---------:|-------------:|-----------------:|---------------:|
+| article                 |     33440278 |   33461175 |    20897 |    0.0624905 |     89.9828      |   89.7909      |
+| review                  |      1443989 |    1432537 |   -11452 |   -0.793081  |      3.88556     |    3.84412     |
+| paratext                |       930439 |     939242 |     8803 |    0.946113  |      2.50367     |    2.5204      |
+| letter                  |       424062 |     419502 |    -4560 |   -1.07531   |      1.14109     |    1.12571     |
+| reference-entry         |       223020 |     219102 |    -3918 |   -1.75679   |      0.600114    |    0.587946    |
+| editorial               |       216188 |     214769 |    -1419 |   -0.656373  |      0.58173     |    0.576319    |
+| erratum                 |       151724 |     150723 |    -1001 |   -0.659751  |      0.408267    |    0.404455    |
+| other                   |        96666 |      94824 |    -1842 |   -1.90553   |      0.260114    |    0.254454    |
+| book-chapter            |        86699 |     171301 |    84602 |   97.5813    |      0.233294    |    0.459675    |
+| dataset                 |        79573 |       3474 |   -76099 |  -95.6342    |      0.214119    |    0.00932226  |
+| preprint*               |        21209 |     106604 |    85395 |  402.636     |      0.0570703   |    0.286065    |
+| book                    |        19407 |      21035 |     1628 |    8.38873   |      0.0522214   |    0.0564461   |
+| retraction              |        16913 |      17183 |      270 |    1.59641   |      0.0455104   |    0.0461095   |
+| supplementary-materials |         7109 |       7108 |       -1 |   -0.0140667 |      0.0191293   |    0.0190739   |
+| report                  |         5505 |       5806 |      301 |    5.46776   |      0.0148131   |    0.01558     |
+| dissertation*           |          162 |       1148 |      986 |  608.642     |      0.000435918 |    0.00308058  |
+| peer-review             |            4 |          4 |        0 |    0         |      1.07634e-05 |    1.07337e-05 |
+| libguides               |            0 |          0 |        0 |  nan         |      0           |    0           |
+| report-component        |            0 |        121 |      121 |  inf         |      0           |    0.000324696 |
+| book-section            |            0 |          2 |        2 |  inf         |      0           |    5.36687e-06 |
+
 </details>
 
 ### Open Access
@@ -492,8 +556,6 @@ Overall, a decline in publication numbers can be observed for most of the top pu
 
 A major increase can be seen in references, with the number of references for articles from the publishing house *Elsevier* standing out in particular (+16,477,238 references). In percentage terms, the publisher *Institute of Electrical and Electronics Engineers* has seen the biggest change, with an increase of 15.29% (2,205,283) references.
 
--> None fehlt in abbildung
-
 ::: cell
 
 ![Changes in the number of journal articles and references for the top 20 publishers after the Walden release in OpenAlex.](media/figure4.png){#fig-references width=80%}
@@ -538,12 +600,44 @@ ORDER BY n DESC
   <summary>Python code</summary>
   
 ```python
+oal_by_host = client.query(f"""
+                            SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.host_organization_name
+                            FROM {openalex_snapshot}
+                            WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                            GROUP BY host_organization_name
+                            ORDER BY n DESC
+                            """).to_dataframe()
+                            
+walden_by_host = client.query(f"""
+                             SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.host_organization_name
+                             FROM {walden_snapshot}
+                             WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                             GROUP BY host_organization_name
+                             ORDER BY n DESC
+                             """).to_dataframe()
+                             
 host_plot = calculate_changes(oal_by_host, walden_by_host, on='host_organization_name').sort_values(by=['n_openalex'], ascending=False)
 
+oal_by_host_references = client.query(f"""
+                                      SELECT SUM(referenced_works_count) AS n, primary_location.source.host_organization_name
+                                      FROM {openalex_snapshot}
+                                      WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                                      GROUP BY host_organization_name
+                                      ORDER BY n DESC
+                                      """).to_dataframe()
+                                      
+walden_by_host_references = client.query(f"""
+                                          SELECT SUM(referenced_works_count) AS n, primary_location.source.host_organization_name
+                                          FROM {walden_snapshot}
+                                          WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                                          GROUP BY host_organization_name
+                                          ORDER BY n DESC
+                                          """).to_dataframe()
+                                          
 ref_plot = calculate_changes(oal_by_host_references, walden_by_host_references, on='host_organization_name').sort_values(by=['n_openalex'], ascending=False)
 
 host_plot_merge = pd.merge(host_plot, ref_plot, on=['host_organization_name'], how='outer', suffixes=('_items', '_refs'))
-host_top_20_plot = host_plot_merge.sort_values(by=['n_openalex_items'], ascending=False).head(20)
+host_top_20_plot = host_plot_merge.sort_values(by=['n_openalex_items'], ascending=False).head(21)
 
 g = sns.PairGrid(host_top_20_plot,
                  x_vars=['change_items', 'change_refs'], 
@@ -570,20 +664,8 @@ for ax, title in zip(g.axes.flat, titles):
 
     ax.set(title=title)
 
-    if title == 'Number of items':
-        #ax.set_xlim(-5, 5)
-        pass
-
-    if title == 'Number of references':
-        #ax.set_xlim(-20, 20)
-        pass
-
     ax.xaxis.grid(True)
     ax.yaxis.grid(True)
-
-    #ax.xaxis.set_major_formatter(mtick.PercentFormatter())
-    
-    #ax.set_xticklabels([f'{x:.0f}%' for x in ax.get_xticks()]) 
 
     ax.xaxis.set_major_formatter(mtick.StrMethodFormatter('{x:,.0f}'))
 
@@ -602,28 +684,29 @@ fig.savefig('media/blog_post_figure4.png', format='png', bbox_inches='tight', dp
   
 <div style="display: block;overflow-x: scroll;">
   
-|    | host_organization_name                            |   n_openalex_items |   n_walden_items |   change_items |   pct_change_items |   n_openalex_refs |   n_walden_refs |   change_refs |   pct_change_refs |
-|---:|:--------------------------------------------------|-------------------:|-----------------:|---------------:|-------------------:|------------------:|----------------:|--------------:|------------------:|
-|  0 | None                                           |            8504822 |          8658958 |         154136 |          1.81234   |          61376055 |        69072543 |       7696488 |         12.5399   |
-|  1 | Elsevier BV                                       |            5310142 |          5290767 |         -19375 |         -0.364868  |         205490953 |       221968191 |      16477238 |          8.01847  |
-|  2 | Springer Science+Business Media                   |            1725031 |          1719995 |          -5036 |         -0.291937  |          68335429 |        69781040 |       1445611 |          2.11546  |
-|  3 | Wiley                                             |            1704126 |          1694799 |          -9327 |         -0.547319  |          68287084 |        70288508 |       2001424 |          2.9309   |
-|  4 | Multidisciplinary Digital Publishing Institute    |            1380269 |          1377671 |          -2598 |         -0.188224  |          72602925 |        77215383 |       4612458 |          6.35299  |
-|  5 | Taylor & Francis                                  |             884007 |           878085 |          -5922 |         -0.669904  |          31776175 |        32544861 |        768686 |          2.41906  |
-|  6 | Oxford University Press                           |             585923 |           583037 |          -2886 |         -0.492556  |          15676432 |        16797118 |       1120686 |          7.14886  |
-|  7 | SAGE Publishing                                   |             532495 |           530335 |          -2160 |         -0.405638  |          16620534 |        16874504 |        253970 |          1.52805  |
-|  8 | Lippincott Williams & Wilkins                     |             512114 |           514345 |           2231 |          0.435645  |           7607006 |         8436201 |        829195 |         10.9004   |
-|  9 | Institute of Electrical and Electronics Engineers |             460108 |           454684 |          -5424 |         -1.17885   |          14419607 |        16624890 |       2205283 |         15.2936   |
-| 10 | Frontiers Media                                   |             457156 |           456839 |           -317 |         -0.0693418 |          28056492 |        28960699 |        904207 |          3.22281  |
-| 11 | American Chemical Society                         |             452077 |           451268 |           -809 |         -0.178952  |          23879558 |        23930234 |         50676 |          0.212215 |
-| 12 | Nature Portfolio                                  |             338884 |           337578 |          -1306 |         -0.385383  |          16370622 |        16668573 |        297951 |          1.82003  |
-| 13 | BioMed Central                                    |             316757 |           315688 |          -1069 |         -0.337483  |          14323466 |        14516716 |        193250 |          1.34918  |
-| 14 | Springer Nature                                   |             301335 |           300856 |           -479 |         -0.158959  |          11953963 |        12141731 |        187768 |          1.57076  |
-| 15 | IOP Publishing                                    |             300552 |           297556 |          -2996 |         -0.996832  |           8949176 |         9396220 |        447044 |          4.99536  |
-| 16 | Royal Society of Chemistry                        |             262792 |           262052 |           -740 |         -0.281592  |          14675079 |        14929938 |        254859 |          1.73668  |
-| 17 | Cambridge University Press                        |             225492 |           226293 |            801 |          0.355223  |           5277402 |         5568814 |        291412 |          5.52188  |
-| 18 | American Institute of Physics                     |             208366 |           207314 |          -1052 |         -0.504881  |           5636936 |         5811366 |        174430 |          3.09441  |
-| 19 | Medknow                                           |             172273 |           171671 |           -602 |         -0.349445  |           3100647 |         3398491 |        297844 |          9.60587  |
+| host_organization_name                            |   n_openalex_items |   n_walden_items |   change_items |   pct_change_items |   n_openalex_refs |   n_walden_refs |   change_refs |   pct_change_refs |
+|:--------------------------------------------------|-------------------:|-----------------:|---------------:|-------------------:|------------------:|----------------:|--------------:|------------------:|
+| None                                          |            8504822 |          8658958 |         154136 |          1.81234   |          61376055 |        69072543 |       7696488 |         12.5399   |
+| Elsevier BV                                       |            5310142 |          5290767 |         -19375 |         -0.364868  |         205490953 |       221968191 |      16477238 |          8.01847  |
+| Springer Science+Business Media                   |            1725031 |          1719995 |          -5036 |         -0.291937  |          68335429 |        69781040 |       1445611 |          2.11546  |
+| Wiley                                             |            1704126 |          1694799 |          -9327 |         -0.547319  |          68287084 |        70288508 |       2001424 |          2.9309   |
+| Multidisciplinary Digital Publishing Institute    |            1380269 |          1377671 |          -2598 |         -0.188224  |          72602925 |        77215383 |       4612458 |          6.35299  |
+| Taylor & Francis                                  |             884007 |           878085 |          -5922 |         -0.669904  |          31776175 |        32544861 |        768686 |          2.41906  |
+| Oxford University Press                           |             585923 |           583037 |          -2886 |         -0.492556  |          15676432 |        16797118 |       1120686 |          7.14886  |
+| SAGE Publishing                                   |             532495 |           530335 |          -2160 |         -0.405638  |          16620534 |        16874504 |        253970 |          1.52805  |
+| Lippincott Williams & Wilkins                     |             512114 |           514345 |           2231 |          0.435645  |           7607006 |         8436201 |        829195 |         10.9004   |
+| Institute of Electrical and Electronics Engineers |             460108 |           454684 |          -5424 |         -1.17885   |          14419607 |        16624890 |       2205283 |         15.2936   |
+| Frontiers Media                                   |             457156 |           456839 |           -317 |         -0.0693418 |          28056492 |        28960699 |        904207 |          3.22281  |
+| American Chemical Society                         |             452077 |           451268 |           -809 |         -0.178952  |          23879558 |        23930234 |         50676 |          0.212215 |
+| Nature Portfolio                                  |             338884 |           337578 |          -1306 |         -0.385383  |          16370622 |        16668573 |        297951 |          1.82003  |
+| BioMed Central                                    |             316757 |           315688 |          -1069 |         -0.337483  |          14323466 |        14516716 |        193250 |          1.34918  |
+| Springer Nature                                   |             301335 |           300856 |           -479 |         -0.158959  |          11953963 |        12141731 |        187768 |          1.57076  |
+| IOP Publishing                                    |             300552 |           297556 |          -2996 |         -0.996832  |           8949176 |         9396220 |        447044 |          4.99536  |
+| Royal Society of Chemistry                        |             262792 |           262052 |           -740 |         -0.281592  |          14675079 |        14929938 |        254859 |          1.73668  |
+| Cambridge University Press                        |             225492 |           226293 |            801 |          0.355223  |           5277402 |         5568814 |        291412 |          5.52188  |
+| American Institute of Physics                     |             208366 |           207314 |          -1052 |         -0.504881  |           5636936 |         5811366 |        174430 |          3.09441  |
+| Medknow                                           |             172273 |           171671 |           -602 |         -0.349445  |           3100647 |         3398491 |        297844 |          9.60587  |
+| Pleiades Publishing                               |             162878 |           163367 |            489 |          0.300225  |           3087649 |         3183881 |         96232 |          3.11668  |
 
 </div>
 
@@ -633,17 +716,21 @@ fig.savefig('media/blog_post_figure4.png', format='png', bbox_inches='tight', dp
 
 With the release of Walden, the new entity [*Awards*](https://docs.openalex.org/api-entities/awards) was introduced, replacing the previous entity [*funders*](https://docs.openalex.org/api-entities/funders). This has resulted in improved coverage of funding information in OpenAlex (as shown in the table below). For the September snapshot, 11,824,259 funding records were linked, while in the Walden snapshot this number rose to 12,165,482. The increase is particularly pronounced for the publication years 2018 (+4.1%), 2019 (+3.5%) and 2023 (+3.5%).
 
-|   publication_year |   n_openalex |   n_walden |   change |   pct_change |
+:::{.column-page}
+
+|   Publication year |   Number of awards <br> in OpenAlex | Number of awards <br> in Walden | Change | Change in % |
 |--------------------|--------------|------------|----------|--------------|
-|               2024 |    1,829,832 |  1,878,897 |   49,065 |        2.68% |
-|               2023 |    1,798,571 |  1,860,801 |   62,230 |        3.46% |
-|               2022 |    1,792,249 |  1,835,203 |   42,954 |        2.40% |
-|               2021 |    1,757,777 |  1,783,645 |   25,868 |        1.47% |
-|               2020 |    1,707,755 |  1,758,263 |   50,508 |        2.96% |
-|               2019 |    1,574,415 |  1,628,985 |   54,570 |        3.47% |
-|               2018 |    1,363,660 |  1,419,688 |   56,028 |        4.11% |
+|               2024 |    1,829,832 |  1,878,897 |  +49,065 |       +2.68% |
+|               2023 |    1,798,571 |  1,860,801 |  +62,230 |       +3.46% |
+|               2022 |    1,792,249 |  1,835,203 |  +42,954 |       +2.40% |
+|               2021 |    1,757,777 |  1,783,645 |  +25,868 |       +1.47% |
+|               2020 |    1,707,755 |  1,758,263 |  +50,508 |       +2.96% |
+|               2019 |    1,574,415 |  1,628,985 |  +54,570 |       +3.47% |
+|               2018 |    1,363,660 |  1,419,688 |  +56,028 |       +4.11% |
 
 : Improvements in funding information {.striped .hover}
+
+:::
 
 <p></p>
 
@@ -660,7 +747,7 @@ ORDER BY n DESC
                            
 -- walden_grants                           
 SELECT COUNT(grant.id) AS n, publication_year
-FROM {walden_snapshot}, UNNEST(awards) AS grant
+FROM `subugoe-collaborative.openalex_walden.works`, UNNEST(awards) AS grant
 WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
 GROUP BY publication_year
 ORDER BY n DESC                           
@@ -668,13 +755,44 @@ ORDER BY n DESC
   
 </details>
 
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_pubyear = client.query(f"""
+                               SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+                               FROM {openalex_snapshot}
+                               WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                               GROUP BY publication_year
+                               ORDER BY publication_year DESC
+                               """).to_dataframe()
+                               
+walden_by_pubyear = client.query(f"""
+                                  SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+                                  FROM {walden_snapshot}
+                                  WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                                  GROUP BY publication_year
+                                  ORDER BY publication_year DESC
+                                  """).to_dataframe()
+                                  
+calculate_changes(oal_by_pubyear, walden_by_pubyear, on='publication_year')
+```
+  
+</details>
+
 ## How do these findings affect working with OpenAlex
 
-The analysis shows that despite being established in 2022, OpenAlex is still undergoing constant change, which makes reliable analysis difficult in some cases. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references can be observed among larger publishers.
+I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The analysis shows that despite being established in 2022, OpenAlex is still undergoing constant change, which makes reliable analysis difficult in some cases. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references and funding information can be observed among larger publishers.
 
 ## Problems with the Walden snapshot
 
 I ran into a few problems while processing the Walden snapshot, which I describe briefly below:
 
 - Reviews were not classified correctly in latest snapshots: At the time of the Walden release in November 2025, the number of classified reviews from journals was almost zero. This issue was fixed with the subsequent Walden update in January 2026. Nevertheless, this observation demonstrates the volatility of the metadata in OpenAlex.
-- Data additions without prior announcement: For the Walden release in February, two updates were noticed within a short period of time, although only one change was recorded in the [change log](https://github.com/ourresearch/openalex-guts/blob/main/files-for-datadumps/standard-format/RELEASE_NOTES.txt). The [manifest on AWS](https://openalex.s3.amazonaws.com/browse.html#data/works/) is incorrect in this regard, as it does not list all files available for download, thereby corrupting the total number of items in the manifest. One additional record was added between these two updates. The same applies to the [publisher entity](https://docs.openalex.org/api-entities/publishers), which contained only 16 records from November 2025 to January 2026 (and was later fixed separately in January 2026 (without further announcement). 
+- Data additions without prior announcement: For the Walden release in February, two updates were noticed within a short period of time, although only one change was recorded in the [change log](https://github.com/ourresearch/openalex-guts/blob/main/files-for-datadumps/standard-format/RELEASE_NOTES.txt). The [manifest on AWS](https://openalex.s3.amazonaws.com/browse.html#data/works/) is incorrect in this regard, as it does not list all files available for download, thereby corrupting the total number of items in the manifest. One additional record was added between these two updates. The same applies to the [publisher entity](https://docs.openalex.org/api-entities/publishers), which contained only 16 records from November 2025 to January 2026 (and was later fixed separately in January 2026 without further announcement). 
+
+## Data and Code Availability
+
+Python code for this data analysis is also available on GitHub: <https://github.com/naustica/openalex_walden_analysis/>.
+
+Data was retrieved from the Data Warehouse of the SUB Göttingen: <https://subugoe.github.io/scholcomm_analytics/data.html>.
