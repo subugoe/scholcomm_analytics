@@ -575,7 +575,7 @@ Data
 </div>
 <p>
 </p>
-<p>Here we can see that the publication type <em>journal</em> has a relatively small increase (+0.28%) compared to other source types such as <em>repository</em> (+516%). Based on their respective share in the snapshot, records with the source type <em>journal</em> account for approximately 61% of the records in the September snapshot and only 35% in the Walden snapshot. This is partly due to an increase in items with the source type <em>igsnCatalog</em> and records without an assigned source type (and of course, records from repositories).</p>
+<p>Here we can see that the publication type <em>journal</em> has a relatively small increase (+0.28%) compared to other source types such as <em>repository</em> (+516%). Based on their respective share in the snapshot, records with the source type <em>journal</em> account for approximately 61% of the records in the September snapshot and only 35% in the Walden snapshot. This is partly due to an increase in items with the source type <em>igsnCatalog</em> and records without an assigned source type (and of course, records from repositories). With Walden, three new publication types are available: <em>igsnCatalog</em>, <em>metadata</em> and <em>raidRegistry</em>.</p>
 <details>
 <summary>
 SQL code
@@ -1544,7 +1544,7 @@ Data
 </section>
 <section id="funding-information" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="funding-information">Funding information</h3>
-<p>With the release of Walden, the new entity <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a> was introduced, replacing the previous entity <a href="https://docs.openalex.org/api-entities/funders"><em>funders</em></a>. This has resulted in improved coverage of funding information in OpenAlex (as shown in the table below). For the September snapshot, 11,824,259 funding records were linked, while in the Walden snapshot this number rose to 12,165,482. The increase is particularly pronounced for the publication years 2018 (+4.1%), 2019 (+3.5%) and 2023 (+3.5%).</p>
+<p>With the release of Walden, the new entity <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a> was introduced, replacing the previous entity <a href="https://docs.openalex.org/api-entities/funders"><em>Funders</em></a>. This has resulted in improved coverage of funding information in OpenAlex (as shown in the table below). For the September snapshot, 11,824,259 funding records were linked, while in the Walden snapshot this number rose to 12,165,482. The increase is particularly pronounced for the publication years 2018 (+4.1%), 2019 (+3.5%) and 2023 (+3.5%).</p>
 <div class="column-page">
 <table class="table-striped table-hover caption-top table">
 <caption>Improvements in funding information</caption>
@@ -1661,17 +1661,16 @@ Python code
 </details>
 </section>
 </section>
-<section id="how-do-these-findings-affect-working-with-openalex" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-these-findings-affect-working-with-openalex">How do these findings affect working with OpenAlex</h2>
-<p>I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The analysis shows that despite being established in 2022, OpenAlex is still undergoing constant change, which makes reliable analysis difficult in some cases. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references and funding information can be observed among larger publishers.</p>
-</section>
-<section id="problems-with-the-walden-snapshot" class="level2">
-<h2 class="anchored" data-anchor-id="problems-with-the-walden-snapshot">Problems with the Walden snapshot</h2>
-<p>I ran into a few problems while processing the Walden snapshot, which I describe briefly below:</p>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The Walden update demonstrates that OpenAlex is a constantly changing database. This, in turn, raises questions regarding the reliability of data analysis with OpenAlex. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references and funding information can be observed among larger publishers. Concurrently, there is a slight decline in the publication volume of larger publishers.</p>
+<p>I would also like to mention some issues that I found regarding the new Walden snapshot:</p>
 <ul>
 <li>Reviews were not classified correctly in latest snapshots: At the time of the Walden release in November 2025, the number of classified reviews from journals was almost zero. This issue was fixed with the subsequent Walden update in January 2026. Nevertheless, this observation demonstrates the volatility of the metadata in OpenAlex.</li>
 <li>Data additions without prior announcement: For the Walden release in February, two updates were noticed within a short period of time, although only one change was recorded in the <a href="https://github.com/ourresearch/openalex-guts/blob/main/files-for-datadumps/standard-format/RELEASE_NOTES.txt">change log</a>. The <a href="https://openalex.s3.amazonaws.com/browse.html#data/works/">manifest on AWS</a> is incorrect in this regard, as it does not list all files available for download, thereby corrupting the total number of items in the manifest. One additional record was added between these two updates. The same applies to the <a href="https://docs.openalex.org/api-entities/publishers">publisher entity</a>, which contained only 16 records from November 2025 to January 2026 (and was later fixed separately in January 2026 without further announcement).</li>
+<li>Missing fields: Currently, the field <em>author_position</em> is not available in the snapshot provided on AWS. However, it can be accessed through API, see <a href="https://api.openalex.org/w2155347384">here</a> for example.</li>
 </ul>
+<p>I hope that these issues will be fixed with newer OpenAlex releases.</p>
 </section>
 <section id="data-and-code-availability" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-code-availability">Data and Code Availability</h2>
