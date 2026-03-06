@@ -39,7 +39,7 @@
     "href": "data.html#status-openalex-walden",
     "title": "Open Scholarly Data @ SUB Göttingen - Overview",
     "section": "Status OpenAlex-Walden",
-    "text": "Status OpenAlex-Walden\n\nopenalex_walden\n\n\n\n\n\n\n\n\n\n\n\nSnapshot\nDirectory\nTable\nProcedure\nLast Changed\nCoverage\nNumber of rows\n\n\n\n\n2026-02-02\nauthors/\nopenalex.authors\nRepo\n09.02.2026\nAll\n107.541.376\n\n\n2026-01-20\nawards/\nopenalex.awards\nRepo\n09.02.2026\nAll\n11.746.894\n\n\n2023-02-13\nfunders/\nopenalex.funders\nRepo\n09.02.2026\nAll\n32.437\n\n\n2026-01-31\ninstitutions/\nopenalex.institutions\nRepo\n09.02.2026\nAll\n120.658\n\n\n2024-11-25\npublishers/\nopenalex.publishers\nRepo\n09.02.2026\nAll\n10.703\n\n\n2025-11-02\nsources/\nopenalex.sources\nRepo\n09.02.2026\nAll\n255.250\n\n\n2024-12-04\ntopics/\nopenalex.topics\nRepo\n09.02.2026\nAll\n4.516\n\n\n2026-02-02\nworks/\nopenalex.works\nRepo\n09.02.2026\nAll\n479.290.642"
+    "text": "Status OpenAlex-Walden\n\nopenalex_walden\n\n\n\n\n\n\n\n\n\n\n\nSnapshot\nDirectory\nTable\nProcedure\nLast Changed\nCoverage\nNumber of rows\n\n\n\n\n2026-02-25\nauthors/\nopenalex.authors\nRepo\n06.03.2026\nAll\n109.695.206\n\n\n2026-02-10\nawards/\nopenalex.awards\nRepo\n06.03.2026\nAll\n11.823.532\n\n\n2026-02-25\nfunders/\nopenalex.funders\nRepo\n06.03.2026\nAll\n32.437\n\n\n2026-02-25\ninstitutions/\nopenalex.institutions\nRepo\n06.03.2026\nAll\n120.658\n\n\n2026-02-25\npublishers/\nopenalex.publishers\nRepo\n06.03.2026\nAll\n10.703\n\n\n2026-02-25\nsources/\nopenalex.sources\nRepo\n06.03.2026\nAll\n279.377\n\n\n2026-02-25\ntopics/\nopenalex.topics\nRepo\n06.03.2026\nAll\n4.516\n\n\n2026-02-25\nworks/\nopenalex.works\nRepo\n06.03.2026\nAll\n482.451.464"
   },
   {
     "objectID": "data.html#status-openbib",

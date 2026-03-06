@@ -99,14 +99,14 @@ Info: Only includes publications with type 'journal-article'
 
 | Snapshot   | Directory     | Table                 | Procedure | Last Changed | Coverage  | Number of rows |
 |------------|---------------|-----------------------|-----------|--------------|-----------|-----------------|
-| 2026-02-02 | authors/      | [<nobr>openalex.authors</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 107.541.376 |
-| 2026-01-20 | awards/       | [<nobr>openalex.awards</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)       | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 11.746.894 |
-| 2023-02-13 | funders/      | [<nobr>openalex.funders</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 32.437 |
-| 2026-01-31 | institutions/ | [<nobr>openalex.institutions</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden) | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 120.658 |
-| 2024-11-25 | publishers/   | [<nobr>openalex.publishers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)   | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 10.703 |
-| 2025-11-02 | sources/      | [<nobr>openalex.sources</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 255.250 |
-| 2024-12-04 | topics/       | [<nobr>openalex.topics</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)       | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 4.516 |
-| 2026-02-02 | works/        | [<nobr>openalex.works</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)        | [Repo](https://github.com/naustica/openalex) |  09.02.2026  | All | 479.290.642 |
+| 2026-02-25 | authors/      | [<nobr>openalex.authors</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 109.695.206 |
+| 2026-02-10 | awards/       | [<nobr>openalex.awards</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)       | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 11.823.532 |
+| 2026-02-25 | funders/      | [<nobr>openalex.funders</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 32.437 |
+| 2026-02-25 | institutions/ | [<nobr>openalex.institutions</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden) | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 120.658 |
+| 2026-02-25 | publishers/   | [<nobr>openalex.publishers</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)   | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 10.703 |
+| 2026-02-25 | sources/      | [<nobr>openalex.sources</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)      | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 279.377 |
+| 2026-02-25 | topics/       | [<nobr>openalex.topics</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)       | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 4.516 |
+| 2026-02-25 | works/        | [<nobr>openalex.works</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2sopenalex_walden)        | [Repo](https://github.com/naustica/openalex) |  06.03.2026  | All | 482.451.464 |
 
 : openalex_walden {tbl-colwidths="[12,13,28,17,12,8,10]" .striped}
 
