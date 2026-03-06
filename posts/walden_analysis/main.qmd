@@ -1,0 +1,802 @@
+---
+title: "Walden: What has changed in OpenAlex?"
+author:
+  - name: Nick Haupka 
+    affiliation: Göttingen State and University Library
+    affiliation-url: https://www.sub.uni-goettingen.de/
+    orcid: 0009-0002-6478-6789
+date: 03/06/2026
+abstract: "The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in OA detection, where Diamond OA is classified far more frequently than in the pre-Walden phase."
+image: distill-preview.png
+bibliography: references.bib
+title-block-banner: false
+---
+
+## Introduction
+
+The past few months brought some changes to the OpenAlex data service. The most relevant update happened in November 2025 with the Walden Update, which promised [better reference coverage, improved OA detection and a more extensive database](https://blog.openalex.org/openalex-rewrite-walden-launch/). In January 2026, improved integration of funding information was introduced, along with a new entity called [*Awards*](https://docs.openalex.org/api-entities/awards). At the same time, little is known about the consequences of the changes so far. In December 2025, it was observed that the quality of author affiliations had declined with the Walden update [@jahn2025]. Meanwhile, there have been three further Walden updates (15 January 2026, 3 February 2026 and 25 February 2026) that address an improvement to the problem. 
+
+In this blog post, I will take a closer look at the changes made in the Walden release. To do this, I will contrast a pre-Walden snapshot from September 2025 with a Walden snapshot from February 2026 (2026-02-25). The data analysis will cover changes in publication volume, open access (OA) status, references, funding information, document types and publication types. The analysis is limited to publications from 2018 and 2024 and to journal articles only.
+
+## Data and Methods
+
+The publicly accessible [scholarly data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html), powered by Google BigQuery and operated by the Göttingen State and University Library, provides access to both an OpenAlex snapshot from September 2025 and the most recent Walden snapshot from February 2026. Access requires a free Google account (Payment information is required, but Google offers the first 1 TB of queries free of charge).
+
+The analysis was carried out by  querying both OpenAlex versions separately and then comparing the results (i.e. no inner join, no shared dataset). This approach is intended to ensure that the new records added to Walden can also be included in the analysis. This is particularly the case for records labelled as [expansion packs](https://docs.openalex.org/how-to-use-the-api/xpac) (which have an is_xpac=True in the data). The following analysis does not exclude retractions ([is_retracted](https://docs.openalex.org/api-entities/works/work-object#is_retracted)), paratexts ([is_paratext](https://docs.openalex.org/api-entities/works/work-object#is_paratext)) and the expansion pack ([is_xpac](https://docs.openalex.org/api-entities/works/work-object#is_xpac)).
+
+The analysis was conducted in Python. If you are interested in reproducing a figure, you may click on one of the grey arrows below to view my Python code, which was used to run the data analysis and generate the figures.
+
+<details>
+  <summary>Python code for setup</summary>
+  
+```python
+from google.cloud import bigquery
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from matplotlib.lines import Line2D
+import matplotlib.ticker as mtick
+import matplotlib.image as mpimg
+
+client = bigquery.Client(project='subugoe-collaborative')
+
+openalex_snapshot = 'subugoe-collaborative.openalex.works'
+walden_snapshot = 'subugoe-collaborative.openalex_walden.works'
+
+sns.set_style('whitegrid')
+plt.rc('font', family='Arial')
+plt.rc('font', size=9) 
+plt.rc('axes', titlesize=9) 
+plt.rc('axes', labelsize=9) 
+plt.rc('xtick', labelsize=9) 
+plt.rc('ytick', labelsize=9) 
+plt.rc('legend', fontsize=9)
+
+def calculate_changes(df1_openalex, df2_walden, on):
+    changes = pd.merge(df1_openalex, df2_walden, on=on, how='outer', suffixes=('_openalex', '_walden'))
+
+    changes['n_openalex'] = changes['n_openalex'].fillna(0)
+    changes['n_walden'] = changes['n_walden'].fillna(0)
+    changes = changes[[on, 'n_openalex', 'n_walden']]
+
+    changes['change'] = changes['n_walden'] - changes['n_openalex']
+    changes['pct_change'] = (changes['n_walden'] - changes['n_openalex']) / changes['n_openalex'] * 100
+
+    return changes
+```
+  
+</details>
+
+## Results
+
+### Publication volume
+Let's start by comparing the number of journal articles between OpenAlex (shown in grey) and Walden (shown in pink) for the publication years 2018 to 2024 (see @fig-publication-volume). A record is considered a journal article if it is assigned to the source type *journal* and the item type *article* or *review*. 
+
+In total, OpenAlex counts 34,884,266 articles, while the Walden snapshot counts 35,249,948 journal articles (which correspond to an overall increase of 1.05%). When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the September 2025 snapshot for the publication years 2018 and 2021 (around -0.1%). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +1.7% (for 2022 and 2023) and +3.2% (for 2024).
+
+::: cell
+![Comparison of the publication volume before and after the introduction of Walden.](media/figure1.png){#fig-publication-volume width=80%}
+:::
+
+<details>
+  <summary>SQL code</summary>
+  
+```sql
+-- oal_by_pubyear
+SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+FROM `subugoe-collaborative.openalex.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY publication_year
+ORDER BY publication_year DESC
+
+-- walden_by_pubyear
+SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+FROM `subugoe-collaborative.openalex_walden.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY publication_year
+ORDER BY publication_year DESC
+```
+  
+</details>
+
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_pubyear = client.query(f"""
+                               SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+                               FROM {openalex_snapshot}
+                               WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                               GROUP BY publication_year
+                               ORDER BY publication_year DESC
+                               """).to_dataframe()
+                               
+walden_by_pubyear = client.query(f"""
+                                  SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+                                  FROM {walden_snapshot}
+                                  WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                                  GROUP BY publication_year
+                                  ORDER BY publication_year DESC
+                                  """).to_dataframe()
+                                  
+calculate_changes(oal_by_pubyear, walden_by_pubyear, on='publication_year').sort_values(by=['change'], ascending=False)
+
+oal_by_pubyear['dataset'] = 'OpenAlex'
+walden_by_pubyear['dataset'] = 'Walden'
+
+fig, ax = plt.subplots(figsize=(7,4))
+plt.box(False)
+
+sns.barplot(data=pd.concat([oal_by_pubyear, walden_by_pubyear], ignore_index=True),
+             x='publication_year',
+             y='n',
+             palette=['#c3c3c3', '#fc5185'],
+             hue='dataset',
+             width=0.6,
+             saturation=1,
+             alpha=0.9,
+             zorder=3,
+             errorbar=None,
+             ax=ax)
+
+ax.yaxis.set_major_formatter(mtick.StrMethodFormatter('{x:,.0f}'))
+
+ax.grid(False, which='both', axis='x')
+
+ax.set(xlabel='Year', ylabel='Number of journal articles')
+
+ax.legend(bbox_to_anchor=(1.05, 0.9),
+          frameon=False,
+          title='Dataset',
+          labelspacing=1.0)
+
+plt.tight_layout()
+
+plt.show()
+fig.savefig('media/blog_post_pubyear.png', format='png', bbox_inches='tight', dpi=500)
+```
+  
+</details>
+
+<details>
+  <summary>Data</summary>
+  
+|   publication_year |   n_openalex |   n_walden |   change |   pct_change |
+|-------------------:|-------------:|-----------:|---------:|-------------:|
+|               2024 |      5747463 |    5931313 |   183850 |    3.1988    |
+|               2023 |      5385802 |    5476020 |    90218 |    1.67511   |
+|               2022 |      5170934 |    5257499 |    86565 |    1.67407   |
+|               2021 |      5168607 |    5162223 |    -6384 |   -0.123515  |
+|               2020 |      4865503 |    4867745 |     2242 |    0.0460795 |
+|               2019 |      4421064 |    4431124 |    10060 |    0.227547  |
+|               2018 |      4124893 |    4124024 |     -869 |   -0.0210672 |
+  
+</details>
+
+### Publication types
+
+To better understand the changes in the Walden snapshot, it makes sense to take a step back and look at the distribution of publication types in both snapshots. 
+
+:::{.column-page}
+
+| Publication type    |   Number of records <br> in OpenAlex |   Number of records <br> in Walden |   Change |   Change in % |   Share in OpenAlex | Share in Walden |
+|:---------------|-------------:|-----------:|---------:|-------------:|-----------------:|---------------:|
+| journal        |   37,162,915 | 37,627,809 |  464,894 |     1.25%  |     61.44%      |   35.09%      |
+| repository     |    7,095,230 | 45,439,269 | 38,344,039 |   540.42%     |     11.73%      |   42.37%      |
+| None           |    6,908,023 | 11,571,409 |  4,663,386 |    67.51%   |     11.42%      |   10.79%      |
+| ebook platform |    6,502,127 |  3,934,121 | -2,568,006 |   -39.49%   |     10.75%      |    3.67%     |
+| book series    |    1,488,834 |  1,478,265 |   -10,569 |    -0.71% |      2.46%     |    1.38%     |
+| conference     |    1,331,331 |    768,808 |  -562,523 |   -42.25%   |      2.20%     |    0.72%    |
+| other          |           97 |        309 |      212 |   218.56%    |      0% |    0% |
+| igsnCatalog    |            0 |  6,423,465 |  6,423,465 |   inf        |      0%           |    5.99%     |
+| metadata       |            0 |        270 |      270 |   inf        |      0%           |    0% |
+| raidRegistry   |            0 |          4 |        4 |   inf        |      0%           |    0% |
+
+: Changes in publication types {.striped .hover}
+
+:::
+
+<p></p>
+
+Here we can see that the publication type *journal* has a relatively small increase (+1.25%) compared to other source types such as *repository* (+540%). Based on their respective share in the snapshot, records with the source type *journal* account for approximately 61% of the records in the September snapshot and only 35% in the Walden snapshot. This is partly due to an increase in items with the source type *igsnCatalog* and records without an assigned source type (and of course, records from repositories). With Walden, three new publication types are available: *igsnCatalog*, *metadata* and *raidRegistry*.
+
+<details>
+  <summary>SQL code</summary>
+  
+```sql
+-- oal_by_source_types
+SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type
+FROM `subugoe-collaborative.openalex.works`
+WHERE publication_year BETWEEN 2018 AND 2024
+GROUP BY source_type
+ORDER BY n DESC
+
+-- walden_by_source_types
+SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type
+FROM `subugoe-collaborative.openalex_walden.works`
+WHERE publication_year BETWEEN 2018 AND 2024
+GROUP BY source_type
+ORDER BY n DESC
+```
+  
+</details>
+
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_source_types = client.query(f"""
+                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type
+                                    FROM {openalex_snapshot}
+                                    WHERE publication_year BETWEEN 2018 AND 2024
+                                    GROUP BY source_type
+                                    ORDER BY n DESC
+                                    """).to_dataframe()
+                                    
+walden_by_source_types = client.query(f"""
+                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type
+                                    FROM {walden_snapshot}
+                                    WHERE publication_year BETWEEN 2018 AND 2024
+                                    GROUP BY source_type
+                                    ORDER BY n DESC
+                                    """).to_dataframe()       
+                                    
+source_type_plot = calculate_changes(oal_by_source_types, walden_by_source_types, on='source_type')
+
+source_type_plot['n_openalex_total'] = source_type_plot['n_openalex'].sum()
+source_type_plot['openalex_share'] = source_type_plot['n_openalex'] / source_type_plot['n_openalex_total'] * 100
+
+source_type_plot['n_walden_total'] = source_type_plot['n_walden'].sum()
+source_type_plot['walden_share'] = source_type_plot['n_walden'] / source_type_plot['n_walden_total'] * 100
+```
+  
+</details>
+
+### Document types
+
+Next, we look at the distribution of document types in both snapshots (see @fig-document-types). Note, that records have been restricted to the source type *journal* again.
+
+We can see that the number of records with the document types *article*, *paratext*, *book-chapter* and *preprint* have increased in the latest Walden snapshot. However, in relative terms, the increase in journal articles is very limited (only 1.12%). With an increase of over 150%, *preprints*, *peer-review* and *dissertations* have seen the highest rise (relatively speaking). Records with the document type *dataset*, in contrast, have been classified less frequently in the recent snapshot (about 74,000 records less). 
+
+::: cell
+
+![Changes in the document type classification after the Walden release in OpenAlex. Document types marked with an asterisk are capped at 150% (see data tab for the actual percentage.)](media/figure2.png){#fig-document-types width=80%}
+:::
+
+<details>
+  <summary>SQL code</summary>
+  
+```sql
+-- oal_by_types
+SELECT COUNT(DISTINCT(doi)) AS n, type
+FROM `subugoe-collaborative.openalex.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024
+GROUP BY type
+ORDER BY n DESC
+
+-- walden_by_types
+SELECT COUNT(DISTINCT(doi)) AS n, type
+FROM `subugoe-collaborative.openalex_walden.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024
+GROUP BY type
+ORDER BY n DESC
+```
+  
+</details>
+
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_types = client.query(f"""
+                             SELECT COUNT(DISTINCT(doi)) AS n, type
+                             FROM {openalex_snapshot}
+                             WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024
+                             GROUP BY type
+                             ORDER BY n DESC
+                             """).to_dataframe()
+                             
+walden_by_types = client.query(f"""
+                                SELECT COUNT(DISTINCT(doi)) AS n, type
+                                FROM {walden_snapshot}
+                                WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024
+                                GROUP BY type
+                                ORDER BY n DESC
+                                """).to_dataframe()
+                                
+types_plot = calculate_changes(oal_by_types, walden_by_types, on='type')
+
+types_plot['n_openalex_total'] = types_plot['n_openalex'].sum()
+types_plot['openalex_share'] = types_plot['n_openalex'] / types_plot['n_openalex_total'] * 100
+
+types_plot['n_walden_total'] = types_plot['n_walden'].sum()
+types_plot['walden_share'] = types_plot['n_walden'] / types_plot['n_walden_total'] * 100
+
+types_plot.replace(to_replace='preprint', value='preprint*', inplace=True)
+types_plot.replace(to_replace='dissertation', value='dissertation*', inplace=True)
+
+change_color = ['#c3c3c3' if (x < 0) else '#fc5185' for x in types_plot.change]
+
+fig, ax = plt.subplots(figsize=(7,4.5))
+plt.box(False)
+
+sns.barplot(data=types_plot, 
+            x='change', 
+            y='type', 
+            orient='h',
+            saturation=1,
+            palette=change_color,
+            hue='type',
+            alpha=0.9,
+            zorder=3,
+            errorbar=None)
+
+ax.xaxis.set_major_formatter(mtick.StrMethodFormatter('{x:,.0f}'))
+
+ax.set(xlabel='Number of items', ylabel='Document type')
+
+plt.tight_layout()
+
+plt.show()
+fig.savefig('media/blog_post_document_types_changes.png', format='png', bbox_inches='tight', dpi=500)
+
+fig, ax = plt.subplots(figsize=(7,4.5))
+plt.box(False)
+
+sns.barplot(data=types_plot, 
+            x='pct_change', 
+            y='type', 
+            orient='h',
+            saturation=1,
+            palette=change_color,
+            hue='type',
+            alpha=0.9,
+            zorder=3,
+            errorbar=None,)
+
+ax.xaxis.set_major_formatter(mtick.PercentFormatter(100))
+
+ax.set_xlim(-100, 150)
+ax.set(xlabel='Percentual change', ylabel='Document type')
+
+plt.tight_layout()
+
+plt.show()
+fig.savefig('media/blog_post_document_types_pct_changes.png', format='png', bbox_inches='tight', dpi=500)
+
+fig, axs = plt.subplots(2, 1, figsize=(10, 10))
+filelist =  ['blog_post_document_types_changes', 'blog_post_document_types_pct_changes']
+for i, (ax, file) in enumerate(zip(axs.flat, filelist)):
+    ax.set_axis_off()
+    filename = 'media/' + file + '.png'
+    ax.imshow(mpimg.imread(filename), extent=None)
+plt.subplots_adjust(wspace=0, hspace=0.05)
+plt.text(-100, -2300, 'a)', size=9, weight='bold')
+plt.text(-100, -100, 'b)', size=9, weight='bold')
+plt.show()
+fig.savefig('media/blog_post_figure1.png', format='png', bbox_inches='tight', dpi=500)
+```
+  
+</details>
+
+<details>
+  <summary>Data</summary>
+  
+| type                    |   n_openalex |   n_walden |   change |   pct_change |   openalex_share |   walden_share |
+|:------------------------|-------------:|-----------:|---------:|-------------:|-----------------:|---------------:|
+| article                 |     33440278 |   33815658 |   375380 |     1.12254  |     89.9828      |   89.8659      |
+| review                  |      1443989 |    1433950 |   -10039 |    -0.695227 |      3.88556     |    3.81076     |
+| paratext                |       930439 |     941087 |    10648 |     1.14441  |      2.50367     |    2.50096     |
+| letter                  |       424062 |     419543 |    -4519 |    -1.06565  |      1.14109     |    1.11495     |
+| reference-entry         |       223020 |     219103 |    -3917 |    -1.75634  |      0.600114    |    0.582271    |
+| editorial               |       216188 |     215199 |     -989 |    -0.457472 |      0.58173     |    0.571896    |
+| erratum                 |       151724 |     150777 |     -947 |    -0.62416  |      0.408267    |    0.400693    |
+| other                   |        96666 |      96362 |     -304 |    -0.314485 |      0.260114    |    0.256084    |
+| book-chapter            |        86699 |     171521 |    84822 |    97.835    |      0.233294    |    0.455821    |
+| dataset                 |        79573 |       5528 |   -74045 |   -93.0529   |      0.214119    |    0.0146908   |
+| preprint*               |        21209 |     107044 |    85835 |   404.71     |      0.0570703   |    0.284472    |
+| book                    |        19407 |      21303 |     1896 |     9.76967  |      0.0522214   |    0.0566132   |
+| retraction              |        16913 |      17184 |      271 |     1.60232  |      0.0455104   |    0.0456669   |
+| supplementary-materials |         7109 |       7109 |        0 |     0        |      0.0191293   |    0.0188923   |
+| report                  |         5505 |       6056 |      551 |    10.0091   |      0.0148131   |    0.016094    |
+| dissertation*           |          162 |       1432 |     1270 |   783.951    |      0.000435918 |    0.00380557  |
+| peer-review*            |            4 |         29 |       25 |   625        |      1.07634e-05 |    7.70682e-05 |
+| libguides               |            0 |          0 |        0 |   nan        |      0           |    0           |
+| report-component        |            0 |        121 |      121 |   inf        |      0           |    0.00032156  |
+| standard                |            0 |          4 |        4 |   inf        |      0           |    1.06301e-05 |
+| book-section            |            0 |          2 |        2 |   inf        |      0           |    5.31505e-06 |
+| grant                   |            0 |          2 |        2 |   inf        |      0           |    5.31505e-06 |
+| software                |            0 |          0 |        0 |   nan        |      0           |    0           |
+
+</details>
+
+### Open Access
+
+Major changes are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6,3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot decreased by 12% (-201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).
+
+::: cell
+
+![Open Access share before and after the release of Walden. Only journal articles published between 2018 and 2024 are considered.](media/figure3.png){#fig-open-access}
+:::
+
+<details>
+  <summary>SQL code</summary>
+  
+```sql
+-- oal_by_oa
+SELECT COUNT(DISTINCT(doi)) AS n, open_access.oa_status, publication_year
+FROM `subugoe-collaborative.openalex.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY oa_status, publication_year
+ORDER BY n DESC
+
+-- walden_by_oa
+SELECT COUNT(DISTINCT(doi)) AS n, open_access.oa_status, publication_year
+FROM `subugoe-collaborative.openalex_walden.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY oa_status, publication_year
+ORDER BY n DESC
+```
+  
+</details>
+
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_oa = client.query(f"""
+                          SELECT COUNT(DISTINCT(doi)) AS n, open_access.oa_status, publication_year
+                          FROM {openalex_snapshot}
+                          WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                          GROUP BY oa_status, publication_year
+                          ORDER BY n DESC
+                          """).to_dataframe()
+                          
+walden_by_oa = client.query(f"""
+                             SELECT COUNT(DISTINCT(doi)) AS n, open_access.oa_status, publication_year
+                             FROM {walden_snapshot}
+                             WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                             GROUP BY oa_status, publication_year
+                             ORDER BY n DESC
+                             """).to_dataframe()
+                             
+oa_plot = pd.merge(oal_by_oa, walden_by_oa, on=['oa_status', 'publication_year'], how='inner', suffixes=('_openalex', '_walden'))
+
+oa_plot = oa_plot.sort_values(by=['oa_status', 'publication_year'])
+
+fig, ax = plt.subplots(figsize=(5,5))
+plt.box(False)
+
+plt.stackplot([2018, 2019, 2020, 2021, 2022, 2023, 2024], 
+              oa_plot[oa_plot.oa_status == 'closed']['n_openalex'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'hybrid']['n_openalex'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'green']['n_openalex'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'bronze']['n_openalex'].tolist(),
+              oa_plot[oa_plot.oa_status == 'diamond']['n_openalex'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'gold']['n_openalex'].tolist(),
+              colors=['#e5e5e5', '#97bbf5ff', '#40a954', '#fd725d', '#446ace', '#e9b121'],
+             )
+
+ax.yaxis.set_major_formatter(mtick.StrMethodFormatter('{x:,.0f}'))
+
+plt.xticks([2018, 2019, 2020, 2021, 2022, 2023, 2024])
+
+plt.show()
+fig.savefig('media/blog_post_oa_oal_area_chart.png', format='png', bbox_inches='tight', dpi=500)
+
+fig, ax = plt.subplots(figsize=(5,5))
+plt.box(False)
+
+plt.stackplot([2018, 2019, 2020, 2021, 2022, 2023, 2024], 
+              oa_plot[oa_plot.oa_status == 'closed']['n_walden'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'hybrid']['n_walden'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'green']['n_walden'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'bronze']['n_walden'].tolist(),
+              oa_plot[oa_plot.oa_status == 'diamond']['n_walden'].tolist(), 
+              oa_plot[oa_plot.oa_status == 'gold']['n_walden'].tolist(),
+              colors=['#e5e5e5', '#97bbf5ff', '#40a954', '#fd725d', '#446ace', '#e9b121'],
+             )
+
+ax.yaxis.set_major_formatter(mtick.StrMethodFormatter('{x:,.0f}'))
+
+plt.xticks([2018, 2019, 2020, 2021, 2022, 2023, 2024])
+
+plt.show()
+fig.savefig('media/blog_post_oa_walden_area_chart.png', format='png', bbox_inches='tight', dpi=500)
+
+fig, axs = plt.subplots(1, 2, figsize=(12, 8))
+filelist =  ['blog_post_oa_oal_area_chart', 'blog_post_oa_walden_area_chart']
+for i, (ax, file) in enumerate(zip(axs.flat, filelist)):
+    ax.set_axis_off()
+    filename = 'media/' + file + '.png'
+    ax.imshow(mpimg.imread(filename), extent=None)
+plt.subplots_adjust(wspace=0.1, hspace=0)
+plt.text(-2700, -100, 'OpenAlex', size=9, weight='bold')
+plt.text(0, -100, 'Walden', size=9, weight='bold')
+
+green_oa_patch = Line2D([0], [0], color='#40a954', label='Green OA')
+gold_oa_patch = Line2D([0], [0], color='#e9b121', label='Gold OA')
+bronze_oa_patch = Line2D([0], [0], color='#fd725d', label='Bronze OA')
+hybrid_oa_patch = Line2D([0], [0], color='#97bbf5ff', label='Hybrid OA')
+diamond_oa_patch = Line2D([0], [0], color='#446ace', label='Diamond OA')
+closed_oa_patch = Line2D([0], [0], color='#e5e5e5', label='Closed')
+
+lgd = fig.legend(handles=[green_oa_patch, 
+                          gold_oa_patch, 
+                          bronze_oa_patch,
+                          hybrid_oa_patch,
+                          diamond_oa_patch,
+                          closed_oa_patch], frameon=False,
+                 bbox_to_anchor=(1.01, 0.65), labelspacing=1.05)
+
+
+plt.show()
+fig.savefig('media/blog_post_figure3.png', format='png', bbox_inches='tight', dpi=500)
+```
+  
+</details>
+
+<details>
+  <summary>Data</summary>
+  
+| oa_status   |   n_openalex |   n_walden |   change |   pct_change |
+|:------------|-------------:|-----------:|---------:|-------------:|
+| bronze      |      3543148 |    2917571 |  -625577 |    -17.656   |
+| closed      |     14565362 |   13278551 | -1286811 |     -8.83473 |
+| diamond     |      2534510 |    8851320 |  6316810 |    249.232   |
+| gold        |      9204670 |    5356677 | -3847993 |    -41.8048  |
+| green       |      1635056 |    1836165 |   201109 |     12.2998  |
+| hybrid      |      3401545 |    3011854 |  -389691 |    -11.4563  |
+  
+</details>
+
+### Publishers and References
+
+In this section, I will look at the 20 largest publishers in OpenAlex (based on publication volume in the September 2025 snapshot) to 1) examine changes in publication volume in the Walden snapshot and 2) highlight changes in the enrichment of references in the latest Walden snapshot (see @fig-references).
+
+Overall, a decline in publication numbers can be observed for most of the top publishers in the Walden snapshot. The number of journal articles published by *Elsevier* falls by 0.36% from 5,310,142 to 5,290,772 articles. Similarly, the number of journal articles for *Wiley* decreases from 1,704,126 to 1,696,053 (-0.47%). An increase in publications can be measured for the publishers *Lippincott Williams & Wilkins* (+0.59%) and *Cambridge University Press* (+0.49%).
+
+A major increase can be seen in references, with the number of references for articles from the publishing house *Elsevier* standing out in particular (+16,477,506 references). In percentage terms, the publisher *Institute of Electrical and Electronics Engineers* has seen the biggest change, with an increase of 15.32% (2,209,250) references.
+
+::: cell
+
+![Changes in the number of journal articles and references for the top 20 publishers after the Walden release in OpenAlex.](media/figure4.png){#fig-references width=80%}
+:::
+
+<details>
+  <summary>SQL code</summary>
+  
+```sql
+-- oal_by_host
+SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.host_organization_name
+FROM `subugoe-collaborative.openalex.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY host_organization_name
+ORDER BY n DESC
+
+-- walden_by_host
+SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.host_organization_name
+FROM `subugoe-collaborative.openalex_walden.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY host_organization_name
+ORDER BY n DESC
+
+-- oal_by_host_references
+SELECT SUM(referenced_works_count) AS n, primary_location.source.host_organization_name
+FROM `subugoe-collaborative.openalex.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY host_organization_name
+ORDER BY n DESC
+
+-- walden_by_host_references
+SELECT SUM(referenced_works_count) AS n, primary_location.source.host_organization_name
+FROM `subugoe-collaborative.openalex_walden.works`
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY host_organization_name
+ORDER BY n DESC
+```
+  
+</details>
+
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_host = client.query(f"""
+                            SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.host_organization_name
+                            FROM {openalex_snapshot}
+                            WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                            GROUP BY host_organization_name
+                            ORDER BY n DESC
+                            """).to_dataframe()
+                            
+walden_by_host = client.query(f"""
+                             SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.host_organization_name
+                             FROM {walden_snapshot}
+                             WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                             GROUP BY host_organization_name
+                             ORDER BY n DESC
+                             """).to_dataframe()
+                             
+host_plot = calculate_changes(oal_by_host, walden_by_host, on='host_organization_name').sort_values(by=['n_openalex'], ascending=False)
+
+oal_by_host_references = client.query(f"""
+                                      SELECT SUM(referenced_works_count) AS n, primary_location.source.host_organization_name
+                                      FROM {openalex_snapshot}
+                                      WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                                      GROUP BY host_organization_name
+                                      ORDER BY n DESC
+                                      """).to_dataframe()
+                                      
+walden_by_host_references = client.query(f"""
+                                          SELECT SUM(referenced_works_count) AS n, primary_location.source.host_organization_name
+                                          FROM {walden_snapshot}
+                                          WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                                          GROUP BY host_organization_name
+                                          ORDER BY n DESC
+                                          """).to_dataframe()
+                                          
+ref_plot = calculate_changes(oal_by_host_references, walden_by_host_references, on='host_organization_name').sort_values(by=['n_openalex'], ascending=False)
+
+host_plot_merge = pd.merge(host_plot, ref_plot, on=['host_organization_name'], how='outer', suffixes=('_items', '_refs'))
+host_top_20_plot = host_plot_merge.sort_values(by=['n_openalex_items'], ascending=False).head(21)
+
+g = sns.PairGrid(host_top_20_plot,
+                 x_vars=['change_items', 'change_refs'], 
+                 y_vars=['host_organization_name'], 
+                 height=6, 
+                 aspect=.5)
+
+g.map(sns.barplot,
+      color='#56B4E9',
+      width=0.6,
+      saturation=1,
+      alpha=0.9,
+      zorder=3,
+      errorbar=None,
+      orient='y')
+
+plt.box(False)
+
+g.set(xlabel='Change', ylabel='Publisher')
+
+titles = ['Number of items', 'Number of references']
+
+for ax, title in zip(g.axes.flat, titles):
+
+    ax.set(title=title)
+
+    ax.xaxis.grid(True)
+    ax.yaxis.grid(True)
+
+    ax.xaxis.set_major_formatter(mtick.StrMethodFormatter('{x:,.0f}'))
+
+sns.despine(left=True, bottom=True)
+
+fig = g.fig.get_figure()
+
+plt.show()
+fig.savefig('media/blog_post_figure4.png', format='png', bbox_inches='tight', dpi=500)
+```
+
+</details>
+
+<details>
+  <summary>Data</summary>
+  
+<div style="display: block;overflow-x: scroll;">
+  
+| host_organization_name                            |   n_openalex_items |   n_walden_items |   change_items |   pct_change_items |   n_openalex_refs |   n_walden_refs |   change_refs |   pct_change_refs |
+|:--------------------------------------------------|-------------------:|-----------------:|---------------:|-------------------:|------------------:|----------------:|--------------:|------------------:|
+| None                                            |            8504822 |          9004368 |         499546 |          5.87368   |          61376055 |        69609733 |       8233678 |         13.4151   |
+| Elsevier BV                                       |            5310142 |          5290772 |         -19370 |         -0.364774  |         205490953 |       221968459 |      16477506 |          8.0186   |
+| Springer Science+Business Media                   |            1725031 |          1720003 |          -5028 |         -0.291473  |          68335429 |        69781945 |       1446516 |          2.11679  |
+| Wiley                                             |            1704126 |          1696053 |          -8073 |         -0.473733  |          68287084 |        70291163 |       2004079 |          2.93478  |
+| Multidisciplinary Digital Publishing Institute    |            1380269 |          1377419 |          -2850 |         -0.206481  |          72602925 |        77215390 |       4612465 |          6.353    |
+| Taylor & Francis                                  |             884007 |           878150 |          -5857 |         -0.662551  |          31776175 |        32547090 |        770915 |          2.42608  |
+| Oxford University Press                           |             585923 |           583024 |          -2899 |         -0.494775  |          15676432 |        16797847 |       1121415 |          7.15351  |
+| SAGE Publishing                                   |             532495 |           530309 |          -2186 |         -0.41052   |          16620534 |        16874424 |        253890 |          1.52757  |
+| Lippincott Williams & Wilkins                     |             512114 |           515114 |           3000 |          0.585807  |           7607006 |         8438760 |        831754 |         10.9341   |
+| Institute of Electrical and Electronics Engineers |             460108 |           454689 |          -5419 |         -1.17777   |          14419607 |        16628857 |       2209250 |         15.3212   |
+| Frontiers Media                                   |             457156 |           456737 |           -419 |         -0.0916536 |          28056492 |        28960467 |        903975 |          3.22198  |
+| American Chemical Society                         |             452077 |           451266 |           -811 |         -0.179394  |          23879558 |        23930242 |         50684 |          0.212248 |
+| Nature Portfolio                                  |             338884 |           337573 |          -1311 |         -0.386858  |          16370622 |        16668529 |        297907 |          1.81977  |
+| BioMed Central                                    |             316757 |           315686 |          -1071 |         -0.338114  |          14323466 |        14516721 |        193255 |          1.34922  |
+| Springer Nature                                   |             301335 |           300847 |           -488 |         -0.161946  |          11953963 |        12141717 |        187754 |          1.57064  |
+| IOP Publishing                                    |             300552 |           297552 |          -3000 |         -0.998163  |           8949176 |         9396322 |        447146 |          4.9965   |
+| Royal Society of Chemistry                        |             262792 |           262051 |           -741 |         -0.281972  |          14675079 |        14929868 |        254789 |          1.7362   |
+| Cambridge University Press                        |             225492 |           226602 |           1110 |          0.492257  |           5277402 |         5569885 |        292483 |          5.54218  |
+| American Institute of Physics                     |             208366 |           207314 |          -1052 |         -0.504881  |           5636936 |         5811338 |        174402 |          3.09391  |
+| Medknow                                           |             172273 |           171701 |           -572 |         -0.332031  |           3100647 |         3398765 |        298118 |          9.6147   |
+| Pleiades Publishing                               |             162878 |           163367 |            489 |          0.300225  |           3087649 |         3183881 |         96232 |          3.11668  |
+
+</div>
+
+</details>
+
+### Funding information
+
+With the release of Walden, the new entity [*Awards*](https://docs.openalex.org/api-entities/awards) was introduced, replacing the previous field *grants*. This has resulted in improved coverage of funding information in OpenAlex (as shown in the table below). For the September snapshot, 11,824,259 funding records were linked, while in the Walden snapshot this number rose to 12,166,398. The increase is particularly pronounced for the publication years 2018 (+4.1%), 2019 (+3.5%) and 2023 (+3.5%).
+
+:::{.column-page}
+
+|   Publication year |   Number of awards <br> in OpenAlex | Number of awards <br> in Walden | Change | Change in % |
+|--------------------|--------------|------------|----------|--------------|
+|               2024 |      1,829,832 |    1,878,923 |    49,091 |      2.68% |
+|               2023 |      1,798,571 |    1,860,895 |    62,324 |      3.47%  |
+|               2022 |      1,792,249 |    1,835,439 |    43,190 |      2.41% |
+|               2021 |      1,757,777 |    1,783,902 |    26,125 |      1.49% |
+|               2020 |      1,707,755 |    1,758,373 |    50,618 |      2.96% |
+|               2019 |      1,574,415 |    1,629,090 |    54,675 |      3.47% |
+|               2018 |      1,363,660 |    1,419,776 |    56,116 |      4.12%  |
+
+: Improvements in funding information {.striped .hover}
+
+:::
+
+<p></p>
+
+<details>
+  <summary>SQL code</summary>
+  
+```sql
+-- oal_grants
+SELECT COUNT(grant.award_id) AS n, publication_year
+FROM `subugoe-collaborative.openalex.works`, UNNEST(grants) AS grant
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY publication_year
+ORDER BY n DESC
+                           
+-- walden_grants                           
+SELECT COUNT(grant.id) AS n, publication_year
+FROM `subugoe-collaborative.openalex_walden.works`, UNNEST(awards) AS grant
+WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+GROUP BY publication_year
+ORDER BY n DESC                           
+```
+  
+</details>
+
+<details>
+  <summary>Python code</summary>
+  
+```python
+oal_by_pubyear = client.query(f"""
+                               SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+                               FROM {openalex_snapshot}
+                               WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                               GROUP BY publication_year
+                               ORDER BY publication_year DESC
+                               """).to_dataframe()
+                               
+walden_by_pubyear = client.query(f"""
+                                  SELECT COUNT(DISTINCT(doi)) AS n, publication_year
+                                  FROM {walden_snapshot}
+                                  WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')
+                                  GROUP BY publication_year
+                                  ORDER BY publication_year DESC
+                                  """).to_dataframe()
+                                  
+calculate_changes(oal_by_pubyear, walden_by_pubyear, on='publication_year')
+```
+  
+</details>
+
+## Summary
+
+I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The Walden update demonstrates that OpenAlex is a constantly changing database. This, in turn, raises questions regarding the reliability of data analysis with OpenAlex. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references and funding information can be observed among larger publishers. Concurrently, there is a slight decline in the publication volume of larger publishers.
+
+I would also like to mention some issues that I found regarding the new Walden snapshots:
+
+- Reviews were not classified correctly in latest snapshots: At the time of the Walden release in November 2025, the number of classified reviews from journals was almost zero. This issue was fixed with the subsequent Walden update in January 2026. 
+- Data additions without prior announcement: For the Walden release in February, two updates were noticed within a short period of time (03-02-2026 and 04-02-2026), although only one change was recorded in the [change log](https://github.com/ourresearch/openalex-guts/blob/main/files-for-datadumps/standard-format/RELEASE_NOTES.txt). The [manifest on AWS](https://openalex.s3.amazonaws.com/browse.html#data/works/) was incorrect in this regard, as it did not list all files available for download, thereby corrupting the total number of items in the manifest. One additional record was added between these two updates. The same applies to the [publisher entity](https://docs.openalex.org/api-entities/publishers), which contained only 16 records from November 2025 to January 2026 (and was later fixed separately in January 2026 without further announcement).
+- Missing fields: The field *author_position* was not available for a short period of time in the snapshot provided on AWS (Snapshot 04-02-2026). However, the field was accessible through API, see [here](https://api.openalex.org/w2155347384) for example.
+
+I hope that these issues will be addressed with newer OpenAlex releases.
+
+## Data and Code Availability
+
+Python code for this data analysis is also available on GitHub: <https://github.com/naustica/openalex_walden_analysis/>.
+
+Data was retrieved from the Data Warehouse of the SUB Göttingen: <https://subugoe.github.io/scholcomm_analytics/data.html>.
