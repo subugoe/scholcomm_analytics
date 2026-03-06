@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nick Haupka">
-<meta name="dcterms.date" content="2026-02-12">
+<meta name="dcterms.date" content="2026-03-06">
 
 <title>Walden: What has changed in OpenAlex? – Scholarly Communication Analytics</title>
 <style>
@@ -131,13 +131,13 @@ div.csl-indent {
 <meta property="og:description" content="The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in OA detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.">
 <meta property="og:image" content="https://subugoe.github.io/scholcomm_analytics/posts/walden_analysis/distill-preview.png">
 <meta property="og:site_name" content="Scholarly Communication Analytics">
-<meta property="og:image:height" content="1963">
-<meta property="og:image:width" content="3438">
+<meta property="og:image:height" content="3039">
+<meta property="og:image:width" content="4146">
 <meta name="twitter:title" content="Walden: What has changed in OpenAlex? – Scholarly Communication Analytics">
 <meta name="twitter:description" content="The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in OA detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.">
 <meta name="twitter:image" content="https://subugoe.github.io/scholcomm_analytics/posts/walden_analysis/distill-preview.png">
-<meta name="twitter:image-height" content="1963">
-<meta name="twitter:image-width" content="3438">
+<meta name="twitter:image-height" content="3039">
+<meta name="twitter:image-width" content="4146">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -218,7 +218,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 12, 2026</p>
+      <p class="date">March 6, 2026</p>
     </div>
   </div>
   
@@ -238,8 +238,8 @@ div.csl-indent {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The past few months brought some changes to the OpenAlex data service. The most relevant update happened in November 2025 with the Walden Update, which promised <a href="https://blog.openalex.org/openalex-rewrite-walden-launch/">better reference coverage, improved OA detection and a more extensive database</a>. In January 2026, improved integration of funding information was introduced, along with a new entity called <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a>. At the same time, little is known about the consequences of the changes so far. In December 2025, it was observed that the quality of author affiliations had declined with the Walden update <span class="citation" data-cites="jahn2025">(<a href="#ref-jahn2025" role="doc-biblioref">Jahn 2025</a>)</span>. Meanwhile, there have been two further Walden updates (15 January 2026 and 3 February 2026) that address an improvement to the problem.</p>
-<p>In this blog post, I will take a closer look at the changes made in the Walden release. To do this, I will contrast a pre-Walden snapshot from September 2025 with a Walden snapshot from February 2026. The data analysis will cover changes in publication volume, OA status, references, funding information, document types and publication types. The analysis is limited to publications from 2018 and 2024 and to journal articles only.</p>
+<p>The past few months brought some changes to the OpenAlex data service. The most relevant update happened in November 2025 with the Walden Update, which promised <a href="https://blog.openalex.org/openalex-rewrite-walden-launch/">better reference coverage, improved OA detection and a more extensive database</a>. In January 2026, improved integration of funding information was introduced, along with a new entity called <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a>. At the same time, little is known about the consequences of the changes so far. In December 2025, it was observed that the quality of author affiliations had declined with the Walden update <span class="citation" data-cites="jahn2025">(<a href="#ref-jahn2025" role="doc-biblioref">Jahn 2025</a>)</span>. Meanwhile, there have been three further Walden updates (15 January 2026, 3 February 2026 and 25 February 2026) that address an improvement to the problem.</p>
+<p>In this blog post, I will take a closer look at the changes made in the Walden release. To do this, I will contrast a pre-Walden snapshot from September 2025 with a Walden snapshot from February 2026 (2026-02-25). The data analysis will cover changes in publication volume, open access (OA) status, references, funding information, document types and publication types. The analysis is limited to publications from 2018 and 2024 and to journal articles only.</p>
 </section>
 <section id="data-and-methods" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-methods">Data and Methods</h2>
@@ -291,7 +291,7 @@ Python code for setup
 <section id="publication-volume" class="level3">
 <h3 class="anchored" data-anchor-id="publication-volume">Publication volume</h3>
 <p>Let’s start by comparing the number of journal articles between OpenAlex (shown in grey) and Walden (shown in pink) for the publication years 2018 to 2024 (see <a href="#fig-publication-volume" class="quarto-xref">Figure&nbsp;1</a>). A record is considered a journal article if it is assigned to the source type <em>journal</em> and the item type <em>article</em> or <em>review</em>.</p>
-<p>In total, OpenAlex counts 34,884,266 articles, while the Walden snapshot counts 34,893,901 journal articles (which correspond to an overall increase of 0.03%). When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the September 2025 snapshot for the publication years 2018 to 2021 (around -1% per year). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +0,6% (for 2022 and 2023) and +2% (for 2024).</p>
+<p>In total, OpenAlex counts 34,884,266 articles, while the Walden snapshot counts 35,249,948 journal articles (which correspond to an overall increase of 1.05%). When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the September 2025 snapshot for the publication years 2018 and 2021 (around -0.1%). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +1.7% (for 2022 and 2023) and +3.2% (for 2024).</p>
 <div class="cell">
 <div id="fig-publication-volume" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -392,62 +392,62 @@ Data
 </colgroup>
 <thead>
 <tr class="header">
-<th>publication_year</th>
-<th>n_openalex</th>
-<th>n_walden</th>
-<th>change</th>
-<th>pct_change</th>
+<th style="text-align: right;">publication_year</th>
+<th style="text-align: right;">n_openalex</th>
+<th style="text-align: right;">n_walden</th>
+<th style="text-align: right;">change</th>
+<th style="text-align: right;">pct_change</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>2024</td>
-<td>5747463</td>
-<td>5866769</td>
-<td>119306</td>
-<td>2.0758</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">5747463</td>
+<td style="text-align: right;">5931313</td>
+<td style="text-align: right;">183850</td>
+<td style="text-align: right;">3.1988</td>
 </tr>
 <tr class="even">
-<td>2023</td>
-<td>5385802</td>
-<td>5421376</td>
-<td>35574</td>
-<td>0.660514</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">5385802</td>
+<td style="text-align: right;">5476020</td>
+<td style="text-align: right;">90218</td>
+<td style="text-align: right;">1.67511</td>
 </tr>
 <tr class="odd">
-<td>2022</td>
-<td>5170934</td>
-<td>5204308</td>
-<td>33374</td>
-<td>0.645415</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">5170934</td>
+<td style="text-align: right;">5257499</td>
+<td style="text-align: right;">86565</td>
+<td style="text-align: right;">1.67407</td>
 </tr>
 <tr class="even">
-<td>2021</td>
-<td>5168607</td>
-<td>5113724</td>
-<td>-54883</td>
-<td>-1.06185</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">5168607</td>
+<td style="text-align: right;">5162223</td>
+<td style="text-align: right;">-6384</td>
+<td style="text-align: right;">-0.123515</td>
 </tr>
 <tr class="odd">
-<td>2020</td>
-<td>4865503</td>
-<td>4820914</td>
-<td>-44589</td>
-<td>-0.916431</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">4865503</td>
+<td style="text-align: right;">4867745</td>
+<td style="text-align: right;">2242</td>
+<td style="text-align: right;">0.0460795</td>
 </tr>
 <tr class="even">
-<td>2019</td>
-<td>4421064</td>
-<td>4383193</td>
-<td>-37871</td>
-<td>-0.856604</td>
+<td style="text-align: right;">2019</td>
+<td style="text-align: right;">4421064</td>
+<td style="text-align: right;">4431124</td>
+<td style="text-align: right;">10060</td>
+<td style="text-align: right;">0.227547</td>
 </tr>
 <tr class="odd">
-<td>2018</td>
-<td>4124893</td>
-<td>4083617</td>
-<td>-41276</td>
-<td>-1.00066</td>
+<td style="text-align: right;">2018</td>
+<td style="text-align: right;">4124893</td>
+<td style="text-align: right;">4124024</td>
+<td style="text-align: right;">-869</td>
+<td style="text-align: right;">-0.0210672</td>
 </tr>
 </tbody>
 </table>
@@ -483,44 +483,44 @@ Data
 <tr class="odd">
 <td style="text-align: left;">journal</td>
 <td style="text-align: right;">37,162,915</td>
-<td style="text-align: right;">37,265,545</td>
-<td style="text-align: right;">+102,630</td>
-<td style="text-align: right;">+0.28%</td>
+<td style="text-align: right;">37,627,809</td>
+<td style="text-align: right;">464,894</td>
+<td style="text-align: right;">1.25%</td>
 <td style="text-align: right;">61.44%</td>
-<td style="text-align: right;">34.85%</td>
+<td style="text-align: right;">35.09%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">repository</td>
 <td style="text-align: right;">7,095,230</td>
-<td style="text-align: right;">43,716,031</td>
-<td style="text-align: right;">+36,620,801</td>
-<td style="text-align: right;">+516.13%</td>
+<td style="text-align: right;">45,439,269</td>
+<td style="text-align: right;">38,344,039</td>
+<td style="text-align: right;">540.42%</td>
 <td style="text-align: right;">11.73%</td>
-<td style="text-align: right;">40.88%</td>
+<td style="text-align: right;">42.37%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">None</td>
 <td style="text-align: right;">6,908,023</td>
-<td style="text-align: right;">13,455,640</td>
-<td style="text-align: right;">+6,547,617</td>
-<td style="text-align: right;">+94.78%</td>
+<td style="text-align: right;">11,571,409</td>
+<td style="text-align: right;">4,663,386</td>
+<td style="text-align: right;">67.51%</td>
 <td style="text-align: right;">11.42%</td>
-<td style="text-align: right;">12.58%</td>
+<td style="text-align: right;">10.79%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">ebook platform</td>
 <td style="text-align: right;">6,502,127</td>
-<td style="text-align: right;">3,930,549</td>
-<td style="text-align: right;">-2,571,578</td>
-<td style="text-align: right;">-39.55%</td>
+<td style="text-align: right;">3,934,121</td>
+<td style="text-align: right;">-2,568,006</td>
+<td style="text-align: right;">-39.49%</td>
 <td style="text-align: right;">10.75%</td>
-<td style="text-align: right;">3.68%</td>
+<td style="text-align: right;">3.67%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">book series</td>
 <td style="text-align: right;">1,488,834</td>
-<td style="text-align: right;">1,478,195</td>
-<td style="text-align: right;">-10,639</td>
+<td style="text-align: right;">1,478,265</td>
+<td style="text-align: right;">-10,569</td>
 <td style="text-align: right;">-0.71%</td>
 <td style="text-align: right;">2.46%</td>
 <td style="text-align: right;">1.38%</td>
@@ -528,35 +528,35 @@ Data
 <tr class="even">
 <td style="text-align: left;">conference</td>
 <td style="text-align: right;">1,331,331</td>
-<td style="text-align: right;">768,789</td>
-<td style="text-align: right;">-562,542</td>
+<td style="text-align: right;">768,808</td>
+<td style="text-align: right;">-562,523</td>
 <td style="text-align: right;">-42.25%</td>
-<td style="text-align: right;">2.2%</td>
+<td style="text-align: right;">2.20%</td>
 <td style="text-align: right;">0.72%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">97</td>
-<td style="text-align: right;">187</td>
-<td style="text-align: right;">+90</td>
-<td style="text-align: right;">+92.78%</td>
+<td style="text-align: right;">309</td>
+<td style="text-align: right;">212</td>
+<td style="text-align: right;">218.56%</td>
 <td style="text-align: right;">0%</td>
 <td style="text-align: right;">0%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">igsnCatalog</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">6,328,178</td>
-<td style="text-align: right;">+6,328,178</td>
+<td style="text-align: right;">6,423,465</td>
+<td style="text-align: right;">6,423,465</td>
 <td style="text-align: right;">inf</td>
 <td style="text-align: right;">0%</td>
-<td style="text-align: right;">5.92%</td>
+<td style="text-align: right;">5.99%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">metadata</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">270</td>
-<td style="text-align: right;">+270</td>
+<td style="text-align: right;">270</td>
 <td style="text-align: right;">inf</td>
 <td style="text-align: right;">0%</td>
 <td style="text-align: right;">0%</td>
@@ -565,7 +565,7 @@ Data
 <td style="text-align: left;">raidRegistry</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">+4</td>
+<td style="text-align: right;">4</td>
 <td style="text-align: right;">inf</td>
 <td style="text-align: right;">0%</td>
 <td style="text-align: right;">0%</td>
@@ -575,7 +575,7 @@ Data
 </div>
 <p>
 </p>
-<p>Here we can see that the publication type <em>journal</em> has a relatively small increase (+0.28%) compared to other source types such as <em>repository</em> (+516%). Based on their respective share in the snapshot, records with the source type <em>journal</em> account for approximately 61% of the records in the September snapshot and only 35% in the Walden snapshot. This is partly due to an increase in items with the source type <em>igsnCatalog</em> and records without an assigned source type (and of course, records from repositories). With Walden, three new publication types are available: <em>igsnCatalog</em>, <em>metadata</em> and <em>raidRegistry</em>.</p>
+<p>Here we can see that the publication type <em>journal</em> has a relatively small increase (+1.25%) compared to other source types such as <em>repository</em> (+540%). Based on their respective share in the snapshot, records with the source type <em>journal</em> account for approximately 61% of the records in the September snapshot and only 35% in the Walden snapshot. This is partly due to an increase in items with the source type <em>igsnCatalog</em> and records without an assigned source type (and of course, records from repositories). With Walden, three new publication types are available: <em>igsnCatalog</em>, <em>metadata</em> and <em>raidRegistry</em>.</p>
 <details>
 <summary>
 SQL code
@@ -626,7 +626,7 @@ Python code
 <section id="document-types" class="level3">
 <h3 class="anchored" data-anchor-id="document-types">Document types</h3>
 <p>Next, we look at the distribution of document types in both snapshots (see <a href="#fig-document-types" class="quarto-xref">Figure&nbsp;2</a>). Note, that records have been restricted to the source type <em>journal</em> again.</p>
-<p>We can see that the number of records with the document types <em>article</em>, <em>paratext</em>, <em>book-chapter</em> and <em>preprint</em> have increased in the latest Walden snapshot. However, in relative terms, the increase in journal articles is very limited (only 0.06%). With an increase of over 150%, <em>preprints</em> and <em>dissertations</em> have seen the highest rise (relatively speaking). Records with the document type <em>dataset</em>, in contrast, have been classified less frequently in the recent snapshot (about 76,000 records less).</p>
+<p>We can see that the number of records with the document types <em>article</em>, <em>paratext</em>, <em>book-chapter</em> and <em>preprint</em> have increased in the latest Walden snapshot. However, in relative terms, the increase in journal articles is very limited (only 1.12%). With an increase of over 150%, <em>preprints</em>, <em>peer-review</em> and <em>dissertations</em> have seen the highest rise (relatively speaking). Records with the document type <em>dataset</em>, in contrast, have been classified less frequently in the recent snapshot (about 74,000 records less).</p>
 <div class="cell">
 <div id="fig-document-types" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -778,155 +778,155 @@ Data
 <tr class="odd">
 <td style="text-align: left;">article</td>
 <td style="text-align: right;">33440278</td>
-<td style="text-align: right;">33461175</td>
-<td style="text-align: right;">20897</td>
-<td style="text-align: right;">0.0624905</td>
+<td style="text-align: right;">33815658</td>
+<td style="text-align: right;">375380</td>
+<td style="text-align: right;">1.12254</td>
 <td style="text-align: right;">89.9828</td>
-<td style="text-align: right;">89.7909</td>
+<td style="text-align: right;">89.8659</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">review</td>
 <td style="text-align: right;">1443989</td>
-<td style="text-align: right;">1432537</td>
-<td style="text-align: right;">-11452</td>
-<td style="text-align: right;">-0.793081</td>
+<td style="text-align: right;">1433950</td>
+<td style="text-align: right;">-10039</td>
+<td style="text-align: right;">-0.695227</td>
 <td style="text-align: right;">3.88556</td>
-<td style="text-align: right;">3.84412</td>
+<td style="text-align: right;">3.81076</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">paratext</td>
 <td style="text-align: right;">930439</td>
-<td style="text-align: right;">939242</td>
-<td style="text-align: right;">8803</td>
-<td style="text-align: right;">0.946113</td>
+<td style="text-align: right;">941087</td>
+<td style="text-align: right;">10648</td>
+<td style="text-align: right;">1.14441</td>
 <td style="text-align: right;">2.50367</td>
-<td style="text-align: right;">2.5204</td>
+<td style="text-align: right;">2.50096</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">letter</td>
 <td style="text-align: right;">424062</td>
-<td style="text-align: right;">419502</td>
-<td style="text-align: right;">-4560</td>
-<td style="text-align: right;">-1.07531</td>
+<td style="text-align: right;">419543</td>
+<td style="text-align: right;">-4519</td>
+<td style="text-align: right;">-1.06565</td>
 <td style="text-align: right;">1.14109</td>
-<td style="text-align: right;">1.12571</td>
+<td style="text-align: right;">1.11495</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">reference-entry</td>
 <td style="text-align: right;">223020</td>
-<td style="text-align: right;">219102</td>
-<td style="text-align: right;">-3918</td>
-<td style="text-align: right;">-1.75679</td>
+<td style="text-align: right;">219103</td>
+<td style="text-align: right;">-3917</td>
+<td style="text-align: right;">-1.75634</td>
 <td style="text-align: right;">0.600114</td>
-<td style="text-align: right;">0.587946</td>
+<td style="text-align: right;">0.582271</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">editorial</td>
 <td style="text-align: right;">216188</td>
-<td style="text-align: right;">214769</td>
-<td style="text-align: right;">-1419</td>
-<td style="text-align: right;">-0.656373</td>
+<td style="text-align: right;">215199</td>
+<td style="text-align: right;">-989</td>
+<td style="text-align: right;">-0.457472</td>
 <td style="text-align: right;">0.58173</td>
-<td style="text-align: right;">0.576319</td>
+<td style="text-align: right;">0.571896</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">erratum</td>
 <td style="text-align: right;">151724</td>
-<td style="text-align: right;">150723</td>
-<td style="text-align: right;">-1001</td>
-<td style="text-align: right;">-0.659751</td>
+<td style="text-align: right;">150777</td>
+<td style="text-align: right;">-947</td>
+<td style="text-align: right;">-0.62416</td>
 <td style="text-align: right;">0.408267</td>
-<td style="text-align: right;">0.404455</td>
+<td style="text-align: right;">0.400693</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">96666</td>
-<td style="text-align: right;">94824</td>
-<td style="text-align: right;">-1842</td>
-<td style="text-align: right;">-1.90553</td>
+<td style="text-align: right;">96362</td>
+<td style="text-align: right;">-304</td>
+<td style="text-align: right;">-0.314485</td>
 <td style="text-align: right;">0.260114</td>
-<td style="text-align: right;">0.254454</td>
+<td style="text-align: right;">0.256084</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">book-chapter</td>
 <td style="text-align: right;">86699</td>
-<td style="text-align: right;">171301</td>
-<td style="text-align: right;">84602</td>
-<td style="text-align: right;">97.5813</td>
+<td style="text-align: right;">171521</td>
+<td style="text-align: right;">84822</td>
+<td style="text-align: right;">97.835</td>
 <td style="text-align: right;">0.233294</td>
-<td style="text-align: right;">0.459675</td>
+<td style="text-align: right;">0.455821</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dataset</td>
 <td style="text-align: right;">79573</td>
-<td style="text-align: right;">3474</td>
-<td style="text-align: right;">-76099</td>
-<td style="text-align: right;">-95.6342</td>
+<td style="text-align: right;">5528</td>
+<td style="text-align: right;">-74045</td>
+<td style="text-align: right;">-93.0529</td>
 <td style="text-align: right;">0.214119</td>
-<td style="text-align: right;">0.00932226</td>
+<td style="text-align: right;">0.0146908</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">preprint*</td>
 <td style="text-align: right;">21209</td>
-<td style="text-align: right;">106604</td>
-<td style="text-align: right;">85395</td>
-<td style="text-align: right;">402.636</td>
+<td style="text-align: right;">107044</td>
+<td style="text-align: right;">85835</td>
+<td style="text-align: right;">404.71</td>
 <td style="text-align: right;">0.0570703</td>
-<td style="text-align: right;">0.286065</td>
+<td style="text-align: right;">0.284472</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">book</td>
 <td style="text-align: right;">19407</td>
-<td style="text-align: right;">21035</td>
-<td style="text-align: right;">1628</td>
-<td style="text-align: right;">8.38873</td>
+<td style="text-align: right;">21303</td>
+<td style="text-align: right;">1896</td>
+<td style="text-align: right;">9.76967</td>
 <td style="text-align: right;">0.0522214</td>
-<td style="text-align: right;">0.0564461</td>
+<td style="text-align: right;">0.0566132</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">retraction</td>
 <td style="text-align: right;">16913</td>
-<td style="text-align: right;">17183</td>
-<td style="text-align: right;">270</td>
-<td style="text-align: right;">1.59641</td>
+<td style="text-align: right;">17184</td>
+<td style="text-align: right;">271</td>
+<td style="text-align: right;">1.60232</td>
 <td style="text-align: right;">0.0455104</td>
-<td style="text-align: right;">0.0461095</td>
+<td style="text-align: right;">0.0456669</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">supplementary-materials</td>
 <td style="text-align: right;">7109</td>
-<td style="text-align: right;">7108</td>
-<td style="text-align: right;">-1</td>
-<td style="text-align: right;">-0.0140667</td>
+<td style="text-align: right;">7109</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: right;">0.0191293</td>
-<td style="text-align: right;">0.0190739</td>
+<td style="text-align: right;">0.0188923</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">report</td>
 <td style="text-align: right;">5505</td>
-<td style="text-align: right;">5806</td>
-<td style="text-align: right;">301</td>
-<td style="text-align: right;">5.46776</td>
+<td style="text-align: right;">6056</td>
+<td style="text-align: right;">551</td>
+<td style="text-align: right;">10.0091</td>
 <td style="text-align: right;">0.0148131</td>
-<td style="text-align: right;">0.01558</td>
+<td style="text-align: right;">0.016094</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">dissertation*</td>
 <td style="text-align: right;">162</td>
-<td style="text-align: right;">1148</td>
-<td style="text-align: right;">986</td>
-<td style="text-align: right;">608.642</td>
+<td style="text-align: right;">1432</td>
+<td style="text-align: right;">1270</td>
+<td style="text-align: right;">783.951</td>
 <td style="text-align: right;">0.000435918</td>
-<td style="text-align: right;">0.00308058</td>
+<td style="text-align: right;">0.00380557</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">peer-review</td>
+<td style="text-align: left;">peer-review*</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">625</td>
 <td style="text-align: right;">1.07634e-05</td>
-<td style="text-align: right;">1.07337e-05</td>
+<td style="text-align: right;">7.70682e-05</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">libguides</td>
@@ -944,16 +944,43 @@ Data
 <td style="text-align: right;">121</td>
 <td style="text-align: right;">inf</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.000324696</td>
+<td style="text-align: right;">0.00032156</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">inf</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.06301e-05</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">book-section</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">inf</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">5.36687e-06</td>
+<td style="text-align: right;">5.31505e-06</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grant</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">inf</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5.31505e-06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">software</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
@@ -961,7 +988,7 @@ Data
 </section>
 <section id="open-access" class="level3">
 <h3 class="anchored" data-anchor-id="open-access">Open Access</h3>
-<p>Major changes are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6,3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.5% (-3,817,054). Hybrid OA falls by 11.6% overall (-393,277) and Bronze OA by 18.6% (-658,037). The proportion of Green OA in the Walden snapshot decreased by 12% (-199,557) and the proportion of non-accessible items (closed) declined by 8% (-1,237,035).</p>
+<p>Major changes are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6,3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot decreased by 12% (-201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).</p>
 <div class="cell">
 <div id="fig-open-access" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1103,44 +1130,44 @@ Data
 <tr class="odd">
 <td style="text-align: left;">bronze</td>
 <td style="text-align: right;">3543148</td>
-<td style="text-align: right;">2885111</td>
-<td style="text-align: right;">-658037</td>
-<td style="text-align: right;">-18.5721</td>
+<td style="text-align: right;">2917571</td>
+<td style="text-align: right;">-625577</td>
+<td style="text-align: right;">-17.656</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">closed</td>
 <td style="text-align: right;">14565362</td>
-<td style="text-align: right;">13328327</td>
-<td style="text-align: right;">-1237035</td>
-<td style="text-align: right;">-8.49299</td>
+<td style="text-align: right;">13278551</td>
+<td style="text-align: right;">-1286811</td>
+<td style="text-align: right;">-8.83473</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">diamond</td>
 <td style="text-align: right;">2534510</td>
-<td style="text-align: right;">8849415</td>
-<td style="text-align: right;">6314905</td>
-<td style="text-align: right;">249.157</td>
+<td style="text-align: right;">8851320</td>
+<td style="text-align: right;">6316810</td>
+<td style="text-align: right;">249.232</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">gold</td>
 <td style="text-align: right;">9204670</td>
-<td style="text-align: right;">5387616</td>
-<td style="text-align: right;">-3817054</td>
-<td style="text-align: right;">-41.4687</td>
+<td style="text-align: right;">5356677</td>
+<td style="text-align: right;">-3847993</td>
+<td style="text-align: right;">-41.8048</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">green</td>
 <td style="text-align: right;">1635056</td>
-<td style="text-align: right;">1435499</td>
-<td style="text-align: right;">-199557</td>
-<td style="text-align: right;">-12.2049</td>
+<td style="text-align: right;">1836165</td>
+<td style="text-align: right;">201109</td>
+<td style="text-align: right;">12.2998</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">hybrid</td>
 <td style="text-align: right;">3401545</td>
-<td style="text-align: right;">3008268</td>
-<td style="text-align: right;">-393277</td>
-<td style="text-align: right;">-11.5617</td>
+<td style="text-align: right;">3011854</td>
+<td style="text-align: right;">-389691</td>
+<td style="text-align: right;">-11.4563</td>
 </tr>
 </tbody>
 </table>
@@ -1149,8 +1176,8 @@ Data
 <section id="publishers-and-references" class="level3">
 <h3 class="anchored" data-anchor-id="publishers-and-references">Publishers and References</h3>
 <p>In this section, I will look at the 20 largest publishers in OpenAlex (based on publication volume in the September 2025 snapshot) to 1) examine changes in publication volume in the Walden snapshot and 2) highlight changes in the enrichment of references in the latest Walden snapshot (see <a href="#fig-references" class="quarto-xref">Figure&nbsp;4</a>).</p>
-<p>Overall, a decline in publication numbers can be observed for most of the top publishers in the Walden snapshot. The number of journal articles published by <em>Elsevier</em> falls by 0.36% from 5,310,142 to 5,290,767 articles. Similarly, the number of journal articles for <em>Wiley</em> decreases from 1,704,126 to 1,694,799 (-0.55%). An increase in publications can be measured for the publishers <em>Lippincott Williams &amp; Wilkins</em> (+0.44%) and <em>Cambridge University Press</em> (+0.36%).</p>
-<p>A major increase can be seen in references, with the number of references for articles from the publishing house <em>Elsevier</em> standing out in particular (+16,477,238 references). In percentage terms, the publisher <em>Institute of Electrical and Electronics Engineers</em> has seen the biggest change, with an increase of 15.29% (2,205,283) references.</p>
+<p>Overall, a decline in publication numbers can be observed for most of the top publishers in the Walden snapshot. The number of journal articles published by <em>Elsevier</em> falls by 0.36% from 5,310,142 to 5,290,772 articles. Similarly, the number of journal articles for <em>Wiley</em> decreases from 1,704,126 to 1,696,053 (-0.47%). An increase in publications can be measured for the publishers <em>Lippincott Williams &amp; Wilkins</em> (+0.59%) and <em>Cambridge University Press</em> (+0.49%).</p>
+<p>A major increase can be seen in references, with the number of references for articles from the publishing house <em>Elsevier</em> standing out in particular (+16,477,506 references). In percentage terms, the publisher <em>Institute of Electrical and Electronics Engineers</em> has seen the biggest change, with an increase of 15.32% (2,209,250) references.</p>
 <div class="cell">
 <div id="fig-references" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1309,200 +1336,200 @@ Data
 <tr class="odd">
 <td style="text-align: left;">None</td>
 <td style="text-align: right;">8504822</td>
-<td style="text-align: right;">8658958</td>
-<td style="text-align: right;">154136</td>
-<td style="text-align: right;">1.81234</td>
+<td style="text-align: right;">9004368</td>
+<td style="text-align: right;">499546</td>
+<td style="text-align: right;">5.87368</td>
 <td style="text-align: right;">61376055</td>
-<td style="text-align: right;">69072543</td>
-<td style="text-align: right;">7696488</td>
-<td style="text-align: right;">12.5399</td>
+<td style="text-align: right;">69609733</td>
+<td style="text-align: right;">8233678</td>
+<td style="text-align: right;">13.4151</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Elsevier BV</td>
 <td style="text-align: right;">5310142</td>
-<td style="text-align: right;">5290767</td>
-<td style="text-align: right;">-19375</td>
-<td style="text-align: right;">-0.364868</td>
+<td style="text-align: right;">5290772</td>
+<td style="text-align: right;">-19370</td>
+<td style="text-align: right;">-0.364774</td>
 <td style="text-align: right;">205490953</td>
-<td style="text-align: right;">221968191</td>
-<td style="text-align: right;">16477238</td>
-<td style="text-align: right;">8.01847</td>
+<td style="text-align: right;">221968459</td>
+<td style="text-align: right;">16477506</td>
+<td style="text-align: right;">8.0186</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Springer Science+Business Media</td>
 <td style="text-align: right;">1725031</td>
-<td style="text-align: right;">1719995</td>
-<td style="text-align: right;">-5036</td>
-<td style="text-align: right;">-0.291937</td>
+<td style="text-align: right;">1720003</td>
+<td style="text-align: right;">-5028</td>
+<td style="text-align: right;">-0.291473</td>
 <td style="text-align: right;">68335429</td>
-<td style="text-align: right;">69781040</td>
-<td style="text-align: right;">1445611</td>
-<td style="text-align: right;">2.11546</td>
+<td style="text-align: right;">69781945</td>
+<td style="text-align: right;">1446516</td>
+<td style="text-align: right;">2.11679</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Wiley</td>
 <td style="text-align: right;">1704126</td>
-<td style="text-align: right;">1694799</td>
-<td style="text-align: right;">-9327</td>
-<td style="text-align: right;">-0.547319</td>
+<td style="text-align: right;">1696053</td>
+<td style="text-align: right;">-8073</td>
+<td style="text-align: right;">-0.473733</td>
 <td style="text-align: right;">68287084</td>
-<td style="text-align: right;">70288508</td>
-<td style="text-align: right;">2001424</td>
-<td style="text-align: right;">2.9309</td>
+<td style="text-align: right;">70291163</td>
+<td style="text-align: right;">2004079</td>
+<td style="text-align: right;">2.93478</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Multidisciplinary Digital Publishing Institute</td>
 <td style="text-align: right;">1380269</td>
-<td style="text-align: right;">1377671</td>
-<td style="text-align: right;">-2598</td>
-<td style="text-align: right;">-0.188224</td>
+<td style="text-align: right;">1377419</td>
+<td style="text-align: right;">-2850</td>
+<td style="text-align: right;">-0.206481</td>
 <td style="text-align: right;">72602925</td>
-<td style="text-align: right;">77215383</td>
-<td style="text-align: right;">4612458</td>
-<td style="text-align: right;">6.35299</td>
+<td style="text-align: right;">77215390</td>
+<td style="text-align: right;">4612465</td>
+<td style="text-align: right;">6.353</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Taylor &amp; Francis</td>
 <td style="text-align: right;">884007</td>
-<td style="text-align: right;">878085</td>
-<td style="text-align: right;">-5922</td>
-<td style="text-align: right;">-0.669904</td>
+<td style="text-align: right;">878150</td>
+<td style="text-align: right;">-5857</td>
+<td style="text-align: right;">-0.662551</td>
 <td style="text-align: right;">31776175</td>
-<td style="text-align: right;">32544861</td>
-<td style="text-align: right;">768686</td>
-<td style="text-align: right;">2.41906</td>
+<td style="text-align: right;">32547090</td>
+<td style="text-align: right;">770915</td>
+<td style="text-align: right;">2.42608</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Oxford University Press</td>
 <td style="text-align: right;">585923</td>
-<td style="text-align: right;">583037</td>
-<td style="text-align: right;">-2886</td>
-<td style="text-align: right;">-0.492556</td>
+<td style="text-align: right;">583024</td>
+<td style="text-align: right;">-2899</td>
+<td style="text-align: right;">-0.494775</td>
 <td style="text-align: right;">15676432</td>
-<td style="text-align: right;">16797118</td>
-<td style="text-align: right;">1120686</td>
-<td style="text-align: right;">7.14886</td>
+<td style="text-align: right;">16797847</td>
+<td style="text-align: right;">1121415</td>
+<td style="text-align: right;">7.15351</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">SAGE Publishing</td>
 <td style="text-align: right;">532495</td>
-<td style="text-align: right;">530335</td>
-<td style="text-align: right;">-2160</td>
-<td style="text-align: right;">-0.405638</td>
+<td style="text-align: right;">530309</td>
+<td style="text-align: right;">-2186</td>
+<td style="text-align: right;">-0.41052</td>
 <td style="text-align: right;">16620534</td>
-<td style="text-align: right;">16874504</td>
-<td style="text-align: right;">253970</td>
-<td style="text-align: right;">1.52805</td>
+<td style="text-align: right;">16874424</td>
+<td style="text-align: right;">253890</td>
+<td style="text-align: right;">1.52757</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Lippincott Williams &amp; Wilkins</td>
 <td style="text-align: right;">512114</td>
-<td style="text-align: right;">514345</td>
-<td style="text-align: right;">2231</td>
-<td style="text-align: right;">0.435645</td>
+<td style="text-align: right;">515114</td>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">0.585807</td>
 <td style="text-align: right;">7607006</td>
-<td style="text-align: right;">8436201</td>
-<td style="text-align: right;">829195</td>
-<td style="text-align: right;">10.9004</td>
+<td style="text-align: right;">8438760</td>
+<td style="text-align: right;">831754</td>
+<td style="text-align: right;">10.9341</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Institute of Electrical and Electronics Engineers</td>
 <td style="text-align: right;">460108</td>
-<td style="text-align: right;">454684</td>
-<td style="text-align: right;">-5424</td>
-<td style="text-align: right;">-1.17885</td>
+<td style="text-align: right;">454689</td>
+<td style="text-align: right;">-5419</td>
+<td style="text-align: right;">-1.17777</td>
 <td style="text-align: right;">14419607</td>
-<td style="text-align: right;">16624890</td>
-<td style="text-align: right;">2205283</td>
-<td style="text-align: right;">15.2936</td>
+<td style="text-align: right;">16628857</td>
+<td style="text-align: right;">2209250</td>
+<td style="text-align: right;">15.3212</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Frontiers Media</td>
 <td style="text-align: right;">457156</td>
-<td style="text-align: right;">456839</td>
-<td style="text-align: right;">-317</td>
-<td style="text-align: right;">-0.0693418</td>
+<td style="text-align: right;">456737</td>
+<td style="text-align: right;">-419</td>
+<td style="text-align: right;">-0.0916536</td>
 <td style="text-align: right;">28056492</td>
-<td style="text-align: right;">28960699</td>
-<td style="text-align: right;">904207</td>
-<td style="text-align: right;">3.22281</td>
+<td style="text-align: right;">28960467</td>
+<td style="text-align: right;">903975</td>
+<td style="text-align: right;">3.22198</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">American Chemical Society</td>
 <td style="text-align: right;">452077</td>
-<td style="text-align: right;">451268</td>
-<td style="text-align: right;">-809</td>
-<td style="text-align: right;">-0.178952</td>
+<td style="text-align: right;">451266</td>
+<td style="text-align: right;">-811</td>
+<td style="text-align: right;">-0.179394</td>
 <td style="text-align: right;">23879558</td>
-<td style="text-align: right;">23930234</td>
-<td style="text-align: right;">50676</td>
-<td style="text-align: right;">0.212215</td>
+<td style="text-align: right;">23930242</td>
+<td style="text-align: right;">50684</td>
+<td style="text-align: right;">0.212248</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Nature Portfolio</td>
 <td style="text-align: right;">338884</td>
-<td style="text-align: right;">337578</td>
-<td style="text-align: right;">-1306</td>
-<td style="text-align: right;">-0.385383</td>
+<td style="text-align: right;">337573</td>
+<td style="text-align: right;">-1311</td>
+<td style="text-align: right;">-0.386858</td>
 <td style="text-align: right;">16370622</td>
-<td style="text-align: right;">16668573</td>
-<td style="text-align: right;">297951</td>
-<td style="text-align: right;">1.82003</td>
+<td style="text-align: right;">16668529</td>
+<td style="text-align: right;">297907</td>
+<td style="text-align: right;">1.81977</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BioMed Central</td>
 <td style="text-align: right;">316757</td>
-<td style="text-align: right;">315688</td>
-<td style="text-align: right;">-1069</td>
-<td style="text-align: right;">-0.337483</td>
+<td style="text-align: right;">315686</td>
+<td style="text-align: right;">-1071</td>
+<td style="text-align: right;">-0.338114</td>
 <td style="text-align: right;">14323466</td>
-<td style="text-align: right;">14516716</td>
-<td style="text-align: right;">193250</td>
-<td style="text-align: right;">1.34918</td>
+<td style="text-align: right;">14516721</td>
+<td style="text-align: right;">193255</td>
+<td style="text-align: right;">1.34922</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Springer Nature</td>
 <td style="text-align: right;">301335</td>
-<td style="text-align: right;">300856</td>
-<td style="text-align: right;">-479</td>
-<td style="text-align: right;">-0.158959</td>
+<td style="text-align: right;">300847</td>
+<td style="text-align: right;">-488</td>
+<td style="text-align: right;">-0.161946</td>
 <td style="text-align: right;">11953963</td>
-<td style="text-align: right;">12141731</td>
-<td style="text-align: right;">187768</td>
-<td style="text-align: right;">1.57076</td>
+<td style="text-align: right;">12141717</td>
+<td style="text-align: right;">187754</td>
+<td style="text-align: right;">1.57064</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">IOP Publishing</td>
 <td style="text-align: right;">300552</td>
-<td style="text-align: right;">297556</td>
-<td style="text-align: right;">-2996</td>
-<td style="text-align: right;">-0.996832</td>
+<td style="text-align: right;">297552</td>
+<td style="text-align: right;">-3000</td>
+<td style="text-align: right;">-0.998163</td>
 <td style="text-align: right;">8949176</td>
-<td style="text-align: right;">9396220</td>
-<td style="text-align: right;">447044</td>
-<td style="text-align: right;">4.99536</td>
+<td style="text-align: right;">9396322</td>
+<td style="text-align: right;">447146</td>
+<td style="text-align: right;">4.9965</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Royal Society of Chemistry</td>
 <td style="text-align: right;">262792</td>
-<td style="text-align: right;">262052</td>
-<td style="text-align: right;">-740</td>
-<td style="text-align: right;">-0.281592</td>
+<td style="text-align: right;">262051</td>
+<td style="text-align: right;">-741</td>
+<td style="text-align: right;">-0.281972</td>
 <td style="text-align: right;">14675079</td>
-<td style="text-align: right;">14929938</td>
-<td style="text-align: right;">254859</td>
-<td style="text-align: right;">1.73668</td>
+<td style="text-align: right;">14929868</td>
+<td style="text-align: right;">254789</td>
+<td style="text-align: right;">1.7362</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Cambridge University Press</td>
 <td style="text-align: right;">225492</td>
-<td style="text-align: right;">226293</td>
-<td style="text-align: right;">801</td>
-<td style="text-align: right;">0.355223</td>
+<td style="text-align: right;">226602</td>
+<td style="text-align: right;">1110</td>
+<td style="text-align: right;">0.492257</td>
 <td style="text-align: right;">5277402</td>
-<td style="text-align: right;">5568814</td>
-<td style="text-align: right;">291412</td>
-<td style="text-align: right;">5.52188</td>
+<td style="text-align: right;">5569885</td>
+<td style="text-align: right;">292483</td>
+<td style="text-align: right;">5.54218</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">American Institute of Physics</td>
@@ -1511,20 +1538,20 @@ Data
 <td style="text-align: right;">-1052</td>
 <td style="text-align: right;">-0.504881</td>
 <td style="text-align: right;">5636936</td>
-<td style="text-align: right;">5811366</td>
-<td style="text-align: right;">174430</td>
-<td style="text-align: right;">3.09441</td>
+<td style="text-align: right;">5811338</td>
+<td style="text-align: right;">174402</td>
+<td style="text-align: right;">3.09391</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Medknow</td>
 <td style="text-align: right;">172273</td>
-<td style="text-align: right;">171671</td>
-<td style="text-align: right;">-602</td>
-<td style="text-align: right;">-0.349445</td>
+<td style="text-align: right;">171701</td>
+<td style="text-align: right;">-572</td>
+<td style="text-align: right;">-0.332031</td>
 <td style="text-align: right;">3100647</td>
-<td style="text-align: right;">3398491</td>
-<td style="text-align: right;">297844</td>
-<td style="text-align: right;">9.60587</td>
+<td style="text-align: right;">3398765</td>
+<td style="text-align: right;">298118</td>
+<td style="text-align: right;">9.6147</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Pleiades Publishing</td>
@@ -1544,7 +1571,7 @@ Data
 </section>
 <section id="funding-information" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="funding-information">Funding information</h3>
-<p>With the release of Walden, the new entity <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a> was introduced, replacing the previous entity <a href="https://docs.openalex.org/api-entities/funders"><em>Funders</em></a>. This has resulted in improved coverage of funding information in OpenAlex (as shown in the table below). For the September snapshot, 11,824,259 funding records were linked, while in the Walden snapshot this number rose to 12,165,482. The increase is particularly pronounced for the publication years 2018 (+4.1%), 2019 (+3.5%) and 2023 (+3.5%).</p>
+<p>With the release of Walden, the new entity <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a> was introduced, replacing the previous field <em>grants</em>. This has resulted in improved coverage of funding information in OpenAlex (as shown in the table below). For the September snapshot, 11,824,259 funding records were linked, while in the Walden snapshot this number rose to 12,166,398. The increase is particularly pronounced for the publication years 2018 (+4.1%), 2019 (+3.5%) and 2023 (+3.5%).</p>
 <div class="column-page">
 <table class="table-striped table-hover caption-top table">
 <caption>Improvements in funding information</caption>
@@ -1568,51 +1595,51 @@ Data
 <tr class="odd">
 <td>2024</td>
 <td>1,829,832</td>
-<td>1,878,897</td>
-<td>+49,065</td>
-<td>+2.68%</td>
+<td>1,878,923</td>
+<td>49,091</td>
+<td>2.68%</td>
 </tr>
 <tr class="even">
 <td>2023</td>
 <td>1,798,571</td>
-<td>1,860,801</td>
-<td>+62,230</td>
-<td>+3.46%</td>
+<td>1,860,895</td>
+<td>62,324</td>
+<td>3.47%</td>
 </tr>
 <tr class="odd">
 <td>2022</td>
 <td>1,792,249</td>
-<td>1,835,203</td>
-<td>+42,954</td>
-<td>+2.40%</td>
+<td>1,835,439</td>
+<td>43,190</td>
+<td>2.41%</td>
 </tr>
 <tr class="even">
 <td>2021</td>
 <td>1,757,777</td>
-<td>1,783,645</td>
-<td>+25,868</td>
-<td>+1.47%</td>
+<td>1,783,902</td>
+<td>26,125</td>
+<td>1.49%</td>
 </tr>
 <tr class="odd">
 <td>2020</td>
 <td>1,707,755</td>
-<td>1,758,263</td>
-<td>+50,508</td>
-<td>+2.96%</td>
+<td>1,758,373</td>
+<td>50,618</td>
+<td>2.96%</td>
 </tr>
 <tr class="even">
 <td>2019</td>
 <td>1,574,415</td>
-<td>1,628,985</td>
-<td>+54,570</td>
-<td>+3.47%</td>
+<td>1,629,090</td>
+<td>54,675</td>
+<td>3.47%</td>
 </tr>
 <tr class="odd">
 <td>2018</td>
 <td>1,363,660</td>
-<td>1,419,688</td>
-<td>+56,028</td>
-<td>+4.11%</td>
+<td>1,419,776</td>
+<td>56,116</td>
+<td>4.12%</td>
 </tr>
 </tbody>
 </table>
@@ -1664,13 +1691,13 @@ Python code
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The Walden update demonstrates that OpenAlex is a constantly changing database. This, in turn, raises questions regarding the reliability of data analysis with OpenAlex. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references and funding information can be observed among larger publishers. Concurrently, there is a slight decline in the publication volume of larger publishers.</p>
-<p>I would also like to mention some issues that I found regarding the new Walden snapshot:</p>
+<p>I would also like to mention some issues that I found regarding the new Walden snapshots:</p>
 <ul>
-<li>Reviews were not classified correctly in latest snapshots: At the time of the Walden release in November 2025, the number of classified reviews from journals was almost zero. This issue was fixed with the subsequent Walden update in January 2026. Nevertheless, this observation demonstrates the volatility of the metadata in OpenAlex.</li>
-<li>Data additions without prior announcement: For the Walden release in February, two updates were noticed within a short period of time, although only one change was recorded in the <a href="https://github.com/ourresearch/openalex-guts/blob/main/files-for-datadumps/standard-format/RELEASE_NOTES.txt">change log</a>. The <a href="https://openalex.s3.amazonaws.com/browse.html#data/works/">manifest on AWS</a> is incorrect in this regard, as it does not list all files available for download, thereby corrupting the total number of items in the manifest. One additional record was added between these two updates. The same applies to the <a href="https://docs.openalex.org/api-entities/publishers">publisher entity</a>, which contained only 16 records from November 2025 to January 2026 (and was later fixed separately in January 2026 without further announcement).</li>
-<li>Missing fields: Currently, the field <em>author_position</em> is not available in the snapshot provided on AWS. However, it can be accessed through API, see <a href="https://api.openalex.org/w2155347384">here</a> for example.</li>
+<li>Reviews were not classified correctly in latest snapshots: At the time of the Walden release in November 2025, the number of classified reviews from journals was almost zero. This issue was fixed with the subsequent Walden update in January 2026.</li>
+<li>Data additions without prior announcement: For the Walden release in February, two updates were noticed within a short period of time (03-02-2026 and 04-02-2026), although only one change was recorded in the <a href="https://github.com/ourresearch/openalex-guts/blob/main/files-for-datadumps/standard-format/RELEASE_NOTES.txt">change log</a>. The <a href="https://openalex.s3.amazonaws.com/browse.html#data/works/">manifest on AWS</a> was incorrect in this regard, as it did not list all files available for download, thereby corrupting the total number of items in the manifest. One additional record was added between these two updates. The same applies to the <a href="https://docs.openalex.org/api-entities/publishers">publisher entity</a>, which contained only 16 records from November 2025 to January 2026 (and was later fixed separately in January 2026 without further announcement).</li>
+<li>Missing fields: The field <em>author_position</em> was not available for a short period of time in the snapshot provided on AWS (Snapshot 04-02-2026). However, the field was accessible through API, see <a href="https://api.openalex.org/w2155347384">here</a> for example.</li>
 </ul>
-<p>I hope that these issues will be fixed with newer OpenAlex releases.</p>
+<p>I hope that these issues will be addressed with newer OpenAlex releases.</p>
 </section>
 <section id="data-and-code-availability" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-code-availability">Data and Code Availability</h2>
