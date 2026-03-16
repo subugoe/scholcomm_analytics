@@ -20,7 +20,7 @@ Anyone can view and query our publicly available [Open Scholarly Data  warehouse
 
 | Snapshot        | File            | Table               | Procedure | Last Changed | Coverage  | Number of rows |
 |-----------------|-----------------|---------------------|-----------|--------------|-----------|-----------------|
-|  2026/01        | all.json.tar.gz | [<nobr>cr_instant.snapshot</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) | [Repo](https://github.com/naustica/crossref_bq) |  09.02.2026  | All             | 178.564.531     |
+|  2026/02        | all.json.tar.gz | [<nobr>cr_instant.snapshot</nobr>](https://console.cloud.google.com/bigquery?ws=!1m4!1m3!3m2!1ssubugoe-collaborative!2scr_instant) | [Repo](https://github.com/naustica/crossref_bq) |  12.03.2026  | All             | 179.536.204     |
 
 : cr_instant {tbl-colwidths="[12,18,25,15,12,8,10]" .striped}
 
