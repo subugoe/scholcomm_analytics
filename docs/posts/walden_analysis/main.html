@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nick Haupka">
-<meta name="dcterms.date" content="2026-03-06">
+<meta name="dcterms.date" content="2026-03-13">
 
 <title>Walden: What has changed in OpenAlex? – Scholarly Communication Analytics</title>
 <style>
@@ -129,16 +129,16 @@ div.csl-indent {
 
 
 <meta property="og:title" content="Walden: What has changed in OpenAlex? – Scholarly Communication Analytics">
-<meta property="og:description" content="The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in OA detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.">
+<meta property="og:description" content="The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in open access (OA) detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.">
 <meta property="og:image" content="https://subugoe.github.io/scholcomm_analytics/posts/walden_analysis/distill-preview.png">
 <meta property="og:site_name" content="Scholarly Communication Analytics">
-<meta property="og:image:height" content="3039">
-<meta property="og:image:width" content="4146">
+<meta property="og:image:height" content="3351">
+<meta property="og:image:width" content="4535">
 <meta name="twitter:title" content="Walden: What has changed in OpenAlex? – Scholarly Communication Analytics">
-<meta name="twitter:description" content="The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in OA detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.">
+<meta name="twitter:description" content="The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in open access (OA) detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.">
 <meta name="twitter:image" content="https://subugoe.github.io/scholcomm_analytics/posts/walden_analysis/distill-preview.png">
-<meta name="twitter:image-height" content="3039">
-<meta name="twitter:image-width" content="4146">
+<meta name="twitter:image-height" content="3351">
+<meta name="twitter:image-width" content="4535">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -219,7 +219,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 6, 2026</p>
+      <p class="date">March 13, 2026</p>
     </div>
   </div>
   
@@ -229,7 +229,7 @@ div.csl-indent {
 <div>
   <div class="abstract">
     <div class="block-title">Abstract</div>
-    The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in OA detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.
+    The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in open access (OA) detection, where Diamond OA is classified far more frequently than in the pre-Walden phase.
   </div>
 </div>
 
@@ -239,13 +239,14 @@ div.csl-indent {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The past few months brought some changes to the OpenAlex data service. The most relevant update happened in November 2025 with the Walden Update, which promised <a href="https://blog.openalex.org/openalex-rewrite-walden-launch/">better reference coverage, improved OA detection and a more extensive database</a>. In January 2026, improved integration of funding information was introduced, along with a new entity called <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a>. At the same time, little is known about the consequences of the changes so far. In December 2025, it was observed that the quality of author affiliations had declined with the Walden update <span class="citation" data-cites="jahn2025">(<a href="#ref-jahn2025" role="doc-biblioref">Jahn 2025</a>)</span>. Meanwhile, there have been three further Walden updates (15 January 2026, 3 February 2026 and 25 February 2026) that address an improvement to the problem.</p>
-<p>In this blog post, I will take a closer look at the changes made in the Walden release. To do this, I will contrast a pre-Walden snapshot from September 2025 with a Walden snapshot from February 2026 (2026-02-25). The data analysis will cover changes in publication volume, open access (OA) status, references, funding information, document types and publication types. The analysis is limited to publications from 2018 and 2024 and to journal articles only.</p>
+<p>The past few months brought some changes to the OpenAlex data service. The most relevant update happened in November 2025 with the Walden Update, which featured <a href="https://blog.openalex.org/openalex-rewrite-walden-launch/">better reference coverage, improved OA detection and a more extensive database</a>. In January 2026, improved integration of funding information was introduced, along with a new entity called <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a>. At the same time, little is known about the consequences of the changes so far. In December 2025, it was observed that the quality of author affiliations had declined with the Walden update <span class="citation" data-cites="jahn2025">(<a href="#ref-jahn2025" role="doc-biblioref">Jahn 2025</a>)</span>. Meanwhile, there have been three further Walden updates (15 January 2026, 3 February 2026 and 25 February 2026) that address an improvement to the problem.</p>
+<p>It is important to monitor changes in the Walden release because <a href="https://www.cnrs.fr/en/update/cnrs-breaking-free-web-science">more and more research institutions</a> have started to reuse data from OpenAlex for publication monitoring and research evaluation (and cancelled paid licenses for Scopus or Web of Science, for example). Small changes to algorithms, e.g.&nbsp;in OA or document type classification can affect the quality of such efforts.</p>
+<p>In this blog post, I will take a closer look at the changes made in the Walden release. To do this, I will contrast a pre-Walden snapshot from September 2025 with a Walden snapshot from February 2026 (2026-02-25). The data analysis will cover changes in publication volume, OA status, references, funding information, document types and publication types. The analysis is limited to publications from 2018 and 2024 and focuses on journal articles.</p>
 </section>
 <section id="data-and-methods" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-methods">Data and Methods</h2>
 <p>The publicly accessible <a href="https://subugoe.github.io/scholcomm_analytics/data.html">scholarly data warehouse</a>, powered by Google BigQuery and operated by the Göttingen State and University Library, provides access to both an OpenAlex snapshot from September 2025 and the most recent Walden snapshot from February 2026. Access requires a free Google account (Payment information is required, but Google offers the first 1 TB of queries free of charge).</p>
-<p>The analysis was carried out by querying both OpenAlex versions separately and then comparing the results (i.e.&nbsp;no inner join, no shared dataset). This approach is intended to ensure that the new records added to Walden can also be included in the analysis. This is particularly the case for records labelled as <a href="https://docs.openalex.org/how-to-use-the-api/xpac">expansion packs</a> (which have an is_xpac=True in the data). The following analysis does not exclude retractions (<a href="https://docs.openalex.org/api-entities/works/work-object#is_retracted">is_retracted</a>), paratexts (<a href="https://docs.openalex.org/api-entities/works/work-object#is_paratext">is_paratext</a>) and the expansion pack (<a href="https://docs.openalex.org/api-entities/works/work-object#is_xpac">is_xpac</a>).</p>
+<p>The analysis was carried out by querying both OpenAlex versions separately and then comparing the results (i.e.&nbsp;no inner join, no shared dataset). This approach is intended to ensure that the new records added to Walden can also be included in the analysis. This is particularly the case for records labelled as <a href="https://docs.openalex.org/how-to-use-the-api/xpac">expansion packs</a> (which have an is_xpac=True in the data). The following analysis does not exclude retractions (<a href="https://docs.openalex.org/api-entities/works/work-object#is_retracted">is_retracted</a>), paratexts (<a href="https://docs.openalex.org/api-entities/works/work-object#is_paratext">is_paratext</a>) and the expansion pack (<a href="https://docs.openalex.org/api-entities/works/work-object#is_xpac">is_xpac</a>). Usually, OpenAlex classifies records labelled with is_paratext=True as paratexts. However, there may occasionally be discrepancies, resulting in a record labelled is_paratext=True being classified as a normal article.</p>
 <p>The analysis was conducted in Python. If you are interested in reproducing a figure, you may click on one of the grey arrows below to view my Python code, which was used to run the data analysis and generate the figures.</p>
 <details>
 <summary>
@@ -289,174 +290,9 @@ Python code for setup
 </section>
 <section id="results" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="results">Results</h2>
-<section id="publication-volume" class="level3">
-<h3 class="anchored" data-anchor-id="publication-volume">Publication volume</h3>
-<p>Let’s start by comparing the number of journal articles between OpenAlex (shown in grey) and Walden (shown in pink) for the publication years 2018 to 2024 (see <a href="#fig-publication-volume" class="quarto-xref">Figure&nbsp;1</a>). A record is considered a journal article if it is assigned to the source type <em>journal</em> and the item type <em>article</em> or <em>review</em>.</p>
-<p>In total, OpenAlex counts 34,884,266 articles, while the Walden snapshot counts 35,249,948 journal articles (which correspond to an overall increase of 1.05%). When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the September 2025 snapshot for the publication years 2018 and 2021 (around -0.1%). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +1.7% (for 2022 and 2023) and +3.2% (for 2024).</p>
-<div class="cell">
-<div id="fig-publication-volume" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-publication-volume-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="media/figure1.png" class="img-fluid figure-img" style="width:80.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-publication-volume-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Comparison of the publication volume before and after the introduction of Walden.
-</figcaption>
-</figure>
-</div>
-</div>
-<details>
-<summary>
-SQL code
-</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_by_pubyear</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, publication_year</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex.works`</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> publication_year <span class="kw">DESC</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_by_pubyear</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, publication_year</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex_walden.works`</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> publication_year <span class="kw">DESC</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<details>
-<summary>
-Python code
-</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>oal_by_pubyear <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                               SELECT COUNT(DISTINCT(doi)) AS n, publication_year</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                               FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                               WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                               GROUP BY publication_year</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                               ORDER BY publication_year DESC</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                               """</span>).to_dataframe()</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                               </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>walden_by_pubyear <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  SELECT COUNT(DISTINCT(doi)) AS n, publication_year</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  GROUP BY publication_year</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  ORDER BY publication_year DESC</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  """</span>).to_dataframe()</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                                  </span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>calculate_changes(oal_by_pubyear, walden_by_pubyear, on<span class="op">=</span><span class="st">'publication_year'</span>).sort_values(by<span class="op">=</span>[<span class="st">'change'</span>], ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>oal_by_pubyear[<span class="st">'dataset'</span>] <span class="op">=</span> <span class="st">'OpenAlex'</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>walden_by_pubyear[<span class="st">'dataset'</span>] <span class="op">=</span> <span class="st">'Walden'</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="dv">4</span>))</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>plt.box(<span class="va">False</span>)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>pd.concat([oal_by_pubyear, walden_by_pubyear], ignore_index<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>             x<span class="op">=</span><span class="st">'publication_year'</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>             y<span class="op">=</span><span class="st">'n'</span>,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>             palette<span class="op">=</span>[<span class="st">'#c3c3c3'</span>, <span class="st">'#fc5185'</span>],</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>             hue<span class="op">=</span><span class="st">'dataset'</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>             width<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>             saturation<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>             alpha<span class="op">=</span><span class="fl">0.9</span>,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>             zorder<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>             errorbar<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>             ax<span class="op">=</span>ax)</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>ax.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">False</span>, which<span class="op">=</span><span class="st">'both'</span>, axis<span class="op">=</span><span class="st">'x'</span>)</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">'Number of journal articles'</span>)</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>ax.legend(bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="fl">0.9</span>),</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>          frameon<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>          title<span class="op">=</span><span class="st">'Dataset'</span>,</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>          labelspacing<span class="op">=</span><span class="fl">1.0</span>)</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_pubyear.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<details>
-<summary>
-Data
-</summary>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 28%">
-<col style="width: 20%">
-<col style="width: 17%">
-<col style="width: 14%">
-<col style="width: 20%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;">publication_year</th>
-<th style="text-align: right;">n_openalex</th>
-<th style="text-align: right;">n_walden</th>
-<th style="text-align: right;">change</th>
-<th style="text-align: right;">pct_change</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">2024</td>
-<td style="text-align: right;">5747463</td>
-<td style="text-align: right;">5931313</td>
-<td style="text-align: right;">183850</td>
-<td style="text-align: right;">3.1988</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2023</td>
-<td style="text-align: right;">5385802</td>
-<td style="text-align: right;">5476020</td>
-<td style="text-align: right;">90218</td>
-<td style="text-align: right;">1.67511</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2022</td>
-<td style="text-align: right;">5170934</td>
-<td style="text-align: right;">5257499</td>
-<td style="text-align: right;">86565</td>
-<td style="text-align: right;">1.67407</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2021</td>
-<td style="text-align: right;">5168607</td>
-<td style="text-align: right;">5162223</td>
-<td style="text-align: right;">-6384</td>
-<td style="text-align: right;">-0.123515</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2020</td>
-<td style="text-align: right;">4865503</td>
-<td style="text-align: right;">4867745</td>
-<td style="text-align: right;">2242</td>
-<td style="text-align: right;">0.0460795</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2019</td>
-<td style="text-align: right;">4421064</td>
-<td style="text-align: right;">4431124</td>
-<td style="text-align: right;">10060</td>
-<td style="text-align: right;">0.227547</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2018</td>
-<td style="text-align: right;">4124893</td>
-<td style="text-align: right;">4124024</td>
-<td style="text-align: right;">-869</td>
-<td style="text-align: right;">-0.0210672</td>
-</tr>
-</tbody>
-</table>
-</details>
-</section>
 <section id="publication-types" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="publication-types">Publication types</h3>
-<p>To better understand the changes in the Walden snapshot, it makes sense to take a step back and look at the distribution of publication types in both snapshots.</p>
+<p>Let’s start by comparing the distribution of publication types between OpenAlex and Walden for the publication years 2018 to 2024. Here, we can see that the publication type <em>journal</em> has a relatively small increase (+1.25%) compared to other source types such as <em>repository</em> (+540%). Based on their respective share in the snapshot, records with the source type <em>journal</em> account for approximately 61% of the records in the September snapshot and only 35% in the Walden snapshot. This is partly due to an increase in items with the source type <em>igsnCatalog</em> and records without an assigned source type (and of course, records from repositories). With Walden, three new publication types are available: <em>igsnCatalog</em>, <em>metadata</em> and <em>raidRegistry</em>.</p>
 <div class="column-page">
 <table class="table-striped table-hover caption-top table">
 <caption>Changes in publication types</caption>
@@ -576,185 +412,60 @@ Data
 </div>
 <p>
 </p>
-<p>Here we can see that the publication type <em>journal</em> has a relatively small increase (+1.25%) compared to other source types such as <em>repository</em> (+540%). Based on their respective share in the snapshot, records with the source type <em>journal</em> account for approximately 61% of the records in the September snapshot and only 35% in the Walden snapshot. This is partly due to an increase in items with the source type <em>igsnCatalog</em> and records without an assigned source type (and of course, records from repositories). With Walden, three new publication types are available: <em>igsnCatalog</em>, <em>metadata</em> and <em>raidRegistry</em>.</p>
 <details>
 <summary>
 SQL code
 </summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_by_source_types</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="kw">AS</span> source_type</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex.works`</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> source_type</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_by_source_types</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="kw">AS</span> source_type</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex_walden.works`</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> source_type</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_by_source_types</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="kw">AS</span> source_type</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex.works`</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> source_type</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_by_source_types</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="kw">AS</span> source_type</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex_walden.works`</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> source_type</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <details>
 <summary>
 Python code
 </summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>oal_by_source_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    WHERE publication_year BETWEEN 2018 AND 2024</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    GROUP BY source_type</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    ORDER BY n DESC</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    """</span>).to_dataframe()</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                    </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>walden_by_source_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    WHERE publication_year BETWEEN 2018 AND 2024</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    GROUP BY source_type</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    ORDER BY n DESC</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    """</span>).to_dataframe()       </span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                                    </span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>source_type_plot <span class="op">=</span> calculate_changes(oal_by_source_types, walden_by_source_types, on<span class="op">=</span><span class="st">'source_type'</span>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'n_openalex_total'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_openalex'</span>].<span class="bu">sum</span>()</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'openalex_share'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_openalex'</span>] <span class="op">/</span> source_type_plot[<span class="st">'n_openalex_total'</span>] <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'n_walden_total'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_walden'</span>].<span class="bu">sum</span>()</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'walden_share'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_walden'</span>] <span class="op">/</span> source_type_plot[<span class="st">'n_walden_total'</span>] <span class="op">*</span> <span class="dv">100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>oal_by_source_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    WHERE publication_year BETWEEN 2018 AND 2024</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    GROUP BY source_type</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    ORDER BY n DESC</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    """</span>).to_dataframe()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                    </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>walden_by_source_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    SELECT COUNT(DISTINCT(doi)) AS n, primary_location.source.type AS source_type</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    WHERE publication_year BETWEEN 2018 AND 2024</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    GROUP BY source_type</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    ORDER BY n DESC</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    """</span>).to_dataframe()       </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                                    </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>source_type_plot <span class="op">=</span> calculate_changes(oal_by_source_types, walden_by_source_types, on<span class="op">=</span><span class="st">'source_type'</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'n_openalex_total'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_openalex'</span>].<span class="bu">sum</span>()</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'openalex_share'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_openalex'</span>] <span class="op">/</span> source_type_plot[<span class="st">'n_openalex_total'</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'n_walden_total'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_walden'</span>].<span class="bu">sum</span>()</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>source_type_plot[<span class="st">'walden_share'</span>] <span class="op">=</span> source_type_plot[<span class="st">'n_walden'</span>] <span class="op">/</span> source_type_plot[<span class="st">'n_walden_total'</span>] <span class="op">*</span> <span class="dv">100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </section>
-<section id="document-types" class="level3">
+<section id="document-types" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="document-types">Document types</h3>
-<p>Next, we look at the distribution of document types in both snapshots (see <a href="#fig-document-types" class="quarto-xref">Figure&nbsp;2</a>). Note, that records have been restricted to the source type <em>journal</em> again.</p>
-<p>We can see that the number of records with the document types <em>article</em>, <em>paratext</em>, <em>book-chapter</em> and <em>preprint</em> have increased in the latest Walden snapshot. However, in relative terms, the increase in journal articles is very limited (only 1.12%). With an increase of over 150%, <em>preprints</em>, <em>peer-review</em> and <em>dissertations</em> have seen the highest rise (relatively speaking). Records with the document type <em>dataset</em>, in contrast, have been classified less frequently in the recent snapshot (about 74,000 records less).</p>
-<div class="cell">
-<div id="fig-document-types" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-document-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="media/figure2.png" class="img-fluid figure-img" style="width:80.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-document-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Changes in the document type classification after the Walden release in OpenAlex. Document types marked with an asterisk are capped at 150% (see data tab for the actual percentage.)
-</figcaption>
-</figure>
-</div>
-</div>
-<details>
-<summary>
-SQL code
-</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_by_types</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, <span class="kw">type</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex.works`</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">type</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_by_types</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, <span class="kw">type</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex_walden.works`</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">type</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<details>
-<summary>
-Python code
-</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>oal_by_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                             SELECT COUNT(DISTINCT(doi)) AS n, type</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                             FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                             WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                             GROUP BY type</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                             ORDER BY n DESC</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                             """</span>).to_dataframe()</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                             </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>walden_by_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                                SELECT COUNT(DISTINCT(doi)) AS n, type</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                                FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                                WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="ss">                                GROUP BY type</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="ss">                                ORDER BY n DESC</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="ss">                                """</span>).to_dataframe()</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                                </span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>types_plot <span class="op">=</span> calculate_changes(oal_by_types, walden_by_types, on<span class="op">=</span><span class="st">'type'</span>)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'n_openalex_total'</span>] <span class="op">=</span> types_plot[<span class="st">'n_openalex'</span>].<span class="bu">sum</span>()</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'openalex_share'</span>] <span class="op">=</span> types_plot[<span class="st">'n_openalex'</span>] <span class="op">/</span> types_plot[<span class="st">'n_openalex_total'</span>] <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'n_walden_total'</span>] <span class="op">=</span> types_plot[<span class="st">'n_walden'</span>].<span class="bu">sum</span>()</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'walden_share'</span>] <span class="op">=</span> types_plot[<span class="st">'n_walden'</span>] <span class="op">/</span> types_plot[<span class="st">'n_walden_total'</span>] <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>types_plot.replace(to_replace<span class="op">=</span><span class="st">'preprint'</span>, value<span class="op">=</span><span class="st">'preprint*'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>types_plot.replace(to_replace<span class="op">=</span><span class="st">'dissertation'</span>, value<span class="op">=</span><span class="st">'dissertation*'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>change_color <span class="op">=</span> [<span class="st">'#c3c3c3'</span> <span class="cf">if</span> (x <span class="op">&lt;</span> <span class="dv">0</span>) <span class="cf">else</span> <span class="st">'#fc5185'</span> <span class="cf">for</span> x <span class="kw">in</span> types_plot.change]</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="fl">4.5</span>))</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>plt.box(<span class="va">False</span>)</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>types_plot, </span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span><span class="st">'change'</span>, </span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span><span class="st">'type'</span>, </span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            orient<span class="op">=</span><span class="st">'h'</span>,</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>            saturation<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>            palette<span class="op">=</span>change_color,</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            hue<span class="op">=</span><span class="st">'type'</span>,</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>            alpha<span class="op">=</span><span class="fl">0.9</span>,</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>            zorder<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>            errorbar<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>ax.xaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Number of items'</span>, ylabel<span class="op">=</span><span class="st">'Document type'</span>)</span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_document_types_changes.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="fl">4.5</span>))</span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>plt.box(<span class="va">False</span>)</span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>types_plot, </span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span><span class="st">'pct_change'</span>, </span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span><span class="st">'type'</span>, </span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>            orient<span class="op">=</span><span class="st">'h'</span>,</span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>            saturation<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>            palette<span class="op">=</span>change_color,</span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>            hue<span class="op">=</span><span class="st">'type'</span>,</span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>            alpha<span class="op">=</span><span class="fl">0.9</span>,</span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>            zorder<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>            errorbar<span class="op">=</span><span class="va">None</span>,)</span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>ax.xaxis.set_major_formatter(mtick.PercentFormatter(<span class="dv">100</span>))</span>
-<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="op">-</span><span class="dv">100</span>, <span class="dv">150</span>)</span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Percentual change'</span>, ylabel<span class="op">=</span><span class="st">'Document type'</span>)</span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_document_types_pct_changes.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span>
-<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
-<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>filelist <span class="op">=</span>  [<span class="st">'blog_post_document_types_changes'</span>, <span class="st">'blog_post_document_types_pct_changes'</span>]</span>
-<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (ax, <span class="bu">file</span>) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(axs.flat, filelist)):</span>
-<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>    ax.set_axis_off()</span>
-<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> <span class="st">'media/'</span> <span class="op">+</span> <span class="bu">file</span> <span class="op">+</span> <span class="st">'.png'</span></span>
-<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>    ax.imshow(mpimg.imread(filename), extent<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(wspace<span class="op">=</span><span class="dv">0</span>, hspace<span class="op">=</span><span class="fl">0.05</span>)</span>
-<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="dv">100</span>, <span class="op">-</span><span class="dv">2300</span>, <span class="st">'a)'</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="dv">100</span>, <span class="op">-</span><span class="dv">100</span>, <span class="st">'b)'</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_figure1.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<details>
-<summary>
-Data
-</summary>
-<table class="caption-top table">
+<p>Next, we look at the distribution of document types in both snapshots. Note that, from now on, records in this data analysis have been restricted to the source type <em>journal</em>.</p>
+<p>We can see that the number of records with the document types <em>article</em>, <em>paratext</em> and <em>retraction</em> have increased in the latest Walden snapshot. However, in relative terms, the increase in articles is very limited (only 1.12%). The number of reviews has decreased from 1,443,989 to 1,433,950 records (-0.70%). The same applies to letters (-1.07%) and editorials (-0.46%). The total proportion of records classified as <em>article</em> has increased to 89.87% in Walden (formerly, 89.98%).</p>
+<div class="column-page">
+<table class="table-striped table-hover caption-top table">
+<caption>Changes in document types</caption>
 <colgroup>
 <col style="width: 22%">
 <col style="width: 12%">
@@ -766,222 +477,321 @@ Data
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">type</th>
-<th style="text-align: right;">n_openalex</th>
-<th style="text-align: right;">n_walden</th>
-<th style="text-align: right;">change</th>
-<th style="text-align: right;">pct_change</th>
-<th style="text-align: right;">openalex_share</th>
-<th style="text-align: right;">walden_share</th>
+<th style="text-align: left;">Document type</th>
+<th style="text-align: right;">Number of records <br> in OpenAlex</th>
+<th style="text-align: right;">Number of records <br> in Walden</th>
+<th style="text-align: right;">Change</th>
+<th style="text-align: right;">Change in %</th>
+<th style="text-align: right;">Share in OpenAlex</th>
+<th style="text-align: right;">Share in Walden</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">article</td>
-<td style="text-align: right;">33440278</td>
-<td style="text-align: right;">33815658</td>
-<td style="text-align: right;">375380</td>
-<td style="text-align: right;">1.12254</td>
-<td style="text-align: right;">89.9828</td>
-<td style="text-align: right;">89.8659</td>
+<td style="text-align: right;">33,440,278</td>
+<td style="text-align: right;">33,815,658</td>
+<td style="text-align: right;">375,380</td>
+<td style="text-align: right;">1.12%</td>
+<td style="text-align: right;">89.98%</td>
+<td style="text-align: right;">89.87%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">review</td>
-<td style="text-align: right;">1443989</td>
-<td style="text-align: right;">1433950</td>
-<td style="text-align: right;">-10039</td>
-<td style="text-align: right;">-0.695227</td>
-<td style="text-align: right;">3.88556</td>
-<td style="text-align: right;">3.81076</td>
+<td style="text-align: right;">1,443,989</td>
+<td style="text-align: right;">1,433,950</td>
+<td style="text-align: right;">-10,039</td>
+<td style="text-align: right;">-0.70%</td>
+<td style="text-align: right;">3.89%</td>
+<td style="text-align: right;">3.81%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">paratext</td>
-<td style="text-align: right;">930439</td>
-<td style="text-align: right;">941087</td>
-<td style="text-align: right;">10648</td>
-<td style="text-align: right;">1.14441</td>
-<td style="text-align: right;">2.50367</td>
-<td style="text-align: right;">2.50096</td>
+<td style="text-align: right;">930,439</td>
+<td style="text-align: right;">941,087</td>
+<td style="text-align: right;">10,648</td>
+<td style="text-align: right;">1.14%</td>
+<td style="text-align: right;">2.50%</td>
+<td style="text-align: right;">2.50%</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">letter</td>
-<td style="text-align: right;">424062</td>
-<td style="text-align: right;">419543</td>
-<td style="text-align: right;">-4519</td>
-<td style="text-align: right;">-1.06565</td>
-<td style="text-align: right;">1.14109</td>
-<td style="text-align: right;">1.11495</td>
+<td style="text-align: right;">424,062</td>
+<td style="text-align: right;">419,543</td>
+<td style="text-align: right;">-4,519</td>
+<td style="text-align: right;">-1.07%</td>
+<td style="text-align: right;">1.14%</td>
+<td style="text-align: right;">1.11%</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">reference-entry</td>
-<td style="text-align: right;">223020</td>
-<td style="text-align: right;">219103</td>
-<td style="text-align: right;">-3917</td>
-<td style="text-align: right;">-1.75634</td>
-<td style="text-align: right;">0.600114</td>
-<td style="text-align: right;">0.582271</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">editorial</td>
-<td style="text-align: right;">216188</td>
-<td style="text-align: right;">215199</td>
+<td style="text-align: right;">216,188</td>
+<td style="text-align: right;">215,199</td>
 <td style="text-align: right;">-989</td>
-<td style="text-align: right;">-0.457472</td>
-<td style="text-align: right;">0.58173</td>
-<td style="text-align: right;">0.571896</td>
+<td style="text-align: right;">-0.46%</td>
+<td style="text-align: right;">0.58%</td>
+<td style="text-align: right;">0.57%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">erratum</td>
-<td style="text-align: right;">151724</td>
-<td style="text-align: right;">150777</td>
+<td style="text-align: right;">151,724</td>
+<td style="text-align: right;">150,777</td>
 <td style="text-align: right;">-947</td>
-<td style="text-align: right;">-0.62416</td>
-<td style="text-align: right;">0.408267</td>
-<td style="text-align: right;">0.400693</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">other</td>
-<td style="text-align: right;">96666</td>
-<td style="text-align: right;">96362</td>
-<td style="text-align: right;">-304</td>
-<td style="text-align: right;">-0.314485</td>
-<td style="text-align: right;">0.260114</td>
-<td style="text-align: right;">0.256084</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">book-chapter</td>
-<td style="text-align: right;">86699</td>
-<td style="text-align: right;">171521</td>
-<td style="text-align: right;">84822</td>
-<td style="text-align: right;">97.835</td>
-<td style="text-align: right;">0.233294</td>
-<td style="text-align: right;">0.455821</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">dataset</td>
-<td style="text-align: right;">79573</td>
-<td style="text-align: right;">5528</td>
-<td style="text-align: right;">-74045</td>
-<td style="text-align: right;">-93.0529</td>
-<td style="text-align: right;">0.214119</td>
-<td style="text-align: right;">0.0146908</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">preprint*</td>
-<td style="text-align: right;">21209</td>
-<td style="text-align: right;">107044</td>
-<td style="text-align: right;">85835</td>
-<td style="text-align: right;">404.71</td>
-<td style="text-align: right;">0.0570703</td>
-<td style="text-align: right;">0.284472</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">book</td>
-<td style="text-align: right;">19407</td>
-<td style="text-align: right;">21303</td>
-<td style="text-align: right;">1896</td>
-<td style="text-align: right;">9.76967</td>
-<td style="text-align: right;">0.0522214</td>
-<td style="text-align: right;">0.0566132</td>
+<td style="text-align: right;">-0.62%</td>
+<td style="text-align: right;">0.41%</td>
+<td style="text-align: right;">0.40%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">retraction</td>
-<td style="text-align: right;">16913</td>
-<td style="text-align: right;">17184</td>
+<td style="text-align: right;">16,913</td>
+<td style="text-align: right;">17,184</td>
 <td style="text-align: right;">271</td>
-<td style="text-align: right;">1.60232</td>
-<td style="text-align: right;">0.0455104</td>
-<td style="text-align: right;">0.0456669</td>
+<td style="text-align: right;">1.60%</td>
+<td style="text-align: right;">0.05%</td>
+<td style="text-align: right;">0.05%</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">supplementary-materials</td>
-<td style="text-align: right;">7109</td>
-<td style="text-align: right;">7109</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.0191293</td>
-<td style="text-align: right;">0.0188923</td>
+<td style="text-align: left;"><i>Other types</i></td>
+<td style="text-align: right;">539,354</td>
+<td style="text-align: right;">635,614</td>
+<td style="text-align: right;">96,260</td>
+<td style="text-align: right;">17.85%</td>
+<td style="text-align: right;">1.45%</td>
+<td style="text-align: right;">1.69%</td>
 </tr>
+</tbody>
+</table>
+</div>
+<p>
+</p>
+<details>
+<summary>
+SQL code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_by_types</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">CASE</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>       <span class="cf">WHEN</span> <span class="kw">type</span> <span class="kw">NOT</span> <span class="kw">IN</span> (<span class="st">'article'</span>, <span class="st">'review'</span>, <span class="st">'paratext'</span>, <span class="st">'letter'</span>, <span class="st">'editorial'</span>, <span class="st">'erratum'</span>, <span class="st">'retraction'</span>) <span class="cf">THEN</span> <span class="st">'other document types'</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>       <span class="cf">ELSE</span> <span class="kw">type</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">END</span> <span class="kw">AS</span> <span class="kw">type</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> {openalex_snapshot}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">type</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_by_types</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">CASE</span> </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>     <span class="cf">WHEN</span> <span class="kw">type</span> <span class="kw">NOT</span> <span class="kw">IN</span> (<span class="st">'article'</span>, <span class="st">'review'</span>, <span class="st">'paratext'</span>, <span class="st">'letter'</span>, <span class="st">'editorial'</span>, <span class="st">'erratum'</span>, <span class="st">'retraction'</span>) <span class="cf">THEN</span> <span class="st">'other document types'</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>     <span class="cf">ELSE</span> <span class="kw">type</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">END</span> <span class="kw">AS</span> <span class="kw">type</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> {walden_snapshot}</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">type</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<details>
+<summary>
+Python code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>oal_by_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                             SELECT </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                                 COUNT(DISTINCT(doi)) AS n, </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                                 CASE </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                                     WHEN type NOT IN ('article', 'review', 'paratext', 'letter', 'editorial', 'erratum', 'retraction') THEN 'other document types'</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                                     ELSE type</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  END AS type</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ss">                             FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ss">                             WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                             GROUP BY type</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                             ORDER BY n DESC</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                             """</span>).to_dataframe()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                             </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>walden_by_types <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="ss">                                SELECT </span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    COUNT(DISTINCT(doi)) AS n,</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    CASE </span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="ss">                                     WHEN type NOT IN ('article', 'review', 'paratext', 'letter', 'editorial', 'erratum', 'retraction') THEN 'other document types'</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="ss">                                     ELSE type</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  END AS type</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="ss">                                FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="ss">                                WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="ss">                                GROUP BY type</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="ss">                                ORDER BY n DESC</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="ss">                                """</span>).to_dataframe()</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                                </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>types_plot <span class="op">=</span> calculate_changes(oal_by_types, walden_by_types, on<span class="op">=</span><span class="st">'type'</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'n_openalex_total'</span>] <span class="op">=</span> types_plot[<span class="st">'n_openalex'</span>].<span class="bu">sum</span>()</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'openalex_share'</span>] <span class="op">=</span> types_plot[<span class="st">'n_openalex'</span>] <span class="op">/</span> types_plot[<span class="st">'n_openalex_total'</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'n_walden_total'</span>] <span class="op">=</span> types_plot[<span class="st">'n_walden'</span>].<span class="bu">sum</span>()</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>types_plot[<span class="st">'walden_share'</span>] <span class="op">=</span> types_plot[<span class="st">'n_walden'</span>] <span class="op">/</span> types_plot[<span class="st">'n_walden_total'</span>] <span class="op">*</span> <span class="dv">100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</section>
+<section id="publication-volume" class="level3">
+<h3 class="anchored" data-anchor-id="publication-volume">Publication volume</h3>
+<p>Now, I will compare the number of journal articles between OpenAlex (shown in grey) and Walden (shown in pink) for the publication years 2018 to 2024 (see <a href="#fig-publication-volume" class="quarto-xref">Figure&nbsp;1</a>). A record is considered a journal article if it is assigned to the source type <em>journal</em> and the item type <em>article</em> or <em>review</em>.</p>
+<p>In total, OpenAlex counts 34,884,266 articles, while the Walden snapshot counts 35,249,948 journal articles (which correspond to an overall increase of 1.05%). When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the September 2025 snapshot for the publication years 2018 and 2021 (around -0.1%). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +1.7% (for 2022 and 2023) and +3.2% (for 2024).</p>
+<p>In Walden, 1060 articles are tagged with is_paratext=True, but not classified as paratexts (this error was not found in the September snapshot). Around 240,000 articles from Walden come from the new expansion pack (which represents a share of 0.7%).</p>
+<div class="cell">
+<div id="fig-publication-volume" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-publication-volume-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/blog_post_pubyear.png" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-publication-volume-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Comparison of the publication volume before and after the introduction of Walden.
+</figcaption>
+</figure>
+</div>
+</div>
+<details>
+<summary>
+SQL code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_by_pubyear</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, publication_year</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex.works`</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> publication_year <span class="kw">DESC</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_by_pubyear</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n, publication_year</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex_walden.works`</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> publication_year <span class="kw">DESC</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<details>
+<summary>
+Python code
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>oal_by_pubyear <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                               SELECT COUNT(DISTINCT(doi)) AS n, publication_year</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                               FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                               WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                               GROUP BY publication_year</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                               ORDER BY publication_year DESC</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                               """</span>).to_dataframe()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                               </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>walden_by_pubyear <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  SELECT COUNT(DISTINCT(doi)) AS n, publication_year</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  GROUP BY publication_year</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  ORDER BY publication_year DESC</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  """</span>).to_dataframe()</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                                  </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>calculate_changes(oal_by_pubyear, walden_by_pubyear, on<span class="op">=</span><span class="st">'publication_year'</span>).sort_values(by<span class="op">=</span>[<span class="st">'change'</span>], ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>oal_by_pubyear[<span class="st">'dataset'</span>] <span class="op">=</span> <span class="st">'OpenAlex'</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>walden_by_pubyear[<span class="st">'dataset'</span>] <span class="op">=</span> <span class="st">'Walden'</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="dv">4</span>))</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>plt.box(<span class="va">False</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>pd.concat([oal_by_pubyear, walden_by_pubyear], ignore_index<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>             x<span class="op">=</span><span class="st">'publication_year'</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>             y<span class="op">=</span><span class="st">'n'</span>,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>             palette<span class="op">=</span>[<span class="st">'#c3c3c3'</span>, <span class="st">'#fc5185'</span>],</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>             hue<span class="op">=</span><span class="st">'dataset'</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>             width<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>             saturation<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>             alpha<span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>             zorder<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>             errorbar<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>             ax<span class="op">=</span>ax)</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>ax.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">False</span>, which<span class="op">=</span><span class="st">'both'</span>, axis<span class="op">=</span><span class="st">'x'</span>)</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">'Number of journal articles'</span>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>ax.legend(bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="fl">0.9</span>),</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>          frameon<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>          title<span class="op">=</span><span class="st">'Dataset'</span>,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>          labelspacing<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_pubyear.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<details>
+<summary>
+Data
+</summary>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 20%">
+<col style="width: 17%">
+<col style="width: 14%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">publication_year</th>
+<th style="text-align: right;">n_openalex</th>
+<th style="text-align: right;">n_walden</th>
+<th style="text-align: right;">change</th>
+<th style="text-align: right;">pct_change</th>
+</tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td style="text-align: left;">report</td>
-<td style="text-align: right;">5505</td>
-<td style="text-align: right;">6056</td>
-<td style="text-align: right;">551</td>
-<td style="text-align: right;">10.0091</td>
-<td style="text-align: right;">0.0148131</td>
-<td style="text-align: right;">0.016094</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">5747463</td>
+<td style="text-align: right;">5931313</td>
+<td style="text-align: right;">183850</td>
+<td style="text-align: right;">3.1988</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">dissertation*</td>
-<td style="text-align: right;">162</td>
-<td style="text-align: right;">1432</td>
-<td style="text-align: right;">1270</td>
-<td style="text-align: right;">783.951</td>
-<td style="text-align: right;">0.000435918</td>
-<td style="text-align: right;">0.00380557</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">5385802</td>
+<td style="text-align: right;">5476020</td>
+<td style="text-align: right;">90218</td>
+<td style="text-align: right;">1.67511</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">peer-review*</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">29</td>
-<td style="text-align: right;">25</td>
-<td style="text-align: right;">625</td>
-<td style="text-align: right;">1.07634e-05</td>
-<td style="text-align: right;">7.70682e-05</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">5170934</td>
+<td style="text-align: right;">5257499</td>
+<td style="text-align: right;">86565</td>
+<td style="text-align: right;">1.67407</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">libguides</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">nan</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">5168607</td>
+<td style="text-align: right;">5162223</td>
+<td style="text-align: right;">-6384</td>
+<td style="text-align: right;">-0.123515</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">report-component</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">121</td>
-<td style="text-align: right;">121</td>
-<td style="text-align: right;">inf</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.00032156</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">4865503</td>
+<td style="text-align: right;">4867745</td>
+<td style="text-align: right;">2242</td>
+<td style="text-align: right;">0.0460795</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">standard</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">inf</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1.06301e-05</td>
+<td style="text-align: right;">2019</td>
+<td style="text-align: right;">4421064</td>
+<td style="text-align: right;">4431124</td>
+<td style="text-align: right;">10060</td>
+<td style="text-align: right;">0.227547</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">book-section</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">inf</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">5.31505e-06</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">grant</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">inf</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">5.31505e-06</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">software</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">nan</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">2018</td>
+<td style="text-align: right;">4124893</td>
+<td style="text-align: right;">4124024</td>
+<td style="text-align: right;">-869</td>
+<td style="text-align: right;">-0.0210672</td>
 </tr>
 </tbody>
 </table>
@@ -989,15 +799,15 @@ Data
 </section>
 <section id="open-access" class="level3">
 <h3 class="anchored" data-anchor-id="open-access">Open Access</h3>
-<p>Major changes are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6,3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot decreased by 12% (-201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).</p>
+<p>Differences are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6,3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot decreased by 12% (-201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).</p>
 <div class="cell">
 <div id="fig-open-access" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-open-access-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="media/figure3.png" class="img-fluid figure-img">
+<img src="media/blog_post_oa.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-open-access-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Open Access share before and after the release of Walden. Only journal articles published between 2018 and 2024 are considered.
+Figure&nbsp;2: Open Access share before and after the release of Walden. Only journal articles published between 2018 and 2024 are considered.
 </figcaption>
 </figure>
 </div>
@@ -1044,74 +854,67 @@ Python code
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>oa_plot <span class="op">=</span> oa_plot.sort_values(by<span class="op">=</span>[<span class="st">'oa_status'</span>, <span class="st">'publication_year'</span>])</span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">5</span>))</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>plt.box(<span class="va">False</span>)</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>plt.stackplot([<span class="dv">2018</span>, <span class="dv">2019</span>, <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>], </span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'closed'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'hybrid'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'green'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'bronze'</span>][<span class="st">'n_openalex'</span>].tolist(),</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'diamond'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'gold'</span>][<span class="st">'n_openalex'</span>].tolist(),</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>              colors<span class="op">=</span>[<span class="st">'#e5e5e5'</span>, <span class="st">'#97bbf5ff'</span>, <span class="st">'#40a954'</span>, <span class="st">'#fd725d'</span>, <span class="st">'#446ace'</span>, <span class="st">'#e9b121'</span>],</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>ax.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>plt.xticks([<span class="dv">2018</span>, <span class="dv">2019</span>, <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_oa_oal_area_chart.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">5</span>,<span class="dv">5</span>))</span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>plt.box(<span class="va">False</span>)</span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>plt.stackplot([<span class="dv">2018</span>, <span class="dv">2019</span>, <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>], </span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'closed'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'hybrid'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'green'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'bronze'</span>][<span class="st">'n_walden'</span>].tolist(),</span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'diamond'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'gold'</span>][<span class="st">'n_walden'</span>].tolist(),</span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>              colors<span class="op">=</span>[<span class="st">'#e5e5e5'</span>, <span class="st">'#97bbf5ff'</span>, <span class="st">'#40a954'</span>, <span class="st">'#fd725d'</span>, <span class="st">'#446ace'</span>, <span class="st">'#e9b121'</span>],</span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>ax.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>plt.xticks([<span class="dv">2018</span>, <span class="dv">2019</span>, <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_oa_walden_area_chart.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">1</span>, </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                               ncols<span class="op">=</span><span class="dv">2</span>, </span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>                               sharey<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                               figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">5</span>))</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>ax1.set_frame_on(<span class="va">False</span>)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>ax2.set_frame_on(<span class="va">False</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>ax1.stackplot([<span class="dv">2018</span>, <span class="dv">2019</span>, <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>], </span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'closed'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'hybrid'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'green'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'bronze'</span>][<span class="st">'n_openalex'</span>].tolist(),</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'diamond'</span>][<span class="st">'n_openalex'</span>].tolist(), </span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'gold'</span>][<span class="st">'n_openalex'</span>].tolist(),</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>              colors<span class="op">=</span>[<span class="st">'#e5e5e5'</span>, <span class="st">'#97bbf5ff'</span>, <span class="st">'#40a954'</span>, <span class="st">'#fd725d'</span>, <span class="st">'#446ace'</span>, <span class="st">'#e9b121'</span>]</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>ax2.stackplot([<span class="dv">2018</span>, <span class="dv">2019</span>, <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>], </span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'closed'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'hybrid'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'green'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'bronze'</span>][<span class="st">'n_walden'</span>].tolist(),</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'diamond'</span>][<span class="st">'n_walden'</span>].tolist(), </span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>              oa_plot[oa_plot.oa_status <span class="op">==</span> <span class="st">'gold'</span>][<span class="st">'n_walden'</span>].tolist(),</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>              colors<span class="op">=</span>[<span class="st">'#e5e5e5'</span>, <span class="st">'#97bbf5ff'</span>, <span class="st">'#40a954'</span>, <span class="st">'#fd725d'</span>, <span class="st">'#446ace'</span>, <span class="st">'#e9b121'</span>]</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>ax1.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>ax2.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'OpenAlex'</span>, loc<span class="op">=</span><span class="st">'left'</span>, pad<span class="op">=</span><span class="fl">12.0</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Walden'</span>, loc<span class="op">=</span><span class="st">'left'</span>, pad<span class="op">=</span><span class="fl">12.0</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>plt.xticks([<span class="dv">2018</span>, <span class="dv">2019</span>, <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>ax1.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">'Number of journal articles'</span>)</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>ax2.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">''</span>)</span>
 <span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>filelist <span class="op">=</span>  [<span class="st">'blog_post_oa_oal_area_chart'</span>, <span class="st">'blog_post_oa_walden_area_chart'</span>]</span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (ax, <span class="bu">file</span>) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(axs.flat, filelist)):</span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>    ax.set_axis_off()</span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> <span class="st">'media/'</span> <span class="op">+</span> <span class="bu">file</span> <span class="op">+</span> <span class="st">'.png'</span></span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>    ax.imshow(mpimg.imread(filename), extent<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(wspace<span class="op">=</span><span class="fl">0.1</span>, hspace<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="dv">2700</span>, <span class="op">-</span><span class="dv">100</span>, <span class="st">'OpenAlex'</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="dv">0</span>, <span class="op">-</span><span class="dv">100</span>, <span class="st">'Walden'</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>green_oa_patch <span class="op">=</span> Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#40a954'</span>, label<span class="op">=</span><span class="st">'Green OA'</span>)</span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>gold_oa_patch <span class="op">=</span> Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#e9b121'</span>, label<span class="op">=</span><span class="st">'Gold OA'</span>)</span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>bronze_oa_patch <span class="op">=</span> Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#fd725d'</span>, label<span class="op">=</span><span class="st">'Bronze OA'</span>)</span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>hybrid_oa_patch <span class="op">=</span> Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#97bbf5ff'</span>, label<span class="op">=</span><span class="st">'Hybrid OA'</span>)</span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>diamond_oa_patch <span class="op">=</span> Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#446ace'</span>, label<span class="op">=</span><span class="st">'Diamond OA'</span>)</span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>closed_oa_patch <span class="op">=</span> Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'#e5e5e5'</span>, label<span class="op">=</span><span class="st">'Closed'</span>)</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>green_oa_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#40a954'</span>, label<span class="op">=</span><span class="st">'Green OA'</span>)</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>gold_oa_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#e9b121'</span>, label<span class="op">=</span><span class="st">'Gold OA'</span>)</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>bronze_oa_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#fd725d'</span>, label<span class="op">=</span><span class="st">'Bronze OA'</span>)</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>hybrid_oa_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#97bbf5ff'</span>, label<span class="op">=</span><span class="st">'Hybrid OA'</span>)</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>diamond_oa_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#446ace'</span>, label<span class="op">=</span><span class="st">'Diamond OA'</span>)</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>closed_oa_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#e5e5e5'</span>, label<span class="op">=</span><span class="st">'Closed'</span>)</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>lgd <span class="op">=</span> fig.legend(handles<span class="op">=</span>[green_oa_patch, </span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>                          gold_oa_patch, </span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>                          bronze_oa_patch,</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>                          hybrid_oa_patch,</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>                          diamond_oa_patch,</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>                          closed_oa_patch], </span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>                 title<span class="op">=</span><span class="st">'OA Status'</span>,</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>                 frameon<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>                 bbox_to_anchor<span class="op">=</span>(<span class="fl">1.12</span>, <span class="fl">0.75</span>), labelspacing<span class="op">=</span><span class="fl">1.05</span>)</span>
 <span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>lgd <span class="op">=</span> fig.legend(handles<span class="op">=</span>[green_oa_patch, </span>
-<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>                          gold_oa_patch, </span>
-<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>                          bronze_oa_patch,</span>
-<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>                          hybrid_oa_patch,</span>
-<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>                          diamond_oa_patch,</span>
-<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>                          closed_oa_patch], frameon<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>                 bbox_to_anchor<span class="op">=</span>(<span class="fl">1.01</span>, <span class="fl">0.65</span>), labelspacing<span class="op">=</span><span class="fl">1.05</span>)</span>
-<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_figure3.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="fl">3.0</span>)</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_oa.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <details>
 <summary>
@@ -1176,17 +979,17 @@ Data
 </section>
 <section id="publishers-and-references" class="level3">
 <h3 class="anchored" data-anchor-id="publishers-and-references">Publishers and References</h3>
-<p>In this section, I will look at the 20 largest publishers in OpenAlex (based on publication volume in the September 2025 snapshot) to 1) examine changes in publication volume in the Walden snapshot and 2) highlight changes in the enrichment of references in the latest Walden snapshot (see <a href="#fig-references" class="quarto-xref">Figure&nbsp;4</a>).</p>
+<p>In this section, I will look at the 20 largest publishers in OpenAlex (based on publication volume in the September 2025 snapshot) to 1) examine changes in publication volume in the Walden snapshot and 2) highlight changes in the enrichment of references in the latest Walden snapshot (see <a href="#fig-references" class="quarto-xref">Figure&nbsp;3</a>). The publisher information from OpenAlex was used to allow a direct comparison. However, it should be noted here that OpenAlex has some shortcomings when it comes to the unambiguity of publisher names (see e.g.&nbsp;<a href="https://openalex.org/publishers/p4310319900">Springer Science Business Media</a> and <a href="https://openalex.org/publishers/p4310319965">Springer Nature</a>).</p>
 <p>Overall, a decline in publication numbers can be observed for most of the top publishers in the Walden snapshot. The number of journal articles published by <em>Elsevier</em> falls by 0.36% from 5,310,142 to 5,290,772 articles. Similarly, the number of journal articles for <em>Wiley</em> decreases from 1,704,126 to 1,696,053 (-0.47%). An increase in publications can be measured for the publishers <em>Lippincott Williams &amp; Wilkins</em> (+0.59%) and <em>Cambridge University Press</em> (+0.49%).</p>
-<p>A major increase can be seen in references, with the number of references for articles from the publishing house <em>Elsevier</em> standing out in particular (+16,477,506 references). In percentage terms, the publisher <em>Institute of Electrical and Electronics Engineers</em> has seen the biggest change, with an increase of 15.32% (2,209,250) references.</p>
+<p>A major increase can be seen in references, with the number of references for articles from the publishing house <em>Elsevier</em> standing out in particular (+16,477,506 references). In percentage terms, the publisher <em>Institute of Electrical and Electronics Engineers</em> has seen the biggest change, with an increase of 15.32% (2,209,250) references. As a reason for the increase in reference numbers, OpenAlex refers to <a href="https://docs.google.com/document/d/1SPZ7QFcPddCHYt1pZP1UCIuqbfBY22lSHwgPA8RQyUY/edit?tab=t.0">improved detection and parsing of references</a> within documents.</p>
 <div class="cell">
 <div id="fig-references" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-references-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="media/figure4.png" class="img-fluid figure-img" style="width:80.0%">
+<img src="media/blog_post_figure4.png" class="img-fluid figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-references-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Changes in the number of journal articles and references for the top 20 publishers after the Walden release in OpenAlex.
+Figure&nbsp;3: Changes in the number of journal articles and references for the top 20 publishers after the Walden release in OpenAlex.
 </figcaption>
 </figure>
 </div>
@@ -1269,7 +1072,7 @@ Python code
 <span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.PairGrid(host_top_20_plot,</span>
 <span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>                 x_vars<span class="op">=</span>[<span class="st">'change_items'</span>, <span class="st">'change_refs'</span>], </span>
 <span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>                 y_vars<span class="op">=</span>[<span class="st">'host_organization_name'</span>], </span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>                 height<span class="op">=</span><span class="dv">6</span>, </span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>                 height<span class="op">=</span><span class="fl">6.5</span>, </span>
 <span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>                 aspect<span class="op">=</span><span class="fl">.5</span>)</span>
 <span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>g.<span class="bu">map</span>(sns.barplot,</span>
@@ -1283,25 +1086,62 @@ Python code
 <span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>plt.box(<span class="va">False</span>)</span>
 <span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>g.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Change'</span>, ylabel<span class="op">=</span><span class="st">'Publisher'</span>)</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>g.<span class="bu">set</span>(ylabel<span class="op">=</span><span class="st">'Publisher'</span>)</span>
 <span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> [<span class="st">'Number of items'</span>, <span class="st">'Number of references'</span>]</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> [<span class="st">'Journal articles'</span>, <span class="st">'References'</span>]</span>
 <span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, title <span class="kw">in</span> <span class="bu">zip</span>(g.axes.flat, titles):</span>
 <span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(title<span class="op">=</span>title)</span>
 <span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.grid(<span class="va">True</span>)</span>
-<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>    ax.yaxis.grid(<span class="va">True</span>)</span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>    ax.yaxis.grid(<span class="va">False</span>)</span>
 <span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> title <span class="op">==</span> <span class="st">'Journal articles'</span>:</span>
 <span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>sns.despine(left<span class="op">=</span><span class="va">True</span>, bottom<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> g.fig.get_figure()</span>
-<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_figure4.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>        ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Differences in the number of </span><span class="ch">\n</span><span class="st"> records after Walden'</span>)</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> idx, row <span class="kw">in</span> host_top_20_plot.iterrows():</span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> idx <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>                ax.text(row[<span class="st">'change_items'</span>] <span class="op">-</span> <span class="dv">5500</span>, </span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>                        idx<span class="op">-</span><span class="dv">1</span>, </span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>                        <span class="ss">f"</span><span class="sc">{</span><span class="bu">round</span>(row[<span class="st">'pct_change_items'</span>], <span class="dv">2</span>)<span class="sc">:+}</span><span class="ss">%"</span>, </span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>                        verticalalignment<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>        ax.set_xlim(<span class="op">-</span><span class="dv">25000</span>, <span class="dv">11000</span>)</span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> title <span class="op">==</span> <span class="st">'References'</span>:</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>        ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Differences in the number of </span><span class="ch">\n</span><span class="st"> references after Walden'</span>)</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> idx, row <span class="kw">in</span> host_top_20_plot.iterrows():</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> idx <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>                ax.text(row[<span class="st">'change_refs'</span>] <span class="op">+</span> <span class="dv">550000</span>, </span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>                        idx<span class="op">-</span><span class="dv">1</span>, </span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>                        <span class="ss">f"</span><span class="sc">{</span><span class="bu">round</span>(row[<span class="st">'pct_change_refs'</span>], <span class="dv">2</span>)<span class="sc">:+}</span><span class="ss">%"</span>, </span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>                        verticalalignment<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a>        ax.set_xlim(<span class="op">-</span><span class="dv">1000000</span>, <span class="dv">18000000</span>)</span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>    <span class="co">#ax.xaxis.set_major_formatter(mtick.PercentFormatter())</span></span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>    <span class="co">#ax.set_xticklabels([f'{x:.0f}%' for x in ax.get_xticks()]) </span></span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>    ax.xaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a>    <span class="co">#ax.patch.set_edgecolor('black')  </span></span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a>    <span class="co">#ax.patch.set_linewidth(1) </span></span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a>sns.despine(left<span class="op">=</span><span class="va">True</span>, bottom<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> g.fig.get_figure()</span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_figure4.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <details>
 <summary>
@@ -1570,80 +1410,21 @@ Data
 </div>
 </details>
 </section>
-<section id="funding-information" class="level3 page-columns page-full">
+<section id="funding-information" class="level3">
 <h3 class="anchored" data-anchor-id="funding-information">Funding information</h3>
-<p>With the release of Walden, the new entity <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a> was introduced, replacing the previous field <em>grants</em>. This has resulted in improved coverage of funding information in OpenAlex (as shown in the table below). For the September snapshot, 11,824,259 funding records were linked, while in the Walden snapshot this number rose to 12,166,398. The increase is particularly pronounced for the publication years 2018 (+4.1%), 2019 (+3.5%) and 2023 (+3.5%).</p>
-<div class="column-page">
-<table class="table-striped table-hover caption-top table">
-<caption>Improvements in funding information</caption>
-<colgroup>
-<col style="width: 28%">
-<col style="width: 20%">
-<col style="width: 17%">
-<col style="width: 14%">
-<col style="width: 20%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Publication year</th>
-<th>Number of awards <br> in OpenAlex</th>
-<th>Number of awards <br> in Walden</th>
-<th>Change</th>
-<th>Change in %</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>2024</td>
-<td>1,829,832</td>
-<td>1,878,923</td>
-<td>49,091</td>
-<td>2.68%</td>
-</tr>
-<tr class="even">
-<td>2023</td>
-<td>1,798,571</td>
-<td>1,860,895</td>
-<td>62,324</td>
-<td>3.47%</td>
-</tr>
-<tr class="odd">
-<td>2022</td>
-<td>1,792,249</td>
-<td>1,835,439</td>
-<td>43,190</td>
-<td>2.41%</td>
-</tr>
-<tr class="even">
-<td>2021</td>
-<td>1,757,777</td>
-<td>1,783,902</td>
-<td>26,125</td>
-<td>1.49%</td>
-</tr>
-<tr class="odd">
-<td>2020</td>
-<td>1,707,755</td>
-<td>1,758,373</td>
-<td>50,618</td>
-<td>2.96%</td>
-</tr>
-<tr class="even">
-<td>2019</td>
-<td>1,574,415</td>
-<td>1,629,090</td>
-<td>54,675</td>
-<td>3.47%</td>
-</tr>
-<tr class="odd">
-<td>2018</td>
-<td>1,363,660</td>
-<td>1,419,776</td>
-<td>56,116</td>
-<td>4.12%</td>
-</tr>
-</tbody>
-</table>
+<p>With the release of Walden, the new entity <a href="https://docs.openalex.org/api-entities/awards"><em>Awards</em></a> was introduced. The entity <em>Awards</em> holds information about research grants and funding awards. As mentioned by <a href="https://blog.openalex.org/funding-metadata-in-openalex/">OpenAlex</a>, the update also comes with an improved linkage between funders and their outcomes (which is accomplished through text mining and ingesting funding metadata from funders directly).</p>
+<p>As can be seen in Figure <a href="#fig-funding" class="quarto-xref">Figure&nbsp;4</a>, the update has improved the coverage of funding information in OpenAlex. For the September snapshot, 6,814,842 articles were linked to at least one funder (about 19.5%), while in the Walden snapshot this number rose to 8,853,069 articles (about 25%). The increase is particularly pronounced for the publication years 2018 (+47% more articles linked to a funder than in the September snapshot), 2019 (+34%) and 2023 (+37%).</p>
+<div class="cell">
+<div id="fig-funding" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-funding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="media/blog_post_funders.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-funding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Improvements in funding information after Walden.
+</figcaption>
+</figure>
+</div>
 </div>
 <p>
 </p>
@@ -1651,54 +1432,365 @@ Data
 <summary>
 SQL code
 </summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_grants</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">grant</span>.award_id) <span class="kw">AS</span> n, publication_year</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex.works`, UNNEST(grants) <span class="kw">AS</span> <span class="kw">grant</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                           </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_grants                           </span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">grant</span>.<span class="kw">id</span>) <span class="kw">AS</span> n, publication_year</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex_walden.works`, UNNEST(awards) <span class="kw">AS</span> <span class="kw">grant</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span>                           </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- oal_has_funder</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">CASE</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">WHEN</span> ARRAY_LENGTH(grants) <span class="op">=</span> <span class="dv">0</span> <span class="cf">THEN</span> <span class="kw">FALSE</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">ELSE</span> <span class="kw">TRUE</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span> has_funder,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>publication_year</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex.works`</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year, has_funder</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> publication_year <span class="kw">ASC</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                           </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">-- walden_has_funder                          </span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(doi)) <span class="kw">AS</span> n,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">CASE</span> </span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">WHEN</span> ARRAY_LENGTH(funders) <span class="op">=</span> <span class="dv">0</span> <span class="cf">THEN</span> <span class="kw">FALSE</span> </span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">ELSE</span> <span class="kw">TRUE</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">END</span> has_funder,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  publication_year</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> `subugoe<span class="op">-</span>collaborative.openalex_walden.works`</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> primary_location.<span class="kw">source</span>.<span class="kw">type</span> <span class="op">=</span> <span class="st">'journal'</span> <span class="kw">AND</span> publication_year <span class="kw">BETWEEN</span> <span class="dv">2018</span> <span class="kw">AND</span> <span class="dv">2024</span> <span class="kw">AND</span> (<span class="kw">type</span> <span class="op">=</span> <span class="st">'article'</span> <span class="kw">OR</span> <span class="kw">type</span> <span class="op">=</span> <span class="st">'review'</span>)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year, has_funder</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> publication_year <span class="kw">ASC</span>                       </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <details>
 <summary>
 Python code
 </summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>oal_by_pubyear <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                               SELECT COUNT(DISTINCT(doi)) AS n, publication_year</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                               FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                               WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                               GROUP BY publication_year</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                               ORDER BY publication_year DESC</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                               """</span>).to_dataframe()</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                               </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>walden_by_pubyear <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  SELECT COUNT(DISTINCT(doi)) AS n, publication_year</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  GROUP BY publication_year</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  ORDER BY publication_year DESC</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  """</span>).to_dataframe()</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                                  </span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>calculate_changes(oal_by_pubyear, walden_by_pubyear, on<span class="op">=</span><span class="st">'publication_year'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>oal_has_funder <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ss">                               SELECT </span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  COUNT(DISTINCT(doi)) AS n,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  CASE </span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    WHEN ARRAY_LENGTH(grants) = 0 THEN FALSE </span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    ELSE TRUE</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  END has_funder,</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ss">                                  publication_year</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ss">                                FROM </span><span class="sc">{</span>openalex_snapshot<span class="sc">}</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="ss">                                WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="ss">                                GROUP BY publication_year, has_funder</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="ss">                                ORDER BY publication_year ASC</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ss">                               """</span>).to_dataframe()</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                               </span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>walden_has_funder <span class="op">=</span> client.query(<span class="ss">f"""</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="ss">                                   SELECT </span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="ss">                                      COUNT(DISTINCT(doi)) AS n,</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="ss">                                      CASE </span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="ss">                                        WHEN ARRAY_LENGTH(funders) = 0 THEN FALSE </span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="ss">                                        ELSE TRUE</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="ss">                                      END has_funder,</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="ss">                                      publication_year</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    FROM </span><span class="sc">{</span>walden_snapshot<span class="sc">}</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    WHERE primary_location.source.type = 'journal' AND publication_year BETWEEN 2018 AND 2024 AND (type = 'article' OR type = 'review')</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    GROUP BY publication_year, has_funder</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="ss">                                    ORDER BY publication_year ASC</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="ss">                                   """</span>).to_dataframe()</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>                                  </span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>funder_plot <span class="op">=</span> pd.merge(oal_has_funder, walden_has_funder, on<span class="op">=</span>[<span class="st">'has_funder'</span>, <span class="st">'publication_year'</span>], how<span class="op">=</span><span class="st">'inner'</span>, suffixes<span class="op">=</span>(<span class="st">'_openalex'</span>, <span class="st">'_walden'</span>))</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>funder_plot_total <span class="op">=</span> funder_plot.groupby([<span class="st">'publication_year'</span>])[<span class="st">'n_openalex'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>funder_plot_total.rename(columns<span class="op">=</span>{<span class="st">'n_openalex'</span>:<span class="st">'n_openalex_total'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>funder_plot <span class="op">=</span> pd.merge(funder_plot, funder_plot_total, on<span class="op">=</span><span class="st">'publication_year'</span>)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>funder_plot_total <span class="op">=</span> funder_plot.groupby([<span class="st">'publication_year'</span>])[<span class="st">'n_walden'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>funder_plot_total.rename(columns<span class="op">=</span>{<span class="st">'n_walden'</span>:<span class="st">'n_walden_total'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>funder_plot <span class="op">=</span> pd.merge(funder_plot, funder_plot_total, on<span class="op">=</span><span class="st">'publication_year'</span>)</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>funder_plot[<span class="st">'share_openalex'</span>] <span class="op">=</span> funder_plot[<span class="st">'n_openalex'</span>] <span class="op">/</span> funder_plot[<span class="st">'n_openalex_total'</span>]</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>funder_plot[<span class="st">'share_walden'</span>] <span class="op">=</span> funder_plot[<span class="st">'n_walden'</span>] <span class="op">/</span> funder_plot[<span class="st">'n_walden_total'</span>]</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>funder_plot[<span class="st">'change'</span>] <span class="op">=</span> funder_plot[<span class="st">'n_walden'</span>] <span class="op">-</span> funder_plot[<span class="st">'n_openalex'</span>]</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>funder_plot[<span class="st">'pct_change'</span>] <span class="op">=</span> (funder_plot[<span class="st">'n_walden'</span>] <span class="op">-</span> funder_plot[<span class="st">'n_openalex'</span>]) <span class="op">/</span> funder_plot[<span class="st">'n_openalex'</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">1</span>, </span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>                               ncols<span class="op">=</span><span class="dv">2</span>, </span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>                               sharey<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>                               figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.7</span>))</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>ax1.set_frame_on(<span class="va">False</span>)</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>ax2.set_frame_on(<span class="va">False</span>)</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>funder_plot,</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>             x<span class="op">=</span><span class="st">'publication_year'</span>,</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>             y<span class="op">=</span><span class="st">'n_openalex_total'</span>,</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'#c3c3c3'</span>,</span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>             width<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>             saturation<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>             alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>             errorbar<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>             ax<span class="op">=</span>ax1)</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>funder_plot[funder_plot.has_funder<span class="op">==</span><span class="va">True</span>],</span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>             x<span class="op">=</span><span class="st">'publication_year'</span>,</span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>             y<span class="op">=</span><span class="st">'n_openalex'</span>,</span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'#f68212'</span>,</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>             width<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>             saturation<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>             alpha<span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>             errorbar<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>             ax<span class="op">=</span>ax1)</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>funder_plot,</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>             x<span class="op">=</span><span class="st">'publication_year'</span>,</span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>             y<span class="op">=</span><span class="st">'n_walden_total'</span>,</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'#c3c3c3'</span>,</span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>             width<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>             saturation<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>             alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>             errorbar<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>             ax<span class="op">=</span>ax2)</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>funder_plot[funder_plot.has_funder<span class="op">==</span><span class="va">True</span>],</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>             x<span class="op">=</span><span class="st">'publication_year'</span>,</span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>             y<span class="op">=</span><span class="st">'n_walden'</span>,</span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'#f68212'</span>,</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>             width<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>             saturation<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>             alpha<span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>             errorbar<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>             ax<span class="op">=</span>ax2)</span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>ax1.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a>ax2.yaxis.set_major_formatter(mtick.StrMethodFormatter(<span class="st">'</span><span class="sc">{x:,.0f}</span><span class="st">'</span>))</span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>ax1.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">'Number of journal articles'</span>)</span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>ax2.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">''</span>)</span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'OpenAlex'</span>, loc<span class="op">=</span><span class="st">'left'</span>, pad<span class="op">=</span><span class="fl">12.0</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Walden'</span>, loc<span class="op">=</span><span class="st">'left'</span>, pad<span class="op">=</span><span class="fl">12.0</span>, size<span class="op">=</span><span class="dv">9</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a>has_funder_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#f68212'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">'True'</span>)</span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a>no_funder_patch <span class="op">=</span> Patch(facecolor<span class="op">=</span><span class="st">'#c3c3c3'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, label<span class="op">=</span><span class="st">'False'</span>)</span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a>lgd <span class="op">=</span> fig.legend(handles<span class="op">=</span>[has_funder_patch, </span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a>                          no_funder_patch], </span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a>                 title<span class="op">=</span><span class="st">'Has funding information?'</span>,</span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a>                 frameon<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>                 bbox_to_anchor<span class="op">=</span>(<span class="fl">1.18</span>, <span class="fl">0.75</span>), </span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a>                 labelspacing<span class="op">=</span><span class="fl">1.05</span>)</span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="fl">3.0</span>)</span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">'media/blog_post_funders.png'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'png'</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>, dpi<span class="op">=</span><span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<details>
+<summary>
+Data
+</summary>
+<div style="display: block;overflow-x: scroll;">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 7%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 6%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">n_openalex</th>
+<th style="text-align: left;">has_funder</th>
+<th style="text-align: right;">publication_year</th>
+<th style="text-align: right;">n_walden</th>
+<th style="text-align: right;">n_openalex_total</th>
+<th style="text-align: right;">n_walden_total</th>
+<th style="text-align: right;">share_openalex</th>
+<th style="text-align: right;">share_walden</th>
+<th style="text-align: right;">change</th>
+<th style="text-align: right;">pct_change</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">755903</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: right;">2018</td>
+<td style="text-align: right;">1114251</td>
+<td style="text-align: right;">4124894</td>
+<td style="text-align: right;">4124054</td>
+<td style="text-align: right;">0.183254</td>
+<td style="text-align: right;">0.270183</td>
+<td style="text-align: right;">358348</td>
+<td style="text-align: right;">47.4066</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3368991</td>
+<td style="text-align: left;">False</td>
+<td style="text-align: right;">2018</td>
+<td style="text-align: right;">3009803</td>
+<td style="text-align: right;">4124894</td>
+<td style="text-align: right;">4124054</td>
+<td style="text-align: right;">0.816746</td>
+<td style="text-align: right;">0.729817</td>
+<td style="text-align: right;">-359188</td>
+<td style="text-align: right;">-10.6616</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">880349</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: right;">2019</td>
+<td style="text-align: right;">1183749</td>
+<td style="text-align: right;">4421067</td>
+<td style="text-align: right;">4431157</td>
+<td style="text-align: right;">0.199126</td>
+<td style="text-align: right;">0.267142</td>
+<td style="text-align: right;">303400</td>
+<td style="text-align: right;">34.4636</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3540718</td>
+<td style="text-align: left;">False</td>
+<td style="text-align: right;">2019</td>
+<td style="text-align: right;">3247408</td>
+<td style="text-align: right;">4421067</td>
+<td style="text-align: right;">4431157</td>
+<td style="text-align: right;">0.800874</td>
+<td style="text-align: right;">0.732858</td>
+<td style="text-align: right;">-293310</td>
+<td style="text-align: right;">-8.28391</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3845102</td>
+<td style="text-align: left;">False</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">3591506</td>
+<td style="text-align: right;">4865505</td>
+<td style="text-align: right;">4867766</td>
+<td style="text-align: right;">0.790278</td>
+<td style="text-align: right;">0.737814</td>
+<td style="text-align: right;">-253596</td>
+<td style="text-align: right;">-6.5953</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1020403</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">1276260</td>
+<td style="text-align: right;">4865505</td>
+<td style="text-align: right;">4867766</td>
+<td style="text-align: right;">0.209722</td>
+<td style="text-align: right;">0.262186</td>
+<td style="text-align: right;">255857</td>
+<td style="text-align: right;">25.0741</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1055879</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">1335512</td>
+<td style="text-align: right;">5168608</td>
+<td style="text-align: right;">5162269</td>
+<td style="text-align: right;">0.204287</td>
+<td style="text-align: right;">0.258706</td>
+<td style="text-align: right;">279633</td>
+<td style="text-align: right;">26.4834</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4112729</td>
+<td style="text-align: left;">False</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">3826757</td>
+<td style="text-align: right;">5168608</td>
+<td style="text-align: right;">5162269</td>
+<td style="text-align: right;">0.795713</td>
+<td style="text-align: right;">0.741294</td>
+<td style="text-align: right;">-285972</td>
+<td style="text-align: right;">-6.95334</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4161028</td>
+<td style="text-align: left;">False</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">3921606</td>
+<td style="text-align: right;">5170934</td>
+<td style="text-align: right;">5257521</td>
+<td style="text-align: right;">0.804696</td>
+<td style="text-align: right;">0.745904</td>
+<td style="text-align: right;">-239422</td>
+<td style="text-align: right;">-5.75391</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1009906</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: right;">2022</td>
+<td style="text-align: right;">1335915</td>
+<td style="text-align: right;">5170934</td>
+<td style="text-align: right;">5257521</td>
+<td style="text-align: right;">0.195304</td>
+<td style="text-align: right;">0.254096</td>
+<td style="text-align: right;">326009</td>
+<td style="text-align: right;">32.2811</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">995537</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">1360240</td>
+<td style="text-align: right;">5385804</td>
+<td style="text-align: right;">5476030</td>
+<td style="text-align: right;">0.184845</td>
+<td style="text-align: right;">0.248399</td>
+<td style="text-align: right;">364703</td>
+<td style="text-align: right;">36.6338</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4390267</td>
+<td style="text-align: left;">False</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">4115790</td>
+<td style="text-align: right;">5385804</td>
+<td style="text-align: right;">5476030</td>
+<td style="text-align: right;">0.815155</td>
+<td style="text-align: right;">0.751601</td>
+<td style="text-align: right;">-274477</td>
+<td style="text-align: right;">-6.25194</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4650600</td>
+<td style="text-align: left;">False</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">4684172</td>
+<td style="text-align: right;">5747465</td>
+<td style="text-align: right;">5931314</td>
+<td style="text-align: right;">0.809157</td>
+<td style="text-align: right;">0.789736</td>
+<td style="text-align: right;">33572</td>
+<td style="text-align: right;">0.721885</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1096865</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">1247142</td>
+<td style="text-align: right;">5747465</td>
+<td style="text-align: right;">5931314</td>
+<td style="text-align: right;">0.190843</td>
+<td style="text-align: right;">0.210264</td>
+<td style="text-align: right;">150277</td>
+<td style="text-align: right;">13.7006</td>
+</tr>
+</tbody>
+</table>
+</div>
 </details>
 </section>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The Walden update demonstrates that OpenAlex is a constantly changing database. This, in turn, raises questions regarding the reliability of data analysis with OpenAlex. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references and funding information can be observed among larger publishers. Concurrently, there is a slight decline in the publication volume of larger publishers.</p>
-<p>I would also like to mention some issues that I found regarding the new Walden snapshots:</p>
-<ul>
-<li>Reviews were not classified correctly in latest snapshots: At the time of the Walden release in November 2025, the number of classified reviews from journals was almost zero. This issue was fixed with the subsequent Walden update in January 2026.</li>
-<li>Data additions without prior announcement: For the Walden release in February, two updates were noticed within a short period of time (03-02-2026 and 04-02-2026), although only one change was recorded in the <a href="https://github.com/ourresearch/openalex-guts/blob/main/files-for-datadumps/standard-format/RELEASE_NOTES.txt">change log</a>. The <a href="https://openalex.s3.amazonaws.com/browse.html#data/works/">manifest on AWS</a> was incorrect in this regard, as it did not list all files available for download, thereby corrupting the total number of items in the manifest. One additional record was added between these two updates. The same applies to the <a href="https://docs.openalex.org/api-entities/publishers">publisher entity</a>, which contained only 16 records from November 2025 to January 2026 (and was later fixed separately in January 2026 without further announcement).</li>
-<li>Missing fields: The field <em>author_position</em> was not available for a short period of time in the snapshot provided on AWS (Snapshot 04-02-2026). However, the field was accessible through API, see <a href="https://api.openalex.org/w2155347384">here</a> for example.</li>
-</ul>
-<p>I hope that these issues will be addressed with newer OpenAlex releases.</p>
+<section id="summary-and-outlook" class="level2">
+<h2 class="anchored" data-anchor-id="summary-and-outlook">Summary and Outlook</h2>
+<p>I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The Walden update demonstrates that OpenAlex is a constantly changing database. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references among larger publishers and better coverage of funding information can be observed. Concurrently, there is a slight decline in the publication volume of larger publishers (which is not unusual, because, for example, the publication year of an article is sometimes updated retrospectively).</p>
+<p>The changes observed in this data analysis raises questions about the reliability of data from OpenAlex. In order to use OpenAlex as an alternative source of bibliographic data, it is therefore essential to keep track of changes in OpenAlex. Here, I would like to refer to the German <a href="https://bibliometrie.info">Kompetenzzentrum Bibliometrie</a>, which has already published quality assurance reports on Zenodo for <a href="https://zenodo.org/records/17419181">Scopus</a> and <a href="https://zenodo.org/records/17419271">Web of Science</a> (and plans to continue providing such reports for OpenAlex). These reports are highlighting changes between database snapshots and are important when providing data to a wider audience.</p>
 </section>
 <section id="data-and-code-availability" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-code-availability">Data and Code Availability</h2>
