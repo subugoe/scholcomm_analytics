@@ -6,7 +6,7 @@ author:
     affiliation-url: https://www.sub.uni-goettingen.de/
     orcid: 0009-0002-6478-6789
 date: 03/13/2026
-abstract: "The team behind OpenAlex has reworked the OpenAlex service with the rollout of the Walden update in November 2025. In this blog post, I will examine how the Walden release has affected the database and what impact this may have on users. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and publications can be observed. However large differences can be observed in open access (OA) detection, where Diamond OA is classified far more frequently than in the pre-Walden phase."
+abstract: "OpenAlex got an update with the Walden rollout. In this blog post, I will focus on potential changes in terms of metadata coverage. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and slight changes in publication volume can be observed. However, substantial differences can be observed in open access (OA) detection, where Diamond OA is classified far more frequently than in the pre-Walden phase."
 image: distill-preview.png
 bibliography: references.bib
 title-block-banner: false
@@ -14,15 +14,14 @@ title-block-banner: false
 
 ## Introduction
 
-The past few months brought some changes to the OpenAlex data service. The most relevant update happened in November 2025 with the Walden Update, which featured [better reference coverage, improved OA detection and a more extensive database](https://blog.openalex.org/openalex-rewrite-walden-launch/). In January 2026, improved integration of funding information was introduced, along with a new entity called [*Awards*](https://docs.openalex.org/api-entities/awards). At the same time, little is known about the consequences of the changes so far. In December 2025, it was observed that the quality of author affiliations had declined with the Walden update [@jahn2025]. Meanwhile, there have been three further Walden updates (15 January 2026, 3 February 2026 and 25 February 2026) that address an improvement to the problem. 
+The past few months brought some changes to OpenAlex. The most relevant update happened in November 2025 with the Walden Update, which featured [better reference coverage, improved OA detection and a more extensive database](https://blog.openalex.org/openalex-rewrite-walden-launch/). In January 2026, improved integration of funding information was introduced, along with a new entity called [*Awards*](https://docs.openalex.org/api-entities/awards). 
+At the same time, users started reporting issues related to the updates, resulting in further Walden updates on 15 January, 3 February and 25 February 2026. These ongoing issue reports highlight that more and more researchers and institutions have begun to use OpenAlex, making close monitoring of updates all the more important to help users adapt their workflows and identify potential issues early on.
 
-It is important to monitor changes in the Walden release because [more and more research institutions](https://www.cnrs.fr/en/update/cnrs-breaking-free-web-science) have started to reuse data from OpenAlex for publication monitoring and research evaluation (and cancelled paid licenses for Scopus or Web of Science, for example). Small changes to algorithms, e.g. in OA or document type classification can affect the quality of such efforts.
-
-In this blog post, I will take a closer look at the changes made in the Walden release. To do this, I will contrast a pre-Walden snapshot from September 2025 with a Walden snapshot from February 2026 (2026-02-25). The data analysis will cover changes in publication volume, OA status, references, funding information, document types and publication types. The analysis is limited to publications from 2018 and 2024 and focuses on journal articles.
+In this blog post, I will take a closer look at the changes made in the Walden release. To do this, I will contrast a pre-Walden snapshot from September 2025 with a Walden snapshot from February 2026 (2026-02-25). The data analysis will cover changes in publication volume, OA status, references, funding information, document types and publication types. The analysis is limited to publications between 2018 and 2024 and focuses on journal articles.
 
 ## Data and Methods
 
-The publicly accessible [scholarly data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html), powered by Google BigQuery and operated by the Göttingen State and University Library, provides access to both an OpenAlex snapshot from September 2025 and the most recent Walden snapshot from February 2026. Access requires a free Google account (Payment information is required, but Google offers the first 1 TB of queries free of charge).
+The publicly accessible [scholarly data warehouse](https://subugoe.github.io/scholcomm_analytics/data.html), powered by Google BigQuery and operated by the Göttingen State and University Library, provides access to both an OpenAlex snapshot from September 2025 and the most recent Walden snapshot from February 2026. 
 
 The analysis was carried out by  querying both OpenAlex versions separately and then comparing the results (i.e. no inner join, no shared dataset). This approach is intended to ensure that the new records added to Walden can also be included in the analysis. This is particularly the case for records labelled as [expansion packs](https://docs.openalex.org/how-to-use-the-api/xpac) (which have an is_xpac=True in the data). The following analysis does not exclude retractions ([is_retracted](https://docs.openalex.org/api-entities/works/work-object#is_retracted)), paratexts ([is_paratext](https://docs.openalex.org/api-entities/works/work-object#is_paratext)) and the expansion pack ([is_xpac](https://docs.openalex.org/api-entities/works/work-object#is_xpac)). Usually, OpenAlex classifies records labelled with is_paratext=True as paratexts. However, there may occasionally be discrepancies, resulting in a record labelled is_paratext=True being classified as a normal article.
 
@@ -247,6 +246,7 @@ types_plot['walden_share'] = types_plot['n_walden'] / types_plot['n_walden_total
 </details>
 
 ### Publication volume
+
 Now, I will compare the number of journal articles between OpenAlex (shown in grey) and Walden (shown in pink) for the publication years 2018 to 2024 (see @fig-publication-volume). A record is considered a journal article if it is assigned to the source type *journal* and the item type *article* or *review*. 
 
 In total, OpenAlex counts 34,884,266 articles, while the Walden snapshot counts 35,249,948 journal articles (which correspond to an overall increase of 1.05%). When looking at individual publication years, it can be seen that the number of journal articles in the Walden snapshot is slightly lower than in the September 2025 snapshot for the publication years 2018 and 2021 (around -0.1%). From 2022 onwards, the number of articles in the Walden snapshot increases, with the difference being +1.7% (for 2022 and 2023) and +3.2% (for 2024).
@@ -354,7 +354,7 @@ fig.savefig('media/blog_post_pubyear.png', format='png', bbox_inches='tight', dp
 
 ### Open Access
 
-Differences are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6,3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot decreased by 12% (-201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).
+Differences are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6.3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot decreased by 12% (-201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).
 
 ::: cell
 
@@ -885,9 +885,11 @@ fig.savefig('media/blog_post_funders.png', format='png', bbox_inches='tight', dp
 
 ## Summary and Outlook
 
-I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The Walden update demonstrates that OpenAlex is a constantly changing database. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the contrary, improved coverage of references among larger publishers and better coverage of funding information can be observed. Concurrently, there is a slight decline in the publication volume of larger publishers (which is not unusual, because, for example, the publication year of an article is sometimes updated retrospectively).
+I am aware that my analysis only covers a small part of the changes made in the Walden release. Even so, some useful information can be gained from this analysis. The Walden update demonstrates that OpenAlex is a constantly changing database. For example, there is a high degree of fluctuation in the classification of OA between the snapshots analysed with a large increase of Diamond OA combined with a decrease in all other OA classes (especially Gold OA). On the other hand, improved coverage of references among larger publishers and better coverage of funding information can be observed. Concurrently, there is a slight decline in the publication volume of larger publishers (which is not unusual, because, for example, the publication year of an article is sometimes updated retrospectively).
 
-The changes observed in this data analysis raises questions about the reliability of data from OpenAlex. In order to use OpenAlex as an alternative source of bibliographic data, it is therefore essential to keep track of changes in OpenAlex. Here, I would like to refer to the German [Kompetenzzentrum Bibliometrie](https://bibliometrie.info), which has already published quality assurance reports on Zenodo for [Scopus](https://zenodo.org/records/17419181) and [Web of Science](https://zenodo.org/records/17419271) (and plans to continue providing such reports for OpenAlex). These reports are highlighting changes between database snapshots and are important when providing data to a wider audience.
+Given these substantial changes, it is essential to report the version used, including timestamp and snapshot, when analysing OpenAlex to allow for comparability. 
+In addition to using [OpenAlex snapshots](https://developers.openalex.org/download/snapshot-format) directly, there are several time-specific snapshots available on BigQuery through the [ORION-DBs collective](https://orion-dbs.community/), which can improve the reproducibility of an  analysis.
+Reporting changes as presented in this blog post can also help to interpret findings. This approach is, for instance, pursued by the German Kompetenzzentrum Bibliometrie, which publishes quality assurance reports on Zenodo for [Scopus](https://zenodo.org/records/17419181) and [Web of Science](https://zenodo.org/records/17419271), and they plan to continue providing such reports for OpenAlex to illustrate changes between database snapshots to a wider audience.
 
 ## Data and Code Availability
 
