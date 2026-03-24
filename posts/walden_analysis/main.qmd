@@ -6,10 +6,17 @@ author:
     affiliation-url: https://www.sub.uni-goettingen.de/
     orcid: 0009-0002-6478-6789
 date: 03/24/2026
+license: CC BY
 abstract: "OpenAlex got an update with the Walden rollout. In this blog post, I will focus on potential changes in terms of metadata coverage. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and slight changes in publication volume can be observed. However, substantial differences can be observed in open access (OA) detection, where Diamond OA is classified far more frequently than in the pre-Walden phase."
 image: distill-preview.png
 bibliography: references.bib
 title-block-banner: false
+doi: "10.59350/4r6jj-90k30"
+citation:
+  container-title: "Scholarly Communication Analytics"
+  type: article-journal
+  doi: "10.59350/4r6jj-90k30"
+google-scholar: true
 ---
 
 ## Introduction

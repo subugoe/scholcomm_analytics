@@ -4575,7 +4575,27 @@ Data
 
 </section>
 
- ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@article{haupka2026,
+  author = {Haupka, Nick},
+  title = {Walden: {What} Has Changed in {OpenAlex?}},
+  journal = {Scholarly Communication Analytics},
+  date = {2026-03-24},
+  url = {https://subugoe.github.io/scholcomm_analytics/posts/walden_analysis/main.html},
+  doi = {10.59350/4r6jj-90k30},
+  langid = {en},
+  abstract = {OpenAlex got an update with the Walden rollout. In this
+    blog post, I will focus on potential changes in terms of metadata
+    coverage. Based on a comparison of journal articles between 2018 and
+    2024 from the OpenAlex September 2025 snapshot and a Walden snapshot
+    from February 2026, an increase in references and slight changes in
+    publication volume can be observed. However, substantial differences
+    can be observed in open access (OA) detection, where Diamond OA is
+    classified far more frequently than in the pre-Walden phase.}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-haupka2026" class="csl-entry quarto-appendix-citeas">
+Haupka, Nick. 2026. <span>“Walden: What Has Changed in OpenAlex?”</span>
+<em>Scholarly Communication Analytics</em>, accepted, March 24. <a href="https://doi.org/10.59350/4r6jj-90k30">https://doi.org/10.59350/4r6jj-90k30</a>.
+</div></div></section></div> ]]></description>
   <guid>https://subugoe.github.io/scholcomm_analytics/posts/walden_analysis/main.html</guid>
   <pubDate>Mon, 23 Mar 2026 23:00:00 GMT</pubDate>
   <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/walden_analysis/distill-preview.png" medium="image" type="image/png" height="106" width="144"/>
