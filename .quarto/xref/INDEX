@@ -28,5 +28,11 @@
   },
   "posts/openalex_affiliation_md/index.rmarkdown": {
     "index.html": "c713ff31"
+  },
+  "posts/walden_analysis/main.qmd": {
+    "main.html": "e1907c32"
+  },
+  "main.qmd": {
+    "main.html": "1778c35b"
   }
 }
