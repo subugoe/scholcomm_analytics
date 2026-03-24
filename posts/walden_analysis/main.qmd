@@ -5,7 +5,7 @@ author:
     affiliation: Göttingen State and University Library
     affiliation-url: https://www.sub.uni-goettingen.de/
     orcid: 0009-0002-6478-6789
-date: 03/13/2026
+date: 03/24/2026
 abstract: "OpenAlex got an update with the Walden rollout. In this blog post, I will focus on potential changes in terms of metadata coverage. Based on a comparison of journal articles between 2018 and 2024 from the OpenAlex September 2025 snapshot and a Walden snapshot from February 2026, an increase in references and slight changes in publication volume can be observed. However, substantial differences can be observed in open access (OA) detection, where Diamond OA is classified far more frequently than in the pre-Walden phase."
 image: distill-preview.png
 bibliography: references.bib
@@ -37,6 +37,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 import matplotlib.ticker as mtick
 import matplotlib.image as mpimg
 
@@ -152,7 +153,7 @@ source_type_plot['walden_share'] = source_type_plot['n_walden'] / source_type_pl
 
 Next, we look at the distribution of document types in both snapshots. Note that, from now on, records in this data analysis have been restricted to the source type *journal*.
 
-We can see that the number of records with the document types *article*, *paratext* and *retraction* have increased in the latest Walden snapshot. However, in relative terms, the increase in articles is very limited (only 1.12%). The number of reviews has decreased from 1,443,989 to 1,433,950 records (-0.70%). The same applies to letters (-1.07%) and editorials (-0.46%). The total proportion of records classified as *article* has increased to 89.87% in Walden (formerly, 89.98%).
+We can see that the number of records with the document types *article*, *paratext* and *retraction* have increased in the latest Walden snapshot. However, in relative terms, the increase in articles is very limited (only +1.12%). The number of reviews has decreased from 1,443,989 to 1,433,950 records (-0.70%). The same applies to letters (-1.07%) and editorials (-0.46%). The total proportion of records classified as *article* has decreased to 89.87% in Walden (formerly, 89.98%).
 
 :::{.column-page}
 
@@ -354,7 +355,7 @@ fig.savefig('media/blog_post_pubyear.png', format='png', bbox_inches='tight', dp
 
 ### Open Access
 
-Differences are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6.3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot decreased by 12% (-201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).
+Differences are also noticeable in terms of the classification of open access between both snapshots. For example, Diamond OA is far more pronounced in the Walden snapshot than in the September Snapshot, with over 6.3 million more records classified (+249%). Journal articles classified as Gold OA, conversely, are dropping notably, by about 41.8% (-3,847,993). Hybrid OA falls by 11.5% overall (-389,691) and Bronze OA by 17.7% (-625,577). The proportion of Green OA in the Walden snapshot increased by 12% (+201,109) and the proportion of non-accessible items (Closed) declined by 8% (-1,286,811).
 
 ::: cell
 
@@ -453,11 +454,11 @@ hybrid_oa_patch = Patch(facecolor='#97bbf5ff', label='Hybrid OA')
 diamond_oa_patch = Patch(facecolor='#446ace', label='Diamond OA')
 closed_oa_patch = Patch(facecolor='#e5e5e5', label='Closed')
 
-lgd = fig.legend(handles=[green_oa_patch, 
-                          gold_oa_patch, 
-                          bronze_oa_patch,
-                          hybrid_oa_patch,
+lgd = fig.legend(handles=[gold_oa_patch, 
                           diamond_oa_patch,
+                          bronze_oa_patch,
+                          green_oa_patch, 
+                          hybrid_oa_patch,
                           closed_oa_patch], 
                  title='OA Status',
                  frameon=False,
