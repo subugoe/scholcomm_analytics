@@ -16,6 +16,11 @@ abstract: "I analyse Crossref metadata for around 250,000 journal articles publi
 image: preview.png
 bibliography: references.bib
 title-block-banner: false
+doi: "10.59350/nv30b-3yg69"
+citation:
+  container-title: "Scholarly Communication Analytics"
+  type: article-journal
+  doi: "10.59350/nv30b-3yg69"
 google-scholar: true
 ---
 
