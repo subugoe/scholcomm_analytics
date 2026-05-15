@@ -1,0 +1,978 @@
+---
+title: "Open Access Licences and Open Metadata in Transformative Agreements"
+format: 
+    html:
+      echo: false
+      message: false
+      warning: false
+author:
+  - name: Sophia Dörner
+    affiliation: Göttingen State and University Library
+    affiliation-url: https://www.sub.uni-goettingen.de/
+    orcid: 0000-0001-8747-3422
+date: 05/15/2026
+license: CC BY
+abstract: "I analyse Crossref metadata for around 250,000 journal articles published between 2019 and 2025. The analysis reveals that contractual language alone is insufficient to ensure implementation: coverage of specific metadata elements varied considerably across publishers and agreements, and explicit provisions do not consistently translate into higher coverage. A notable near-absence of ROR ID coverage across most agreements highlights gaps that undermine institutional attribution in research assessment and bibliometric analyses, while CC BY licence adoption is highest where agreements mandate it as the sole permissible licence."
+image: preview.png
+bibliography: references.bib
+title-block-banner: false
+google-scholar: true
+---
+
+
+```{r}
+#| label: setup
+#| message: false
+library(tidyverse)
+library(reactable)
+library(htmlwidgets)
+library(DT)
+library(crosstalk)
+library(jsonlite)
+library(bigrquery)
+library(DBI)
+library(htmltools)
+library(sparkline)
+library(glue)
+options(scipen = 999, tidyverse.quiet = TRUE)
+```
+
+
+```{r}
+# reused and adapted from: https://github.com/subugoe/hoaddash/blob/c21afac28c0a8e911d0d666db374ee5c602a14cb/R/open_md.R
+
+get_by_color <- function(share) {
+  by_pal <- function(x) rgb(colorRamp(c("#5681b9", "#00429d"))(x), maxColorValue = 255)
+  normalized <- (share - min(share)) / (max(share) - min(share))
+  by_pal(normalized)
+}
+
+get_cc_color <- function(share) {
+  cc_pal <- function(x) rgb(colorRamp(c("#b9e5dd", "#6ccad4"))(x), maxColorValue = 255)
+  normalized <- (share - min(share)) / (max(share) - min(share))
+  cc_pal(normalized)
+}
+
+md_pal <- c("#e2fff2", "#c2e6ef", "#a2cde9", "#84b5de", "#689dd0", "#4f85be", "#3b6ea8", "#2e588f", "#294173")
+
+make_color_pal <- function(colors, bias = 1) {
+  get_color <- colorRamp(colors, bias = bias)
+  function(x) rgb(get_color(x), maxColorValue = 255)
+}
+
+color_function <- make_color_pal(md_pal, bias = 1)
+
+# Function to calculate luminance
+calculate_luminance <- function(hex_color) {
+  # Convert hex color to RGB
+  rgb_color <- col2rgb(hex_color)
+  # Calculate luminance
+  luminance <- 0.299 * rgb_color[1] + 0.587 * rgb_color[2] + 0.114 * rgb_color[3]
+  return(luminance / 255)
+}
+
+# Indicator column function with the palette
+indicator_column_custom <- function(name = NULL, maxWidth = 70) {
+  colDef(
+    name = name,
+    cell = function(value) {
+      if (is.na(value)) {
+        "  \u2013 "
+      } # Unicode dash for missing data
+      else {
+        formatC(paste0(round(value * 100, 1), "%"), width = 5)
+      }
+    },
+    maxWidth = maxWidth,
+    style = function(value) {
+      if (is.na(value)) {
+        list(color = "#333333") # Dark gray for missing data
+      } else {
+        bg_color <- color_function(value)
+        luminance <- calculate_luminance(bg_color)
+        text_color <- ifelse(luminance > 0.5, "#000000", "#ffffff") # Black for light backgrounds, white for dark backgrounds
+        list(color = text_color, background = bg_color)
+      }
+    }
+  )
+}
+```
+
+```{r}
+js_remove_all <- "
+function remove_all_options() {
+  // Remove ALL options from all filter selects
+  setTimeout(function() {
+    // Get all select elements with class 'selectized' (crosstalk filters)
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+      if (select.classList.contains('selectized')) {
+        const selectize = select.selectize;
+        if (selectize) {
+          // Remove any option with empty value (which is typically ALL)
+          selectize.removeOption('');
+        }
+      }
+    });
+  }, 100);
+}
+
+// Run when document is ready
+$(document).ready(function() {
+  remove_all_options();
+});
+
+// Also run when filters are updated
+$(document).on('change', 'select', function() {
+  setTimeout(remove_all_options, 50);
+});
+"
+
+# reused and adpted from: https://github.com/subugoe/hoaddash/blob/c21afac28c0a8e911d0d666db374ee5c602a14cb/_portfolio_template.qmd#L294
+
+js_select_year <- "
+$(document).ready(function() {
+  // Wait a bit for elements to load
+  setTimeout(function() {
+    // Try to find the filter element
+    const filterElement = document.getElementById('filter_year');
+    if (filterElement) {
+      const selectizedElements = filterElement.getElementsByClassName('selectized');
+      if (selectizedElements.length > 0) {
+        const selectizeInstance = selectizedElements[0].selectize;
+        if (selectizeInstance) {
+          // Set default value to 2025
+          selectizeInstance.setValue('2025', false);
+        }
+      }
+    }
+  }, 1000);
+});
+"
+```
+
+## Introduction
+
+Over the past decade, [transformative agreements](https://esac-initiative.org/about/transformative-agreements/) have been instrumental in driving the transition to open access by redirecting former subscription costs to fund open access publishing for affiliated authors of the negotiating institutions [@deJonge2025;@Dr2025]. Open publishing agreements have gained serious traction, with the [ESAC registry](https://esac-initiative.org/about/transformative-agreements/agreement-registry/) listing 1,644 such agreements as of April 29, 2026, including 177 concluded with German institutions and consortia [@esac_registry].
+
+In @doerner2026, I conducted a content analysis of 13 transformative agreements between scientific publishers and German consortia, with a focus on contractual provisions related to open metadata and data-analytical research services. With respect to open metadata provisions, 12 of the 13 agreements mandated metadata submission to [Crossref](https://www.crossref.org/). However, only four agreements specified detailed metadata fields for Crossref delivery, despite these being non-exhaustive lists. Metadata fields explicitly referenced included, inter alia, author information, ORCID identifiers, affiliations, and open access licence information.
+
+This blog post extends the prior content analysis by assessing the implementation of contractual provisions through a data-driven approach, focusing on two aspects: (i) CC BY licence adoption and (ii) open metadata coverage including ORCID and ROR IDs, TDM information, funding information, funder DOIs, and open abstracts. I build upon prior work by the [Hybrid Open Access Dashboard (HOAD)](https://subugoe.github.io/hoaddash/index.html) and the [Sesame Open Science (SOS) Crossref truth table](https://orion-dbs.community/collections/sos/#truthtables). HOAD is an openly available data analytics tool that currently tracks, amongst other things, the use of [Creative Commons (CC) licences](https://creativecommons.org/) and the coverage of open metadata in Crossref for open access articles in hybrid journals. The metadata captured by HOAD include [text and data mining (TDM)](https://www.crossref.org/blog/evolving-our-support-for-text-and-data-mining/) information, [ORCID](https://orcid.org/) coverage, funding information, and the coverage of open abstracts and citations [@Jahn2023]. However, some dimensions are missing from HOAD, such as [ROR](https://ror.org/) coverage and information for articles in fully open access journals. The [SOS Crossref truth table](https://codeberg.org/TwoBirds/metadata_ingest/src/branch/main) is a processed table based on Crossref data indicating presence and counts of several metadata elements for each record in Crossref. Compared to HOAD the truth table provides detailed information on affiliations and ROR coverage, but does not include TDM and CC licence information. Furthermore, its scope is broader, meaning that articles made available through transformative agreements are not pre-identified.
+
+## Data and Method
+
+This analysis reproduces and adapts the data analytics workflow underlying HOAD, as describe in @Jahn2025. To this end, data retrieval started with obtaining journal and institutional information from preserved transformative agreement data from the cOAlition S Journal Checker Tool (JCT) [^1]. I subsequently filtered the data based on the ESAC IDs of the selected 13 transformative agreements (see @tbl-TAs) to obtain information about journal portfolios and participating institutions pertaining specifically to the respective agreements. Journal information was further enriched with linking ISSNs (ISSN-Ls), as provided by the ISSN International Centre in the February 2026 version, based on ISSN matching to allow unique reference of journals. 
+
+Using the compiled JCT data, I retrieved article-level metadata from the Crossref April 2026 database snapshot and enriched it with first-author affiliation data from the OpenAlex Walden April 2026 database snapshot. All data was accessed via the [SUB Göttingen Open Scholarly Data Warehouse](https://subugoe.github.io/scholcomm_analytics/data.html). It should be noted that affiliation metadata coverage in OpenAlex has been reported to have declined substantially following the transition to Walden, partly due to publishers not sharing affiliation metadata via Crossref and partly due to technical issues within OpenAlex itself [@jahn2025walden], which may affect the completeness of first-author affiliation matching in this analysis.
+
+The article-level data was restricted to the publication years 2019--2025, based on the issued date, to account for varying transformative agreement terms and full-year data availability (see @tbl-TAs). Non-scholarly journal content, such as table of contents etc., was excluded via paratext recognition, enrichment with first-author affiliation data was done by matching JCT participating institution information with OpenAlex affiliation data using ROR-IDs and institutional names as a fall back option. Furthermore the [SOS Crossref truth table](https://codeberg.org/TwoBirds/metadata_ingest/commit/aebca5028503ca83e0b6885abc48f42946fb8e59) data from the January 2026 snapshot was matched using DOIs.
+
+
+```{r}
+md_calc <- read_csv(file = "data/md_calc.csv")
+```
+
++-----------------------------+-----------------+------------------------+----------------+
+| Publisher                   |Consortium Lead  | Term                   | ESAC ID        |
++:============================+:================+:=======================+:===============+
+| Elsevier                    | DEAL            | 01.09.2023--31.12.2028 | els2023deal    |
++-----------------------------+-----------------+------------------------+----------------+
+| Hogrefe                     | SUB Göttingen   | 01.01.2021--31.12.2023 | hogrefe2021gac |
+|                             |                 +------------------------+----------------+
+|                             |                 | 01.01.2024--31.12.2026 | hogrefe2024gac |
++-----------------------------+-----------------+------------------------+----------------+
+| Optica                      | TIB             | 01.01.2023--31.12.2026 | opg2023tib     |
++-----------------------------+-----------------+------------------------+----------------+
+| Royal Society of Chemistry  | TIB             | 01.01.2024--31.12.2027 | rsc2024tib     |
++-----------------------------+-----------------+------------------------+----------------+
+| Springer Nature             | DEAL            | 01.01.2020--31.12.2023 | sn2020deal     |
+|                             |                 +------------------------+----------------+
+|                             |                 | 01.01.2024--31.12.2028 | sn2024deal     |
+|                             +-----------------+------------------------+----------------+
+|                             | MPDL            | 01.01.2021--31.12.2024 | sn2021gac      |
++-----------------------------+-----------------+------------------------+----------------+
+| Trans Tech Publications     | TIB             | 01.01.2024--31.12.2026 | ttp2024tib     |
++-----------------------------+-----------------+------------------------+----------------+
+| Walter de Gruyter           | SUB Göttingen   | 01.01.2022--31.12.2022 | degruy2022gac  |
+|                             |                 +------------------------+----------------+
+|                             |                 | 01.01.2023--31.12.2024 | degruy2023gac  |
++-----------------------------+-----------------+------------------------+----------------+
+| Wiley                       | DEAL            | 01.01.2019--31.12.2023 | wiley2019deal  |
+|                             |                 +------------------------+----------------+
+|                             |                 | 01.01.2024--31.12.2028 | wiley2024deal  |
++-----------------------------+-----------------+------------------------+----------------+
+: Transformative agreements concluded with German consortia as analysed in @doerner2026 {#tbl-TAs}
+
+
+My workflow extends the current workflows for HOAD in the following respects: (1) journal coverage includes both hybrid and fully open access journals rather than hybrid journals only, (2) article data is restricted to pertain only to the selected 13 transformative agreements presented in @tbl-TAs, (3) I additionally enriched the data set with data from the SOS Crossref truth table.
+
+To obtain information about metadata coverage, I computed counts of authors, affiliations, funders, and their respective persistent identifiers, as well as indicators for the presence of key metadata fields such as TDM support and open abstracts. Affiliation and ROR ID counts were computed as distinct values per article. This means that if multiple authors from the same institution appear on an article, the affiliation and its designated ROR ID are each counted only once. The number of affiliations was determined by first checking for ROR IDs and using name strings as a fall back option, when affiliations had no ROR IDs assigned. I identified open access articles by the presence of a CC licence in the version of record metadata. I therefore did not retrieve licence URLs for author accepted manuscript or TDM article versions, as identified by Crossref’s *content_version* field. Subsequently, articles without a CC licence were classified as non-open access, regardless of publisher policies or other access indicators. 
+
+The following SQL code shows the query used to retrieve the article-level data set, compute different metrics and join the SOS Crossref truth table. 
+
+<details> 
+
+<summary>SQL code</summary>
+
+
+``` sql
+WITH filtered_publications AS (
+  SELECT DISTINCT
+    UPPER(TRIM(cr.doi)) AS doi,
+    jct.issn_l,
+    jct.esac_id AS jn_esac_id,
+    cr.publisher AS cr_publisher,
+    cr.container_title AS cr_journal_title,
+    EXTRACT(YEAR FROM cr.issued) AS cr_year,
+    CASE WHEN cr.abstract IS NOT NULL THEN 1 END AS has_abstract,
+    cr.license,
+    cr.author,
+    cr.link,
+    cr.funder
+  FROM (
+      SELECT SPLIT(issn, ",") AS issn,
+        doi,
+        publisher,
+        container_title,
+        issued,
+        license,
+        abstract,
+        author,
+        link,
+        funder
+      FROM `subugoe-collaborative.cr_instant.snapshot`
+      WHERE NOT REGEXP_CONTAINS(
+          title,
+          '(?i)^Author Index$|^Back Cover|^Contents$|^Contents:|^Corrigendum|^Cover Image|^Cover Picture|^Editorial Board|^Front Cover|^Frontispiece|^Inside Back Cover|^Inside Cover|^Inside Front Cover|^Issue Information|^List of contents|^Masthead|^Title page|^Correction$|^Corrections to|^Corrections$|^Withdrawn|^Frontmatter'
+        )
+        AND (
+          NOT REGEXP_CONTAINS(page, '^S')
+          OR page IS NULL
+        )
+        AND (
+          NOT REGEXP_CONTAINS(issue, '^S')
+          OR issue IS NULL
+        )
+        AND EXTRACT(YEAR FROM issued) BETWEEN 2019 AND 2025
+  ) AS cr
+  CROSS JOIN UNNEST(cr.issn) AS issn
+  INNER JOIN `subugoe-collaborative.resources.oad_jct_jn` jct
+    ON issn = jct.issn
+  WHERE (
+      (jct.esac_id = 'wiley2019deal' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2019 AND 2023) OR
+      (jct.esac_id = 'wiley2024deal' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2024 AND 2025) OR
+      (jct.esac_id = 'sn2021gac' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2021 AND 2023) OR
+      (jct.esac_id = 'sn2020deal' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2020 AND 2023) OR
+      (jct.esac_id = 'sn2024deal' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2024 AND 2025) OR
+      (jct.esac_id = 'els2023deal' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2023 AND 2025) OR
+      (jct.esac_id = 'degruy2022gac' AND EXTRACT(YEAR FROM cr.issued) = 2022) OR
+      (jct.esac_id = 'degruy2023gac' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2023 AND 2024) OR
+      (jct.esac_id = 'hogrefe2021gac' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2021 AND 2023) OR
+      (jct.esac_id = 'hogrefe2024gac' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2024 AND 2025) OR
+      (jct.esac_id = 'rsc2024tib' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2024 AND 2025) OR
+      (jct.esac_id = 'opg2023tib' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2023 AND 2025) OR
+      (jct.esac_id = 'ttp2024tib' AND EXTRACT(YEAR FROM cr.issued) BETWEEN 2024 AND 2025)
+  )
+),
+first_author_data AS (
+  SELECT
+    UPPER(TRIM(w.doi)) AS doi,
+    a.countries
+  FROM `subugoe-collaborative.openalex_walden.works` w
+  CROSS JOIN UNNEST(authorships) AS a
+  WHERE a.author_position = 'first'
+    AND 'DE' IN (
+      SELECT UPPER(TRIM(country_code))
+      FROM UNNEST(a.countries) AS country_code
+    )
+    AND EXISTS (
+      SELECT 1
+      FROM UNNEST(a.institutions) AS i
+      JOIN `subugoe-collaborative.resources.oad_jct_inst` ji
+        ON LOWER(i.ror) = LOWER(ji.ror_id)
+        OR LOWER(i.display_name) = LOWER(ji.inst_name)
+      WHERE i.display_name IS NOT NULL
+        AND ji.inst_name IS NOT NULL
+    )
+),
+oad_ta_md AS (
+  SELECT
+    fp.doi,
+    fp.cr_year,
+    fp.issn_l,
+    fp.cr_journal_title,
+    fp.jn_esac_id,
+    fp.cr_publisher,
+    fp.has_abstract,
+    ARRAY_LENGTH(fp.author) AS num_authors,
+    (SELECT COUNT(1) FROM UNNEST(fp.author) AS authors WHERE authors.orcid IS NOT NULL) AS num_orcids,
+    COUNT(DISTINCT CASE WHEN md_2.id IS NOT NULL THEN md_2.id ELSE md_1.name END) AS num_affiliations,
+    COUNT(DISTINCT CASE WHEN LOWER(md_2.id_type) = 'ror' THEN md_2.id END) AS num_rors,
+    ARRAY_LENGTH(fp.funder) AS num_funders,
+    (SELECT COUNT(1) FROM UNNEST(fp.funder) AS funders, UNNEST(funders.id) WHERE LOWER(id_type) = "doi") AS num_funder_dois,
+    MAX(CASE WHEN md_3.content_version IN ('vor', 'unspecified') THEN md_3.url END) AS license_url,
+    CASE
+      WHEN EXISTS (SELECT 1 FROM UNNEST(fp.link) WHERE intended_application = "text-mining") THEN 1
+      ELSE 0
+    END AS has_tdm,
+    tt.doi AS tt_doi,
+    tt.count_authors,
+    tt.has_authors_id_orcid,
+    tt.count_authors_id_orcid,
+    tt.has_affiliations,
+    tt.count_affiliations,
+    tt.has_affiliations_id_ror,
+    tt.count_affiliations_id_ror,
+    tt.has_abstract AS tt_has_abstract,
+    tt.has_funders,
+    tt.count_funders,
+    tt.has_funders_id_doi,
+    tt.count_funders_id_doi
+  FROM filtered_publications fp
+  INNER JOIN first_author_data fa
+    ON fp.doi = fa.doi
+  LEFT JOIN UNNEST(fp.author) AS md_0
+  LEFT JOIN UNNEST(md_0.affiliation) AS md_1
+  LEFT JOIN UNNEST(md_1.id) AS md_2
+  LEFT JOIN UNNEST(fp.license) AS md_3
+  LEFT JOIN `sos-datasources.truthtables.crossref_truthtable_20260131` tt
+    ON fp.doi = tt.doi
+  GROUP BY
+    fp.doi,
+    tt.doi,
+    fp.cr_year,
+    fp.issn_l,
+    fp.cr_journal_title,
+    fp.jn_esac_id,
+    fp.cr_publisher,
+    fp.has_abstract,
+    fp.author,
+    fp.funder,
+    fp.license,
+    fp.link,
+    tt.count_authors,
+    tt.has_authors_id_orcid,
+    tt.count_authors_id_orcid,
+    tt.has_affiliations,
+    tt.count_affiliations,
+    tt.has_affiliations_id_ror,
+    tt.count_affiliations_id_ror,
+    tt.has_abstract,
+    tt.has_funders,
+    tt.count_funders,
+    tt.has_funders_id_doi,
+    tt.count_funders_id_doi
+)
+
+SELECT * FROM oad_ta_md
+```
+
+</details> 
+
+Data cleaning and preparation involved several standardisation procedures: (1) harmonisation of ISSN-Ls for journals assigned to multiple ISSN-Ls, (2) consolidation of ESAC IDs for ISSN-Ls assigned to multiple ESAC IDs, in particular those resulting from publisher changes after the termination of the agreement, and (3) correction of errors in licence URLs. Journal-level standardisations were based on journal information from [EZB](https://ezb.ur.de/) and [ZDB](zdb-katalog.de/index.xhtml). 
+
+
+The so-compiled data set I used for the analysis consists of `r format(n_distinct(md_calc$doi), big.mark = ",")` articles published between 2019 and 2025 and enabled by one of the 13 transformative agreements of interest.
+
+
+```{r}
+md_diff_ror <- read_csv(file = "data/md_diff_ror.csv")
+```
+
+
+I used the SOS Crossref truth table data to validate my approach and found strong alignment for all coverage metrics (ORCIDs, funding information, funder DOIs, open abstracts) except for ROR coverage. Specifically, the ROR coverage values from the SOS dataset were higher than those I computed, in some instances even considerably. A more detailed analysis of the data revealed that these differences are attributable to `r format(n_distinct(md_diff_ror$doi), big.mark= ",")` articles for which the absolute number of ROR IDs counted in the SOS dataset exceeds the absolute number of affiliations. Inspecting a sample of 20 DOIs from this set of articles via the Crossref API revealed that when a ROR ID was present for a given affiliation, no additional name string (Crossref field *name*) was included in the metadata. The [SQL query](https://codeberg.org/TwoBirds/metadata_ingest/src/branch/main/databases/truthtables/sql/crossref_truthtable.sql) used to create the SOS dataset and calculate the metrics shows that the number of affiliations is determined based on the name string in the Crossref affiliation *name* field. This differs from the calculation approach applied here. If publishers do not provide a name string for each affiliation, additionally to the respective ROR IDs, this explains why, for these articles, the number of ROR IDs is assessed as higher by the SOS counting method than the number of actual affiliations.
+
+[^1]: <https://github.com/njahn82/jct_data>
+
+## Results
+
+The contractual provisions analysed in @doerner2026, with underlying data provided in @doerner2025, form the baseline for the analysis presented here. Briefly, the agreements with de Gruyter, Optica, and Trans Tech Publications mandated CC BY licensing; 12 of the 13 agreements committed to metadata delivery to Crossref, with several explicitly referencing ORCIDs, ROR IDs, and funding information as metadata fields available to the publishers; and 12 agreements contained TDM provisions. 
+
+### Creative Commons Licences
+
+@tbl-cc provides an overview of the article volume per agreement and publication year, aligned with the respective agreement terms, detailing the overall share of open access articles, the proportion published under a CC BY licence, and trends of CC BY shares across publication years.
+
+
+```{r}
+md_react <- readRDS(file = "data/md_react.rds")
+```
+
+
+```{r}
+#| label: tbl-cc
+#| tbl-cap: Article volume, open access share, CC BY adoption, and trends of CC BY shares by transformative agreement and publication year.
+
+
+shared_md_react <- SharedData$new(md_react)
+
+
+react_table <- reactable(
+  shared_md_react,
+  pagination = TRUE,
+  compact = TRUE,
+  showPageSizeOptions = TRUE,
+  defaultColDef = colDef(vAlign = "center", headerClass = "header", format = colFormat(locales = "en-GB", separators = TRUE)),
+  defaultSortOrder = "asc",
+  columns = list(
+    agreement = colDef(
+      name = "Agreement",
+      align = "left",
+      html = TRUE,
+      cell = function(value, index) {
+        publisher <- shared_md_react$origData()$esac_publisher[index]
+        agreement <- shared_md_react$origData()$agreement[index]
+        htmltools::tagList(
+          htmltools::div(style = list(fontWeight = "bold", fontSize = "14px"), publisher),
+          htmltools::div(style = list(fontSize = "12px"), agreement)
+        )
+      },
+      maxWidth = 300
+    ),
+    num_articles_total = colDef(
+      name = "Article Volume",
+      align = "left",
+      html = TRUE,
+      maxWidth = 300
+    ),
+    cc_share_total = colDef(
+      name = "% CC",
+      format = colFormat(digits = 1, locales = "en-GB"),
+      cell = JS(
+        "function(cellInfo) {
+        const sliceColor = cellInfo.row['cc_color']
+        const sliceLength = 2 * Math.PI * 32
+        const sliceOffset = sliceLength * (1 - cellInfo.value / 100)
+        const donutChart = (
+          '<svg width=75 height=75 style=\"transform: rotate(-90deg)\" focusable=false>' +
+            '<circle cx=37.5 cy=37.5 r=32 fill=none stroke-width=5 stroke=rgba(0,0,0,0.1)></circle>' +
+            '<circle cx=37.5 cy=37.5 r=32 fill=none stroke-width=5 stroke=' + sliceColor +
+            ' stroke-dasharray=' + sliceLength + ' stroke-dashoffset=' + sliceOffset + '></circle>' +
+          '</svg>'
+        )
+        const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
+          'transform: translate(-50%, -50%)\">' + cellInfo.value + '%' + '</div>'
+        return '<div style=\"display: inline-flex; position: relative\">' + donutChart + label + '</div>'
+      }"
+      ),
+      html = TRUE,
+      align = "center",
+      width = 150,
+      class = "number"
+    ),
+    cc_share_by = colDef(
+      name = "% CC BY",
+      format = colFormat(digits = 1, locales = "en-GB"),
+      cell = JS(
+        "function(cellInfo) {
+        const sliceColor = cellInfo.row['by_color']
+        const sliceLength = 2 * Math.PI * 32
+        const sliceOffset = sliceLength * (1 - cellInfo.value / 100)
+        const donutChart = (
+          '<svg width=75 height=75 style=\"transform: rotate(-90deg)\" focusable=false>' +
+            '<circle cx=37.5 cy=37.5 r=32 fill=none stroke-width=5 stroke=rgba(0,0,0,0.1)></circle>' +
+            '<circle cx=37.5 cy=37.5 r=32 fill=none stroke-width=5 stroke=' + sliceColor +
+            ' stroke-dasharray=' + sliceLength + ' stroke-dashoffset=' + sliceOffset + '></circle>' +
+          '</svg>'
+        )
+        const label = '<div style=\"position: absolute; top: 50%; left: 50%; ' +
+          'transform: translate(-50%, -50%)\">' + cellInfo.value + '%' + '</div>'
+        return '<div style=\"display: inline-flex; position: relative\">' + donutChart + label + '</div>'
+      }"
+      ),
+      html = TRUE,
+      align = "center",
+      width = 150,
+      class = "number"
+    ),
+    cc_by_trend = colDef(
+      name = "CC BY Trend",
+      cell = function(value, index) {
+        sparkline(
+          shared_md_react$origData()$cc_by_trend[[index]],
+          lineColor = "#5681b9",
+          fillColor = "transparent",
+          highlightSpotColor = "#5681b9",
+          minSpotColor = FALSE,
+          maxSpotColor = FALSE,
+          spotColor = "#5681b9",
+          lineWidth = 3,
+          spotRadius = 4,
+          width = 90
+        )
+      },
+      minWidth = 80,
+      align = "center"
+    ),
+    cc_color = colDef(show = FALSE),
+    by_color = colDef(show = FALSE),
+    `cc_share_by-nc` = colDef(show = FALSE),
+    `cc_share_by-nc-nd` = colDef(show = FALSE),
+    `cc_share_by-nc-sa` = colDef(show = FALSE),
+    `cc_share_by-sa` = colDef(show = FALSE),
+    `cc_share_by-nd` = colDef(show = FALSE),
+    `cc_share_zero` = colDef(show = FALSE),
+    esac_id = colDef(show = FALSE),
+    esac_publisher = colDef(show = FALSE),
+    cr_year = colDef(show = FALSE),
+    combined_agreement = colDef(show = FALSE),
+    agreement_display = colDef(show = FALSE),
+    lead = colDef(show = FALSE),
+    defaultPageSize = 25,
+    language = reactableLang(
+      pageInfo = "{rowStart}\u2013{rowEnd} of {rows} agreements",
+      pagePrevious = "\u276e",
+      pageNext = "\u276f"
+    )
+  )
+)
+
+combined_widget <- tagList(
+  tags$script(HTML(js_remove_all)),
+  tags$script(HTML(js_select_year)),
+  tags$style(HTML("
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+      align-items: flex-start;
+    }
+    .filter-input {
+      flex: 1 1 200px;
+    }
+
+   /* Atkinson Hyperlegible font */
+  .reactable,
+  .reactable-table,
+  .reactable-header,
+  .reactable-cell,
+  .rt-table,
+  .rt-header,
+  .rt-cell,
+  .reactable-container,
+  .filter-input input,
+  .filter-select,
+  .selectize-control,
+  .selectize-input,
+  .selectize-dropdown,
+  .selectize-dropdown-content,
+  .selectize-dropdown-item,
+  .filter-label {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+  }
+
+  /* Header styling */
+  .reactable-header, .rt-header {
+    font-weight: 700 !important;
+  }
+
+  /* Cell styling for better readability */
+  .reactable-cell, .rt-cell {
+    line-height: 1.4 !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Filter label styling */
+  .filter-input label {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Filter input styling */
+  .filter-input input {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Selectize dropdown styling */
+  .selectize-input {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+  }
+
+  .selectize-dropdown {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+  }
+
+    @media (max-width: 768px) {
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-input {
+        min-width: 100%;
+      }
+    }
+  ")),
+  htmltools::div(
+    class = "filters",
+    htmltools::div(
+      class = "filter-input",
+      filter_select(
+        "filter_agreement",
+        "Agreement",
+        shared_md_react,
+        ~agreement_display,
+        multiple = TRUE
+      )
+    ),
+    htmltools::div(
+      class = "filter-input",
+      filter_select(
+        "filter_lead",
+        "Consortium Lead",
+        shared_md_react,
+        ~lead,
+        multiple = TRUE
+      )
+    ),
+    htmltools::div(
+      class = "filter-input",
+      filter_select(
+        "filter_year",
+        "Publication Year",
+        shared_md_react,
+        ~cr_year,
+        multiple = FALSE
+      )
+    )
+  ),
+  react_table
+)
+
+combined_widget
+```
+
+For the agreements with Optica and Trans Tech Publications, the proportion of open access articles and the proportion with a CC BY licence are identical, indicating full implementation of the CC provision. An overall slight increase in CC BY share can be observed for Optica, while Trans Tech Publications shows a decline. For de Gruyter, the CC BY share falls short of the overall open access share — the underlying data suggest this is due to some articles having been published under CC BY-NC-ND — though a general upward trend in CC BY adoption is visible.
+
+For the agreements with Elsevier, Wiley, and the Royal Society of Chemistry, where CC BY was required only as a default or preferred option rather than the sole permissible licence, the open access share consistently exceeds the CC BY share across all agreement terms, despite an overall increase in both. The Hogrefe agreements allow authors to choose from several CC licences without preference for CC BY, which is reflected in a lower CC BY share relative to the overall open access share, and a downward trend in CC BY for the 2024 agreement. For the Springer Nature agreements, the 2021 MPDL agreement shows identical open access and CC BY shares throughout its term, while the 2020 DEAL agreement shows a slightly higher overall open access share, with an upward trend in CC BY for both.
+
+
+### Crossref Metadata Coverage
+
+Crossref is critical, because many publishers use this DOI registration agency to share metadata openly. In addition to bibliographic data, efforts from initiatives such as the [Initiative for Open Citations](https://i4oc.org/) and the [Initiative for Open Abstracts](https://i4oa.org/) have led to an increase in the open availability of references and abstracts in Crossref [@waltman2025]. 
+
+@tbl-md[^2] provides an overview of the proportion of openly accessible metadata in Crossref for articles covered by the 13 transformative agreements, focusing on [TDM](https://doi.org/10.64000/4b6d4-a0q89) support, authors' ORCIDs, author affiliations' ROR IDs, general funding information, funders' DOIs, and openly accessible abstracts. 
+
+
+```{r}
+md_alt <- read_csv(file = "data/md_alt.csv")
+
+md_cov <- md_alt %>% 
+  group_by(esac_id) %>% 
+  mutate(article_volume = n_distinct(doi)) %>% 
+  ungroup() %>% 
+  group_by(esac_publisher, esac_id, agreement, agreement_display, combined_agreement, article_volume, cr_year) |>
+  summarise(
+    articles = n(),
+    authors = sum(num_authors, na.rm = TRUE),
+    affiliations = sum(num_affiliations, na.rm = TRUE),
+    tdm_support = sum(has_tdm, na.rm = TRUE),
+    orcid_coverage = sum(num_orcids, na.rm = TRUE),
+    ror_coverage = sum(num_rors, na.rm = TRUE),
+    funder_info = sum(num_funders > 0, na.rm = TRUE),
+    funders = sum(num_funders, na.rm = TRUE),
+    funder_doi_coverage = sum(num_funder_dois, na.rm = TRUE),
+    abstract_coverage = sum(has_abstract, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(
+    tdm_share = tdm_support / articles,
+    orcid_share = orcid_coverage / authors,
+    ror_share = case_when(
+      ror_coverage == 0 ~ 0,
+      TRUE ~ ror_coverage / affiliations
+    ),
+    funder_share = funder_info / articles,
+    funder_doi_share = case_when(
+      funder_doi_coverage == 0 ~ 0,
+      TRUE ~ funder_doi_coverage / funders
+    ),
+    abstract_share = abstract_coverage / articles
+  ) |>
+  select(esac_publisher, esac_id, agreement, agreement_display, combined_agreement, article_volume, cr_year, tdm_share, orcid_share, ror_share, funder_share, funder_doi_share, abstract_share) |>
+  pivot_longer(
+    cols = c(tdm_share, orcid_share, ror_share, funder_share, funder_doi_share, abstract_share),
+    names_to = "metric", values_to = "value"
+  ) |>
+  mutate(metric = case_when(
+    metric == "tdm_share" ~ "TDM",
+    metric == "orcid_share" ~ "ORCID",
+    metric == "ror_share" ~ "ROR",
+    metric == "funder_share" ~ "Funder Info",
+    metric == "funder_doi_share" ~ "Funder DOIs",
+    metric == "abstract_share" ~ "Open Abstracts"
+  )) |>
+  pivot_wider(names_from = "cr_year", values_from = "value") |>
+  # mutate(combined_agreement = glue::glue('<div><div style="font-weight:bold;font-size:14px;">{esac_publisher}</div><div style="font-size:12px;">{agreement}</div></div>')) |>
+  # mutate(agreement_display = paste(esac_publisher, agreement, sep = " ")) |>
+  select(esac_publisher, esac_id, agreement, agreement_display, combined_agreement, article_volume, metric, `2019`, `2020`, `2021`, `2022`, `2023`, `2024`, `2025`)
+```
+
+
+```{r}
+#| label: tbl-md
+#| tbl-cap: Proportion of publicly available Crossref metadata per transformative agreement and publication year. 
+
+# Reused and adapted from: https://github.com/subugoe/hoaddash/blob/c21afac28c0a8e911d0d666db374ee5c602a14cb/_oam_overview.qmd#L624 and https://github.com/subugoe/hoaddash/blob/c21afac28c0a8e911d0d666db374ee5c602a14cb/R/open_md.R#L33
+
+shared_md_cov_react <- SharedData$new(md_cov)
+
+react_md <- reactable(
+  shared_md_cov_react,
+  pagination = TRUE,
+  compact = TRUE,
+  defaultSorted = "article_volume",
+  defaultSortOrder = "desc",
+  showPageSizeOptions = TRUE,
+  sortable = FALSE,
+  defaultColDef = colDef(vAlign = "center", headerClass = "header"),
+  columns = list(
+    combined_agreement = colDef(
+      name = "Agreement",
+      align = "left",
+      html = TRUE,
+      style = JS("function(rowInfo, column, state) {
+        const firstSorted = state.sorted[0]
+        // Always show the agreement row if it's part of the filter
+        const isFiltered = state.filters['combined_agreement']?.includes(rowInfo.values['combined_agreement'])
+        if (isFiltered) {
+          return { visibility: 'visible' }
+        }
+        // Merge cells if unsorted or sorting by agreement
+        if (!firstSorted || firstSorted.id === 'article_volume') {
+          const prevRow = state.pageRows[rowInfo.viewIndex - 1]
+          if (prevRow && rowInfo.values['combined_agreement'] === prevRow['combined_agreement']) {
+            return { visibility: 'hidden' }
+          }
+        }
+      }"),
+      maxWidth = 300
+    ),
+    article_volume = colDef(
+      name = "Article Volume",
+      align = "left",
+      html = TRUE,
+      sortable = TRUE,
+      maxWidth = 300,
+      format = colFormat(separators = TRUE, locales = "en-GB"),
+      style = JS("function(rowInfo, column, state) {
+        const firstSorted = state.sorted[0]
+        // Always show the article volume row if it's part of the filter
+        const isFiltered = state.filters['combined_agreement' || 'metric']?.includes(rowInfo.values['combined_agreement' || 'metric'])
+        if (isFiltered) {
+          return { visibility: 'visible' }
+        }
+        // Merge cells if unsorted or sorting by agreement
+        if (!firstSorted || firstSorted.id === 'article_volume') {
+          const prevRow = state.pageRows[rowInfo.viewIndex - 1]
+          if (prevRow && rowInfo.values['article_volume'] === prevRow['article_volume']) {
+            return { visibility: 'hidden' }
+          }
+        }
+      }")
+      ),
+    metric = colDef(
+      name = "Metadata",
+      align = "left",
+      cell = function(value, index) {
+        if (index == 1 || shared_md_cov_react$origData()$metric[index] != shared_md_cov_react$origData()$metric[index - 1]) {
+          value
+        } else {
+          htmltools::div(style = list(display = "none"))
+        }
+      },
+      maxWidth = 120
+    ),
+    `2019` = indicator_column_custom(name = "2019"),
+    `2020` = indicator_column_custom(name = "2020"),
+    `2021` = indicator_column_custom(name = "2021"),
+    `2022` = indicator_column_custom(name = "2022"),
+    `2023` = indicator_column_custom(name = "2023"),
+    `2024` = indicator_column_custom(name = "2024"),
+    `2025` = indicator_column_custom(name = "2025"),
+    esac_id = colDef(show = FALSE),
+    esac_publisher = colDef(show = FALSE),
+    combined_agreement = colDef(show = FALSE),
+    agreement = colDef(show = FALSE),
+    agreement_display = colDef(show = FALSE)
+  ),
+  defaultPageSize = 12,
+  language = reactableLang(
+    pageInfo = "{rowStart}\u2013{rowEnd} of {rows} rows",
+    pagePrevious = "\u276e",
+    pageNext = "\u276f"
+  )
+)
+
+md_widget <- tagList(
+  tags$script(HTML(js_remove_all)),
+  tags$style(HTML("
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+      align-items: flex-start;
+    }
+    .filter-input {
+      flex: 1 1 200px;
+    }
+  /* Atkinson Hyperlegible font */
+  .reactable,
+  .reactable-table,
+  .reactable-header,
+  .reactable-cell,
+  .rt-table,
+  .rt-header,
+  .rt-cell,
+  .reactable-container,
+  .filter-input input,
+  .filter-select,
+  .selectize-control,
+  .selectize-input,
+  .selectize-dropdown,
+  .selectize-dropdown-content,
+  .selectize-dropdown-item,
+  .filter-label {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+  }
+
+  /* Header styling */
+  .reactable-header, .rt-header {
+    font-weight: 700 !important;
+  }
+
+  /* Cell styling for better readability */
+  .reactable-cell, .rt-cell {
+    line-height: 1.4 !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Filter label styling */
+  .filter-input label {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Filter input styling */
+  .filter-input input {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Selectize dropdown styling */
+  .selectize-input {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+    text-align: left !important;
+  }
+
+  .selectize-dropdown {
+    font-family: 'Atkinson Hyperlegible', 'Arial', sans-serif !important;
+    font-size: 14px !important;
+    text-align: left !important;
+  }
+    @media (max-width: 768px) {
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-input {
+        min-width: 100%;
+      }
+    }
+  ")),
+  htmltools::div(
+    class = "filters",
+    htmltools::div(
+      class = "filter-input",
+      filter_select(
+        "filter_agreement",
+        "Agreement",
+        shared_md_cov_react,
+        ~agreement_display,
+        multiple = TRUE
+      )
+    ),
+    htmltools::div(
+      class = "filter-input",
+      filter_select(
+        "filter_metadata",
+        "Metadata",
+        shared_md_cov_react,
+        ~metric,
+        multiple = TRUE
+      )
+    )
+  ),
+  react_md
+)
+
+
+md_widget
+```
+
+[^2]: @tbl-md reuses and extends the interactive visualization framework from the [Hybrid Open Access Dashboard](https://github.com/subugoe/hoaddash), including its `reactable`-based layout and filtering system. It adds ROR ID coverage as a new metric, which was not included in HOAD’s original scope and uses a modified colour palette. Code adaptations were based on HOAD’s open-source implementation on [GitHub](https://github.com/subugoe/hoaddash/blob/c21afac28c0a8e911d0d666db374ee5c602a14cb/R/open_md.R#L33).
+
+#### TDM support
+
+For the agreements with Elsevier, de Gruyter, and the 2021 MPDL Springer Nature agreement, TDM information has been persistently submitted to Crossref throughout the entire terms, consistent with contractual permissions for TDM for private use or research purposes. By contrast, no TDM information was delivered for the agreements with Hogrefe, the Royal Society of Chemistry, Trans Tech Publications, or Optica, despite non-commercial TDM being permissible under the first three and no TDM clause having been identified for Optica. For the Springer Nature DEAL agreements, TDM support is high throughout, reaching 100% in 2022. For Wiley, a strong decline is visible from 2023 onwards — corroborated by [HOAD](https://subugoe.github.io/hoaddash/oam/#crossref-metadata-coverage) and the [Crossref Participation Report for Wiley](https://www.crossref.org/members/prep/311) — though HOAD data for 2026 shows a recovery to over 90%, suggesting the decline may reflect a temporary technical issue rather than a strategic change.
+
+#### ORCID coverage
+
+ORCID coverage ranges from 10.9% (Hogrefe for 2021) to 62.5% (Royal Society of Chemistry for 2025).
+Notably, the Royal Society of Chemistry agreement — which does not explicitly reference ORCIDs for Crossref delivery — shows the highest coverage. Despite most other agreements mentioning ORCIDs for author identification or metadata delivery, coverage remains mostly below 50%.
+
+#### ROR coverage
+
+Substantial disparities are visible across publishers. Optica is the only agreement with noticeable and consistent ROR coverage. Wiley shows minimal ROR coverage from 2022 onwards, and all other agreements show 0% — including the agreements with the Royal Society of Chemistry and Trans Tech Publications, which explicitly reference ROR IDs for institutional identification or reporting.
+
+#### Funding information and funder DOIs
+
+No funding-related metadata was submitted to Crossref for the Hogrefe or Trans Tech Publications agreements, despite both containing funding information provisions. The Trans Tech Publications agreement, however, specified that funding information would only be recorded upon request by the authors. The Royal Society of Chemistry agreement — the only one without a funding information provision — nevertheless achieves among the highest funding information coverage, with DOIs recorded for all funders. De Gruyter shows low funding information coverage (maximum 7.4%) but with around 70% funder DOI coverage. Elsevier, which only committed to examining the feasibility of including funding information, shows coverage rising to 60% by 2025 with near-complete funder DOI coverage. The 2021 MPDL Springer Nature agreement shows declining funding information and funder DOI coverage, while the DEAL agreements show comparably higher funding information coverage but also a downward trend in funder DOI coverage. Wiley coverage of funding information oscillates around 50%, while funder DOI coverage is consistently above 90% and trending upward. Optica — the only agreement with an explicit contractual guarantee for funding information — shows the highest funding information coverage, though with a slight downward trend in funder DOI coverage.
+
+#### Open abstracts
+
+Almost no abstracts were delivered to Crossref for articles under the Elsevier agreement. Coverage is highest for Optica and Trans Tech Publications, followed by the Royal Society of Chemistry and Wiley, each exceeding 90%. None of the 13 agreements contained an explicit contractual provision for abstract delivery to Crossref.
+
+## Discussion
+
+The analysis reveals substantial discrepancies between the contractual provisions of transformative agreements and their actual implementation in Crossref metadata, highlighting a gap in the operationalisation of open metadata commitments.
+
+### Creative Commons Licences
+
+The CC licence analysis demonstrates that contractual specificity directly correlates with implementation compliance. Agreements that explicitly mandated CC BY licensing (Optica, Trans Tech Publications, and de Gruyter) generally achieved higher compliance rates, though de Gruyter's implementation was imperfect due to residual CC BY-NC-ND usage. In contrast, agreements where CC BY was merely presented as a default or preferred option (Elsevier, Wiley, Royal Society of Chemistry) consistently showed lower CC BY adoption rates despite increasing overall open access volumes. This finding suggests that without explicit contractual mandates requiring CC BY as the sole permissible licence, publishers maintain flexibility to offer alternative licences, potentially undermining the transformative goals of these agreements. 
+
+### Crossref Metadata Coverage
+
+The near-absence of ROR coverage across most agreements is particularly striking. Even agreements that explicitly reference ROR IDs in the agreement text show 0% coverage, and virtually no ROR IDs were submitted for articles under the DEAL agreements — which account for the largest share of publication volume. This is problematic because ROR IDs provide persistent, unambiguous institutional identification essential for research assessment and funding attribution. Without them, bibliometric analyses must rely on error-prone string matching, introducing noise and increasing the manual curation burden. The methodological comparison with the SOS Crossref truth table further highlights the difficulty of measuring ROR coverage consistently when publishers submit ROR IDs without corresponding institutional name strings. The importance of ROR adoption is further underscored by Crossref's plans to retire the Funder Registry in favour of ROR [@Portenoy2026], making consistent ROR submission increasingly central to the Crossref metadata ecosystem.
+
+In line with @de_Jonge_2026, the ORCID coverage findings suggest that publisher workflow integration and editorial systems might play a more decisive role in ORCID adoption than contractual language alone, as for instance, the Royal Society of Chemistry agreement -- which does not explicitly reference ORCIDs for Crossref delivery -- achieves the highest coverage regardless.
+
+The funding metadata findings illustrate a broader pattern: the presence of contractual provisions is no guarantee of implementation. The Trans Tech Publications agreement committed to recording funding information but only upon author request, and the complete absence of such metadata suggests either that authors rarely invoked this option, that the publisher lacked the necessary infrastructure, or that the provision was too vague to operationalise. Conversely, the Royal Society of Chemistry — without any funding metadata provision — achieved among the highest coverage, again pointing to publisher infrastructure and internal priorities as the more decisive factors. The declining funder DOI coverage for both Springer Nature agreement types, despite generally reasonable funding information coverage, further illustrates that even partial implementation can be inconsistent over time.
+
+The TDM findings similarly show that contractual permissions do not reliably translate into metadata delivery. The temporary decline in Wiley's TDM metadata after 2022, despite contractual permissions, likely reflects a technical issue given the subsequent recovery visible in HOAD's 2026 data, but it underscores the need for ongoing monitoring rather than reliance on contractual commitments alone.
+
+Taken together, these findings demonstrate that vague or permissive contractual language on metadata tends to produce inconsistent outcomes. The cases of the Royal Society of Chemistry (high ORCID and funding coverage without explicit provisions) and Trans Tech Publications (zero funding coverage despite an explicit provision) illustrate the disconnect between contractual commitment and operational reality. Future agreements should specify exact metadata elements, required values, and implementation timelines, with measurable compliance indicators to enable systematic monitoring.
+
+## Outlook
+
+One of the most compelling findings is the near-total absence of ROR ID coverage across most agreements. This underscores a clear opportunity for HOAD to expand its analytical scope by incorporating ROR coverage as a standard metric. Such an extension would be technically straightforward and would enable monitoring of ROR coverage across a wider set of agreements over time.
+
+While this analysis is focused on 13 agreements with German consortia, the methodological approach could serve as a template for broader investigation. A distributed effort, connected to the [Joint Task Force on Negotiating Openness of Publication Metadata](https://oa2020.org/2025/10/02/barcelona-declaration-and-oa2020-launch-joint-task-force-on-negotiating-openness-of-publication-metadata/) between OA2020 (now OA Forward) and the Barcelona Declaration, has been started to analyse all openly available transformative agreements in the [ESAC Registry of Open Publishing Agreements](https://esac-initiative.org/about/transformative-agreements/agreement-registry/). The approach presented here could contribute to that initiative, providing empirical evidence to inform the task force's work on negotiating openness of publication metadata across publishers and nations.
+
+## Code and Data Availability {.appendix}
+
+R Code and processed data files for this data analysis are available on GitHub: <https://github.com/subugoe/scholcomm_analytics/tree/main/posts/ta_coverage_analysis>
+
+Data tables used for data retrieval are publicly available on Google BigQuery, as provided by the SUB Göttingen: <https://subugoe.github.io/scholcomm_analytics/data.html>.
+
+# References
