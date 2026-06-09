@@ -390,5 +390,12 @@
     "title": "Open Access Licences and Open Metadata in Transformative Agreements",
     "section": "Footnotes",
     "text": "Footnotes\n\n\nhttps://github.com/njahn82/jct_data↩︎\nTable 3 reuses and extends the interactive visualization framework from the Hybrid Open Access Dashboard, including its reactable-based layout and filtering system. It adds ROR ID coverage as a new metric, which was not included in HOAD’s original scope and uses a modified colour palette. Code adaptations were based on HOAD’s open-source implementation on GitHub.↩︎"
+  },
+  {
+    "objectID": "posts/ta_coverage_analysis/main.html#funding-acknowledgements",
+    "href": "posts/ta_coverage_analysis/main.html#funding-acknowledgements",
+    "title": "Open Access Licences and Open Metadata in Transformative Agreements",
+    "section": "Funding Acknowledgements",
+    "text": "Funding Acknowledgements\n\nThis analysis was conducted as part of the OA Datenpraxis project, funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – 528466070"
   }
 ]
