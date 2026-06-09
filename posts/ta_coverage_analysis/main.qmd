@@ -980,4 +980,8 @@ R Code and processed data files for this data analysis are available on GitHub: 
 
 Data tables used for data retrieval are publicly available on Google BigQuery, as provided by the SUB Göttingen: <https://subugoe.github.io/scholcomm_analytics/data.html>.
 
+## Funding Acknowledgements {.appendix}
+
+This analysis was conducted as part of the [OA Datenpraxis](https://oa-datenpraxis.de/) project, funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – [528466070](https://gepris.dfg.de/gepris/projekt/528466070)
+
 # References
