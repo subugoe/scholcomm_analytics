@@ -14,6 +14,7 @@ author:
 date: 07/16/2026
 image: mcp_logo.svg
 license: CC BY
+doi: "10.59350/mmvqt-ae749"
 abstract: "The Open Research Information Online Databases collective (ORION-DBs) provides access to multiple open research information resources on BigQuery.
 This post introduces `orion-mcp`, an open-source tool that enables large language models (LLMs) such as Claude to explore schemas, draft SQL queries, estimate costs, execute these queries and export the data using R.
 This provides a practical entry point for users who are unfamiliar with ORION-DBs, as well as those who wish to use LLMs for data analysis."
@@ -21,6 +22,7 @@ title-block-banner: false
 citation:
   container-title: "Scholarly Communication Analytics"
   type: article-journal
+  doi: "10.59350/mmvqt-ae749"
 google-scholar: true
 ---
 
