@@ -9,8 +9,125 @@
 <link>https://subugoe.github.io/scholcomm_analytics/</link>
 <atom:link href="https://subugoe.github.io/scholcomm_analytics/index.xml" rel="self" type="application/rss+xml"/>
 <description>A blog where you’ll find insights from our work as Data Analysts in the domain of scholarly communication at Göttingen State and University Library.</description>
-<generator>quarto-1.9.38</generator>
-<lastBuildDate>Thu, 14 May 2026 22:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.30</generator>
+<lastBuildDate>Wed, 15 Jul 2026 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>Introducing an MCP Server for ORION-DBs</title>
+  <dc:creator>Najko Jahn</dc:creator>
+  <link>https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>When working with databases provided by the <a href="https://orion-dbs.community/">ORION-DBs collective</a>, I often find it difficult to choose between datasets, understand their schemas, and keep track of changes across releases. To make these collections discoverable, <a href="https://orion-dbs.community/collections/">ORION-DBs website documents them</a>. Together, ORION-DBs collections span over 20 TB of open research information on Google BigQuery, including different versions of large datasets from Crossref, OpenAlex, and OpenAIRE. The website is built from <a href="https://github.com/orion-dbs-community/website/tree/main/data">schema data fetched daily from BigQuery and versioned on GitHub</a>. Even with the website, however, finding the right dataset and writing the corresponding SQL query remains difficult, particularly for collections with many table variants or frequent schema changes.</p>
+<p>I therefore sometimes feed BigQuery schema files into an LLM to ask questions about the available data sources or to generate or validate SQL queries. <a href="https://www.youtube.com/watch?v=owDd1CJ17uQ">LLMs perform reasonably well at such coding tasks when given sufficient context</a>, and I have found it similarly useful to discuss data analysis design with an LLM directly when providing background information. It is also a quite <a href="https://www.anthropic.com/engineering/code-execution-with-mcp">cost-sensitive way to deal with data using LLMs</a>.</p>
+<p>This blog post introduces <a href="https://github.com/subugoe/orion-mcp"><code>orion-mcp</code></a>, an experimental tool that connects ORION-DBs schemas to AI applications such as Claude Desktop, to make this kind of data exploration and retrieval more systematic. <code>orion-mcp</code> follows a <a href="https://aarontay.substack.com/p/creating-your-own-research-assistant">growing number of Model Context Protocol (MCP) servers combining scholarly resources with LLMs</a>, many of them offered by commercial vendors and publishers.</p>
+<p><code>orion-mcp</code> provides the LLM with enough context to write SQL queries, which are then executed on BigQuery rather than in the conversation. Only the schema and the query results are passed along, which reduces token usage and keeps data retrieval auditable. BigQuery handles the underlying database computation and returns only the results to the model, typically at low cost, allowing retrieval strategies to be discussed and refined in natural language.</p>
+<p>This post walks through a use case. The tool is at an early stage, so <a href="https://github.com/subugoe/orion-mcp/issues">feedback is welcome</a>.</p>
+</section>
+<section id="what-it-does" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-does">What it does</h2>
+<p>A typical workflow is to ask which databases are available, explore the relevant schemas, and write a SQL query from that context. Once the results look right, they can be exported for further analysis outside the conversation. I illustrate this below with an open access analysis of publications from authors affiliated with German institutions, and from the University of Göttingen.</p>
+<p>The <strong>full Claude chat transcript</strong> can be found here <a href="https://claude.ai/share/ec48f509-78a1-48c9-9f98-98b1c60147ee" class="uri">https://claude.ai/share/ec48f509-78a1-48c9-9f98-98b1c60147ee</a>.</p>
+<section id="explore-schemas" class="level3">
+<h3 class="anchored" data-anchor-id="explore-schemas">Explore schemas</h3>
+<p>Schema exploration runs on the same metadata that the ORION-DBs website is built from. These schema files are fetched daily from BigQuery and versioned on GitHub. The MCP server downloads them when it starts, so browsing schemas requires no Google Cloud account and costs nothing.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/list_dbs.png" class="img-fluid figure-img"></p>
+<figcaption>Asking Claude to browse for ORION-DBs using <code>orion-mcp</code></figcaption>
+</figure>
+</div>
+<p>In this case, I asked which OpenAlex snapshots ORION-DBs provides and which one is most recent. The model identified the current snapshot and, when I asked it to compare <code>subugoe-collaborative.openalex_walden</code> with the one in MultiObs, focusing on the <code>works</code> table, it worked through how the two differ in schema design.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/explain_dbs.png" class="img-fluid figure-img"></p>
+<figcaption>Explaining table structures using <code>orion-mcp</code></figcaption>
+</figure>
+</div>
+</section>
+<section id="query-bigquery" class="level3">
+<h3 class="anchored" data-anchor-id="query-bigquery">Query BigQuery</h3>
+<p>This is where authentication with Google Cloud and cost matter. Queries run against your own Google Cloud credentials, and before anything executes, <code>orion-mcp</code> estimates the bytes scanned, associated costs, and asks for confirmation. Here, I asked the model to use the <code>subugoe-collaborative.openalex_walden</code> dataset to get the number and proportion of open access articles by year for authors affiliated with German institutions between 2018 and 2025, comparing first and corresponding authors.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/oa_query.png" class="img-fluid figure-img"></p>
+<figcaption>Chat with Claude about your SQL strategy. <code>orion-mcp</code> will always provide a cost estimate and ask before running a query. This allows to review and discuss the SQL code.</figcaption>
+</figure>
+</div>
+<p>From there, I narrowed the analysis to the University of Göttingen, including UMG, asking the model to use ROR IDs to identify the relevant institutions. Each refinement is a separate query with its own cost estimate fetched from Google BigQuery.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/oa_gottingen.png" class="img-fluid figure-img"></p>
+<figcaption>Returning results as a formatted table, comparing open access shares for University of Göttingen between first and corresponding author according to OpenAlex.</figcaption>
+</figure>
+</div>
+<p>When results are returned, follow-up breakdowns and summaries are computed from the R objects held in the local R session.</p>
+</section>
+<section id="export-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="export-datasets">Export datasets</h3>
+<p>Once the results looked right, I asked the model to export the raw data: DOI, institution, author role (first or corresponding), publication year, and OA status.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/oa_export.png" class="img-fluid figure-img"></p>
+<figcaption>Requesting raw data to be downloaded.</figcaption>
+</figure>
+</div>
+<p>Exports are written as CSV for flat tabular data, or JSON for nested structures, saved to the mounted exports directory so they appear locally outside the container. he container can only access the two folders you explicitly mount, your Google credentials (read-only) and this exports folder, which prevents access to anything else on the computer.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/download.png" class="img-fluid figure-img"></p>
+<figcaption>Confirming download of OpenAlex article-level data as csv.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="costs" class="level2">
+<h2 class="anchored" data-anchor-id="costs">Costs</h2>
+<p>The BigQuery side of <a href="https://claude.ai/share/ec48f509-78a1-48c9-9f98-98b1c60147ee">this entire use-case session</a>, five queries plus the export, about 46 GB scanned, cost under $0.30, and would typically fall within Google BigQuery’s free tier of 1 TB per month. Claude usage comes on top. Run against the API with Sonnet, this session would cost roughly another $0.30–0.50; in Claude Desktop, as here, it is covered by the subscription.</p>
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>Full instructions are in the <a href="https://github.com/subugoe/orion-mcp">GitHub repo README</a>.</p>
+<p>The server runs in a Docker container connected to Claude Desktop via its MCP config file. Authentication uses Google’s <a href="https://cloud.google.com/docs/authentication/application-default-credentials">Application Default Credentials</a>, so local <code>gcloud</code> credentials are used directly and no service account keys are needed. A <a href="https://cloud.google.com/free">Google Cloud account</a> includes 1 TB of free queries per month.</p>
+<p>The tool is implemented in R using <a href="https://posit-dev.github.io/mcptools/"><code>{mcptools}</code></a> and <a href="https://ellmer.tidyverse.org/"><code>{ellmer}</code></a>, assisted with Claude Code. It mainly uses <a href="https://bigrquery.r-dbi.org/"><code>{bigrquery}</code></a> to interact with Google BigQuery, which I use in my everyday work.</p>
+<p>Note that I only tested <code>orion-mcp</code> using Claude and Claude Desktop. If you find any bugs or have questions, please feel free to file an <a href="https://github.com/subugoe/orion-mcp/issues">issue</a>.</p>
+</section>
+<section id="responsible-use" class="level2">
+<h2 class="anchored" data-anchor-id="responsible-use">Responsible use</h2>
+<p>LLMs make mistakes. Always verify that queries return the results you intended before using them in any analysis. If you plan to use this in a publication, check the outlet’s policy on AI-assisted work and document your process accordingly.</p>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@article{jahn2026,
+  author = {Jahn, Najko},
+  title = {Introducing an {MCP} {Server} for {ORION-DBs}},
+  journal = {Scholarly Communication Analytics},
+  date = {2026-07-16},
+  url = {https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/},
+  langid = {en},
+  abstract = {The Open Research Information Online Databases collective
+    (ORION-DBs) provides access to multiple open research information
+    resources on BigQuery. This post introduces `orion-mcp`, an
+    open-source tool that enables large language models (LLMs) such as
+    Claude to explore schemas, draft SQL queries, estimate costs,
+    execute these queries and export the data using R. This provides a
+    practical entry point for users who are unfamiliar with ORION-DBs,
+    as well as those who wish to use LLMs for data analysis.}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-jahn2026" class="csl-entry quarto-appendix-citeas">
+Jahn, Najko. 2026. <span>“Introducing an MCP Server for
+ORION-DBs.”</span> <em>Scholarly Communication Analytics</em>, accepted,
+July 16. <a href="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/">https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/</a>.
+</div></div></section></div> ]]></description>
+  <guid>https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/</guid>
+  <pubDate>Wed, 15 Jul 2026 22:00:00 GMT</pubDate>
+  <media:content url="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/mcp_logo.svg" medium="image" type="image/svg+xml"/>
+</item>
 <item>
   <title>Open Access Licences and Open Metadata in Transformative Agreements</title>
   <dc:creator>Sophia Dörner</dc:creator>

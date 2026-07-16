@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.30">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Najko Jahn">
+<meta name="dcterms.date" content="2026-07-16">
+
+<title>Introducing an MCP Server for ORION-DBs – Scholarly Communication Analytics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-b6a8276bf55561bdbc268162d41bd1f7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-7ffc84074ef9b7ecd4e5eec444df9067.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<meta property="og:title" content="Introducing an MCP Server for ORION-DBs – Scholarly Communication Analytics">
+<meta property="og:description" content="The Open Research Information Online Databases collective (ORION-DBs) provides access to multiple open research information resources on BigQuery. This post introduces orion-mcp, an open-source tool that enables large language models (LLMs) such as Claude to explore schemas, draft SQL queries, estimate costs, execute these queries and export the data using R. This provides a practical entry point for users who are unfamiliar with ORION-DBs, as well as those who wish to use LLMs for data analysis.">
+<meta property="og:image" content="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/mcp_logo.svg">
+<meta property="og:site_name" content="Scholarly Communication Analytics">
+<meta name="twitter:title" content="Introducing an MCP Server for ORION-DBs – Scholarly Communication Analytics">
+<meta name="twitter:description" content="The Open Research Information Online Databases collective (ORION-DBs) provides access to multiple open research information resources on BigQuery. This post introduces orion-mcp, an open-source tool that enables large language models (LLMs) such as Claude to explore schemas, draft SQL queries, estimate costs, execute these queries and export the data using R. This provides a practical entry point for users who are unfamiliar with ORION-DBs, as well as those who wish to use LLMs for data analysis.">
+<meta name="twitter:image" content="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/mcp_logo.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="citation_title" content="Introducing an MCP Server for ORION-DBs">
+<meta name="citation_abstract" content="The Open Research Information Online Databases collective (ORION-DBs) provides access to multiple open research information resources on BigQuery. This post introduces `orion-mcp`, an open-source tool that enables large language models (LLMs) such as Claude to explore schemas, draft SQL queries, estimate costs, execute these queries and export the data using R. This provides a practical entry point for users who are unfamiliar with ORION-DBs, as well as those who wish to use LLMs for data analysis.">
+<meta name="citation_author" content="Najko Jahn">
+<meta name="citation_publication_date" content="2026-07-16">
+<meta name="citation_cover_date" content="2026-07-16">
+<meta name="citation_year" content="2026">
+<meta name="citation_online_date" content="2026-07-16">
+<meta name="citation_fulltext_html_url" content="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/">
+<meta name="citation_language" content="en">
+<meta name="citation_journal_title" content="Scholarly Communication Analytics">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../../logo.svg" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Scholarly Communication Analytics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../data.html"> 
+<span class="menu-text">Data</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Introducing an MCP Server for ORION-DBs</h1>
+<p class="subtitle lead">Navigating Open Research Information Resources on BigQuery with LLMs</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Najko Jahn <a href="https://orcid.org/0000-0001-5105-1463" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://www.sub.uni-goettingen.de/">
+            Göttingen State and University Library
+            </a>
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Abstract</div>
+    The Open Research Information Online Databases collective (ORION-DBs) provides access to multiple open research information resources on BigQuery. This post introduces <code>orion-mcp</code>, an open-source tool that enables large language models (LLMs) such as Claude to explore schemas, draft SQL queries, estimate costs, execute these queries and export the data using R. This provides a practical entry point for users who are unfamiliar with ORION-DBs, as well as those who wish to use LLMs for data analysis.
+  </div>
+</div>
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>When working with databases provided by the <a href="https://orion-dbs.community/">ORION-DBs collective</a>, I often find it difficult to choose between datasets, understand their schemas, and keep track of changes across releases. To make these collections discoverable, <a href="https://orion-dbs.community/collections/">ORION-DBs website documents them</a>. Together, ORION-DBs collections span over 20 TB of open research information on Google BigQuery, including different versions of large datasets from Crossref, OpenAlex, and OpenAIRE. The website is built from <a href="https://github.com/orion-dbs-community/website/tree/main/data">schema data fetched daily from BigQuery and versioned on GitHub</a>. Even with the website, however, finding the right dataset and writing the corresponding SQL query remains difficult, particularly for collections with many table variants or frequent schema changes.</p>
+<p>I therefore sometimes feed BigQuery schema files into an LLM to ask questions about the available data sources or to generate or validate SQL queries. <a href="https://www.youtube.com/watch?v=owDd1CJ17uQ">LLMs perform reasonably well at such coding tasks when given sufficient context</a>, and I have found it similarly useful to discuss data analysis design with an LLM directly when providing background information. It is also a quite <a href="https://www.anthropic.com/engineering/code-execution-with-mcp">cost-sensitive way to deal with data using LLMs</a>.</p>
+<p>This blog post introduces <a href="https://github.com/subugoe/orion-mcp"><code>orion-mcp</code></a>, an experimental tool that connects ORION-DBs schemas to AI applications such as Claude Desktop, to make this kind of data exploration and retrieval more systematic. <code>orion-mcp</code> follows a <a href="https://aarontay.substack.com/p/creating-your-own-research-assistant">growing number of Model Context Protocol (MCP) servers combining scholarly resources with LLMs</a>, many of them offered by commercial vendors and publishers.</p>
+<p><code>orion-mcp</code> provides the LLM with enough context to write SQL queries, which are then executed on BigQuery rather than in the conversation. Only the schema and the query results are passed along, which reduces token usage and keeps data retrieval auditable. BigQuery handles the underlying database computation and returns only the results to the model, typically at low cost, allowing retrieval strategies to be discussed and refined in natural language.</p>
+<p>This post walks through a use case. The tool is at an early stage, so <a href="https://github.com/subugoe/orion-mcp/issues">feedback is welcome</a>.</p>
+</section>
+<section id="what-it-does" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-does">What it does</h2>
+<p>A typical workflow is to ask which databases are available, explore the relevant schemas, and write a SQL query from that context. Once the results look right, they can be exported for further analysis outside the conversation. I illustrate this below with an open access analysis of publications from authors affiliated with German institutions, and from the University of Göttingen.</p>
+<p>The <strong>full Claude chat transcript</strong> can be found here <a href="https://claude.ai/share/ec48f509-78a1-48c9-9f98-98b1c60147ee" class="uri">https://claude.ai/share/ec48f509-78a1-48c9-9f98-98b1c60147ee</a>.</p>
+<section id="explore-schemas" class="level3">
+<h3 class="anchored" data-anchor-id="explore-schemas">Explore schemas</h3>
+<p>Schema exploration runs on the same metadata that the ORION-DBs website is built from. These schema files are fetched daily from BigQuery and versioned on GitHub. The MCP server downloads them when it starts, so browsing schemas requires no Google Cloud account and costs nothing.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="list_dbs.png" class="img-fluid figure-img"></p>
+<figcaption>Asking Claude to browse for ORION-DBs using <code>orion-mcp</code></figcaption>
+</figure>
+</div>
+<p>In this case, I asked which OpenAlex snapshots ORION-DBs provides and which one is most recent. The model identified the current snapshot and, when I asked it to compare <code>subugoe-collaborative.openalex_walden</code> with the one in MultiObs, focusing on the <code>works</code> table, it worked through how the two differ in schema design.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="explain_dbs.png" class="img-fluid figure-img"></p>
+<figcaption>Explaining table structures using <code>orion-mcp</code></figcaption>
+</figure>
+</div>
+</section>
+<section id="query-bigquery" class="level3">
+<h3 class="anchored" data-anchor-id="query-bigquery">Query BigQuery</h3>
+<p>This is where authentication with Google Cloud and cost matter. Queries run against your own Google Cloud credentials, and before anything executes, <code>orion-mcp</code> estimates the bytes scanned, associated costs, and asks for confirmation. Here, I asked the model to use the <code>subugoe-collaborative.openalex_walden</code> dataset to get the number and proportion of open access articles by year for authors affiliated with German institutions between 2018 and 2025, comparing first and corresponding authors.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="oa_query.png" class="img-fluid figure-img"></p>
+<figcaption>Chat with Claude about your SQL strategy. <code>orion-mcp</code> will always provide a cost estimate and ask before running a query. This allows to review and discuss the SQL code.</figcaption>
+</figure>
+</div>
+<p>From there, I narrowed the analysis to the University of Göttingen, including UMG, asking the model to use ROR IDs to identify the relevant institutions. Each refinement is a separate query with its own cost estimate fetched from Google BigQuery.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="oa_gottingen.png" class="img-fluid figure-img"></p>
+<figcaption>Returning results as a formatted table, comparing open access shares for University of Göttingen between first and corresponding author according to OpenAlex.</figcaption>
+</figure>
+</div>
+<p>When results are returned, follow-up breakdowns and summaries are computed from the R objects held in the local R session.</p>
+</section>
+<section id="export-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="export-datasets">Export datasets</h3>
+<p>Once the results looked right, I asked the model to export the raw data: DOI, institution, author role (first or corresponding), publication year, and OA status.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="oa_export.png" class="img-fluid figure-img"></p>
+<figcaption>Requesting raw data to be downloaded.</figcaption>
+</figure>
+</div>
+<p>Exports are written as CSV for flat tabular data, or JSON for nested structures, saved to the mounted exports directory so they appear locally outside the container. he container can only access the two folders you explicitly mount, your Google credentials (read-only) and this exports folder, which prevents access to anything else on the computer.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="download.png" class="img-fluid figure-img"></p>
+<figcaption>Confirming download of OpenAlex article-level data as csv.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="costs" class="level2">
+<h2 class="anchored" data-anchor-id="costs">Costs</h2>
+<p>The BigQuery side of <a href="https://claude.ai/share/ec48f509-78a1-48c9-9f98-98b1c60147ee">this entire use-case session</a>, five queries plus the export, about 46 GB scanned, cost under $0.30, and would typically fall within Google BigQuery’s free tier of 1 TB per month. Claude usage comes on top. Run against the API with Sonnet, this session would cost roughly another $0.30–0.50; in Claude Desktop, as here, it is covered by the subscription.</p>
+</section>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>Full instructions are in the <a href="https://github.com/subugoe/orion-mcp">GitHub repo README</a>.</p>
+<p>The server runs in a Docker container connected to Claude Desktop via its MCP config file. Authentication uses Google’s <a href="https://cloud.google.com/docs/authentication/application-default-credentials">Application Default Credentials</a>, so local <code>gcloud</code> credentials are used directly and no service account keys are needed. A <a href="https://cloud.google.com/free">Google Cloud account</a> includes 1 TB of free queries per month.</p>
+<p>The tool is implemented in R using <a href="https://posit-dev.github.io/mcptools/"><code>{mcptools}</code></a> and <a href="https://ellmer.tidyverse.org/"><code>{ellmer}</code></a>, assisted with Claude Code. It mainly uses <a href="https://bigrquery.r-dbi.org/"><code>{bigrquery}</code></a> to interact with Google BigQuery, which I use in my everyday work.</p>
+<p>Note that I only tested <code>orion-mcp</code> using Claude and Claude Desktop. If you find any bugs or have questions, please feel free to file an <a href="https://github.com/subugoe/orion-mcp/issues">issue</a>.</p>
+</section>
+<section id="responsible-use" class="level2">
+<h2 class="anchored" data-anchor-id="responsible-use">Responsible use</h2>
+<p>LLMs make mistakes. Always verify that queries return the results you intended before using them in any analysis. If you plan to use this in a publication, check the outlet’s policy on AI-assisted work and document your process accordingly.</p>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@article{jahn2026,
+  author = {Jahn, Najko},
+  title = {Introducing an {MCP} {Server} for {ORION-DBs}},
+  journal = {Scholarly Communication Analytics},
+  date = {2026-07-16},
+  url = {https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/},
+  langid = {en},
+  abstract = {The Open Research Information Online Databases collective
+    (ORION-DBs) provides access to multiple open research information
+    resources on BigQuery. This post introduces `orion-mcp`, an
+    open-source tool that enables large language models (LLMs) such as
+    Claude to explore schemas, draft SQL queries, estimate costs,
+    execute these queries and export the data using R. This provides a
+    practical entry point for users who are unfamiliar with ORION-DBs,
+    as well as those who wish to use LLMs for data analysis.}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-jahn2026" class="csl-entry quarto-appendix-citeas" role="listitem">
+Jahn, Najko. 2026. <span>“Introducing an MCP Server for
+ORION-DBs.”</span> <em>Scholarly Communication Analytics</em>, accepted,
+July 16. <a href="https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/">https://subugoe.github.io/scholcomm_analytics/posts/orion_mcp_intro/</a>.
+</div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/subugoe\.github\.io\/scholcomm_analytics\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://creativecommons.org/licenses/by/4.0/">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/CC_BY_icon.svg" alt="CC BY 4.0" style="height: 16px; margin-top: -2px;"></p>
+</a>
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="mailto:najko.jahn@sub.uni-goettingen.de">
+<p>Contact</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.sub.uni-goettingen.de/impressum/">
+<p>Imprint</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/subugoe/scholcomm_analytics/">
+      <i class="bi bi-github" role="img" aria-label="Project GitHub">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

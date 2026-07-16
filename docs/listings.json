@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/orion_mcp_intro/index.html",
       "/posts/ta_coverage_analysis/main.html",
       "/posts/walden_analysis/main.html",
       "/posts/openalex_affiliation_md/index.html",
